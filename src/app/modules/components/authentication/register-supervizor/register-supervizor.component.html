@@ -1,0 +1,75 @@
+<div class="container">
+  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/">
+  <div class="register-container">
+    <div class="left">
+      <img class="image" src="assets/svgImages/supervizor.svg">
+    </div>
+    <div class="register-body">
+      <div class="register-panel">
+        <form [formGroup]="registerSupervizorFormGroup">
+          <h2>Potëso Formularin</h2>
+          <div class="field-container">
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Emri</mat-label>
+              <input matInput placeholder="Emri" formControlName="firstName" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('firstName')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Mbiemri</mat-label>
+              <input matInput placeholder="Numer Telefoni" formControlName="phoneNumber" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('phoneNumber')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-error *ngIf="registerSupervizorFormGroup.get('email')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <div class="field-container">
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Profesion</mat-label>
+              <input matInput placeholder="Profesion" formControlName="profession" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('profession')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Shkolla</mat-label>
+              <input matInput placeholder="Shkolla" formControlName="school" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('school')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="field-container">
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Qytet</mat-label>
+              <input matInput placeholder="Qytet" formControlName="city" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('city')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Kod Postar</mat-label>
+              <input matInput placeholder="Kod Postar" formControlName="postalCode" required>
+              <mat-error *ngIf="registerSupervizorFormGroup.get('postalCode')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="btn-container">
+            <button mat-button [disabled]="!isRegisterFormValid()" (click)="submitRequest">Apliko</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

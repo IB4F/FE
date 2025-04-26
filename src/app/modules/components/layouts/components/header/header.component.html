@@ -1,0 +1,39 @@
+<div class="header">
+  <div class="container">
+    <div class="h-left">
+      <div class="logo">
+        <a routerLink="/">
+          <img src="assets/svgImages/logo.svg" alt="brainGain-logo">
+        </a>
+      </div>
+    </div>
+    <div class="h-right" *ngIf="isLogged(); else notLoggedIn">
+      <button mat-button routerLink="dashboard">Dashboardi im</button>
+      <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu">
+        FM
+<!--        {{ (userInitials$ | async) | uppercase }}-->
+      </div>
+      <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>
+      <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">
+        <add-quiz-svg></add-quiz-svg>
+      </div>
+      <mat-icon class="notification">notifications</mat-icon>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="profili">
+          <mat-icon>person</mat-icon>
+          Profili
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          Dil
+        </button>
+      </mat-menu>
+    </div>
+    <ng-template #notLoggedIn>
+      <div class="h-right">
+        <button mat-button routerLink="/hyr">Hyr</button>
+        <button mat-button routerLink="/membership">Regjistrohu</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

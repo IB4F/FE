@@ -1,0 +1,69 @@
+$font-family-primary: 'Montserrat', sans-serif;
+$font-family-secondary: 'Cabin', sans-serif;
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .center-content {
+    text-align: center;
+  }
+
+  .not-found-container {
+    height: 200px;
+    position: relative;
+  }
+
+  .not-found-body {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 520px;
+    width: 100%;
+    line-height: 1.4;
+    text-align: center;
+
+    h1 {
+      font-size: 200px;
+      font-family: $font-family-primary;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 900;
+      margin: 0;
+      color: #262626;
+      text-transform: uppercase;
+      letter-spacing: -40px;
+    }
+
+    h2 {
+      font-family: $font-family-secondary;
+      font-size: 20px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: #000;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    h3 {
+      font-family: $font-family-secondary;
+      position: relative;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #262626;
+      margin: 0;
+      letter-spacing: 3px;
+      padding-left: 6px;
+    }
+
+    span {
+      text-shadow: -8px 0 0 #fff;
+    }
+  }
+}

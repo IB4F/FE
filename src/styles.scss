@@ -1,1 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+$blueCustom: #259ccb;
+
+html,
+body,
+app-root {
+  height: 100%;
+}
+
+body {
+  //margin-bottom: 0;
+  //margin-top: 0;
+  margin: 0;
+}
+
+p {
+  font-family: Work-Sans-Regular;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Lufga-Regular;
+}
+
+button {
+  padding: 13px 29px;
+  letter-spacing: 0.16px;
+}
+
+.custom-container{
+  max-width: 1700px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 40px !important;
+}
+
+.mdc-menu-surface.mat-mdc-select-panel {
+  padding: 0px !important;
+  margin: 5px 10px 0 10px;
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked ~ .mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  border-color: #198754 !important;
+  background-color: #198754 !important;
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
+  background-color: #198754 !important;
+}
+
+.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked + .mdc-radio__background .mdc-radio__outer-circle,
+.mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled + .mdc-radio__background .mdc-radio__inner-circle {
+  border-color: $blueCustom !important;
+}
+
+.mat-mdc-radio-button.mat-accent {
+  --mat-radio-checked-ripple-color: $blueCustom !important;
+}

@@ -1,0 +1,122 @@
+$blueCustom: #259ccb;
+$blueDark: darken($blueCustom, 10%);
+$blueLight: lighten($blueCustom, 35%);
+$blueSoftGradientStart: lighten($blueCustom, 40%);
+$blueSoftGradientEnd: lighten($blueCustom, 20%);
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 40px 20px;
+  background: linear-gradient(to right, $blueSoftGradientStart, $blueSoftGradientEnd);
+
+  > img {
+    margin-bottom: 40px;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1000px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      button {
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        margin-top: 0.5rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 200px;
+      }
+
+      &.student {
+        h2 {
+          color: $blueCustom;
+        }
+
+        .primary {
+          background-color: $blueCustom;
+          color: white;
+          border: none;
+
+          &:hover {
+            background-color: $blueDark;
+          }
+        }
+
+        .secondary {
+          background-color: transparent;
+          color: $blueCustom;
+          border: 2px solid $blueCustom;
+
+          &:hover {
+            background-color: lighten($blueCustom, 40%);
+          }
+        }
+      }
+
+      &.supervizor {
+        h2 {
+          color: $blueDark;
+        }
+
+        .primary {
+          background-color: $blueDark;
+          color: white;
+          border: none;
+
+          &:hover {
+            background-color: darken($blueDark, 5%);
+          }
+        }
+
+        .secondary {
+          background-color: lighten($blueCustom, 35%);
+          color: $blueDark;
+          border: none;
+
+          &:hover {
+            background-color: lighten($blueCustom, 25%);
+          }
+        }
+
+        .tertiary {
+          background-color: transparent;
+          color: $blueDark;
+          border: 2px solid $blueDark;
+
+          &:hover {
+            background-color: lighten($blueCustom, 45%);
+          }
+        }
+      }
+    }
+  }
+}

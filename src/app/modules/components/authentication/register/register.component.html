@@ -1,0 +1,84 @@
+<div class="container">
+  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/info">
+  <div class="register-container">
+    <div class="left">
+      <img class="image" src="assets/svgImages/registerIcon.svg">
+    </div>
+    <div class="register-body">
+      <div class="register-panel">
+        <form [formGroup]="registerFormGroup">
+          <h2>Regjistrohu</h2>
+          <div class="field-container">
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Emri</mat-label>
+              <input matInput placeholder="Emri" formControlName="firstName" required>
+              <mat-error *ngIf="registerFormGroup.get('firstName')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Mbiemri</mat-label>
+              <input matInput placeholder="Mbiemri" formControlName="lastName" required>
+              <mat-error *ngIf="registerFormGroup.get('lastName')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-error *ngIf="registerFormGroup.get('email')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <div class="field-container">
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Ditëlindja</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="registerFormGroup.get('dateOfBirth')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 48%;">
+              <mat-label>Shkolla</mat-label>
+              <input matInput placeholder="Shkolla" formControlName="school" required>
+              <mat-error *ngIf="registerFormGroup.get('school')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Klasa aktuale</mat-label>
+            <input matInput placeholder="Klasa aktuale" formControlName="currentClass" required>
+            <mat-error *ngIf="registerFormGroup.get('currentClass')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" formControlName="password"
+                   [type]="hidePass ? 'password' : 'text'" required>
+            <mat-icon matSuffix
+                      matTooltip="1. Të paktën 8 karaktere 2. Të paktën një karakter special 3. Të paktën një shkronjë të madhe 4. Të paktën një numër">
+              info
+            </mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
+              <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerFormGroup.get('password')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <div class="btn-container">
+            <button mat-button [disabled]="!isRegisterFormValid()" (click)="registerSubmit()">Regjistrohu</button>
+            <p class="signup-text">Ke një llogari?<a routerLink="/hyr">Hyr</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

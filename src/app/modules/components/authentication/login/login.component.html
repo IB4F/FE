@@ -1,0 +1,43 @@
+<div class="container">
+  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/">
+  <div class="login-container">
+    <div class="login-body">
+      <div class="login-form">
+        <h2>Hyr</h2>
+        <form [formGroup]="loginFormGroup">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-error *ngIf="loginFormGroup.get('email')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" formControlName="password"
+                   [type]="hidePass ? 'password' : 'text'" required>
+            <mat-icon matSuffix
+                      matTooltip="1. Të paktën 8 karaktere 2. Të paktën një karakter special 3. Të paktën një shkronjë të madhe 4. Të paktën një numër">
+              info
+            </mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
+              <mat-icon>{{hidePass ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginFormGroup.get('password')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <div class="forget-pass"><span (click)="openDialog()">Harruat fjalëkalimin?</span></div>
+          <div class="btn-container">
+            <button mat-button (click)="onLogin()" [disabled]="!isLoginFormValid()">Identifikohu</button>
+          </div>
+          <p class="signup-text">Nuk ke një llogari?<a routerLink="/membership">Regjistrohu</a></p>
+        </form>
+      </div>
+    </div>
+    <div class="right">
+      <img src="assets/svgImages/loginIcon.svg">
+    </div>
+  </div>
+</div>

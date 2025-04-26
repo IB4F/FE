@@ -1,0 +1,122 @@
+$blueCustom: #259ccb;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+
+  >img {
+    margin: 20px 0;
+    cursor: pointer;
+    width: fit-content;
+  }
+}
+
+.login-container {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+
+.login-body {
+  background: white;
+  padding: 40px;
+  width: 49%;
+  border: 1px solid white;
+  border-radius: 25px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.login-body h2,
+.info-section h2 {
+  margin-bottom: 20px;
+}
+
+.login-form .btn-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: $blueCustom;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.forget-pass {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 0 0 20px 0;
+
+  span {
+    text-decoration: underline;
+    color: #2e34df;
+    cursor: pointer;
+  }
+}
+
+.login-body form {
+  max-width: 680px;
+}
+
+.login-body p {
+  margin-top: 20px;
+}
+
+.login-body a {
+  margin-left: 10px;
+  text-decoration: underline;
+  color: #2e34df;
+  cursor: pointer;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 10px;
+}
+
+
+.login-form {
+  width: 100%;
+  max-width: 680px;
+}
+
+mat-icon {
+  color: #536065;
+}
+
+
+.right {
+  margin: auto;
+  width: 49%;
+  display: flex;
+  justify-content: flex-end;
+
+  >img {
+    width: 100%;
+  }
+}
+
+::ng-deep .mdc-notched-outline>* {
+  border-color: $blueCustom !important;
+}
+
+::ng-deep .mdc-text-field--invalid .mdc-notched-outline>* {
+  border-color: red !important;
+}
+
+::ng-deep .mdc-notched-outline__notch {
+  border-left: none !important;
+}
