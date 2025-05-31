@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
@@ -12,7 +12,7 @@ import {passwordValidator} from "../../../../helpers/customValidators/check-pass
 import {ForgetPasswordComponent} from "../forget-password/forget-password.component";
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../../services/token-storage.service";
-import {AuthService} from "../../../../api-client/auth";
+import {AuthService} from "../../../../api-client";
 
 @Component({
   selector: 'app-login',
@@ -31,13 +31,13 @@ import {AuthService} from "../../../../api-client/auth";
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   loginFormGroup!: FormGroup;
   hidePass = true;
 
   constructor(
     private _formBuilder: FormBuilder,
-    private authService: AuthService,
+    private _authService: AuthService,
     private toast: NgToastService,
     private tokenStorageService: TokenStorageService,
     private router: Router,
@@ -57,13 +57,12 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.authService.loginPost(this.loginFormGroup.value).subscribe({
+    this._authService.loginPost(this.loginFormGroup.value).subscribe({
       next: (resp) => {
         this.tokenStorageService.saveTokens(resp?.data);
         this.toast.success(resp?.message, 'SUKSES', 3000);
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['student', 'dashboard']);
         this.loginFormGroup.reset();
-
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'ERROR', 3000);

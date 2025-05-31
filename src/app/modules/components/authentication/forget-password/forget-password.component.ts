@@ -7,8 +7,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatDialogRef} from "@angular/material/dialog";
-import {AuthService, ForgotPasswordDTO} from "../../../../api-client/auth";
 import {NgToastService} from "ng-angular-popup";
+import {AuthService, ForgotPasswordDTO} from "../../../../api-client";
 
 @Component({
   selector: 'app-forget-password',
@@ -59,7 +59,6 @@ export class ForgetPasswordComponent implements OnInit {
     const email: ForgotPasswordDTO = {email: this.emailForm.get('email')?.value};
     this._authService.requestResetPost(email).subscribe({
       next: (resp) => {
-        console.log(resp)
         this.toast.success('Email-i u dergua me sukses!', 'SUKSES', 5000);
         this.closeModal();
       },

@@ -11,10 +11,9 @@ $blueCustom: #259ccb;
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   align-items: center;
 
-  >img {
+  > img {
     margin: 20px 0;
     cursor: pointer;
     width: fit-content;
@@ -27,7 +26,7 @@ $blueCustom: #259ccb;
   display: flex;
   justify-content: flex-start;
 
-  >img {
+  > img {
     width: 100%;
   }
 }
@@ -99,7 +98,7 @@ $blueCustom: #259ccb;
   cursor: pointer;
 }
 
-::ng-deep .mdc-notched-outline>* {
+::ng-deep .mdc-notched-outline > * {
   border-color: $blueCustom !important;
 
 }
@@ -108,6 +107,6 @@ $blueCustom: #259ccb;
   border-left: none !important;
 }
 
-::ng-deep .mdc-text-field--invalid .mdc-notched-outline>* {
+::ng-deep .mdc-text-field--invalid .mdc-notched-outline > * {
   border-color: red !important;
 }

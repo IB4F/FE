@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -8,7 +8,9 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {jwtInterceptor} from "./interceptors/jwt.interceptor";
 import {refreshTokenInterceptor} from "./interceptors/refresh-token.interceptor";
 import {errorInterceptor} from "./interceptors/error.interceptor";
-import {ApiModule, Configuration} from "./api-client/auth";
+import {appInitializer} from "./services/app-initializer.service";
+import {ApiModule, Configuration} from "./api-client";
+import {loaderInterceptor} from "./interceptors/loader.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,15 +18,20 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideHttpClient(
       withInterceptors([
+        loaderInterceptor,
         jwtInterceptor,
         refreshTokenInterceptor,
-        errorInterceptor
-      ])
-      , withFetch()
+        errorInterceptor,
+      ]), withFetch()
     ),
     provideAnimationsAsync(),
     importProvidersFrom(
       ApiModule.forRoot(() => new Configuration())
     ),
+    {
+      provide: ENVIRONMENT_INITIALIZER,
+      multi: true,
+      useFactory: appInitializer
+    }
   ]
 };

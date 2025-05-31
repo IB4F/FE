@@ -3,22 +3,35 @@ import {PageNotFoundComponent} from "./modules/components/layouts/components/pag
 
 export const routes: Routes = [
   {
+    path: '',
+    loadChildren: () => import('./modules/components/layouts/portal-layouts.routes')
+      .then(r => r.PortalLayoutsRoutes)
+  },
+  {
     path: 'hyr',
     title: 'Login',
     loadComponent: () => import('./modules/components/authentication/login/login.component')
-      .then(m => m.LoginComponent),
+      .then(m => m.LoginComponent)
   },
   {
     path: 'regjistrohu',
     title: 'Register',
     loadComponent: () => import('./modules/components/authentication/register/register.component')
-      .then(m => m.RegisterComponent),
+      .then(m => m.RegisterComponent)
   },
   {
-    path: 'apliko',
-    title: 'Apliko',
-    loadComponent: () => import('./modules/components/authentication/register-supervizor/register-supervizor.component')
-      .then(m => m.RegisterSupervizorComponent),
+    path: 'verify-email',
+    title: 'Verifikim Email',
+    loadComponent: () => import('./modules/components/authentication/email-verification/email-verification.component')
+      .then(m => m.EmailVerificationComponent),
+    pathMatch: 'full'
+  },
+  {
+    path: 'reset-password',
+    title: 'Ndrysho Fjalëkalimin',
+    loadComponent: () => import('./modules/components/authentication/reset-password/reset-password.component')
+      .then(m => m.ResetPasswordComponent),
+    pathMatch: 'full'
   },
   {
     path: 'membership',
@@ -31,11 +44,6 @@ export const routes: Routes = [
     title: 'Reset Password',
     loadComponent: () => import('./modules/components/authentication/forget-password/forget-password.component')
       .then(m => m.ForgetPasswordComponent),
-  },
-  {
-    path: '',
-    loadChildren: () => import('./modules/components/layouts/portal-layouts.routes')
-      .then(r => r.PortalLayoutsRoutes),
   },
   {
     path: '**',

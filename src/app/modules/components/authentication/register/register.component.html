@@ -1,5 +1,4 @@
 <div class="container">
-  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/info">
   <div class="register-container">
     <div class="left">
       <img class="image" src="assets/svgImages/registerIcon.svg">
@@ -7,7 +6,6 @@
     <div class="register-body">
       <div class="register-panel">
         <form [formGroup]="registerFormGroup">
-          <h2>Regjistrohu</h2>
           <div class="field-container">
             <mat-form-field appearance="outline" style="width: 48%;">
               <mat-label>Emri</mat-label>
@@ -52,7 +50,11 @@
           </div>
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-label>Klasa aktuale</mat-label>
-            <input matInput placeholder="Klasa aktuale" formControlName="currentClass" required>
+            <mat-select placeholder="Klasa aktuale" formControlName="currentClass" required>
+              <mat-option *ngFor="let class of classesList" [value]="class.id">
+                {{ class.name }}
+              </mat-option>
+            </mat-select>
             <mat-error *ngIf="registerFormGroup.get('currentClass')?.hasError('required')">
               Fushë e detyrueshme
             </mat-error>
@@ -73,10 +75,6 @@
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
-          <div class="btn-container">
-            <button mat-button [disabled]="!isRegisterFormValid()" (click)="registerSubmit()">Regjistrohu</button>
-            <p class="signup-text">Ke një llogari?<a routerLink="/hyr">Hyr</a></p>
-          </div>
         </form>
       </div>
     </div>

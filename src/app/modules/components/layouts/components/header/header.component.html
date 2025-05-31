@@ -7,11 +7,10 @@
         </a>
       </div>
     </div>
-    <div class="h-right" *ngIf="isLogged(); else notLoggedIn">
-      <button mat-button routerLink="dashboard">Dashboardi im</button>
+    <div class="h-right" *ngIf="isLogged; else notLoggedIn">
+      <button mat-button routerLink="/student/dashboard">Dashboardi im</button>
       <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu">
         FM
-<!--        {{ (userInitials$ | async) | uppercase }}-->
       </div>
       <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>
       <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">

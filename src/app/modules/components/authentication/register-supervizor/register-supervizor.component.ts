@@ -10,8 +10,10 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
-import {AuthService, SchoolRegistrationDTO} from "../../../../api-client/auth";
 import {NgToastService} from "ng-angular-popup";
+import {AuthService, City, DetailsService, SchoolRegistrationDTO} from "../../../../api-client";
+import {MatOption} from "@angular/material/autocomplete";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-register-supervizor',
@@ -26,24 +28,29 @@ import {NgToastService} from "ng-angular-popup";
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    RouterLink
+    RouterLink,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './register-supervizor.component.html',
   styleUrl: './register-supervizor.component.scss'
 })
 export class RegisterSupervizorComponent implements OnInit {
   registerSupervizorFormGroup!: FormGroup;
+  citiesList: City [] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
     private router: Router,
     private toast: NgToastService,
+    private _detailsService: DetailsService
   ) {
   }
 
   ngOnInit() {
-    this.registerFormInitialize()
+    this.registerFormInitialize();
+    this.loadCombos();
   }
 
   registerFormInitialize() {
@@ -54,12 +61,22 @@ export class RegisterSupervizorComponent implements OnInit {
       profession: ['', Validators.required],
       city: ['', Validators.required],
       postalCode: ['', Validators.required],
-      school: ['', Validators.required],
+      schoolName: ['', Validators.required],
     });
   }
 
   isRegisterFormValid(): boolean {
     return this.registerSupervizorFormGroup.valid;
+  }
+
+  private loadCombos() {
+    this.getClassesList();
+  }
+
+  private getClassesList() {
+    this._detailsService.apiDetailsGetCitiesGet().subscribe(res => {
+      this.citiesList = res;
+    })
   }
 
   submitRequest() {
@@ -68,7 +85,6 @@ export class RegisterSupervizorComponent implements OnInit {
     };
     this._authService.registerSchoolPost(registerData).subscribe({
       next: (resp) => {
-        console.log(resp)
         this.toast.success(resp?.message, 'SUCCESS', 3000);
         this.registerSupervizorFormGroup.reset();
         this.router.navigate(['']);

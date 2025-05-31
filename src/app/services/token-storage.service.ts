@@ -1,39 +1,67 @@
-import {Injectable, Inject, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from "rxjs";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class TokenStorageService {
-  private readonly ACCESS_TOKEN_KEY = 'secure_at';
-  private readonly REFRESH_TOKEN_KEY = 'secure_rt';
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
+    private userRoleSubject = new BehaviorSubject<string | null>(null);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  public isLoggedIn$ = this.loggedInSubject.asObservable();
+
+  constructor() {
+    const token = this.getAccessToken();
+    this.loggedInSubject.next(!!token);
   }
 
-  private get isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
-  }
+  // GETTERS (optimized for speed)
+  getAccessToken = (): string | null => localStorage.getItem('accessToken');
+  getRefreshToken = (): string | null => localStorage.getItem('refreshToken');
+  getRole = (): string | null => this.userRoleSubject.value;
 
-  getAccessToken(): string | null {
-    return this.isBrowser ? localStorage.getItem(this.ACCESS_TOKEN_KEY) : null;
-  }
+  // SETTERS (optimized for speed)
+  saveTokens = (tokens: { accessToken: string; refreshToken: string }): void => {
+    localStorage.setItem('accessToken', tokens.accessToken);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+    this.parseAndSetRole(tokens.accessToken);
+    this.loggedInSubject.next(true);
+  };
 
-  getRefreshToken(): string | null {
-    return this.isBrowser ? sessionStorage.getItem(this.REFRESH_TOKEN_KEY) : null;
-  }
+  // UTILITIES (optimized for speed)
+  clearTokens = (): void => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    this.loggedInSubject.next(false);
+  };
 
-  saveTokens(tokens: { accessToken: string; refreshToken: string }): void {
-    if (this.isBrowser) {
-      localStorage.setItem(this.ACCESS_TOKEN_KEY, tokens.accessToken);
-      sessionStorage.setItem(this.REFRESH_TOKEN_KEY, tokens.refreshToken);
+  loadTokensFromStorage = (): void => {
+    const accessToken = this.getAccessToken();
+    const refreshToken = this.getRefreshToken();
+    if (accessToken && refreshToken) {
+      this.saveTokens({accessToken, refreshToken});
+    }
+  };
+
+  private parseAndSetRole(token: string): void {
+    try {
+      const payload = this.parseJwt(token);
+      if (payload && payload.role) {
+        this.userRoleSubject.next(payload.role);
+      }
+    } catch (e) {
+      console.error('Error parsing JWT token', e);
+      this.userRoleSubject.next(null);
     }
   }
 
-  clearTokens(): void {
-    if (this.isBrowser) {
-      localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-      sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    }
+  private parseJwt(token: string): any {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
   }
 }

@@ -1,113 +1,123 @@
 $blueCustom: #259ccb;
-
-// .signup-container {
-//     display: flex;
-//     justify-content: flex-end;
-//     font-family: Arial, sans-serif;
-//     position: relative;
-//     height: 100%;
-// }
+$blueBanner: #31bff32b;
+$blueText: #0a4670;
 
 .container {
+  padding: 40px 30px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   align-items: center;
 
-  >img {
-    margin: 20px 0;
-    cursor: pointer;
-    width: fit-content;
+  .banner {
+    border-radius: 20px;
+    padding: 40px 90px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: $blueBanner;
+
+    h1 {
+      width: 50%;
+      text-align: center;
+      margin-bottom: 20px;
+      color: $blueText;
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      width: 300px;
+    }
+
+
+  }
+
+  .title {
+    text-align: center;
+    margin: 50px 0 50px 0;
+
+    h1 {
+      color: $blueText;
+      margin-bottom: 20px;
+    }
+
+    p {
+      opacity: 0.75;
+      line-height: 1.6;
+      margin: 20px 0;
+    }
   }
 }
 
-.left {
-  margin: auto;
-  width: 49%;
-  display: flex;
-  justify-content: flex-start;
-
-  >img {
-    width: 100%;
-  }
-}
-
-
-.register-body {
+.form-container {
+  width: 100%;
+  max-width: 800px;
   background: white;
   padding: 40px;
-  width: 50%;
-  border: 1px solid white;
   border-radius: 25px;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.register-container {
-  display: flex;
-  height: 100%;
-  justify-content: space-between;
-  font-family: Arial, sans-serif;
-  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .register-panel {
   width: 100%;
-  max-width: 680px;
+
+  h2 {
+    text-align: center;
+    color: $blueText;
+    margin-bottom: 30px;
+  }
 }
 
 .field-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
+  gap: 20px;
 
-.mat-mdc-form-field {
-  margin-bottom: 10px;
-}
-
-.register-body h2 {
-  margin-bottom: 20px;
-}
-
-.register-panel .btn-container button {
-  width: 100%;
-  padding: 10px;
-  background-color: $blueCustom;
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
+  mat-form-field {
+    flex: 1;
   }
 }
 
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
 
-.register-body p {
+.btn-container {
   margin-top: 20px;
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: $blueCustom;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover:not(:disabled) {
+      background-color: darken($blueCustom, 10%);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
 }
 
-.register-body a {
-  margin-left: 10px;
-  text-decoration: underline;
-  color: #2e34df;
-  cursor: pointer;
-}
+::ng-deep {
+  .mdc-notched-outline > * {
+    border-color: $blueCustom !important;
+  }
 
-::ng-deep .mdc-notched-outline>* {
-  border-color: $blueCustom !important;
+  .mdc-notched-outline__notch {
+    border-left: none !important;
+  }
 
-}
-
-::ng-deep .mdc-notched-outline__notch {
-  border-left: none !important;
-}
-
-::ng-deep .mdc-text-field--invalid .mdc-notched-outline>* {
-  border-color: red !important;
+  .mdc-text-field--invalid .mdc-notched-outline > * {
+    border-color: red !important;
+  }
 }

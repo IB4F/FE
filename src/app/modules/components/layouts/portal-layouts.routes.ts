@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
 import {PortalLayoutComponent} from "./portal-layout.component";
-import {authGuard} from "../../../guards/auth.guard";
+import {roleGuard} from "../../../guards/role.guard";
 
 export const PortalLayoutsRoutes: Routes = [
   {
@@ -14,10 +14,32 @@ export const PortalLayoutsRoutes: Routes = [
           .then(m => m.LandingPageComponent)
       },
       {
-        path: 'dashboard',
-        loadComponent: () => import('../student/dashboard/dashboard.component')
-          .then(m => m.DashboardComponent),
-        canActivate: [authGuard]
+        path: 'supervizor',
+        children: [
+          {
+            path: 'apliko',
+            title: 'Apliko',
+            loadComponent: () => import('../authentication/register-supervizor/register-supervizor.component')
+              .then(m => m.RegisterSupervizorComponent),
+          },
+        ]
+      },
+      {
+        path: 'student',
+        children: [
+          {
+            path: 'membership',
+            loadComponent: () => import('../authentication/membership-student/membership-student.component')
+              .then(m => m.MembershipStudentComponent)
+          },
+          {
+            path: 'dashboard',
+            canActivate: [roleGuard('Student')],
+            loadComponent: () => import('../student/dashboard/dashboard.component')
+              .then(m => m.DashboardComponent)
+          },
+
+        ]
       }
     ]
   }
