@@ -1,0 +1,137 @@
+$blueBanner: #31bff32b;
+$blueText: #0a4670;
+$blueCustom: #259ccb;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 1rem;
+}
+
+.card {
+  width: 33%;
+  text-align: center;
+  max-width: 350px;
+  font-size: 1.25rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  border: 1px solid $blueCustom;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+
+  p {
+    color: black;
+    opacity: 0.75;
+  }
+
+  &:hover {
+    background-color: #9CBED9;
+    color: $blueText;
+    // animation: shake 1.5s ease-in-out;
+    transition: all 0.3s linear;
+    z-index: 10;
+
+    p {
+      color: black;
+    }
+  }
+}
+
+.selected {
+  border: 2px solid $blueCustom;
+  background-color: #9CBED9;
+  color: $blueText;
+  transform: scale(1.1);
+}
+
+.non-selected {
+  transform: scale(0.9);
+  opacity: 0.6;
+}
+
+.card-content {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.card-content li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.check-icon {
+  color: green;
+  margin-right: 10px;
+}
+
+.cancel-icon {
+  color: red;
+  margin-right: 10px;
+}
+
+.disabled {
+  color: #999;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.price {
+  font-size: 2em;
+  margin: 20px 0;
+}
+
+.billing-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+
+  .radio-option {
+    .mat-radio-label-content {
+      padding-left: 8px;
+      color: $blueText;
+      font-weight: 500;
+    }
+
+    .mat-radio-outer-circle {
+      border-color: $blueCustom;
+    }
+
+    &.mat-radio-checked {
+      .mat-radio-inner-circle {
+        background-color: $blueCustom;
+      }
+    }
+
+    &:hover {
+      .mat-radio-outer-circle {
+        border-color: darken($blueCustom, 10%);
+      }
+    }
+  }
+}

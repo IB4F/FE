@@ -1,0 +1,14 @@
+<!-- email-verification.component.html -->
+<div class="container">
+  <div *ngIf="isLoading" class="spinner">Loading...</div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="isSuccess" class="alert success">
+      {{ message }} Redirect al login...
+    </div>
+    <div *ngIf="!isSuccess" class="alert error">
+      {{ message }}
+      <button (click)="router.navigate(['/resend-verification'])">Invia nuovo link</button>
+    </div>
+  </div>
+</div>

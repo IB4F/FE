@@ -1,0 +1,15 @@
+export * from './adminUser.service';
+import { AdminUserService } from './adminUser.service';
+export * from './auth.service';
+import { AuthService } from './auth.service';
+export * from './details.service';
+import { DetailsService } from './details.service';
+export * from './learnHubs.service';
+import { LearnHubsService } from './learnHubs.service';
+export * from './links.service';
+import { LinksService } from './links.service';
+export * from './payment.service';
+import { PaymentService } from './payment.service';
+export * from './quizzes.service';
+import { QuizzesService } from './quizzes.service';
+export const APIS = [AdminUserService, AuthService, DetailsService, LearnHubsService, LinksService, PaymentService, QuizzesService];

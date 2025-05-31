@@ -1,0 +1,48 @@
+$blueBanner: #31bff32b;
+$blueCustom: #259ccb;
+$blueText: #0a4670;
+
+.container {
+  padding: 100px 30px;
+
+  .banner {
+    border-radius: 20px;
+    padding: 40px 90px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: $blueBanner;
+
+    h1 {
+      width: 50%;
+      text-align: center;
+      margin-bottom: 20px;
+      color: $blueText;
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      width: 300px;
+    }
+
+
+  }
+
+  .title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 100px 0 20px 0;
+
+    h1,
+    p {
+      text-align: center;
+    }
+
+    p {
+      margin: 20px 100px;
+      opacity: 0.75;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<div class="container">
+  <!-- Billing cycle selector -->
+  <form [formGroup]="packegeForm">
+    <mat-radio-group formControlName="billingCycle" class="billing-switcher">
+      <mat-radio-button value="annual" class="radio-option">Vjecare</mat-radio-button>
+      <mat-radio-button value="monthly" class="radio-option">Mujore</mat-radio-button>
+    </mat-radio-group>
+  </form>
+
+  <!-- Dynamic cards based on selected billing cycle -->
+  <div class="cards-container">
+    <div class="card"
+         *ngFor="let card of currentCards"
+         [ngClass]="{
+           'selected': selectedCard === card,
+           'non-selected': selectedCard && selectedCard !== card
+         }"
+         (click)="selectCard(card)">
+      <img src="assets/svgImages/price.svg" alt="Price Tag">
+      <h2>{{ card.title }}</h2>
+      <ul class="card-content">
+        <li *ngFor="let feature of card.features" [class.disabled]="!feature.available">
+          <mat-icon *ngIf="feature.available" class="check-icon">check_circle</mat-icon>
+          <mat-icon *ngIf="!feature.available" class="cancel-icon">cancel</mat-icon>
+          {{ feature.text }}
+        </li>
+      </ul>
+      <p class="price">{{ card.priceDisplay }}</p>
+    </div>
+  </div>
+</div>
