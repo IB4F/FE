@@ -1,137 +1,161 @@
+// Variabili (aggiunte per consistenza)
 $blueBanner: #31bff32b;
 $blueText: #0a4670;
 $blueCustom: #259ccb;
+$hoverBlue: rgba(156, 190, 217, 0.7);
+$disabledGray: #999;
 
+// Container principale
 .container {
   display: flex;
   flex-direction: column;
   width: 100%;
+  align-items: center;
+  padding: 1rem;
 }
 
+// Griglia delle card
 .cards-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
   width: 100%;
-  gap: 1rem;
+  max-width: 1200px;
 }
 
+// Stile base della card
 .card {
-  width: 33%;
-  text-align: center;
-  max-width: 350px;
-  font-size: 1.25rem;
-  background-color: white;
-  padding: 2rem;
+  width: 28%;
+  min-width: 280px;
+  max-width: 300px;
+  background: white;
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  display: flex;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid $blueCustom;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  z-index: 1;
+  transition: all 0.3s ease;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
 
-  p {
-    color: black;
-    opacity: 0.75;
+  // Contenuto interno
+  img {
+    width: 40px;
+    height: auto;
+    margin-bottom: 1rem;
   }
 
-  &:hover {
-    background-color: #9CBED9;
+  h2 {
+    font-size: 1.5rem;
     color: $blueText;
-    // animation: shake 1.5s ease-in-out;
-    transition: all 0.3s linear;
-    z-index: 10;
+    margin: 0.5rem 0;
+  }
 
-    p {
-      color: black;
-    }
+  .price {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: $blueText;
+    margin: 1rem 0;
   }
 }
 
-.selected {
-  border: 2px solid $blueCustom;
-  background-color: #9CBED9;
-  color: $blueText;
-  transform: scale(1.1);
-}
-
-.non-selected {
-  transform: scale(0.9);
-  opacity: 0.6;
-}
-
+// Lista delle feature
 .card-content {
   list-style: none;
   padding: 0;
   margin: 1rem 0;
+  text-align: left;
+
+  li {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+  }
+
+  .disabled {
+    color: $disabledGray;
+  }
 }
 
-.card-content li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
+// Icone
 .check-icon {
   color: green;
-  margin-right: 10px;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
 }
 
 .cancel-icon {
   color: red;
-  margin-right: 10px;
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
 }
 
-.disabled {
-  color: #999;
+// Stati interattivi
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  background: $hoverBlue;
 }
 
-.card-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.selected {
+  border: 2px solid $blueCustom;
+  background: $hoverBlue;
+  transform: scale(1.03);
+
+  .price {
+    color: darken($blueText, 10%);
+  }
 }
 
-.price {
-  font-size: 2em;
-  margin: 20px 0;
+.non-selected {
+  opacity: 0.7;
+  transform: scale(0.95);
 }
 
+// Toggle billing cycle
 .billing-switcher {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin: 1rem 0 2rem;
   padding: 1rem;
+  background: rgba($blueCustom, 0.1);
   border-radius: 0.5rem;
+  width: 100%;
 
-  .radio-option {
-    .mat-radio-label-content {
-      padding-left: 8px;
-      color: $blueText;
-      font-weight: 500;
-    }
+  .mat-radio-label-content {
+    padding-left: 0.5rem;
+    color: $blueText;
+    font-weight: 500;
+  }
 
-    .mat-radio-outer-circle {
-      border-color: $blueCustom;
-    }
+  .mat-radio-outer-circle {
+    border-color: $blueCustom;
+  }
 
-    &.mat-radio-checked {
-      .mat-radio-inner-circle {
-        background-color: $blueCustom;
-      }
-    }
+  .mat-radio-checked .mat-radio-inner-circle {
+    background: $blueCustom;
+  }
+}
 
-    &:hover {
-      .mat-radio-outer-circle {
-        border-color: darken($blueCustom, 10%);
-      }
-    }
+// Responsive
+@media (max-width: 900px) {
+  .card {
+    width: 45%;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 90%;
+    max-width: none;
+  }
+
+  .billing-switcher {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
   }
 }
