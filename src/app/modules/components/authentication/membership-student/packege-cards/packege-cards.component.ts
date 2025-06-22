@@ -3,7 +3,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from "@angular/common";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
-import {MembershipStudentService} from "../../../../../services/membership-student.service";
+import { MembershipStudentService } from "../../../../../services/membership-student.service";
+import { PaymentService } from "../../../../../api-client";
 
 interface Feature {
   text: string;
@@ -16,7 +17,6 @@ interface Card {
   price: number;
   priceDisplay: string;
   features: Feature[];
-  stripePriceId?: string;
 }
 
 type BillingCycle = 'annual' | 'monthly';
@@ -35,103 +35,24 @@ type BillingCycle = 'annual' | 'monthly';
 })
 export class PackegeCardsComponent implements OnInit {
   cards: Record<BillingCycle, Card[]> = {
-    annual: [
-      {
-        id: 'prod_annual_basic',
-        title: 'Paketa Bazë',
-        price: 200,
-        priceDisplay: '200 €/year',
-        stripePriceId: 'price_annual_basic',
-        features: [
-          { text: '3 HD video lessons', available: true },
-          { text: '1 Official exam', available: true },
-          { text: 'Practice quizzes', available: false },
-          { text: 'Email support', available: false }
-        ]
-      },
-      {
-        id: 'prod_annual_standard',
-        title: 'Paketa Standarde',
-        price: 400,
-        priceDisplay: '400 €/year',
-        stripePriceId: 'price_annual_standard',
-        features: [
-          { text: '10 HD video lessons', available: true },
-          { text: '3 Official exams', available: true },
-          { text: 'Practice quizzes', available: true },
-          { text: 'Priority email support', available: true }
-        ]
-      },
-      {
-        id: 'prod_annual_premium',
-        title: 'Paketa Premium',
-        price: 600,
-        priceDisplay: '600 €/year',
-        stripePriceId: 'price_annual_premium',
-        features: [
-          { text: 'Unlimited HD video lessons', available: true },
-          { text: '5 Official exams', available: true },
-          { text: 'Practice quizzes', available: true },
-          { text: '24/7 Priority support', available: true },
-          { text: 'Personal tutor sessions', available: true }
-        ]
-      }
-    ],
-    monthly: [
-      {
-        id: 'prod_monthly_basic',
-        title: 'Paketa Bazë',
-        price: 20,
-        priceDisplay: '20 €/month',
-        stripePriceId: 'price_monthly_basic',
-        features: [
-          { text: '3 HD video lessons', available: true },
-          { text: '1 Official exam', available: true },
-          { text: 'Practice quizzes', available: false },
-          { text: 'Email support', available: false }
-        ]
-      },
-      {
-        id: 'prod_monthly_standard',
-        title: 'Paketa Standarde',
-        price: 40,
-        priceDisplay: '40 €/month',
-        stripePriceId: 'price_monthly_standard',
-        features: [
-          { text: '10 HD video lessons', available: true },
-          { text: '3 Official exams', available: true },
-          { text: 'Practice quizzes', available: true },
-          { text: 'Priority email support', available: true }
-        ]
-      },
-      {
-        id: 'prod_monthly_premium',
-        title: 'Paketa Premium',
-        price: 60,
-        priceDisplay: '60 €/month',
-        stripePriceId: 'price_monthly_premium',
-        features: [
-          { text: 'Unlimited HD video lessons', available: true },
-          { text: '5 Official exams', available: true },
-          { text: 'Practice quizzes', available: true },
-          { text: '24/7 Priority support', available: true },
-          { text: 'Personal tutor sessions', available: true }
-        ]
-      }
-    ]
+    annual: [],
+    monthly: []
   };
 
   selectedCard: Card | null = null;
   packegeForm!: FormGroup;
+  paymentInfo: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private membershipStudentService: MembershipStudentService
-  ) {}
+    private membershipStudentService: MembershipStudentService,
+    private _paymentInfoService: PaymentService
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
     this.setupFormListeners();
+    this.loadInfo();
   }
 
   initForm() {
@@ -141,7 +62,6 @@ export class PackegeCardsComponent implements OnInit {
   }
 
   setupFormListeners() {
-    // Aggiorna il form state quando cambia la selezione
     this.packegeForm.valueChanges.subscribe(() => {
       this.selectedCard = null;
       this.membershipStudentService.setSelectedPackage(null);
@@ -156,5 +76,67 @@ export class PackegeCardsComponent implements OnInit {
   selectCard(card: Card) {
     this.selectedCard = card;
     this.membershipStudentService.setSelectedPackage(card);
+  }
+
+  private loadInfo() {
+    this.getPaymentInfo();
+  }
+
+  private getPaymentInfo() {
+    this._paymentInfoService.apiPaymentsGet().subscribe(res => {
+      this.paymentInfo = res;
+      this.mapApiDataToCards();
+    });
+  }
+
+  private mapApiDataToCards() {
+    // Clear existing cards
+    this.cards = { annual: [], monthly: [] };
+
+    // Define feature templates for each package type
+    const featureTemplates: Record<string, Feature[]> = {
+      "Bazë": [
+        { text: '3 HD video lessons', available: true },
+        { text: '1 Official exam', available: true },
+        { text: 'Practice quizzes', available: false },
+        { text: 'Email support', available: false }
+      ],
+      "Standarde": [
+        { text: '10 HD video lessons', available: true },
+        { text: '3 Official exams', available: true },
+        { text: 'Practice quizzes', available: true },
+        { text: 'Priority email support', available: true }
+      ],
+      "Premium": [
+        { text: 'Unlimited HD video lessons', available: true },
+        { text: '5 Official exams', available: true },
+        { text: 'Practice quizzes', available: true },
+        { text: '24/7 Priority support', available: true },
+        { text: 'Personal tutor sessions', available: true }
+      ]
+    };
+
+    // Map API data to cards
+    this.paymentInfo.forEach(item => {
+      const card: Card = {
+        id: item.id,
+        title: item.name,
+        price: item.price / 100,
+        priceDisplay: this.getPriceDisplay(item.price / 100, item.type),
+        features: [...featureTemplates[item.name]]
+      };
+
+      if (item.type === 'yearly') {
+        this.cards.annual.push(card);
+      } else if (item.type === 'monthly') {
+        this.cards.monthly.push(card);
+      }
+    });
+  }
+
+  private getPriceDisplay(price: number, type: string): string {
+    return type === 'yearly'
+      ? `${price} €/year`
+      : `${price} €/month`;
   }
 }

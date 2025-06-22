@@ -1,0 +1,31 @@
+<div class="tabs">
+  <button *ngFor="let typeClass of typeClasses" (click)="selectTab(typeClass)"
+          [class.active]="selectedTab === typeClass">
+    <ng-container [ngSwitch]="typeClass">
+      <app-first-svg *ngSwitchCase="TypeClass.First"></app-first-svg>
+      <app-second-svg *ngSwitchCase="TypeClass.Second"></app-second-svg>
+      <app-third-svg *ngSwitchCase="TypeClass.Third"></app-third-svg>
+      <app-fourth-svg *ngSwitchCase="TypeClass.Fourth"></app-fourth-svg>
+      <app-fifth-svg *ngSwitchCase="TypeClass.Fifth"></app-fifth-svg>
+      <app-sixth-svg *ngSwitchCase="TypeClass.Sixth"></app-sixth-svg>
+      <app-seventh-svg *ngSwitchCase="TypeClass.Seventh"></app-seventh-svg>
+      <app-eighth-svg *ngSwitchCase="TypeClass.Eighth"></app-eighth-svg>
+      <app-nineth-svg *ngSwitchCase="TypeClass.Nineth"></app-nineth-svg>
+    </ng-container>
+  </button>
+</div>
+
+<div class="category-tabs">
+  <button *ngFor="let subject of subjects" (click)="selectSubject(subject)"
+          [class.active]="selectedSubject === subject">
+    <span>{{ subjectLabels[subject] }}</span>
+    <ng-container [ngSwitch]="subject">
+      <letersi-svg *ngSwitchCase="Subject.Literature"></letersi-svg>
+      <matematik-svg *ngSwitchCase="Subject.Mathematics"></matematik-svg>
+      <gjeografi-svg *ngSwitchCase="Subject.Geography"></gjeografi-svg>
+      <shkenc-svg *ngSwitchCase="Subject.Science"></shkenc-svg>
+      <anglisht-svg *ngSwitchCase="Subject.English"></anglisht-svg>
+      <histori-svg *ngSwitchCase="Subject.History"></histori-svg>
+    </ng-container>
+  </button>
+</div>

@@ -1,11 +1,13 @@
 import {Routes} from '@angular/router';
 import {PortalLayoutComponent} from "./portal-layout.component";
 import {roleGuard} from "../../../guards/role.guard";
+import {userResolver} from "../../../helpers/resolvers/user.resolver";
 
 export const PortalLayoutsRoutes: Routes = [
   {
     path: '',
     component: PortalLayoutComponent,
+    resolve: {user: userResolver},
     children: [
       {
         path: '',
@@ -25,6 +27,49 @@ export const PortalLayoutsRoutes: Routes = [
         ]
       },
       {
+        path: 'admin',
+        children: [
+          {
+            path: 'panel',
+            title: 'Panel',
+            canActivate: [roleGuard('Admin')],
+            loadComponent: () => import('../admin/panel/panel.component')
+              .then(m => m.PanelComponent)
+          },
+          {
+            path: 'users',
+            title: 'Users',
+            canActivate: [roleGuard('Admin')],
+            loadComponent: () => import('../admin/users/users.component')
+              .then(m => m.UsersComponent)
+          },
+          {
+            path: 'learnhub',
+            canActivate: [roleGuard('Admin')],
+            children: [
+              {
+                path: '',
+                title: 'Learnhub',
+                loadComponent: () => import('../admin/learnhub/learnhub.component')
+                  .then(m => m.LearnhubComponent)
+              },
+              {
+                path: 'manage',
+                title: 'Shto Learnhub',
+                loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-learnhub.component')
+                  .then(m => m.ManageLearnhubComponent)
+              },
+              {
+                path: 'manage/:id',
+                title: 'Modifiko Learnhub',
+                loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-learnhub.component')
+                  .then(m => m.ManageLearnhubComponent)
+              }
+            ]
+          }
+        ],
+      },
+      {
         path: 'student',
         children: [
           {
@@ -34,9 +79,15 @@ export const PortalLayoutsRoutes: Routes = [
           },
           {
             path: 'dashboard',
-            canActivate: [roleGuard('Student')],
+            canActivate: [roleGuard('Student', 'Admin')],
             loadComponent: () => import('../student/dashboard/dashboard.component')
               .then(m => m.DashboardComponent)
+          },
+          {
+            path: 'kurset',
+            canActivate: [roleGuard('Student', 'Admin')],
+            loadComponent: () => import('../student/courses/courses.component')
+              .then(m => m.CoursesComponent)
           },
 
         ]

@@ -1,7 +1,34 @@
 <div class="container">
   <app-header class="header"></app-header>
-  <main class="content">
-    <router-outlet></router-outlet>
-  </main>
+  @if (showSideNav()) {
+    <!-- Layout con sidenav -->
+    <mat-sidenav-container class="content-container">
+      <mat-sidenav #sidenav
+                   mode="side"
+                   [(opened)]="isSideNavOpen"
+                   class="admin-sidenav"
+                   (mouseenter)="onSidenavHover()"
+                   (mouseleave)="onSidenavLeave()">
+        <app-sidebar></app-sidebar>
+      </mat-sidenav>
+
+      <mat-sidenav-content [class.sidenav-closed]="!isSideNavOpen">
+        <button mat-icon-button
+                class="toggle-btn"
+                (click)="toggleSideNav()"
+                [matTooltip]="isSideNavOpen ? 'Mbyll menu' : 'Hap menu'">
+          <mat-icon>{{isSideNavOpen ? 'chevron_left' : 'chevron_right'}}</mat-icon>
+        </button>
+
+        <main class="content-admin">
+          <router-outlet></router-outlet>
+        </main>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  } @else {
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  }
   <app-footer class="footer"></app-footer>
 </div>

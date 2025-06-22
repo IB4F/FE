@@ -45,6 +45,10 @@ button {
   --mdc-outlined-text-field-container-shape: 40px !important;
 }
 
+.mat-mdc-paginator .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 20px !important; /* o il valore di default che preferisci */
+}
+
 .mdc-menu-surface.mat-mdc-select-panel {
   padding: 0px !important;
   margin: 5px 10px 0 10px;

@@ -7,10 +7,10 @@ import {MatButtonModule} from "@angular/material/button";
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService, ResetPasswordDTO} from "../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ConfirmPasswordValidator} from "../../../../helpers/customValidators/confirm-password.validator";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
+import {AuthService, ResetPasswordDTO} from "../../../../api-client";
 
 @Component({
   selector: 'app-reset-password',

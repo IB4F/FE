@@ -10,8 +10,8 @@ import {MatInputModule} from "@angular/material/input";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
-import {Class, DetailsService} from "../../../../api-client";
 import {MatSelectModule} from "@angular/material/select";
+import {Class, DetailsService} from "../../../../api-client";
 
 @Component({
   selector: 'app-register',
@@ -32,7 +32,7 @@ import {MatSelectModule} from "@angular/material/select";
   styleUrl: './register.component.scss',
   providers: [provideNativeDateAdapter()]
 })
-export class RegisterComponent implements OnInit {
+export class  RegisterComponent implements OnInit {
   registerFormGroup!: FormGroup;
   hidePass = true;
   classesList: Class[] = [];

@@ -8,15 +8,17 @@
       </div>
     </div>
     <div class="h-right" *ngIf="isLogged; else notLoggedIn">
-      <button mat-button routerLink="/student/dashboard">Dashboardi im</button>
-      <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu">
-        FM
+      <button *ngIf="showDashboard()" mat-button routerLink="/student/dashboard">Dashboardi im</button>
+      <button *ngIf="showPanel()" mat-button routerLink="/admin/panel">Panel</button>
+      <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu"
+           [matTooltip]="(user$ | async)?.firstName + ' ' + (user$ | async)?.lastName">
+        {{ initials$ | async }}
       </div>
       <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>
-      <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">
-        <add-quiz-svg></add-quiz-svg>
-      </div>
-      <mat-icon class="notification">notifications</mat-icon>
+      <!--      <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">-->
+      <!--        <add-quiz-svg></add-quiz-svg>-->
+      <!--      </div>-->
+      <mat-icon class="notification" routerLink="/student/kurset">notifications</mat-icon>
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item routerLink="profili">
           <mat-icon>person</mat-icon>

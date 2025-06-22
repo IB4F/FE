@@ -15,7 +15,6 @@ import {loaderInterceptor} from "./interceptors/loader.interceptor";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideClientHydration(),
     provideHttpClient(
       withInterceptors([
         loaderInterceptor,

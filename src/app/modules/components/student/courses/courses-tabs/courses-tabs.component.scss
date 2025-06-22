@@ -1,0 +1,245 @@
+$font-family: 'Lufga-Regular';
+$primary-color: white;
+$active-color: #f0f0f0;
+$inactive-opacity: 0.5;
+$active-opacity: 1;
+$transition-duration: 0.3s;
+$hover-color: blue;
+$button-padding: 0.5rem 1rem;
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  padding: 10px 0;
+  border-radius: 40px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+  button {
+    background: none;
+    border: none;
+    color: $primary-color;
+    padding: $button-padding;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: $font-family;
+    transition: transform $transition-duration, opacity $transition-duration;
+
+    &.active {
+      transform: scale(1.5);
+      opacity: $active-opacity;
+      padding: 0;
+    }
+
+    &:not(.active) {
+      opacity: $inactive-opacity;
+    }
+  }
+}
+
+.category-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  margin-top: 20px;
+  padding: 1rem;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $button-padding;
+    font-size: 0.875rem;
+    font-family: $font-family;
+    color: black;
+    transition: transform $transition-duration, opacity $transition-duration;
+
+    &.active {
+      background-color: $active-color;
+      transform: scale(1.2);
+      border-radius: 25px;
+      opacity: $active-opacity;
+    }
+
+    &:not(.active) {
+      opacity: 0.7;
+    }
+  }
+}
+
+.tab-content {
+  padding: 2rem;
+  color: black;
+  margin-top: 20px;
+
+  h3,
+  p {
+    font-family: $font-family;
+  }
+
+  h3 {
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .quiz-content {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+
+    .icon {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: 15px;
+
+      mat-icon {
+        margin-left: 15px;
+        cursor: pointer;
+
+        &:nth-child(1) {
+          margin: 0;
+          color: #f9890e;
+        }
+
+        &:nth-child(2) {
+          margin-left: 10px;
+          color: #c70000;
+        }
+      }
+    }
+  }
+
+  .quiz-question {
+    margin: 0;
+    text-decoration: none;
+    color: initial;
+    transition: color $transition-duration, text-decoration $transition-duration;
+
+    &.quiz-answered {
+      color: green;
+    }
+
+    &.quiz-enrolled {
+      color: orange;
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: $hover-color;
+      text-decoration: underline;
+    }
+  }
+
+}
+
+// Media Queries for different screen sizes
+// For tablets (768px - 1024px)
+@media (max-width: 1024px) {
+  .tabs {
+    button {
+      font-size: 0.9rem;
+
+      &.active {
+        transform: scale(1.5);
+      }
+    }
+  }
+
+  .category-tabs button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+
+    &.active {
+      transform: scale(1.15);
+    }
+  }
+
+  .tab-content {
+    padding: 1.5rem;
+
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// For mobile screens (480px - 768px)
+@media (max-width: 768px) {
+  .tabs {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0.5rem;
+
+    button {
+      font-size: 0.85rem;
+
+      &.active {
+        transform: scale(1.8);
+      }
+    }
+  }
+
+  .category-tabs {
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-around;
+
+    button {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+
+      &.active {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .tab-content {
+    // grid-template-columns: repeat(3, 1fr);
+    padding: 1rem;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// For very small screens (below 480px)
+@media (max-width: 480px) {
+  .tabs {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0.3rem;
+
+    button {
+      font-size: 0.75rem;
+
+      &.active {
+        transform: scale(1.5);
+      }
+    }
+  }
+
+  .category-tabs {
+    justify-content: space-evenly;
+    grid-template-columns: repeat(3, 1fr);
+
+    button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+
+      &.active {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 0.75rem;
+
+    h3 {
+      font-size: 1rem;
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { NgToastService } from "ng-angular-popup";
 import { map, take } from "rxjs";
 
-export const roleGuard = (expectedRole: string): CanActivateFn => {
+export const roleGuard = (...expectedRoles: string[]): CanActivateFn => {
   return (route, state) => {
     const tokenService = inject(TokenStorageService);
     const router = inject(Router);
@@ -20,8 +20,9 @@ export const roleGuard = (expectedRole: string): CanActivateFn => {
         }
 
         const userRole = tokenService.getRole();
-        if (userRole !== expectedRole) {
-          notificationService.danger(`Nuk keni akses si ${expectedRole}!`, 'GABIM', 3000);
+        if (!userRole || !expectedRoles.includes(userRole)) {
+          const rolesString = expectedRoles.join(' ose ');
+          notificationService.danger(`Nuk keni akses si ${rolesString}!`, 'GABIM', 3000);
           router.navigate(['/']);
           return false;
         }

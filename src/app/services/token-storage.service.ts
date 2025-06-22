@@ -31,6 +31,7 @@ export class TokenStorageService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.loggedInSubject.next(false);
+    this.userRoleSubject.next(null);
   };
 
   loadTokensFromStorage = (): void => {

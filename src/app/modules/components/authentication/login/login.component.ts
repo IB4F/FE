@@ -13,6 +13,9 @@ import {ForgetPasswordComponent} from "../forget-password/forget-password.compon
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../../services/token-storage.service";
 import {AuthService} from "../../../../api-client";
+import {ROUTES, UserRole} from "../../../shared/constant/enums";
+import {switchMap} from "rxjs";
+import {UserService} from "../../../../services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -31,7 +34,7 @@ import {AuthService} from "../../../../api-client";
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   loginFormGroup!: FormGroup;
   hidePass = true;
 
@@ -39,7 +42,8 @@ export class LoginComponent implements OnInit{
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
     private toast: NgToastService,
-    private tokenStorageService: TokenStorageService,
+    private _tokenStorageService: TokenStorageService,
+    private userService: UserService,
     private router: Router,
     private dialog: MatDialog
   ) {
@@ -57,17 +61,18 @@ export class LoginComponent implements OnInit{
   }
 
   onLogin() {
-    this._authService.loginPost(this.loginFormGroup.value).subscribe({
-      next: (resp) => {
-        this.tokenStorageService.saveTokens(resp?.data);
-        this.toast.success(resp?.message, 'SUKSES', 3000);
-        this.router.navigate(['student', 'dashboard']);
-        this.loginFormGroup.reset();
+    this._authService.loginPost(this.loginFormGroup.value).pipe(
+      switchMap(resp => {
+        this._tokenStorageService.saveTokens(resp?.data);
+        this.toast.success(resp?.message, 'SUCCESS', 3000);
+        return this.userService.loadUserData(true);
+      })
+    ).subscribe({
+      next: () => {
+        this.navigateTo();
       },
-      error: (error) => {
-        this.toast.danger(error?.error?.message, 'ERROR', 3000);
-      }
-    })
+      error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)
+    });
   }
 
   isLoginFormValid(): boolean {
@@ -82,5 +87,21 @@ export class LoginComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       console.log('Dialog closed:', result);
     });
+  }
+
+  navigateTo() {
+    const role = this._tokenStorageService.getRole();
+    switch (role) {
+      case UserRole.ADMIN:
+        this.router.navigate([ROUTES.ADMIN]);
+        break;
+      case UserRole.STUDENT:
+        this.router.navigate([ROUTES.STUDENT]);
+        break;
+      default:
+        this.router.navigate([ROUTES.DEFAULT]);
+        this.toast.warning('Roli nuk njihet, ridrejtimi në faqen kryesore', 'Kujdes', 3000);
+        break;
+    }
   }
 }

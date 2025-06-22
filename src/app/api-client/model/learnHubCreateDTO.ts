@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CreateLinkDTO } from './createLinkDTO';
 
 
 export interface LearnHubCreateDTO { 
@@ -15,5 +16,6 @@ export interface LearnHubCreateDTO {
     classType?: string | null;
     subject?: string | null;
     isFree?: boolean;
+    links?: Array<CreateLinkDTO> | null;
 }
 

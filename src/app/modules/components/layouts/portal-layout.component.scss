@@ -10,14 +10,72 @@
     z-index: 10;
   }
 
-  .content {
+  .content-container {
     flex: 1;
     margin-top: 80px;
     padding-bottom: 60px;
+    height: calc(100vh - 140px);
+
+    .admin-sidenav {
+      width: 250px;
+      background: #259ccb4f;
+      color: white;
+      padding-top: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      margin-top: 80px;
+      height: calc(100vh - 80px);
+      position: fixed;
+      transition: width 0.3s ease;
+
+      &.mat-drawer-collapsed {
+        width: 0;
+        overflow: hidden;
+      }
+    }
+
+    mat-sidenav-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+      position: relative;
+
+      &.sidenav-closed {
+        margin-left: 0;
+      }
+
+      .toggle-btn {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        z-index: 10;
+        background: rgb(37 156 203);
+        color: white;
+      }
+
+      .content {
+        width: 100%;
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    margin-top: 80px;
+    padding: 20px;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 140px);
+  }
+
+  .content-admin{
+    flex: 1;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 140px);
   }
 
   .footer {
     width: 100%;
     margin-top: auto;
+    position: relative;
+    z-index: 5;
   }
 }

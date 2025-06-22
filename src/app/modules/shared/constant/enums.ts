@@ -26,9 +26,9 @@ export enum Difficulty {
 }
 
 export enum UserRole {
-  NXENES = 'NXENES',
-  MESUES = 'MESUES',
-  ADMIN = 'ADMIN'
+  STUDENT = 'Student',
+  SUPERVIZOR = 'Supervizor',
+  ADMIN = 'Admin'
 }
 
 export enum ProfileTabs {
@@ -40,3 +40,10 @@ export enum NavigationDirection {
   NEXT = 'next',
   PREVIOUS = 'previous'
 }
+
+export enum ROUTES {
+  ADMIN = '/admin/panel',
+  STUDENT = '/student/dashboard',
+  DEFAULT = ''
+}
+

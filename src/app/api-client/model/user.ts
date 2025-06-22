@@ -32,9 +32,10 @@ export interface User {
     postalCode?: string | null;
     passwordResetToken?: string | null;
     passwordResetTokenExpiry?: string | null;
-    refreshToken?: string;
-    refreshTokenExpiry?: string;
+    refreshToken?: string | null;
+    refreshTokenExpiry?: string | null;
     payments?: Array<Payment> | null;
+    createAt?: string;
 }
 export namespace User {
 }

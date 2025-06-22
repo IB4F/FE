@@ -12,5 +12,6 @@
 export interface PaymentSessionRequestDTO { 
     email?: string | null;
     registrationType?: string | null;
+    planId?: string;
 }
 

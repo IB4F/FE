@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {AfterContentChecked, ChangeDetectorRef, Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 import {LoginComponent} from "./modules/components/authentication/login/login.component";
 import {NgToastModule, ToasterPosition} from "ng-angular-popup";
 import {LoaderService} from "./modules/shared/components/loader/loader.service";
@@ -18,10 +18,18 @@ import {LoaderComponent} from "./modules/shared/components/loader/loader.compone
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements AfterContentChecked {
   title = 'brain-gain-fe';
   isLoading$ = this.loaderService.isLoading$;
   protected readonly ToasterPosition = ToasterPosition;
 
-  constructor(private loaderService: LoaderService) {}
+  constructor(
+    private loaderService: LoaderService,
+    private changeDetector: ChangeDetectorRef
+  ) {
+  }
+
+  ngAfterContentChecked(): void {
+    this.changeDetector.detectChanges();
+  }
 }
