@@ -4,6 +4,7 @@ import {Subjects, TypeClass} from "../../../../shared/constant/enums";
 import {ActivatedRoute} from "@angular/router";
 import * as Grade from "../../../../shared/components/svg/grades";
 import * as Category from "../../../../shared/components/svg/categories";
+import {LearnHubsService} from "../../../../../api-client";
 
 @Component({
   selector: 'app-courses-tabs',
@@ -50,6 +51,7 @@ export class CoursesTabsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private _learnHubsService: LearnHubsService,
   ) {
   }
 
@@ -60,14 +62,30 @@ export class CoursesTabsComponent implements OnInit {
         this.selectedTab = tab;
       }
     });
+    this.getCourses(this.selectedTab, this.selectedSubject);
+
   }
 
   selectTab(tab: TypeClass) {
     this.selectedTab = tab;
     this.selectedSubject = this.subjects[0];
+    this.getCourses(this.selectedTab, this.selectedSubject);
+
   }
 
   selectSubject(subject: Subjects) {
     this.selectedSubject = subject;
+    this.getCourses(this.selectedTab, this.selectedSubject);
+  }
+
+  getCourses(typeClass: TypeClass, subject: Subjects) {
+    this._learnHubsService.apiLearnHubsFilterLearnhubsGet(typeClass, subject).subscribe({
+      next: (response) => {
+        console.log('Courses fetched:', response);
+      },
+      error: (error) => {
+        console.error('Error fetching courses:', error);
+      }
+    });
   }
 }

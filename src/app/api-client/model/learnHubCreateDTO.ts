@@ -16,6 +16,7 @@ export interface LearnHubCreateDTO {
     classType?: string | null;
     subject?: string | null;
     isFree?: boolean;
+    difficulty?: number;
     links?: Array<CreateLinkDTO> | null;
 }
 

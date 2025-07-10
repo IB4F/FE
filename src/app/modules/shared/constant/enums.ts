@@ -1,13 +1,16 @@
 export enum TypeClass {
-  First = 'Klasa e pare',
-  Second = 'Klasa e dyt',
-  Third = 'Klasa tret',
-  Fourth = 'Klasa e kater',
-  Fifth = 'Klasa e pest',
-  Sixth = 'Klasa e gjasht',
-  Seventh = 'Klasa e shtat',
-  Eighth = 'Klasa e tet',
-  Nineth = 'Klasa e nent',
+  First = 'Klasa 1',
+  Second = 'Klasa 2',
+  Third = 'Klasa 3',
+  Fourth = 'Klasa 4',
+  Fifth = 'Klasa 5',
+  Sixth = 'Klasa 6',
+  Seventh = 'Klasa 7',
+  Eighth = 'Klasa 8',
+  Nineth = 'Klasa 9',
+  Tenth = 'Klasa 10',
+  Eleventh = 'Klasa 11',
+  Twelventh = 'Klasa 12',
 }
 
 export enum Subjects {

@@ -68,7 +68,20 @@
 
       mat-icon {
         cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .add-icon {
+        color: #2196F3;
+      }
+
+      .delete-icon {
         color: #f44336;
+
       }
     }
   }

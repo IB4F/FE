@@ -38,10 +38,21 @@ export const PortalLayoutsRoutes: Routes = [
           },
           {
             path: 'users',
-            title: 'Users',
             canActivate: [roleGuard('Admin')],
-            loadComponent: () => import('../admin/users/users.component')
-              .then(m => m.UsersComponent)
+            children: [
+              {
+                path: '',
+                title: 'Users',
+                loadComponent: () => import('../admin/users/users.component')
+                  .then(m => m.UsersComponent)
+              },
+              {
+                path: 'manageUser/:id',
+                title: 'Modifiko Userin',
+                loadComponent: () => import('../admin/users/manage-user/manage-user.component')
+                  .then(m => m.ManageUserComponent)
+              }
+            ]
           },
           {
             path: 'learnhub',

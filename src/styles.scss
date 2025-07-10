@@ -72,3 +72,14 @@ button {
 .mat-mdc-radio-button.mat-accent {
   --mat-radio-checked-ripple-color: $blueCustom !important;
 }
+
+.cdk-global-overlay-wrapper {
+  /* Replace aria-hidden with inert */
+  &:not(:empty) {
+    app-root {
+      inert {
+        display: none;
+      }
+    }
+  }
+}

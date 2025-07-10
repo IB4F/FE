@@ -1,16 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdminUserService } from "../../../../api-client";
-import { CommonModule } from "@angular/common";
-import { NgToastService } from "ng-angular-popup";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
-import { MatIconButton } from "@angular/material/button";
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {AdminUserDetailsDTO, AdminUserService} from "../../../../api-client";
+import {CommonModule} from "@angular/common";
+import {NgToastService} from "ng-angular-popup";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
+import {MatSort, MatSortModule} from "@angular/material/sort";
+import {MatIconModule} from "@angular/material/icon";
+import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
+import {MatIconButton} from "@angular/material/button";
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-users',
@@ -46,8 +49,11 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private _adminUserService: AdminUserService,
-    private toast: NgToastService
-  ) {}
+    private toast: NgToastService,
+    public router: Router,
+    private dialog: MatDialog
+  ) {
+  }
 
   ngOnInit() {
     this.getUserslist();
@@ -92,5 +98,36 @@ export class UsersComponent implements OnInit {
     this.pageNumber = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getUserslist();
+  }
+
+  onEdit(user: AdminUserDetailsDTO) {
+    this.router.navigate(['/admin/users/manageUser', user.id]);
+  }
+
+  onDelete(user: AdminUserDetailsDTO) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      data: {
+        title: 'Fshi Përdoruesin',
+        message: 'Jeni i sigurt që dëshironi të fshini këtë përdorues?',
+        id: user.id
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.success) {
+        this.deleteUser(user.id);
+      }
+    })
+  }
+
+  deleteUser(userId: any) {
+    this._adminUserService.apiAdminUsersIdDelete(userId).subscribe({
+      next: (resp) => {
+        this.toast.success(resp?.message, 'SUCCESS', 3000);
+        this.getUserslist();
+      },
+      error: (error) => {
+        this.toast.danger(error?.error?.message, 'GABIM', 3000);
+      }
+    });
   }
 }

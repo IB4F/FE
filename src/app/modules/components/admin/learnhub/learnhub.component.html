@@ -8,6 +8,13 @@
       Përdorni me kujdes funksionet e modifikimit dhe fshirjes për të mbajtur platformën e përditësuar.
     </p>
   </div>
+  <div class="button-row">
+    <button mat-raised-button color="primary" class="add-button" (click)="goToAddLearnHub()">
+      <mat-icon>add</mat-icon>
+      Aggiungi LearnHub
+    </button>
+  </div>
+  <ng-container *ngIf="this.dataSource.data.length > 0">
   <!-- Barra di ricerca posizionata qui -->
   <div class="search-container">
     <mat-form-field appearance="outline" class="search-field">
@@ -20,15 +27,9 @@
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
-  <div class="button-row">
-    <button mat-raised-button color="primary" class="add-button" (click)="goToAddLearnHub()">
-      <mat-icon>add</mat-icon>
-      Aggiungi LearnHub
-    </button>
-  </div>
   <div class="mat-elevation-z8">
     <!-- Table -->
-    <table mat-table [dataSource]="dataSource" matSort>
+      <table mat-table [dataSource]="dataSource" matSort>
 
       <!-- Title Column -->
       <ng-container matColumnDef="title">
@@ -95,4 +96,8 @@
     [pageSizeOptions]="pageSizeOptions"
     (page)="onPageChange($event)">
   </mat-paginator>
+  </ng-container>
+  <div *ngIf="dataSource.data.length === 0" class="no-data-message">
+    <p>Nuk ka LearnHubs të disponueshëm. Mund të shtoni të reja duke përdorur butonin "Shto LearnHub".</p>
+  </div>
 </div>

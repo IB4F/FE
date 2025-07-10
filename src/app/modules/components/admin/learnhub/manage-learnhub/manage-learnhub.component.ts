@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
@@ -56,9 +56,12 @@ export class ManageLearnhubComponent implements OnInit {
 
   ngOnInit(): void {
     this.idLearnHub = this.route.snapshot.params['id'];
-    this.getLearnHubInfo();
     this.loadCombos();
     this.initializeCategoryManagementForm();
+
+    if (this.idLearnHub) {
+      this.getLearnHubInfo();
+    }
   }
 
   get isEditMode(): boolean {
@@ -68,7 +71,8 @@ export class ManageLearnhubComponent implements OnInit {
   getLearnHubInfo() {
     this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub).subscribe({
       next: (resp) => {
-        console.log(resp);
+        this.learHub = resp;
+        this.patchFormWithLearnhubData();
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'GABIM', 3000);
@@ -77,34 +81,48 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   initializeCategoryManagementForm() {
-    // Define form control values
-    const formValues = {
-      title: this.learHub?.title || '',
-      typeClass: this.learHub?.typeClass || '',
-      subject: this.learHub?.subject || '',
-      description: this.learHub?.description || '',
-      isFree: this.learHub?.isFree || ''
-    };
-
-    // Initialize form group with conditionally disabled controls
     this.learnHubFormGroup = this._formBuilder.group({
-      title: [formValues.title, Validators.required],
-      classType: [{value: formValues.typeClass, disabled: !!formValues.typeClass}, Validators.required],
-      subject: [{value: formValues.subject, disabled: !!formValues.subject}, Validators.required],
-      description: [formValues.description, Validators.required],
-      isFree: [formValues.isFree, Validators.required],
+      title: ['', Validators.required],
+      classType: ['', Validators.required],
+      subject: ['', Validators.required],
+      description: ['', Validators.required],
+      difficulty: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
+      isFree: ['', Validators.required],
       links: this._formBuilder.array([], requiredRowsValidator())
     });
+  }
 
-    // Populate numbered rows if available
-    if (this.learHub?.links) {
-      this.populateNumberedRows(this.learHub.links);
+  patchFormWithLearnhubData() {
+    if (this.learHub) {
+      this.learnHubFormGroup.patchValue({
+        title: this.learHub.title,
+        classType: this.getClassName(this.learHub.classType),
+        subject: this.getSubjectName(this.learHub.subject),
+        description: this.learHub.description,
+        difficulty: this.learHub.difficulty,
+        isFree: this.learHub.isFree
+      });
+
+      if (this.learHub.typeClass) {
+        this.learnHubFormGroup.get('classType')?.disable();
+      }
+      if (this.learHub.subject) {
+        this.learnHubFormGroup.get('subject')?.disable();
+      }
+
+      if (this.learHub.links) {
+        this.populateNumberedRows(this.learHub.links);
+      }
     }
   }
 
   populateNumberedRows(rows: any[]) {
+    while (this.links.length !== 0) {
+      this.links.removeAt(0);
+    }
     rows.forEach(row => {
       const linkGroup = this._formBuilder.group({
+        id: [row.id],
         number: [row.number],
         title: [row.title, Validators.required]
       });
@@ -119,6 +137,7 @@ export class ManageLearnhubComponent implements OnInit {
   addRow() {
     const linkNumber = this.links.length + 1;
     const linkGroup = this._formBuilder.group({
+      id: [null],
       number: [linkNumber],
       title: ['', Validators.required]
     });
@@ -142,31 +161,25 @@ export class ManageLearnhubComponent implements OnInit {
 
   handleButtonClick() {
     if (!this.isFormValid()) return;
-    const formData = this.learnHubFormGroup.value;
+    const formData = this.learnHubFormGroup.getRawValue();
     const formattedData: LearnHubCreateDTO = {
       ...formData,
       isFree: formData.isFree === 'true'
     };
-    if (this.isEditMode) {
-      if (this.learHub._id !== undefined) {
-
-      }
-      if (this.learHub._id !== undefined) {
-        this.learnHubsService.apiLearnHubsUpdateLearnhubPut(this.learHub._id, formattedData).subscribe({
-          next: (resp) => {
-            this.toast.success(resp?.message, 'SUCCESS', 3000);
-          },
-          error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
-        });
-      } else {
-        this.toast.danger("LearnHub ID is undefined.", 'GABIM', 3000)
-      }
+    if (this.idLearnHub) {
+      this.learnHubsService.apiLearnHubsUpdateLearnhubPut(this.idLearnHub, formattedData).subscribe({
+        next: (resp) => {
+          this.toast.success(resp?.message, 'SUCCESS', 3000);
+        },
+        error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
+      });
     } else {
       //for the create
       this.learnHubsService.apiLearnHubsPostLearnhubPost(formattedData).subscribe({
         next: (resp) => {
-          this.toast.success(resp?.message, 'SUCCESS', 3000);
-          this.router.navigate(['/admin/learnhub']);
+          this.idLearnHub = resp;
+          this.getLearnHubInfo();
+          this.toast.success('Learnhubi u krijua', 'SUCCESS', 3000);
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       });
@@ -188,6 +201,21 @@ export class ManageLearnhubComponent implements OnInit {
     this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
       this.subjectList = res;
     })
+  }
+
+  getClassName(name: string): string | undefined {
+    console.log(name)
+    const foundClass = this.classesList.find(c => c.name === name);
+    return foundClass ? foundClass.id : '';
+  }
+
+  getSubjectName(name: string): string | undefined {
+    const foundSubject = this.subjectList.find(s => s.name === name);
+    return foundSubject ? foundSubject.id : '';
+  }
+
+  openAddQuizDialog(link: AbstractControl) {
+    const linkId = link.get('id')?.value;
   }
 
 }

@@ -16,6 +16,6 @@ export class CardsComponent {
   }
 
   navigateToCourses(tab: TypeClass) {
-    this.router.navigate(['/kurset'], {queryParams: {tab: tab}});
+    this.router.navigate(['/student/kurset'], {queryParams: {tab: tab}});
   }
 }

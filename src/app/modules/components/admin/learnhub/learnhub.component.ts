@@ -107,6 +107,16 @@ export class LearnhubComponent implements OnInit {
   }
 
   onDelete(learnHub: any) {
-    console.log(learnHub);
+    this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id).subscribe(
+      {
+        next: (resp) => {
+          this.toast.success(resp?.message, 'SUCCESS', 3000);
+          this.getLearnHublist();
+        },
+        error: (error) => {
+          this.toast.danger(error?.error?.message, 'GABIM', 3000);
+        }
+      }
+    )
   }
 }

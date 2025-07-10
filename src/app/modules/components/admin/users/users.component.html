@@ -70,11 +70,11 @@
             <mat-icon>expand_more</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="onEdit(user)">
               <mat-icon>edit</mat-icon>
               <span>Modifiko</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="onDelete(user)">
               <mat-icon>delete</mat-icon>
               <span>Elimino</span>
             </button>
