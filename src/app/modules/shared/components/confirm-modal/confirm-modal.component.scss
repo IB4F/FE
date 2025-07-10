@@ -1,0 +1,20 @@
+.modal-container {
+  padding: 16px;
+  min-width: 300px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.close-button {
+  margin-left: auto;
+}
+
+mat-dialog-content p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.87);
+}

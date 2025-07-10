@@ -1,0 +1,20 @@
+<div class="modal-container">
+  <!-- Titolo + Icona X -->
+  <div class="modal-header">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Messaggio -->
+  <div mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </div>
+
+  <!-- Bottoni -->
+  <div mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onConfirm()">Confirm</button>
+  </div>
+</div>

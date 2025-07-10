@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="title">
+    <h1>Menaxhimi i Përdoruesve - LearnHub</h1>
+    <p>
+      Ky seksion ju lejon të menaxhoni të gjithë përdoruesit e platformës LearnHub.
+      Nga këtu mund të shtoni, modifikoni ose fshini përdorues, si dhe të ndryshoni rolet e tyre.
+      Ju lutemi përdorni me kujdes këto funksione pasi ndryshimet mund të kenë ndikim direkt në përdorimin e platformës.
+    </p>
+  </div>
+
+  <form [formGroup]="userForm" class="form-container">
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Emer</mat-label>
+      <input matInput formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Mbiemer</mat-label>
+      <input matInput formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Roli</mat-label>
+      <input matInput formControlName="role">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Shkolla</mat-label>
+      <input matInput formControlName="school">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Qyteti</mat-label>
+      <input matInput formControlName="city">
+    </mat-form-field>
+
+
+    <div class="btn-container">
+      <button mat-raised-button color="primary" (click)="onUpdate()">
+        Përditëso
+      </button>
+    </div>
+  </form>
+</div>

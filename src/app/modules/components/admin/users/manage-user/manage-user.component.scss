@@ -1,0 +1,22 @@
+.container {
+  padding: 40px 10px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 30px;
+
+    h1,
+    p {
+      text-align: center;
+    }
+
+    p {
+      margin: 20px 0;
+      opacity: 0.75;
+    }
+  }
+}
