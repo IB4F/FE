@@ -1,0 +1,48 @@
+<div>
+  <div class="profile-header-modern">
+    <div class="profile-avatar-modern">
+      <span>{{ userInitials | uppercase }}</span>
+    </div>
+    <div class="profile-info-modern">
+      <h2>{{ fullName }}</h2>
+      <p>Menaxhoni informacionin personal dhe llogarinë tuaj.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="profileFormGroup" class="modern-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Emri</mat-label>
+        <input matInput formControlName="firstName">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mbiemri</mat-label>
+        <input matInput formControlName="lastName">
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Shkolla</mat-label>
+      <input matInput placeholder="Shkolla" formControlName="school">
+    </mat-form-field>
+    <!--    <mat-form-field appearance="outline">-->
+    <!--      <mat-label>Ditëlindja</mat-label>-->
+    <!--      <input matInput [matDatepicker]="picker" formControlName="birthday">-->
+    <!--      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>-->
+    <!--      <mat-datepicker #picker></mat-datepicker>-->
+    <!--    </mat-form-field>-->
+    <!--    <mat-form-field appearance="outline">-->
+    <!--      <mat-label>Emër përdoruesi</mat-label>-->
+    <!--      <input matInput formControlName="userName">-->
+    <!--    </mat-form-field>-->
+    <div class="form-actions">
+      <button mat-flat-button color="primary"
+              (click)="onSaveChanges()"
+      >Ruaj Ndryshimet
+      </button>
+    </div>
+  </form>
+</div>

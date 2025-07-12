@@ -1,0 +1,136 @@
+// ===============================================
+// ===============================================
+// VARIABILI DI STILE
+// Palette 2: Oasi Tropicale
+// ===============================================
+$background-color: #ffffff;
+$box-background-color: #ffffff;
+$icon-background-color: #e0f7fa; // Un ciano chiarissimo
+$text-color: #1f2937;
+$box-skew-angle: -10deg;
+
+// Gradiente vibrante verde/blu
+$hover-gradient: linear-gradient(135deg, #6DD5ED 0%, #259ccb 100%);
+
+
+// ===============================================
+// STILE DEL CONTENITORE PRINCIPALE
+// ===============================================
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  background-color: $background-color; // Utilizza il colore solido
+  min-height: 100vh; // Assicura che lo sfondo copra l'intera altezza della pagina
+  box-sizing: border-box;
+}
+
+
+// ===============================================
+// STILE DELLE CARD (DOMANDE E OPZIONI)
+// ===============================================
+.quiz-box {
+  background-color: $box-background-color;
+  border: 1px solid #e5e7eb; // Bordo sottile per definire le card
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  transform: skew($box-skew-angle);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  // Transizioni fluide per tutti gli effetti
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+
+  .box-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transform: skew(-$box-skew-angle); // Raddrizza il contenuto
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background-color: $icon-background-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $text-color;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    // Transizione per i cambi di colore al hover
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: $text-color;
+    // Transizione per il cambio di colore al hover
+    transition: color 0.3s ease;
+  }
+}
+
+
+// ===============================================
+// STRUTTURA E LAYOUT
+// ===============================================
+.question {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+  padding: 0 5%;
+}
+
+
+// ===============================================
+// EFFETTO HOVER INTERATTIVO PER LE OPZIONI
+// ===============================================
+.option {
+  cursor: pointer;
+
+  &:hover {
+    transform: skew($box-skew-angle) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: transparent; // Nascondi il bordo per un effetto gradiente pulito
+    background: $hover-gradient; // Applica il gradiente!
+
+    // Quando la card ha il gradiente, il testo e l'icona devono cambiare colore
+    .icon {
+      background-color: rgba(255, 255, 255, 0.2); // Sfondo icona semi-trasparente
+      color: #ffffff; // Testo icona bianco
+    }
+
+    .text {
+      color: #ffffff; // Testo bianco
+    }
+  }
+}
+
+
+// ===============================================
+// STILI RESPONSIVE PER DISPOSITIVI MOBILI
+// ===============================================
+@media (max-width: 768px) {
+  .quiz-container {
+    padding: 1rem;
+  }
+
+  .question {
+    width: 100%;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr; // Le opzioni vanno una sotto l'altra
+    padding: 0;
+  }
+}

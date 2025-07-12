@@ -1,0 +1,80 @@
+/* personal-info-tab.component.scss */
+.profile-header-modern {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.profile-avatar-modern {
+  width: 80px;
+  height: 80px;
+  background-color: #6c5ce7; /* Viola più moderno */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: 600;
+  margin-right: 25px;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.profile-info-modern h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+  font-weight: 700;
+}
+
+.profile-info-modern p {
+  color: #777;
+  font-size: 15px;
+  margin-top: 5px;
+}
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+
+  .form-row {
+    display: flex;
+    gap: 20px; /* Spazio tra i campi */
+    margin-bottom: 15px;
+
+    mat-form-field {
+      flex: 1; /* Distribuisce equamente lo spazio */
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px; /* Spazio sotto ogni campo */
+  }
+
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-wrapper {
+    border-radius: 8px; /* Angoli più arrotondati per i campi */
+  }
+
+  .form-actions {
+    margin-top: 30px;
+    text-align: right;
+
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 25px;
+      background-color: #007bff; /* Blu primario */
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+      }
+    }
+  }
+}

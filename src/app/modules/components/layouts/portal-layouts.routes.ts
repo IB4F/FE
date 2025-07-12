@@ -16,6 +16,11 @@ export const PortalLayoutsRoutes: Routes = [
           .then(m => m.LandingPageComponent)
       },
       {
+        path: 'settings',
+        loadComponent: () => import('../settings/settings.component')
+          .then(m => m.SettingsComponent)
+      },
+      {
         path: 'supervizor',
         children: [
           {
@@ -99,6 +104,12 @@ export const PortalLayoutsRoutes: Routes = [
             canActivate: [roleGuard('Student', 'Admin')],
             loadComponent: () => import('../student/courses/courses.component')
               .then(m => m.CoursesComponent)
+          },
+          {
+            path: 'quiz',
+            canActivate: [roleGuard('Student', 'Admin')],
+            loadComponent: () => import('../student/quiz/quiz.component')
+              .then(m => m.QuizComponent)
           },
 
         ]
