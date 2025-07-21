@@ -1,1 +1,103 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+
+  <section class="welcome-banner">
+    <div class="welcome-content">
+      <h2>Mirësevjen, {{ name }}!</h2>
+      <p class="motivation-quote">"Çdo ushtrim është një hap drejt zotërimit."</p>
+      <button class="cta-button" routerLink="/student/kurset">Eksploro kurse të reja</button>
+    </div>
+    <img src="assets/svgImages/banner/exam-submit.svg"
+         alt="Illustrazione di benvenuto."
+         class="banner-illustration">
+  </section>
+
+  <section class="metrics-summary">
+    <div class="metric-card">
+      <div class="metric-icon">
+        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="metric-value">72%</div>
+      <div class="metric-label">Progres Total</div>
+      <div class="progress-bar-overall" style="width: 72%;"></div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">
+        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 3a1 1 0 100 2h2a1 1 0 100-2h-2z"></path>
+          <path fill-rule="evenodd"
+                d="M4 10a4 4 0 014-4h4a4 4 0 110 8H8a4 4 0 01-4-4zm2 0a2 2 0 114 0 2 2 0 01-4 0zm10 0a2 2 0 10-4 0 2 2 0 004 0z"
+                clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="metric-value">1450</div>
+      <div class="metric-label">Pikë të Grumbulluara</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">
+        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd"
+                d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 6.293A1 1 0 015.586 7H4zm0 10v-5h12v5H4z"
+                clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <div class="metric-value">3/5</div>
+      <div class="metric-label">LearnHubs të Përfunduara</div>
+    </div>
+  </section>
+
+  <section class="recent-learnhubs">
+    <h3>LearnHub-et e Tua të Fundit</h3>
+    <div class="learnhub-cards-container">
+      <div class="learnhub-dashboard-card">
+        <div class="card-header">
+          <h4>LearnHub: Hyrje në Dizajn</h4>
+          <span class="hub-progress-percent">75%</span>
+        </div>
+        <div class="card-body">
+          <div class="progress-bar-hub">
+            <div class="progress-fill" style="width: 75%;"></div>
+          </div>
+          <p class="last-activity">Ushtrimi i fundit: Ngjyrat dhe Psikologjia</p>
+          <button class="continue-hub-button">Vazhdo</button>
+        </div>
+      </div>
+
+      <div class="learnhub-dashboard-card">
+        <div class="card-header">
+          <h4>LearnHub: Bazat e Programimit</h4>
+          <span class="hub-progress-percent">40%</span>
+        </div>
+        <div class="card-body">
+          <div class="progress-bar-hub">
+            <div class="progress-fill" style="width: 40%;"></div>
+          </div>
+          <p class="last-activity">Ushtrimi i fundit: Variablat dhe Llojet e të Dhënave</p>
+          <button class="continue-hub-button">Vazhdo</button>
+        </div>
+      </div>
+
+      <div class="learnhub-dashboard-card">
+        <div class="card-header">
+          <h4>LearnHub: Matematikë Aplikative</h4>
+          <span class="hub-progress-percent">90%</span>
+        </div>
+        <div class="card-body">
+          <div class="progress-bar-hub">
+            <div class="progress-fill" style="width: 90%;"></div>
+          </div>
+          <p class="last-activity">Ushtrimi i fundit: Ekuacionet Diferenciale</p>
+          <button class="continue-hub-button">Vazhdo</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>

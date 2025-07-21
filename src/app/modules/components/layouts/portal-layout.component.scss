@@ -12,9 +12,9 @@
 
   .content-container {
     flex: 1;
-    margin-top: 80px;
-    padding-bottom: 60px;
-    height: calc(100vh - 140px);
+    margin-top: 80px; // Spazio per l'header
+    padding-bottom: 60px; // Spazio per il footer
+    height: calc(100vh - 140px); // Altezza fissa per gestire lo scroll interno se necessario
 
     .admin-sidenav {
       width: 250px;
@@ -22,9 +22,9 @@
       color: white;
       padding-top: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      margin-top: 80px;
+      margin-top: 80px; // Allineato con l'inizio del contenuto sotto l'header
       height: calc(100vh - 80px);
-      position: fixed;
+      position: fixed; // Anche la sidenav è fissa
       transition: width 0.3s ease;
 
       &.mat-drawer-collapsed {
@@ -34,40 +34,45 @@
     }
 
     mat-sidenav-content {
-      margin-left: 250px;
+      margin-left: 250px; // Spazio per la sidenav aperta
       padding: 20px;
       transition: margin-left 0.3s ease;
-      position: relative;
-
-      &.sidenav-closed {
-        margin-left: 0;
-      }
+      position: relative; // Necessario per il posizionamento relativo del bottone se fosse absolute, ma qui usiamo fixed.
 
       .toggle-btn {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        z-index: 10;
+        position: fixed; // *** CAMBIATO DA 'absolute' A 'fixed' ***
+        // Queste coordinate sono relative alla finestra del browser (viewport)
+        // Regola questi valori per posizionarlo dove lo vuoi esattamente
+        top: 90px;      // Esempio: 80px (altezza header) + 10px (margine sotto header)
+        left: 260px;    // Esempio: 250px (larghezza sidenav) + 10px (margine dalla sidenav)
+        z-index: 100;   // Assicurati che sia sopra tutti gli altri elementi
         background: rgb(37 156 203);
         color: white;
+        transition: left 0.3s ease; // Transizione per un movimento fluido con la sidenav
       }
 
-      .content {
-        width: 100%;
+      &.sidenav-closed {
+        margin-left: 0; // Sposta il contenuto a sinistra quando la sidenav è chiusa
+        .toggle-btn {
+          left: 10px; // Sposta il bottone all'estrema sinistra quando la sidenav è chiusa
+        }
+      }
+
+      .content-admin { // Hai un '.content' e '.content-admin', assicurati di applicare lo scroll a quello giusto
+        // Questo è il contenitore del tuo router-outlet che può scrollare
+        // Se il tuo contenuto è molto lungo, questo div potrebbe avere bisogno di overflow-y: auto;
+        // o il scroll viene gestito da mat-sidenav-content o content-container
+        flex: 1;
+        padding-bottom: 60px;
+        min-height: calc(100vh - 140px - 40px); // Sottrai anche il padding di mat-sidenav-content (20px top + 20px bottom)
       }
     }
   }
 
-  .content {
+  .content { // Questo è per il layout senza sidenav, assicurati che abbia un'altezza minima per lo scroll
     flex: 1;
     margin-top: 80px;
     padding: 20px;
-    padding-bottom: 60px;
-    min-height: calc(100vh - 140px);
-  }
-
-  .content-admin{
-    flex: 1;
     padding-bottom: 60px;
     min-height: calc(100vh - 140px);
   }

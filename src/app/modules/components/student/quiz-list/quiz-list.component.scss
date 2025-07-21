@@ -1,0 +1,492 @@
+/* ===============================================
+   Style Variables: Modern & Professional Palette
+   =============================================== */
+$modern-blue: #4a90e2; // Primary Blue - Professional, clean, modern
+$modern-green: #5cb85c; // Secondary Green - For success, positive feedback
+$modern-orange: #f5a623; // Accent Orange - Energetic, for CTAs/highlights
+$text-deep-gray: #333333; // Deep Charcoal - Highly readable, modern standard
+$text-white: #ffffff; // Pure White
+$bg-off-white: #f4f7f6; // Off-White - Soft, clean background
+$border-subtle: #d8dce2; // Soft Gray - Subtle borders
+$shadow-soft: rgba(0, 0, 0, 0.08); // Light shadow for depth
+$shadow-moderate: rgba(0, 0, 0, 0.15); // Slightly darker shadow
+
+/* ===============================================
+   General Dashboard Structure
+   =============================================== */
+.quiz-dashboard {
+  display: flex;
+  min-height: calc(100vh - 60px); /* Adjust based on your header/footer height */
+  background-color: $bg-off-white;
+  font-family: 'Poppins', sans-serif; /* Modern, clean font */
+  color: $text-deep-gray;
+  overflow: hidden; /* Prevents overflow issues with shadows */
+}
+
+/* ===============================================
+   Quiz Sidebar
+   =============================================== */
+.quiz-sidebar {
+  position: relative;
+  width: 320px; /* Slightly wider for better readability */
+  background-color: $text-white;
+  box-shadow: 4px 0 20px $shadow-soft; /* More prominent, softer shadow */
+  padding: 25px; /* Increased padding */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid $border-subtle;
+  flex-shrink: 0; /* Prevents shrinking on smaller screens */
+
+  // Add transition for collapse/expand
+  transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+
+  &.collapsed {
+    width: 80px;
+    padding: 15px 10px; /* Adjusted padding for collapsed state */
+    overflow: hidden;
+
+    .no-quizzes,
+    .score-display {
+      display: none; // These will disappear instantly
+    }
+
+    .sidebar-header {
+      justify-content: center;
+
+      h2 {
+        display: none; // Hide title
+      }
+
+      .toggle-icon {
+        transform: rotate(270deg); /* Points right when collapsed */
+        color: $modern-blue; /* Use primary color for consistency */
+      }
+    }
+
+    .quiz-navigation-list {
+      li {
+        justify-content: center;
+        padding: 10px 5px;
+        flex-direction: column; /* Stack elements vertically in collapsed */
+        text-align: center; /* Center text */
+        font-size: 0.85em; // Smaller font in collapsed state
+
+        .quiz-question-preview,
+        .answered-indicator {
+          display: none; // Hide preview and indicator
+        }
+
+        .quiz-index {
+          margin-right: 0;
+          margin-bottom: 3px; /* Smaller space below number */
+          font-size: 1.1em; /* Slightly smaller number */
+          padding: 5px 8px; // Smaller padding
+        }
+      }
+    }
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 15px; /* More space below header */
+    border-bottom: 3px solid $modern-blue; /* Thicker, more prominent border */
+    margin-bottom: 25px; /* Increased margin */
+    transition: background-color 0.2s ease, padding 0.2s ease, border-radius 0.2s ease; // Keep hover transitions
+
+    &:hover {
+      background-color: lighten($modern-blue, 45%); /* Lighter hover effect */
+      border-radius: 8px; /* Softer rounded corners */
+      padding-left: 10px; /* Subtle hover expansion */
+      padding-right: 10px;
+    }
+
+    h2 {
+      color: $modern-blue;
+      margin-bottom: 0;
+      font-size: 1.4em; /* Adjusted to be closer to toggle icon size */
+      font-weight: 700;
+      text-align: left;
+      transition: font-size 0.3s ease-in-out; // Animate font size
+    }
+
+    .toggle-icon {
+      font-size: 1.4em; /* Slightly smaller icon */
+      color: $modern-blue;
+      transition: transform 0.3s ease; // Keep icon rotation animation
+      line-height: 1;
+      transform: rotate(0deg); /* Default: points down when expanded */
+    }
+
+    // Removed .toggle-icon:not(.rotated) as it's now handled by the default transform and .collapsed override
+  }
+
+  .quiz-navigation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+
+    li {
+      padding: 12px 16px; /* Reduced padding */
+      margin-bottom: 8px; /* Reduced space between items */
+      border-radius: 8px; /* Softer corners */
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease; /* Smoother transitions for list items */
+      color: $text-deep-gray;
+      font-size: 0.95em; /* Slightly smaller font */
+      line-height: 1.4;
+      background-color: $text-white;
+      border: 1px solid $border-subtle;
+      position: relative; /* For active indicator */
+
+      &:hover {
+        background-color: lighten($modern-blue, 50%); /* Softer hover background */
+        transform: translateY(-3px); /* More noticeable lift effect */
+        box-shadow: 0 6px 15px $shadow-soft; /* Deeper shadow on hover */
+      }
+
+      &.active {
+        background-color: $modern-blue;
+        color: $text-white;
+        font-weight: bold;
+        box-shadow: 0 6px 18px $shadow-moderate; /* Stronger shadow for active */
+        border-color: transparent;
+        position: relative; /* For the side bar */
+
+        &::before { /* Left border highlight for active item */
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 6px; /* Width of the accent bar */
+          background-color: $modern-orange; /* Accent color for the bar */
+          border-radius: 8px 0 0 8px; /* Rounded only on the left */
+        }
+
+        .quiz-index {
+          color: $text-white;
+          background-color: rgba(255, 255, 255, 0.2); /* More visible background for index */
+        }
+      }
+
+      &.answered {
+        background-color: lighten($modern-green, 40%); /* Light green for answered */
+        color: darken($modern-green, 15%);
+        border-color: lighten($modern-green, 20%);
+        .answered-indicator {
+          color: $modern-green; /* Consistent green checkmark */
+          margin-left: auto;
+          font-weight: bold;
+          font-size: 1.1em; /* Slightly smaller checkmark */
+        }
+        &:hover {
+          background-color: lighten($modern-green, 38%); /* Even lighter on hover */
+          transform: none;
+          box-shadow: none;
+        }
+      }
+
+      .quiz-index {
+        font-weight: bold;
+        margin-right: 10px; /* Reduced space */
+        color: $modern-blue;
+        background-color: rgba($modern-blue, 0.1); /* Slightly darker background for number */
+        padding: 5px 9px; /* Reduced padding */
+        border-radius: 6px; /* Softer corners */
+        min-width: 32px; /* Ensure consistent width for numbers */
+        text-align: center;
+        font-size: 0.9em; // Smaller index font
+      }
+      .quiz-question-preview {
+        flex-grow: 1;
+        white-space: normal; /* Allow text to wrap */
+        overflow: visible; /* Don't hide overflow */
+        text-overflow: clip; /* Don't use ellipsis if wrapping */
+        max-width: 100%; /* Allow full width for text */
+        font-size: 0.95em; // Ensure preview text isn't too large
+      }
+    }
+  }
+
+  .no-quizzes {
+    padding: 25px; /* Reduced padding */
+    text-align: center;
+    color: #8c9fae; /* Softer gray */
+    font-style: italic;
+    font-size: 1em; /* Smaller text */
+  }
+
+  .score-display {
+    margin-top: 25px; /* Reduced margin */
+    padding-top: 18px; /* Reduced padding */
+    border-top: 2px solid $border-subtle; /* Thicker border */
+    text-align: center;
+    font-size: 1.2em; /* Smaller font */
+    color: $text-deep-gray;
+    strong {
+      color: $modern-blue; /* Use primary blue for score */
+      font-size: 1.4em; /* Smaller prominent score */
+      margin-left: 5px;
+    }
+  }
+}
+
+/* ===============================================
+   Main Quiz Content
+   =============================================== */
+.quiz-main-content {
+  flex-grow: 1;
+  padding: 35px; /* Slightly reduced padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: padding 0.3s ease; /* Transition for padding changes */
+
+  /* No longer need margin-left adjustments as content fills available space */
+  .quiz-dashboard & {
+    margin-left: 0; /* Default state */
+  }
+  .quiz-dashboard.collapsed & {
+    /* No need for margin here, content will naturally expand */
+  }
+
+  .welcome-message {
+    font-size: 1.8em; /* Slightly smaller welcome message */
+    color: $modern-blue;
+    text-align: center;
+    max-width: 700px; /* Slightly narrower max-width */
+    line-height: 1.5;
+    background-color: $text-white;
+    padding: 40px; /* Reduced padding */
+    border-radius: 12px; /* Softer rounded corners */
+    box-shadow: 0 8px 30px $shadow-moderate; /* Deeper, softer shadow */
+    border: 1px solid $border-subtle; /* Subtle border */
+    strong {
+      color: $modern-blue;
+      font-weight: 800; /* Bolder emphasis */
+    }
+  }
+
+  app-quiz {
+    width: 100%;
+    max-width: 850px; /* Slightly narrower quiz area */
+  }
+
+  .test-confetti-btn {
+    margin-top: 25px; /* Reduced space above button */
+    padding: 10px 25px; /* Reduced padding */
+    background-color: $modern-orange;
+    color: $text-white; // Changed to white for better contrast on orange
+    border: none;
+    border-radius: 8px; /* Softer corners */
+    cursor: pointer;
+    font-size: 1em; /* Slightly smaller font */
+    font-weight: 700; /* Bolder text */
+    transition: all 0.2s ease; /* Smoother transitions */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+
+    &:hover {
+      background-color: darken($modern-orange, 10%); /* Darker hover */
+      transform: translateY(-2px) scale(1.02); /* Lift and slight scale */
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0); /* Press effect */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+}
+
+/* ===============================================
+   Media Queries for Responsiveness
+   =============================================== */
+@media (max-width: 992px) {
+  .quiz-dashboard {
+    flex-direction: column;
+    min-height: 100vh; /* Use full height on smaller screens */
+  }
+
+  .quiz-sidebar {
+    width: 100%;
+    max-height: 30vh; /* Control height in portrait */
+    border-right: none;
+    border-bottom: 1px solid $border-subtle;
+    box-shadow: 0 4px 15px $shadow-soft; /* Shadow at the bottom */
+    overflow-x: hidden; /* Ensure no horizontal scroll */
+    padding: 20px;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; // Transition for max-height
+
+    &.collapsed {
+      max-height: 70px; /* Taller collapsed state for touch */
+      flex-direction: row;
+      justify-content: space-between; /* Space out items in collapsed row */
+      align-items: center;
+      padding: 15px 20px;
+      overflow-x: auto; /* Allow horizontal scroll for quiz list */
+      white-space: nowrap; /* Keep list items on one line */
+
+      .sidebar-header {
+        justify-content: center;
+        width: auto; /* Allow header to shrink */
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+      .quiz-navigation-list {
+        display: flex; /* Use flex for horizontal list */
+        flex-direction: row;
+        flex-wrap: nowrap;
+        margin-left: 20px; /* Space from header */
+        padding-bottom: 10px; /* For scroll indicators */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+
+        li {
+          flex-shrink: 0; /* Prevent items from shrinking */
+          flex-direction: column;
+          padding: 8px 12px;
+          margin-right: 10px; /* Space between horizontal items */
+          margin-bottom: 0;
+          font-size: 0.8em; // Smaller font for collapsed horizontal items
+
+          .quiz-index {
+            margin-bottom: 3px; // Smaller margin
+            margin-right: 0;
+            font-size: 1em; // Smaller index font
+          }
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .quiz-main-content {
+    padding: 30px; /* Reduced padding for mobile */
+    min-height: 60vh; /* Ensure content takes up remaining space */
+  }
+
+  .quiz-sidebar h2 {
+    font-size: 1.4em; /* Slightly smaller title, similar to toggle icon */
+  }
+}
+
+@media (max-width: 768px) {
+  .quiz-dashboard {
+    min-height: 100vh;
+  }
+
+  .quiz-sidebar {
+    max-height: 25vh;
+    padding: 15px;
+
+    &.collapsed {
+      max-height: 60px;
+      padding: 10px 15px;
+    }
+
+    .sidebar-header {
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      h2 {
+        font-size: 1.3em; // Further reduced title size
+      }
+      .toggle-icon {
+        font-size: 1.3em; // Further reduced icon size
+      }
+    }
+
+    .quiz-navigation-list {
+      li {
+        padding: 9px 12px; // Further reduced padding
+        font-size: 0.85em; // Further reduced font size
+      }
+    }
+  }
+
+  .quiz-main-content {
+    padding: 25px;
+  }
+
+  .welcome-message {
+    font-size: 1.6em; // Further reduced welcome message
+    padding: 35px; // Further reduced padding
+  }
+
+  .test-confetti-btn {
+    padding: 9px 22px; // Further reduced padding
+    font-size: 0.95em; // Further reduced font size
+  }
+}
+
+@media (max-width: 576px) {
+  .quiz-sidebar {
+    max-height: 40vh; /* Allow more height for sidebar in portrait */
+    padding: 15px 10px;
+
+    &.collapsed {
+      max-height: 55px;
+      padding: 8px 10px;
+    }
+
+    .sidebar-header {
+      h2 {
+        font-size: 1.1em; // Smallest title size
+      }
+    }
+
+    .quiz-navigation-list li {
+      flex-direction: row; /* Keep items in a row even if content wraps */
+      align-items: center;
+      padding: 8px; // Smallest list item padding
+      font-size: 0.8em; // Smallest list item font size
+
+      .quiz-index {
+        margin-right: 6px; // Smallest index margin
+        margin-bottom: 0;
+        font-size: 0.85em; // Smallest index font size
+      }
+      .quiz-question-preview {
+        flex-grow: 1;
+        white-space: normal; /* Allow text to wrap */
+        overflow: visible; /* Don't hide overflow */
+        text-overflow: clip; /* Don't use ellipsis if wrapping */
+        max-width: calc(100% - 35px); /* Adjust based on index width */
+      }
+    }
+  }
+
+  .quiz-main-content {
+    padding: 20px;
+  }
+
+  .welcome-message {
+    font-size: 1.4em; // Smallest welcome message
+    padding: 25px; // Smallest welcome message padding
+  }
+
+  .test-confetti-btn {
+    padding: 7px 18px; // Smallest button padding
+    font-size: 0.85em; // Smallest button font size
+  }
+}

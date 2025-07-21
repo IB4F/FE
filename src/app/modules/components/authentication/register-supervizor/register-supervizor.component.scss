@@ -15,13 +15,13 @@ $blueText: #0a4670;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    background-color: $blueBanner;
+    background: linear-gradient(to right, #6dd5ed, #2193b0);
 
     h1 {
       width: 50%;
       text-align: center;
       margin-bottom: 20px;
-      color: $blueText;
+      color: white;
       display: flex;
       align-items: center;
     }

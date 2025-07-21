@@ -1,0 +1,79 @@
+<div class="app-container">
+  <div class="section-title">
+    <h1>Administrimi - Menaxhimi i Quiz-eve</h1>
+    <p>
+      Ky seksion është i rezervuar për administratorin e sistemit. Nga këtu mund të menaxhoni të gjitha quiz-et e
+      LearnHub,
+      të shtoni quiz-e të reja, të modifikoni përmbajtjen ekzistuese ose t'i fshini ato.
+      Përdorni me kujdes funksionet e modifikimit dhe fshirjes për të mbajtur platformën e përditësuar.
+    </p>
+  </div>
+  <div class="action-button-row">
+    <button mat-raised-button color="primary" class="add-button" (click)="addExam()">
+      <mat-icon>add</mat-icon>
+      Shto Quiz
+    </button>
+  </div>
+  <ng-container *ngIf="this.dataSource.data.length > 0">
+    <div class="search-bar-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Kërko LearnHub</mat-label>
+        <input
+          matInput
+          placeholder="Shkruaj titull, pershkrim, klasa, lend..."
+          (keyup)="applyFilter($event)"
+        >
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="modern-table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="question">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Pytja</th>
+          <td mat-cell *matCellDef="let element">{{ element.question }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="explanation">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.explanation }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Veprimet</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <span>Veprimet</span>
+              <mat-icon>expand_more</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="editExam(element)">
+                <mat-icon>edit</mat-icon>
+                <span>Modifiko</span>
+              </button>
+              <button mat-menu-item (click)="onDelete(element)" class="delete-item">
+                <mat-icon>delete</mat-icon>
+                <span>Elimino</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      #paginator
+      showFirstLastButtons
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageNumber"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </ng-container>
+  <div *ngIf="dataSource.data.length === 0" class="no-data-message">
+    <p>Nuk ka Quiz-e të disponueshme. Mund të shtoni të reja duke përdorë butonin "Shto Quiz".</p>
+  </div>
+</div>

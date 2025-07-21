@@ -14,11 +14,12 @@
            [matTooltip]="(user$ | async)?.firstName + ' ' + (user$ | async)?.lastName">
         {{ initials$ | async }}
       </div>
-      <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>
+<!--      <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>-->
       <!--      <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">-->
       <!--        <add-quiz-svg></add-quiz-svg>-->
       <!--      </div>-->
-      <mat-icon class="notification" routerLink="/student/kurset">notifications</mat-icon>
+      <!--Do ta shtojm si feature me von kete pjesen e notificationit -->
+<!--      <mat-icon class="notification" routerLink="/student/kurset">notifications</mat-icon>-->
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item routerLink="settings">
           <mat-icon>person</mat-icon>

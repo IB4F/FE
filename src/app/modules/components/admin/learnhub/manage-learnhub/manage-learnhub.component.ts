@@ -169,6 +169,7 @@ export class ManageLearnhubComponent implements OnInit {
     if (this.idLearnHub) {
       this.learnHubsService.apiLearnHubsUpdateLearnhubPut(this.idLearnHub, formattedData).subscribe({
         next: (resp) => {
+          this.getLearnHubInfo();
           this.toast.success(resp?.message, 'SUCCESS', 3000);
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
@@ -214,8 +215,9 @@ export class ManageLearnhubComponent implements OnInit {
     return foundSubject ? foundSubject.id : '';
   }
 
-  openAddQuizDialog(link: AbstractControl) {
+  goToQuiz(link: AbstractControl) {
     const linkId = link.get('id')?.value;
+    this.router.navigate(['/admin/learnhub/manage/quiz', linkId]);
   }
 
 }

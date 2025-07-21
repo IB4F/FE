@@ -1,7 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-$blueCustom: #259ccb;
+/* Variabili di colore per un tema e-learning moderno */
+// Definisci i colori come variabili Sass
+$primary-color-sass: #4CAF50; // Verde vibrante (LearnHub Green)
+$secondary-color-sass: #2196F3; // Blu (LearnHub Blue)
+$accent-color-sass: #FFC107; // Giallo
+$warn-color-sass: #F44336; // Rosso
+$text-color-dark-sass: #333333;
+$text-color-light-sass: #555555;
+$bg-light-gray-sass: #F8F9FA;
+$border-color-sass: #E0E0E0;
+$hover-color-sass: #EFEFEF; // Leggermente più chiaro per un hover sottile
+$table-header-bg-sass: #E8F5E9; // Sfondo leggero per l'intestazione
+$table-row-even-bg-sass: #FDFEFE;
+$table-row-odd-bg-sass: #FFFFFF;
+
+// Poi assegna questi valori alle variabili CSS per usarli nel browser
+:root {
+  --primary-color: #{$primary-color-sass};
+  --secondary-color: #{$secondary-color-sass};
+  --accent-color: #{$accent-color-sass};
+  --warn-color: #{$warn-color-sass};
+  --text-color-dark: #{$text-color-dark-sass};
+  --text-color-light: #{$text-color-light-sass};
+  --bg-light-gray: #{$bg-light-gray-sass};
+  --border-color: #{$border-color-sass};
+  --hover-color: #{$hover-color-sass};
+  --table-header-bg: #{$table-header-bg-sass};
+  --table-row-even-bg: #{$table-row-even-bg-sass};
+  --table-row-odd-bg: #{$table-row-odd-bg-sass};
+
+  // Nuove variabili per il pulsante "Veprimet"
+  --action-button-bg: #{$secondary-color-sass}; // Blu per lo sfondo del pulsante Veprimet
+  --action-button-text: white; // Testo bianco per il pulsante Veprimet
+  --action-button-hover-bg: #{darken($secondary-color-sass, 10%)};
+  --action-button-icon-color: white; // CORREZIONE: Colore esplicito per l'icona del pulsante Veprimet
+}
+
+$blueCustom: #259ccb; // La tua variabile custom mantenuta
 
 html,
 body,
@@ -10,13 +47,14 @@ app-root {
 }
 
 body {
-  //margin-bottom: 0;
-  //margin-top: 0;
   margin: 0;
+  font-family: 'Work-Sans-Regular', sans-serif; /* Assicurati che Work-Sans-Regular sia importato correttamente */
+  color: var(--text-color-dark);
+  background-color: #f6f8fb; /* Sfondo generale leggermente più chiaro e moderno */
 }
 
 p {
-  font-family: Work-Sans-Regular;
+  font-family: 'Work-Sans-Regular', sans-serif;
   font-size: 18px;
   line-height: 28px;
 }
@@ -27,15 +65,17 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Lufga-Regular;
+  font-family: 'Lufga-Regular', sans-serif; /* Assicurati che Lufga-Regular sia importato correttamente */
+  color: var(--text-color-dark);
 }
 
 button {
   padding: 13px 29px;
   letter-spacing: 0.16px;
+  font-family: 'Work-Sans-Regular', sans-serif;
 }
 
-.custom-container{
+.custom-container {
   max-width: 1700px;
   width: 90%;
   margin: 0 auto;
@@ -46,7 +86,7 @@ button {
 }
 
 .mat-mdc-paginator .mdc-text-field--outlined {
-  --mdc-outlined-text-field-container-shape: 20px !important; /* o il valore di default che preferisci */
+  --mdc-outlined-text-field-container-shape: 20px !important;
 }
 
 .mdc-menu-surface.mat-mdc-select-panel {
@@ -54,27 +94,352 @@ button {
   margin: 5px 10px 0 10px;
 }
 
+/* Stili checkbox per coerenza con il tema */
 .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked ~ .mdc-checkbox__background,
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
-  border-color: #198754 !important;
-  background-color: #198754 !important;
+  border-color: var(--primary-color) !important;
+  background-color: var(--primary-color) !important;
 }
 
 .mdc-checkbox .mdc-checkbox__native-control:focus:checked ~ .mdc-checkbox__ripple {
-  background-color: #198754 !important;
+  background-color: var(--primary-color) !important;
 }
 
+/* Stili radio button per coerenza con il tema */
 .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked + .mdc-radio__background .mdc-radio__outer-circle,
 .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled + .mdc-radio__background .mdc-radio__inner-circle {
-  border-color: $blueCustom !important;
+  border-color: var(--secondary-color) !important;
 }
 
 .mat-mdc-radio-button.mat-accent {
-  --mat-radio-checked-ripple-color: $blueCustom !important;
+  --mat-radio-checked-ripple-color: var(--secondary-color) !important;
 }
 
+/* Stili generali del container della pagina */
+.app-container {
+  padding: 40px 20px; /* Aumentato padding laterale */
+  max-width: 1200px; /* Limita la larghezza massima del contenuto */
+  margin: 0 auto; /* Centra il container principale */
+}
+
+/* Stili del titolo della sezione */
+.section-title {
+  display: block;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+
+  h1,
+  p {
+    text-align: center;
+  }
+
+  h1 {
+    color: var(--text-color-dark);
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 20px auto;
+    opacity: 0.85;
+    color: var(--text-color-light);
+  }
+}
+
+/* Stili della barra di ricerca */
+.search-bar-container {
+  margin: 30px 0 20px 0; /* Allineato a sinistra nel container */
+  width: 100%;
+  max-width: 600px; /* CORREZIONE: Aumentato a 600px per renderlo più grande */
+
+  .mat-form-field {
+    width: 100%;
+    /* CORREZIONE: Aumentiamo l'altezza del campo di ricerca */
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+      // La height è solitamente gestita dal padding interno o dalla dimensione del font
+      // Aggiungiamo un padding extra al mat-input-element se necessario
+    }
+
+    .mat-form-field-outline {
+      background-color: var(--table-row-odd-bg);
+      border-radius: 8px;
+    }
+
+    .mat-input-element {
+      color: var(--text-color-dark);
+      font-size: 16px; /* Aumentato leggermente il font size */
+      padding: 12px 0; /* Aggiunto padding verticale per rendere il campo più alto */
+      // CORREZIONE
+    }
+
+    .mat-form-field-label {
+      color: var(--text-color-light);
+      font-size: 16px; /* Allineato con il font input */
+      // CORREZIONE
+    }
+
+    .mat-icon {
+      color: var(--secondary-color);
+      font-size: 24px; /* Icona di ricerca leggermente più grande */
+      // CORREZIONE
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .mat-mdc-form-field {
+    width: 70%;
+  }
+}
+
+/* Stili del pulsante "Aggiungi LearnHub" */
+.action-button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+  padding-right: 0;
+
+  .add-button {
+    /* background-color: var(--primary-color); */
+    /* CORREZIONE: Rimosso background-color per mantenere il tema Material di default (es. indigo-pink) */
+    color: white; /* Il testo dovrebbe essere bianco sul colore di default di Material */
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 28px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    /* box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3); */
+    /* CORREZIONE: Rimosso o modificato l'ombra se non più appropriata al colore di default */
+    /* Lasciamo che Material gestisca l'ombra o ne mettiamo una più generica */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Ombra generica più adatta
+
+    &:hover {
+      /* background-color: darken($primary-color-sass, 10%); */
+      /* CORREZIONE: Rimosso, il tema Material gestirà l'hover */
+      transform: translateY(-3px);
+      /* box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); */
+      /* CORREZIONE: Rimosso o modificato */
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); // Ombra generica più intensa all'hover
+    }
+
+    mat-icon {
+      margin-right: 8px;
+      font-size: 20px;
+    }
+  }
+}
+
+/* Stili della tabella moderna */
+.modern-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  margin-top: 30px;
+  background: var(--table-row-odd-bg);
+  border: 1px solid var(--border-color);
+
+  table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+  }
+
+  .mat-header-cell {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-color-dark);
+    background-color: var(--table-header-bg);
+    padding: 18px 20px;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--primary-color);
+    text-align: left;
+
+    &:first-child {
+      border-top-left-radius: 12px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 12px;
+    }
+  }
+
+  .mat-cell {
+    font-size: 14px;
+    padding: 14px 20px;
+    color: var(--text-color-light);
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+
+    &:empty::before {
+      content: "-";
+      color: #999;
+      font-style: italic;
+    }
+  }
+
+  .mat-row {
+    transition: background-color 0.3s ease;
+
+    &:nth-child(even) {
+      background-color: var(--table-row-even-bg);
+    }
+
+    &:nth-child(odd) {
+      background-color: var(--table-row-odd-bg);
+    }
+
+    &:hover {
+      background-color: var(--hover-color);
+    }
+  }
+
+  .mat-paginator {
+    background-color: transparent;
+    border-top: 1px solid var(--border-color);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 10px 0;
+  }
+
+  /* Stile pulsante azioni nel menu della tabella (Veprimet) */
+  button[mat-icon-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background-color: var(--action-button-bg);
+    color: var(--action-button-text);
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 12px;
+    min-width: 95px;
+    height: 32px;
+    line-height: 1;
+    box-shadow: 0 2px 5px rgba(33, 150, 243, 0.2);
+
+    &:hover {
+      background-color: var(--action-button-hover-bg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+      cursor: pointer;
+    }
+
+    span {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    mat-icon {
+      overflow: unset;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: var(--action-button-icon-color); /* CORREZIONE: Usa la nuova variabile per il colore dell'icona */
+    }
+  }
+
+  /* Stile voci menu (Modifica, Elimina) */
+  button[mat-menu-item] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    line-height: 24px;
+    font-size: 14px;
+    color: var(--text-color-light);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--hover-color);
+    }
+
+    .mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--secondary-color);
+      overflow: unset;
+    }
+  }
+
+  /* Stile specifico per il pulsante Elimina nel menu */
+  button[mat-menu-item].delete-item {
+    color: var(--warn-color);
+
+    .mat-icon {
+      color: var(--warn-color);
+    }
+  }
+
+  /* Stile per lo stato "required" e invalid delle form fields */
+  .mat-form-field.mat-form-field-invalid {
+    .mat-form-field-label {
+      color: var(--warn-color);
+    }
+
+    .mat-form-field-outline-thick {
+      color: var(--warn-color);
+    }
+  }
+}
+
+.no-data-message {
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: var(--bg-light-gray);
+  border-radius: 8px;
+  color: var(--text-color-light);
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Responsive per schermi piccoli */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 20px 15px;
+  }
+
+  .section-title {
+    margin: 0 auto 20px auto;
+  }
+  .section-title p {
+    margin: 15px auto;
+  }
+
+  .search-bar-container {
+    margin: 20px auto;
+    max-width: 100%;
+  }
+
+  .modern-table-container {
+    margin: 8px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .mat-cell, .mat-header-cell {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .action-button-row {
+    justify-content: center;
+    padding-right: 0;
+  }
+
+  .modern-table-container button[mat-icon-button] {
+    min-width: 80px;
+    padding: 6px 8px;
+  }
+}
+
+/* Gestione inerzia per overlay Cdk */
 .cdk-global-overlay-wrapper {
-  /* Replace aria-hidden with inert */
   &:not(:empty) {
     app-root {
       inert {

@@ -1,0 +1,30 @@
+<div class="quiz-container">
+  <div class="quiz-box question">
+    <div class="box-content">
+      <div class="icon">?</div>
+      <div class="text">{{ question }}</div>
+    </div>
+  </div>
+
+  <div class="options-grid">
+    <div
+      *ngFor="let option of options; let i = index"
+      class="quiz-box option"
+      [class.selected]="selectedOption === option.optionText"
+      (click)="setSelectedOption(option.optionText)"
+    >
+      <div class="box-content">
+        <div class="icon">{{ getOptionLetter(i) }}</div>
+        <div class="text">{{ option.optionText }}</div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="submit-button"
+    (click)="submitAnswer()"
+    [disabled]="!selectedOption"
+  >
+    Dërgo Përgjigjen
+  </button>
+</div>

@@ -1,17 +1,17 @@
 <div class="container">
-  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/"/>
+  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/" class="logo"/>
 
-  <div class="cards">
-    <!-- Student Card -->
-    <div class="card student">
-      <h2>Nxënës</h2>
-      <button class="primary" routerLink="/student/membership">Regjistrohu</button>
+  <div class="cards-wrapper">
+    <div class="card student-card">
+      <h2 class="card-title">Nxënës</h2>
+      <p class="card-description">Bashkohu komunitetit tonë të nxënësve për të pasur qasje në burime dhe mbështetje.</p>
+      <button class="btn primary-btn" routerLink="/student/membership">Regjistrohu</button>
     </div>
 
-    <!-- Supervizor Card -->
-    <div class="card supervizor">
-      <h2>Supervizor</h2>
-      <button class="primary" routerLink="/supervizor/apliko">Apliko</button>
+    <div class="card supervisor-card">
+      <h2 class="card-title">Supervizor</h2>
+      <p class="card-description">Je ekspert? Apliko për t'u bërë supervizor dhe ndaj njohuritë e tua.</p>
+      <button class="btn primary-btn" routerLink="/supervizor/apliko">Apliko</button>
     </div>
   </div>
 </div>

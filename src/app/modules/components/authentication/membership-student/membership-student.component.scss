@@ -1,9 +1,13 @@
-$blueBanner: #31bff32b;
-$blueCustom: #259ccb;
-$blueText: #0a4670;
+/* Stili globali o variabili se usi un file separato per le variabili */
+$primary-blue: #259ccb;
+$light-blue-bg: #e0f7fa;
+$dark-text-blue: #0a4670;
+$white-text: #ffffff;
 
 .container {
   padding: 100px 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 
   .banner {
     border-radius: 20px;
@@ -11,38 +15,152 @@ $blueText: #0a4670;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    background-color: $blueBanner;
+    align-items: center;
+    background: linear-gradient(to right, #6dd5ed, $primary-blue);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
     h1 {
-      width: 50%;
+      flex: 1;
       text-align: center;
-      margin-bottom: 20px;
-      color: $blueText;
-      display: flex;
-      align-items: center;
+      color: $white-text;
+      font-size: 2.5em;
+      line-height: 1.2;
+      margin-right: 20px;
     }
 
     img {
       width: 300px;
+      max-width: 40%;
+      height: auto;
     }
-
-
   }
 
   .title {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin: 100px 0 20px 0;
+    align-items: center;
+    margin: 100px 0 40px 0;
 
-    h1,
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
     p {
       text-align: center;
+      margin: 0 100px;
+      opacity: 0.85;
+      max-width: 800px;
+    }
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 100px;
+}
+
+.payment-button {
+  min-width: 200px;
+  height: 45px;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover:not([disabled]) {
+    background-color: darken($primary-blue, 10%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: lighten($primary-blue, 20%) !important;
+  }
+
+  .mat-spinner {
+    margin-right: 8px;
+  }
+}
+
+// Media queries per la responsività
+
+@media (max-width: 992px) {
+  .container {
+    padding: 80px 20px;
+  }
+
+  .banner {
+    flex-direction: column;
+    padding: 30px 40px;
+
+    h1 {
+      width: 100%;
+      font-size: 2em;
+      margin-bottom: 30px;
+      margin-right: 0;
+    }
+
+    img {
+      width: 250px;
+      max-width: 60%;
+    }
+  }
+
+  .title {
+    margin: 60px 0 30px 0;
+
+    h1 {
+      font-size: 1.8em;
     }
 
     p {
-      margin: 20px 100px;
-      opacity: 0.75;
+      margin: 0 30px;
     }
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 50px 15px;
+  }
+
+  .banner {
+    padding: 20px 20px;
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    img {
+      width: 180px;
+      max-width: 80%;
+    }
+  }
+
+  .title {
+    margin: 40px 0 20px 0;
+
+    h1 {
+      font-size: 1.4em;
+    }
+
+    p {
+      margin: 0 15px;
+      font-size: 0.9em;
+    }
+  }
+
+  .payment-button {
+    min-width: unset;
+    width: 80%;
+    font-size: 1em;
+    height: 40px;
   }
 }

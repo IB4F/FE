@@ -1,0 +1,163 @@
+/* Variabili per colori e font (opzionale, ma buona pratica) */
+$primary-green: #4CAF50; // Colore principale per il successo
+$secondary-blue: #2196F3; // Colore per icone email e link
+$text-dark: #333333; // Colore del testo scuro
+$text-light: #666666; // Colore del testo più leggero
+$background-light: #F5F7FA; // Sfondo chiaro per il card
+$border-light: #e0e0e0; // Bordo sottile
+
+
+.payment-success-card {
+  font-family: 'Roboto', sans-serif;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata ma morbida */
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  margin: 50px auto; /* Centra la card sulla pagina */
+  animation: fadeIn 0.8s ease-out; /* Animazione di apparizione */
+  border: 1px solid $border-light;
+  overflow: hidden; // Per gestire le animazioni interne
+
+  /* Se vuoi che la card occupi l'intera visualizzazione o sia una modal */
+  /*
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: auto;
+  max-height: 90vh;
+  z-index: 1000;
+  */
+
+  .icon-section {
+    margin-bottom: 30px;
+    position: relative; // Per posizionare il checkmark
+
+    .success-checkmark {
+      width: 100px;
+      height: 100px;
+      display: block;
+      margin: 0 auto;
+
+      .checkmark-circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke: $primary-green;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+      }
+
+      .checkmark-check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        stroke-width: 2;
+        stroke: $primary-green;
+        fill: none;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; /* Ritardo per apparire dopo il cerchio */
+      }
+    }
+  }
+
+  .main-title {
+    font-size: 2.2em; /* Titolo più grande */
+    color: $primary-green;
+    margin-bottom: 10px;
+    font-weight: 700; /* Più spesso */
+  }
+
+  .subtitle {
+    font-size: 1.1em;
+    color: $text-light;
+    margin-bottom: 30px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid $border-light;
+    margin: 30px auto;
+    width: 60%; /* Linea più corta per un aspetto più pulito */
+  }
+
+  .email-notification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* Spazio tra icona e testo */
+    margin-bottom: 30px;
+    text-align: left; /* Il testo all'interno si allinea a sinistra rispetto all'icona */
+
+    .email-icon-wrapper {
+      flex-shrink: 0; /* Impedisce all'icona di ridimensionarsi */
+      .email-icon {
+        width: 36px;
+        height: 36px;
+        fill: $secondary-blue;
+      }
+    }
+
+    .email-text-content {
+      p {
+        margin: 0;
+        line-height: 1.6;
+        color: $text-dark;
+      }
+
+      .email-message {
+        font-size: 1em;
+        font-weight: 500;
+      }
+
+      .email-tip {
+        font-size: 0.9em;
+        color: $text-light;
+
+        strong {
+          color: $text-dark; // Rende le parole chiave più visibili
+        }
+      }
+    }
+  }
+
+  .action-button {
+    background-color: $secondary-blue;
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transizione smooth */
+    &:hover {
+      background-color: darken($secondary-blue, 10%);
+      transform: translateY(-2px); /* Effetto leggero al passaggio del mouse */
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

@@ -11,6 +11,9 @@
       <app-seventh-svg *ngSwitchCase="TypeClass.Seventh"></app-seventh-svg>
       <app-eighth-svg *ngSwitchCase="TypeClass.Eighth"></app-eighth-svg>
       <app-nineth-svg *ngSwitchCase="TypeClass.Nineth"></app-nineth-svg>
+      <app-tenth-svg *ngSwitchCase="TypeClass.Tenth"></app-tenth-svg>
+      <app-eleventh-svg *ngSwitchCase="TypeClass.Eleventh"></app-eleventh-svg>
+      <app-twelveth-svg *ngSwitchCase="TypeClass.Twelventh"></app-twelveth-svg>
     </ng-container>
   </button>
 </div>
@@ -28,4 +31,13 @@
       <histori-svg *ngSwitchCase="Subject.History"></histori-svg>
     </ng-container>
   </button>
+</div>
+
+<div class="courses-list">
+  <ng-container *ngIf="courses.length > 0; else noCourses">
+    <app-links-list *ngFor="let course of courses" [course]="course"></app-links-list>
+  </ng-container>
+  <ng-template #noCourses>
+    <p class="no-courses-message">Nuk u gjet asnjë kurs për përzgjedhjen aktuale.</p>
+  </ng-template>
 </div>

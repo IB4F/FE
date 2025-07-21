@@ -1,122 +1,161 @@
-$blueCustom: #259ccb;
-$blueDark: darken($blueCustom, 10%);
-$blueLight: lighten($blueCustom, 35%);
-$blueSoftGradientStart: lighten($blueCustom, 40%);
-$blueSoftGradientEnd: lighten($blueCustom, 20%);
+/* Variabili migliorate per una palette più sofisticata */
+$primary-accent: #6c63ff; // Un viola-blu moderno per accenti principali
+$secondary-accent: #007bff; // Un blu più classico ma vibrante
+$background-start: #f8faff; // Blu chiarissimo, quasi bianco per lo sfondo
+$background-end: #e6f0ff;   // Un blu molto tenue per la fine del gradiente
+$text-dark: #333d47;      // Grigio scuro per il testo principale
+$text-light: #ffffff;     // Bianco per il testo chiaro
+$shadow-light: rgba(0, 0, 0, 0.05); // Ombra molto sottile
+$shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
 
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
+  min-height: 100vh;
   padding: 40px 20px;
-  background: linear-gradient(to right, $blueSoftGradientStart, $blueSoftGradientEnd);
+  // Gradiente di sfondo più morbido e ampio
+  background: linear-gradient(145deg, $background-start 0%, $background-end 100%);
+  overflow: hidden; // Previene scroll indesiderati per alcuni effetti
+}
 
-  > img {
-    margin-bottom: 40px;
-    cursor: pointer;
-    width: fit-content;
+.logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 70px; // Spazio aumentato per il logo
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+
+  &:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); // Ombra discreta al logo
+  }
+}
+
+.cards-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem; // Spazio maggiore tra le card
+  width: 100%;
+  max-width: 960px; // Larghezza massima leggermente maggiore
+  padding: 0 15px; // Padding laterale per schermi più piccoli
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem; // Ancora più spazio su desktop
   }
 
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    width: 100%;
-    max-width: 1000px;
+  .card {
+    background: $text-light;
+    border-radius: 20px; // Bordi morbidi
+    box-shadow: 0 10px 30px $shadow-light; // Ombra elegante
+    padding: 3rem; // Padding generoso
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; // Per effetti di sfondo interni
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
 
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
+    &:hover {
+      transform: translateY(-12px); // Sollevamento più marcato
+      box-shadow: 0 15px 40px $shadow-medium; // Ombra più intensa
     }
 
-    .card {
-      background-color: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    // Effetto gradiente sul bordo superiore della card
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px; // Altezza del bordo gradiente
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      // Gradiente specifico per ogni card
+    }
 
-      h2 {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
+    .card-title {
+      font-size: 2rem; // Titolo leggermente ridotto
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: $text-dark;
+      line-height: 1.2;
+    }
+
+    .card-description {
+      font-size: 1rem; // Testo descrizione più piccolo
+      color: #6a7482; // Grigio più caldo per la descrizione
+      margin-bottom: 2.5rem; // Spazio adeguato
+      line-height: 1.7;
+    }
+
+    .btn {
+      font-weight: 600;
+      padding: 0.9rem 2.2rem; // Padding leggermente ridotto per i bottoni
+      border-radius: 10px; // Bordi più arrotondati per i bottoni
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 260px; // Larghezza massima dei bottoni
+      font-size: 1rem; // Dimensione testo bottone normale
+      border: none; // Rimuovi il bordo di default
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // Ombra leggera per i bottoni
+    }
+
+    &.student-card {
+      &::before {
+        background: linear-gradient(to right, $primary-accent, lighten($primary-accent, 15%));
       }
-
-      button {
-        font-weight: 600;
-        padding: 0.75rem 1.5rem;
-        margin-top: 0.5rem;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        max-width: 200px;
+      .card-title {
+        color: $primary-accent;
       }
-
-      &.student {
-        h2 {
-          color: $blueCustom;
-        }
-
-        .primary {
-          background-color: $blueCustom;
-          color: white;
-          border: none;
-
-          &:hover {
-            background-color: $blueDark;
-          }
-        }
-
-        .secondary {
-          background-color: transparent;
-          color: $blueCustom;
-          border: 2px solid $blueCustom;
-
-          &:hover {
-            background-color: lighten($blueCustom, 40%);
-          }
+      .primary-btn {
+        background-color: $primary-accent;
+        color: $text-light;
+        &:hover {
+          background-color: darken($primary-accent, 8%);
+          box-shadow: 0 6px 20px rgba($primary-accent, 0.5);
         }
       }
+    }
 
-      &.supervizor {
-        h2 {
-          color: $blueDark;
-        }
-
-        .primary {
-          background-color: $blueDark;
-          color: white;
-          border: none;
-
-          &:hover {
-            background-color: darken($blueDark, 5%);
-          }
-        }
-
-        .secondary {
-          background-color: lighten($blueCustom, 35%);
-          color: $blueDark;
-          border: none;
-
-          &:hover {
-            background-color: lighten($blueCustom, 25%);
-          }
-        }
-
-        .tertiary {
-          background-color: transparent;
-          color: $blueDark;
-          border: 2px solid $blueDark;
-
-          &:hover {
-            background-color: lighten($blueCustom, 45%);
-          }
+    &.supervisor-card {
+      &::before {
+        background: linear-gradient(to right, $secondary-accent, lighten($secondary-accent, 15%));
+      }
+      .card-title {
+        color: $secondary-accent;
+      }
+      .primary-btn {
+        background-color: $secondary-accent;
+        color: $text-light;
+        &:hover {
+          background-color: darken($secondary-accent, 8%);
+          box-shadow: 0 6px 20px rgba($secondary-accent, 0.5);
         }
       }
     }
   }
+}
+
+/* Stili generali per reset e tipografia */
+body {
+  font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; // 'Inter' è un ottimo font moderno
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased; // Migliora il rendering del font su WebKit
+  -moz-osx-font-smoothing: grayscale; // Migliora il rendering del font su Firefox
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-top: 0;
 }

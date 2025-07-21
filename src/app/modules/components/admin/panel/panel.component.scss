@@ -1,3 +1,336 @@
-.container {
-  padding: 40px 10px;
+// Variabili di colore per facile modifica
+$primary-green: #4CAF50; // Jell Green - Përdorur për veprime pozitive/sukses
+$secondary-blue: #2196F3; // Blu e ndritshme - Për veprime neutrale/lidhje
+$bg-light-grey: #F0F2F5; // Gri più moderna, leggermente più scura per contrasto morbido
+$text-dark: #2C3E50; // Testo più scuro per maggiore leggibilità
+$card-white: #FFFFFF; // Sfondi kartash/seksionesh
+$border-grey: #E5E9ED; // Ngjyra e kufijve të hollë, più morbida
+$light-hover: #E8F5FD; // Hover più pronunciato ma delicato
+$danger-red: #EF5350; // E kuqe per fshirje/rrezik, leggermente più morbida
+$warning-orange: #FFB300; // Portokalli, leggermente più calda
+
+// Mixin per boxShadow consistent e più moderno
+@mixin card-shadow {
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05); // Ombra più diffusa e meno intensa
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-7px); // Effetto "lift" più pronunciato
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); // Ombra più intensa al hover
+  }
+}
+
+// Stili generali per il corpo
+body {
+  font-family: 'Inter', 'Poppins', sans-serif; // Aggiungi Inter o un font simile per un tocco moderno
+  margin: 0;
+  padding: 0;
+  background-color: $bg-light-grey;
+  color: $text-dark;
+  min-height: 100vh;
+  // display: flex; // Mantieni solo se il layout principale lo richiede
+  // justify-content: center;
+  // align-items: flex-start;
+  padding: 40px; // Aumenta il padding generale per più aria
+  box-sizing: border-box; // Importante per il padding
+}
+
+/* Ky është wrapper-i kryesor i përmbajtjes së panelit tuaj */
+.admin-main-content-panel {
+  flex-grow: 1;
+  padding-bottom: 30px; // Padding solo per il contenuto interno, l'header ha il suo
+  background-color: $card-white; // Il panel stesso ora è bianco e ha un'ombra più marcata
+  border-radius: 16px; // Bordi più arrotondati
+  @include card-shadow; // Applica l'ombra
+  // Rimosso box-shadow 0 0 20px rgba(0,0,0,0.03); perché ora è nel mixin
+  width: 100%;
+  max-width: 1300px; // Imposta un max-width per non farlo allungare troppo su schermi grandi
+  margin: 0 auto; // Centra il pannello
+  overflow: hidden;
+}
+
+/* Header-i brenda panelit (titulli i seksionit aktual) */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px; // Più padding
+  margin-bottom: 30px; // Più spazio sotto l'header
+  background-color: $card-white;
+  border-bottom: 1px solid $border-grey;
+  border-top-left-radius: 16px; // Match con il parent
+  border-top-right-radius: 16px; // Match con il parent
+
+  h1 {
+    font-size: 32px; // Titolo più grande
+    font-weight: 700; // Più audace
+    margin: 0;
+    color: $text-dark;
+  }
+}
+
+/* Grid-i i Dashboard-it (kartat e përmbledhjes) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); // Leggermente più piccolo
+  gap: 30px; // Più spazio tra le card
+  margin-bottom: 40px; // Più spazio sotto la griglia
+  padding: 0 40px; // Più padding laterale
+}
+
+.card {
+  background-color: $card-white;
+  border-radius: 16px; // Più arrotondato
+  padding: 30px; // Più padding interno
+  @include card-shadow; // Usa mixin per l'ombra
+
+  &-icon {
+    font-size: 42px; // Icone più grandi
+    margin-bottom: 20px; // Più spazio
+    color: $secondary-blue;
+  }
+  &-title {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: $text-dark;
+  }
+  &-value {
+    font-size: 38px; // Valore più grande
+    font-weight: 700;
+    color: $primary-green;
+    margin-bottom: 12px;
+  }
+  &-description {
+    font-size: 14px;
+    color: #777; // Colore leggermente più scuro per leggibilità
+  }
+}
+
+/* Seksionet e të dhënave/tabelave */
+.section-block {
+  background-color: $card-white;
+  border-radius: 16px; // Match con gli altri elementi
+  padding: 30px; // Più padding
+  @include card-shadow; // Usa mixin per l'ombra
+  margin: 0 40px 30px 40px; // Margini aggiornati
+
+  h2 {
+    font-size: 24px; // Titolo più grande
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 25px; // Più spazio
+    color: $text-dark;
+    border-bottom: 1px solid $border-grey;
+    padding-bottom: 15px; // Più padding
+  }
+}
+
+/* Seksioni i Aktivitetit të Fundit */
+.activity-item {
+  display: flex;
+  align-items: flex-start; // Allinea in alto per testi più lunghi
+  margin-bottom: 18px; // Più spazio
+  padding-bottom: 18px;
+  border-bottom: 1px dashed $border-grey; // Linea più morbida
+  transition: background-color 0.2s ease; // Transizione per hover
+
+  &:hover {
+    background-color: lighten($light-hover, 5%); // Leggero highlight al hover
+    cursor: pointer;
+  }
+
+  .icon {
+    font-size: 22px;
+    color: $secondary-blue;
+    margin-right: 20px; // Più spazio
+    min-width: 22px;
+    text-align: center;
+  }
+  .text {
+    flex-grow: 1;
+    font-size: 16px; // Testo leggermente più grande
+    line-height: 1.5; // Migliore interlinea
+  }
+  .timestamp {
+    font-size: 13px;
+    color: #A0A0A0; // Colore più chiaro per il timestamp
+    white-space: nowrap;
+    margin-left: 15px; // Spazio tra testo e timestamp
+  }
+}
+
+/* Tabelat e Menaxhimit (CRUD) */
+.data-table {
+  width: 100%;
+  border-collapse: separate; // Usa separate per border-radius sui bordi
+  border-spacing: 0; // Rimuovi spazio tra celle
+  margin-top: 25px; // Più spazio
+
+  th, td {
+    text-align: left;
+    padding: 15px 20px; // Più padding
+    border-bottom: 1px solid $border-grey;
+  }
+
+  th {
+    background-color: $bg-light-grey; // Sfondo intestazione
+    font-weight: 600;
+    font-size: 15px;
+    color: #666;
+    text-transform: uppercase;
+    &:first-child { border-top-left-radius: 8px; } // Bordi arrotondati per intestazione
+    &:last-child { border-top-right-radius: 8px; }
+  }
+
+  tr:last-child td {
+    border-bottom: none; // Rimuovi il bordo dall'ultima riga
+  }
+
+  tr:hover {
+    background-color: $light-hover;
+  }
+
+  .action-buttons {
+    button {
+      background-color: $primary-green;
+      color: white;
+      border: none;
+      padding: 9px 14px; // Padding leggermente maggiore
+      border-radius: 7px; // Arrotondamento leggermente maggiore
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease, transform 0.2s ease; // Aggiungi transizione transform
+      margin-right: 8px; // Più spazio tra i bottoni
+      display: inline-flex;
+      align-items: center;
+
+      i {
+        margin-right: 6px;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+      &.edit {
+        background-color: $secondary-blue;
+      }
+      &.delete {
+        background-color: $danger-red;
+      }
+      &:hover {
+        transform: translateY(-2px); // Leggero lift al hover
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); // Ombra leggera al hover
+      }
+    }
+  }
+}
+
+/* Butonat e Përgjithshëm */
+.button-primary {
+  background-color: $primary-green;
+  color: white;
+  padding: 14px 25px; // Più padding
+  border-radius: 10px; // Più arrotondato
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; // Aggiungi box-shadow transition
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); // Ombra iniziale
+
+  &:hover {
+    background-color: darken($primary-green, 8%);
+    transform: translateY(-3px); // Lift più pronunciato
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); // Ombra più intensa
+  }
+  i {
+    margin-right: 10px;
+  }
+}
+
+/* Stilet për badge-et e statusit */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px; // Più padding
+  border-radius: 25px; // Più arrotondato
+  font-size: 13px; // Leggermente più grande
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px; // Leggero spacing per modernità
+
+  &.active { background-color: $primary-green; }
+  &.inactive { background-color: $danger-red; }
+  &.draft { background-color: $warning-orange; }
+  &.published { background-color: $primary-green; }
+  &.pending { background-color: $secondary-blue; }
+}
+
+/* Media Queries për Responsivitet */
+@media (max-width: 900px) {
+  body {
+    padding: 20px;
+  }
+  .panel-header, .dashboard-grid, .section-block {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .panel-header h1 {
+    font-size: 28px;
+  }
+  .card {
+    padding: 25px;
+  }
+  .card-icon { font-size: 36px; }
+  .card-value { font-size: 32px; }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+  .panel-header, .dashboard-grid, .section-block {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 20px;
+  }
+  .panel-header h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .section-block {
+    padding: 20px;
+  }
+  .data-table {
+    font-size: 13px;
+    th, td {
+      padding: 10px 12px;
+    }
+  }
+  .action-buttons button {
+    padding: 6px 10px;
+    font-size: 12px;
+    margin-right: 5px;
+    i { margin-right: 4px; }
+  }
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+    .icon { margin-bottom: 10px; }
+    .timestamp { margin-left: 0; margin-top: 5px; }
+  }
 }

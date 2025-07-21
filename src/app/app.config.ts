@@ -1,5 +1,5 @@
 import {ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom} from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {provideRouter, withInMemoryScrolling} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideClientHydration} from '@angular/platform-browser';
@@ -14,7 +14,7 @@ import {loaderInterceptor} from "./interceptors/loader.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration: 'top', anchorScrolling: 'enabled',})),
     provideHttpClient(
       withInterceptors([
         loaderInterceptor,

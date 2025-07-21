@@ -124,20 +124,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (this.profileFormGroup.valid) {
       this.user$.pipe(take(1)).subscribe(user => {
         const userId = user?.id;
+        if (!userId) {
+          return;
+        }
         const userDetail: User = {
           ...user,
           ...this.profileFormGroup.value
         };
-        console.log('Saving profile data:', user);
-        console.log('userId:', userId);
-        console.log('userDetail:', userDetail);
-        // this._authService.idPut(userId, userDetail).subscribe({
-        //     next: () => {
-        //       this.toast.success('Të dhënat u përditësuan me sukses!', 'SUCCESS', 3000)
-        //     },
-        //     error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)
-        //   }
-        // );
+        this._authService.idPut(userId, userDetail).subscribe({
+            next: () => {
+              this.userService.loadUserData(true).subscribe();
+              this.toast.success('Të dhënat u përditësuan me sukses!', 'SUCCESS', 3000)
+            },
+            error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)
+          }
+        );
       })
     }
   }

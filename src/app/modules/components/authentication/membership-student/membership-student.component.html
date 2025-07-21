@@ -1,13 +1,14 @@
 <div class="container">
   <div class="banner">
     <h1>Paketat tona të çmimeve të gatshme</h1>
-    <img src="assets/svgImages/membership.svg">
+    <img src="assets/svgImages/membership.svg"
+         alt="Illustrazione di persone che studiano, simboleggiante l'iscrizione e l'appartenenza.">
   </div>
   <div class="title">
     <h1>Ne krijojmë një paketë çmimesh mujore për të gjithë studentët standardë</h1>
     <p>
       Në thelb ne e krijojmë këtë paketë për ata që janë vërtet të interesuar dhe përfitojnë nga kurset apo librat
-      tanë. Ne duam të bëjmë një paketë me kosto të ulët për ta. Në mënyrë që ata të blejnë çdo kurs me paketën që
+      tanë. Ne duam të bëjmë një paketë me kosto të ulët per ta. Në mënyrë që ata të blejnë çdo kurs me paketën që
       blejnë nga ne. Gjithashtu do të merrni libra falas nga çdo paketë.
     </p>
   </div>
@@ -17,23 +18,26 @@
     <p>
       Regjistrohuni tani për të përfituar nga të gjitha avantazhet e anëtarësimit tonë. Me një regjistrim të thjeshtë,
       do të keni qasje në të gjitha kurset tona, materiale ekskluzive. Çdo student i regjistruar
-      merr mundësinë të mësojë në ritmin e tij dhe të përfitojë nga çmime të veçanta.
+      merr mundësinë të mësojë in ritmin e tij dhe të përfitojë nga çmime të veçanta.
     </p>
     <p>
-      Mos humbisni këtë mundësi - regjistrohuni sot dhe hapni derën për një eksperiencë të re mësimore!
+      Mos humbisni këtë mundësi - regjistrohuni sot dhe hapni derën per një eksperiencë të re mësimore!
     </p>
   </div>
   <app-register #registerComponent></app-register>
-  <button
-    mat-raised-button
-    color="primary"
-    [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
-    (click)="handlePayment()"
-  >
-    <span *ngIf="!loading">Regjistrohu dhe Pago</span>
-    <span *ngIf="loading">
-      <mat-spinner diameter="20"></mat-spinner>
-      Processing...
-    </span>
-  </button>
+  <div class="button-container">
+    <button
+      mat-raised-button
+      color="primary"
+      class="payment-button"
+      [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
+      (click)="handlePayment()"
+    >
+      <span *ngIf="!loading">Regjistrohu dhe Pago</span>
+      <span *ngIf="loading">
+        <mat-spinner diameter="20"></mat-spinner>
+        Processing...
+      </span>
+    </button>
+  </div>
 </div>

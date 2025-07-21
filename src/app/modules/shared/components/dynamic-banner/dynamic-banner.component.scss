@@ -10,7 +10,7 @@ $successBanner: #e6fee6;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    background-color: $blueBanner;
+    background: linear-gradient(to right, #6dd5ed, $blueBanner);
 
     &.success-banner {
       background-color: $successBanner;
@@ -22,7 +22,6 @@ $successBanner: #e6fee6;
       margin-bottom: 20px;
       color: $blueText;
       display: flex;
-      align-items: center;
       align-items: center;
       font-size: 2rem;
     }

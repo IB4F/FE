@@ -20,7 +20,7 @@
 
     <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>Përmbajtja</mat-label>
-      <textarea matInput formControlName="description" required></textarea>
+      <textarea matInput formControlName="description" rows="9" required></textarea>
       <mat-error *ngIf="learnHubFormGroup.get('description')?.hasError('required')">
         Fushë e detyrueshme
       </mat-error>
@@ -100,15 +100,15 @@
           <!-- Icona Aggiungi Quiz (blu) -->
           <mat-icon
             *ngIf="row.get('id')?.value"
-            matTooltip="Shto Quize"
-            class="add-icon"
-            (click)="openAddQuizDialog(row)">
-            add_circle
+            matTooltip="Menaxho Kuizet"
+            class="manage-icon"
+            (click)="goToQuiz(row)">
+            visibility
           </mat-icon>
 
           <!-- Icona Elimina (grigio) -->
           <mat-icon
-            matTooltip="Fshije"
+            matTooltip="Fshije Linkun"
             class="delete-icon"
             (click)="removeRow(i)">
             delete_outline

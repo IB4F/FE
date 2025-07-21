@@ -9,6 +9,7 @@ import {UserRole} from "../../../../shared/constant/enums";
 import {UserService} from "../../../../../services/user.service";
 import {map} from "rxjs";
 import {AuthService} from "../../../../../api-client";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-header',
@@ -18,7 +19,8 @@ import {AuthService} from "../../../../../api-client";
     MatMenuModule,
     MatIconModule,
     MatTooltipModule,
-    RouterLink
+    RouterLink,
+    MatButtonModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

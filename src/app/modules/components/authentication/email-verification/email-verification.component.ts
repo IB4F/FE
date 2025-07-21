@@ -31,7 +31,7 @@ export class EmailVerificationComponent implements OnInit {
       if (token) {
         this.verifyToken(token);
       } else {
-        this.message = 'Token mancante.';
+        this.message = 'Token verifikimi mungon.';
         this.isLoading = false;
       }
     });
@@ -42,15 +42,14 @@ export class EmailVerificationComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isSuccess = true;
-          this.message = 'Email verificata con successo!';
+          this.message = 'Email-i juaj është verifikuar me sukses!';
           this.isLoading = false;
           setTimeout(() => this.router.navigate(['/hyr']), 3000);
         },
         error: () => {
-          this.message = 'Token non valido o scaduto.';
+          this.message = 'Token verifikimi i pavlefshëm ose i skaduar.';
           this.isLoading = false;
         }
       });
   }
-
 }

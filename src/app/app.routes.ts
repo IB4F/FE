@@ -46,6 +46,12 @@ export const routes: Routes = [
       .then(m => m.ForgetPasswordComponent),
   },
   {
+    path: 'success',
+    title: 'Pagesa Sukses',
+    loadComponent: () => import('./modules/components/payment/payment-success/payment-success.component')
+      .then(m => m.PaymentSuccessComponent),
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

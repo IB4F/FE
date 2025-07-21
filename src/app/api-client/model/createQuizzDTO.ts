@@ -7,12 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { OptionDTO } from './optionDTO';
 
 
 export interface CreateQuizzDTO { 
     question?: string | null;
     explanation?: string | null;
     points?: number;
-    options?: string | null;
+    options?: Array<OptionDTO> | null;
 }
 

@@ -1,0 +1,235 @@
+.container {
+  padding: 40px 10px;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    h1,
+    p {
+      text-align: center;
+    }
+
+    p {
+      margin: 20px 100px;
+      opacity: 0.75;
+    }
+  }
+
+  .search-container {
+    margin: 30px 0;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+
+    mat-form-field {
+      width: 100%;
+
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .mat-form-field-outline {
+        background-color: white;
+        border-radius: 4px;
+      }
+
+      .mat-input-element {
+        color: #333;
+        font-size: 14px;
+      }
+
+      .mat-form-field-label {
+        color: #666;
+      }
+
+      .mat-icon {
+        color: #666;
+      }
+    }
+  }
+
+  .button-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    padding-right: 8px;
+
+    .add-button {
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .mat-elevation-z8 {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    background: white;
+
+    table {
+      width: 100%;
+      min-width: 800px;
+    }
+  }
+
+  /* Stile intestazione tabella */
+  .mat-header-cell {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    background-color: #f5f5f5;
+    padding: 16px;
+    white-space: nowrap;
+  }
+
+  /* Stile celle tabella */
+  .mat-cell {
+    font-size: 14px;
+    padding: 12px 16px;
+    color: #555;
+    white-space: nowrap;
+  }
+
+  /* Stile righe alternate */
+  .mat-row:nth-child(even) {
+    background-color: #fafafa;
+  }
+
+  /* Hover sulle righe */
+  .mat-row:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.2s ease;
+  }
+
+  /* Stile paginatore */
+  .mat-paginator {
+    background-color: transparent;
+    border-top: 1px solid #e0e0e0;
+    margin-top: -1px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  /* Stile pulsante azioni */
+  button[mat-icon-button] {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #3f51b5;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: darken(#3f51b5, 10%);
+    }
+
+    span {
+      font-size: 14px;
+    }
+  }
+
+  /* Stile menu azioni */
+  .mat-menu-content {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    min-width: 160px;
+  }
+
+  /* Stile voci menu */
+  button[mat-menu-item] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    line-height: 24px;
+    font-size: 13px;
+
+    .mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  /* Stile icone menu */
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Stile pulsante elimina */
+  button[color="warn"] {
+    color: #f44336;
+
+    &:hover {
+      color: darken(#f44336, 10%);
+    }
+  }
+
+  /* Stile testo "-" per valori nulli */
+  td:empty::before {
+    content: "-";
+    color: #999;
+    font-style: italic;
+  }
+
+  /* Responsive per schermi piccoli */
+  @media (max-width: 768px) {
+    .container {
+      padding: 20px 15px;
+
+      .title p {
+        margin: 15px 0;
+      }
+
+      .search-container {
+        margin: 20px 0;
+      }
+    }
+
+    .mat-elevation-z8 {
+      margin: 8px 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .mat-cell, .mat-header-cell {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+  }
+
+  .scrollable {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Effetto focus per la search bar */
+  .mat-form-field-appearance-outline.mat-focused {
+    .mat-form-field-outline-thick {
+      color: #3f51b5;
+    }
+
+    .mat-form-field-label {
+      color: #3f51b5;
+    }
+  }
+
+  /* Stile per lo stato "required" */
+  .mat-form-field.mat-form-field-invalid {
+    .mat-form-field-label {
+      color: #f44336;
+    }
+
+    .mat-form-field-outline-thick {
+      color: #f44336;
+    }
+  }
+}

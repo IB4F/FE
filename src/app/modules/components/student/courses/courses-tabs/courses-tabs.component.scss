@@ -5,33 +5,55 @@ $inactive-opacity: 0.5;
 $active-opacity: 1;
 $transition-duration: 0.3s;
 $hover-color: blue;
-$button-padding: 0.5rem 1rem;
+$button-padding: 0.5rem 1rem; // Questo non sarà usato direttamente sui bottoni delle tab, ma è una variabile generale
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  padding: 10px 0;
+  // Per schermi desktop e grandi tablet: tenta di mostrare tutti e 12 su una riga
+  grid-template-columns: repeat(12, 1fr);
+  gap: 5px; // Piccolo spazio tra i pulsanti
+  padding: 10px; // Padding interno al contenitore delle tab
   border-radius: 40px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  overflow-x: auto; // Permette lo scorrimento orizzontale se non c'è spazio
+  white-space: nowrap; // Impedisce ai pulsanti di andare a capo
+
+  // Nasconde la scrollbar pur mantenendo la funzionalità di scorrimento
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 
   button {
     background: none;
     border: none;
     color: $primary-color;
-    padding: $button-padding;
+    padding: 0; // Rimuovi il padding sui singoli bottoni per un controllo migliore
     cursor: pointer;
     font-size: 1rem;
     font-family: $font-family;
     transition: transform $transition-duration, opacity $transition-duration;
+    display: flex; // Usa flexbox per centrare l'SVG
+    justify-content: center;
+    align-items: center;
+    min-width: 40px; // Larghezza minima per contenere l'SVG
+
+    // Stili per l'SVG all'interno del pulsante
+    ::ng-deep svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
     &.active {
-      transform: scale(1.5);
+      transform: scale(1.5); // Inggrandisce l'SVG attivo
       opacity: $active-opacity;
-      padding: 0;
+      z-index: 1; // Assicura che l'SVG attivo sia sopra gli altri
     }
 
     &:not(.active) {
-      opacity: $inactive-opacity;
+      opacity: $inactive-opacity; // Rende gli SVG inattivi meno visibili
     }
   }
 }
@@ -136,15 +158,38 @@ $button-padding: 0.5rem 1rem;
 
 }
 
+.courses-list {
+  display: grid; /* Change from flex to grid */
+  grid-template-columns: repeat(2, 1fr); /* Two columns, each taking equal space */
+  gap: 25px;
+  padding: 20px;
+  background-color: #f4f7f6;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.courses-list .no-courses-message { /* Moved out of .courses-list nesting for clarity but functionally the same */
+  grid-column: 1 / -1; /* Spans across all columns */
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1em;
+  padding: 30px;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
 // Media Queries for different screen sizes
 // For tablets (768px - 1024px)
 @media (max-width: 1024px) {
   .tabs {
+    grid-template-columns: repeat(6, 1fr); // 6 elementi per riga, su 2 righe
+    gap: 8px;
+    padding: 8px;
     button {
       font-size: 0.9rem;
-
       &.active {
-        transform: scale(1.5);
+        transform: scale(1.4); // Scala leggermente meno su tablet
       }
     }
   }
@@ -170,14 +215,13 @@ $button-padding: 0.5rem 1rem;
 // For mobile screens (480px - 768px)
 @media (max-width: 768px) {
   .tabs {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0.5rem;
-
+    grid-template-columns: repeat(4, 1fr); // 4 elementi per riga, su 3 righe
+    gap: 5px;
+    padding: 5px;
     button {
       font-size: 0.85rem;
-
       &.active {
-        transform: scale(1.8);
+        transform: scale(1.3); // Scala ancora meno
       }
     }
   }
@@ -197,7 +241,6 @@ $button-padding: 0.5rem 1rem;
   }
 
   .tab-content {
-    // grid-template-columns: repeat(3, 1fr);
     padding: 1rem;
 
     h3 {
@@ -209,14 +252,13 @@ $button-padding: 0.5rem 1rem;
 // For very small screens (below 480px)
 @media (max-width: 480px) {
   .tabs {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0.3rem;
-
+    grid-template-columns: repeat(3, 1fr); // 3 elementi per riga, su 4 righe
+    gap: 3px;
+    padding: 3px;
     button {
       font-size: 0.75rem;
-
       &.active {
-        transform: scale(1.5);
+        transform: scale(1.2); // Minore scala per non sovrapporsi
       }
     }
   }

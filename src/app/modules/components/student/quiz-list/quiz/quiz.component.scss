@@ -1,0 +1,222 @@
+// ===============================================
+// ===============================================
+// VARIABILI DI STILE (MODIFICATE)
+// Palette 3: Sfumature Tranquille
+// ===============================================
+$background-color: #f9f7f3; // Beige chiaro
+$box-background-color: #ffffff;
+$icon-background-color: #dbe2ef; // Azzurro polveroso
+$text-color: #3f3730; // Marrone scuro tenue
+$box-skew-angle: -10deg;
+
+// Gradiente delicato
+$hover-gradient: linear-gradient(135deg, #c9d6df 0%, #bac8e0 100%);
+$selected-gradient: linear-gradient(135deg, #b1cbbb 0%, #90b4ce 100%);
+
+
+// ===============================================
+// STILE DEL CONTENITORE PRINCIPALE
+// ===============================================
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; // Ridotto il gap
+  padding: 1.5rem; // Ridotto il padding
+  font-family: 'Poppins', sans-serif;
+  background-color: $background-color;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+
+// ===============================================
+// STILE DELLE CARD (DOMANDE E OPZIONI)
+// ===============================================
+.quiz-box {
+  background-color: $box-background-color;
+  border: 1px solid #e0e0e0; // Bordo più chiaro
+  border-radius: 10px; // Angoli leggermente meno arrotondati
+  padding: 1rem; // Ridotto il padding generale
+  position: relative;
+  transform: skew($box-skew-angle);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); // Ombra più sottile
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+
+  .box-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem; // Ridotto il gap
+    transform: skew(-$box-skew-angle);
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 40px; // Icone più piccole
+    height: 40px; // Icone più piccole
+    background-color: $icon-background-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem; // Testo icone più piccolo
+    font-weight: 600;
+    color: $text-color;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08); // Ombra icona più leggera
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .text {
+    font-size: 1rem; // Testo generale più piccolo
+    font-weight: 400; // Peso del testo più leggero
+    color: $text-color;
+    transition: color 0.3s ease;
+  }
+}
+
+
+// ===============================================
+// STRUTTURA E LAYOUT
+// ===============================================
+.question {
+  width: 80%; // Leggermente più largo
+  margin: 0 auto;
+
+  .box-content .text {
+    font-size: 1.2rem; // Testo della domanda più grande
+    font-weight: 500;
+  }
+
+  .icon {
+    width: 45px; // Icona domanda leggermente più grande
+    height: 45px;
+    font-size: 1.6rem;
+  }
+}
+
+.options-grid {
+  display: grid;
+  // Modifica qui: due colonne di uguale larghezza
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem; // Ridotto il gap
+  padding: 0 5%;
+}
+
+
+// ===============================================
+// EFFETTO HOVER INTERATTIVO PER LE OPZIONI
+// ===============================================
+.option {
+  cursor: pointer;
+
+  &:hover {
+    transform: skew($box-skew-angle) scale(1.02); // Effetto hover più sottile
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: transparent;
+    background: $hover-gradient;
+
+    .icon {
+      background-color: rgba(255, 255, 255, 0.4);
+      color: $text-color; // Mantenuto il colore del testo
+    }
+
+    .text {
+      color: $text-color; // Mantenuto il colore del testo
+    }
+  }
+
+  &.selected {
+    background: $selected-gradient;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    .icon {
+      background-color: rgba(255, 255, 255, 0.5);
+      color: $text-color;
+    }
+    .text {
+      color: $text-color;
+      font-weight: 500;
+    }
+  }
+}
+
+
+// Stile per il pulsante di submit
+.submit-button {
+  margin-top: 2rem; // Ridotto il margine
+  padding: 0.8rem 2rem; // Pulsante di submit più piccolo
+  background-color: #52b788; // Verde più tenue
+  color: white;
+  border: none;
+  border-radius: 6px; // Angoli meno arrotondati
+  font-size: 1rem; // Testo pulsante più piccolo
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #40916c; // Verde più scuro al hover
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  }
+
+  &:disabled {
+    background-color: #e0e0e0;
+    color: #9e9e9e;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+
+// ===============================================
+// STILI RESPONSIVE PER DISPOSITIVI MOBILI
+// ===============================================
+@media (max-width: 768px) {
+  .quiz-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .question {
+    width: 100%;
+    .box-content .text {
+      font-size: 1.1rem;
+    }
+    .icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1.4rem;
+    }
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr; // Su mobile, tornano a una colonna singola
+    padding: 0 2%;
+    gap: 0.8rem;
+  }
+
+  .quiz-box.option {
+    padding: 0.8rem;
+    .box-content {
+      gap: 0.8rem;
+    }
+    .icon {
+      width: 35px;
+      height: 35px;
+      font-size: 1.2rem;
+    }
+    .text {
+      font-size: 0.9rem;
+    }
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    margin-top: 2rem;
+  }
+}

@@ -1,0 +1,234 @@
+// Colori Professionali
+$primary-dark-blue: #2c3e50; // Blu molto scuro, quasi nero
+$secondary-light-gray: #ecf0f1; // Grigio molto chiaro per sfondi
+$text-color-dark: #34495e; // Grigio scuro per il testo principale
+$text-color-light: #7f8c8d; // Grigio più chiaro per testo secondario/label
+$accent-green: #27ae60; // Verde per elementi di successo/primari
+$danger-red: #e74c3c; // Rosso per errori
+$border-color-subtle: #bdc3c7; // Bordo sottile
+
+// Mixin per ombreggiatura leggermente più pronunciata ma elegante
+@mixin box-shadow-elevated {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-modal-container {
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  @include box-shadow-elevated;
+  width: 100%;
+  max-width: 850px; // Larghezza massima leggermente ridotta per un look più compatto
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid $secondary-light-gray;
+
+    h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: $primary-dark-blue;
+      font-weight: 700; // Più spesso per il titolo
+    }
+
+    .close-icon {
+      cursor: pointer;
+      color: $text-color-light;
+      font-size: 28px; // Icona più grande
+      transition: color 0.2s ease-in-out;
+      &:hover {
+        color: $text-color-dark;
+      }
+    }
+  }
+
+  .quiz-form-content {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px; // Aumentato lo spazio tra le sezioni
+
+      .full-width {
+        width: 100%;
+      }
+
+      // Stile per i campi di input Material
+      mat-form-field {
+        .mat-mdc-form-field-flex {
+          background-color: $secondary-light-gray;
+          border-radius: 8px;
+          padding: 8px 16px; // Padding interno per il campo
+        }
+        .mat-mdc-form-field-outline {
+          color: transparent !important; // Rimuove il bordo predefinito
+        }
+        .mat-mdc-label {
+          color: $text-color-light !important; // Colore delle label
+          font-size: 0.95rem;
+        }
+        .mat-mdc-form-field-input-control {
+          color: $text-color-dark; // Colore del testo input
+        }
+        &.mat-focused {
+          .mat-mdc-form-field-flex {
+            box-shadow: 0 0 0 2px $accent-green; // Bordo accentuato al focus
+          }
+        }
+      }
+
+      .options-section {
+        background-color: $secondary-light-gray;
+        border: 1px solid $border-color-subtle;
+        border-radius: 8px;
+        padding: 25px;
+        position: relative; // Per il messaggio di errore posizionato
+
+        .section-title {
+          text-align: center;
+          font-weight: 600;
+          color: $primary-dark-blue;
+          margin-bottom: 20px;
+          font-size: 1.1rem;
+        }
+
+        .option-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 15px;
+          margin-bottom: 15px;
+          padding: 10px 0;
+          border-bottom: 1px dashed $border-color-subtle; // Bordo tratteggiato tra le opzioni
+
+          &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+          }
+
+          .option-label {
+            font-weight: 500;
+            color: $text-color-dark;
+            min-width: 70px; // Larghezza fissa per la label
+            padding-top: 10px; // Allinea con l'input
+          }
+
+          .option-input-group {
+            flex-grow: 1;
+            display: flex;
+            align-items: center; // Allinea checkbox e input
+            gap: 10px;
+
+            mat-form-field {
+              flex-grow: 1;
+              margin-bottom: 0; // Rimuove il margine inferiore predefinito
+              .mat-mdc-form-field-flex {
+                padding: 5px 12px; // Riduci il padding per le opzioni
+              }
+            }
+
+            .option-checkbox {
+              .mat-mdc-checkbox-inner-container {
+                width: 22px;
+                height: 22px;
+              }
+            }
+          }
+        }
+
+        .options-error {
+          display: block;
+          margin-top: 15px;
+          color: $danger-red;
+          font-size: 0.85rem;
+          text-align: center;
+          font-weight: 500;
+        }
+      }
+
+      .points-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center; // Centra lo slider
+        gap: 15px;
+        padding: 15px 0;
+        background-color: $secondary-light-gray;
+        border-radius: 8px;
+
+        mat-label {
+          font-weight: 600;
+          color: $primary-dark-blue;
+          font-size: 1.1rem;
+        }
+
+        mat-slider {
+          width: 90%; // Riduci la larghezza per un aspetto più pulito
+          .mdc-slider__track--active_fill {
+            background-color: $accent-green; // Colore della traccia attiva
+          }
+          .mdc-slider__thumb {
+            .mdc-slider__value-indicator {
+              background-color: $accent-green; // Colore del valore visualizzato
+            }
+          }
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: center;
+        padding-top: 25px;
+
+        button {
+          width: 70%; // Rendi il pulsante un po' più largo
+          padding: 14px 25px;
+          border-radius: 30px; // Bordi più arrotondati
+          font-size: 1.1rem;
+          font-weight: 700;
+          transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+          background-color: $accent-green;
+          color: white;
+          border: none; // Rimuovi il bordo predefinito
+
+          &:hover:not([disabled]) {
+            background-color: darken($accent-green, 8%);
+            transform: translateY(-2px); // Leggero sollevamento all'hover
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); // Ombra più pronunciata
+          }
+
+          &:disabled {
+            background-color: $border-color-subtle; // Colore più neutro quando disabilitato
+            color: $text-color-light;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Stili globali Material per coerenza
+::ng-deep {
+  // Checkbox e Radio Button
+  .mat-mdc-checkbox.mat-checked .mat-mdc-checkbox-background,
+  .mat-mdc-radio-button.mat-mdc-radio-checked .mat-mdc-radio-outer-circle,
+  .mat-mdc-radio-button.mat-mdc-radio-checked .mat-mdc-radio-inner-circle {
+    border-color: $accent-green;
+    background-color: $accent-green;
+  }
+
+  // Label dei campi di input quando sono floating/non vuoti
+  .mat-mdc-form-field.mat-focused .mat-mdc-floating-label,
+  .mat-mdc-form-field:not(.mat-form-field-empty) .mat-mdc-floating-label {
+    color: $text-color-dark !important;
+  }
+
+  // Colore del cursore dell'input
+  .mat-mdc-input-element {
+    caret-color: $accent-green;
+  }
+}

@@ -7,6 +7,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthService, StudentRegistrationDTO} from "../../../../api-client";
 import {loadStripe, Stripe} from "@stripe/stripe-js";
 import {environment} from "../../../../../envirorment/envirorment";
+import {MatButton} from "@angular/material/button";
+import {NgToastService} from "ng-angular-popup";
 
 @Component({
   selector: 'app-membership-student',
@@ -15,7 +17,8 @@ import {environment} from "../../../../../envirorment/envirorment";
     PackegeCardsComponent,
     RegisterComponent,
     CommonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatButton
   ],
   templateUrl: './membership-student.component.html',
   styleUrl: './membership-student.component.scss'
@@ -30,6 +33,7 @@ export class MembershipStudentComponent {
   constructor(
     public membershipStudentService: MembershipStudentService,
     private _authService: AuthService,
+    private toast: NgToastService,
   ) {
   }
 
@@ -55,6 +59,7 @@ export class MembershipStudentComponent {
         });
       },
       error: (err) => {
+        this.toast.danger(err?.error?.error, 'GABIM', 3000);
         console.error('Registration failed:', err);
         this.loading = false;
       }

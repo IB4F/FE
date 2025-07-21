@@ -1,0 +1,27 @@
+<div class="course-card">
+  <div class="card-header">
+    <h3 class="course-title">{{ course.title }}</h3>
+    <span class="course-subject">{{ course.subject }}</span>
+  </div>
+  <div class="card-body">
+    <p class="course-description">{{ course.description }}</p>
+
+    <div *ngIf="course.links && course.links.length > 0" class="course-links">
+      <h4>Burimet e ndërlidhura:</h4>
+      <ol>
+        <li *ngFor="let link of course.links">
+          <a (click)="goToQuizList(link.id)" target="_blank" rel="noopener noreferrer">
+            {{ link.title }}
+            <span class="quiz-count">({{ link.quizzesCount }})</span>
+          </a>
+        </li>
+      </ol>
+    </div>
+  </div>
+  <div class="card-footer">
+    <span class="course-class-type">{{ course.classType }}</span>
+    <span [class]="difficultyColorClass">
+      Vështirësi: {{ course.difficulty }}
+    </span>
+  </div>
+</div>

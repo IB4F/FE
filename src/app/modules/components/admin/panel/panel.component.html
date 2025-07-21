@@ -1,3 +1,203 @@
-<div class="container">
-  <p>panel works!</p>
+<div class="admin-main-content-panel">
+
+  <div class="panel-header">
+    <h1>Paneli i Administratorit</h1>
+  </div>
+
+  <section id="dashboard-section" class="dashboard-grid">
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+      <div class="card-title">LearnHubs Aktivë</div>
+      <div class="card-value">124</div>
+      <div class="card-description">Gjithsej LearnHubs të publikuar</div>
+    </div>
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+      <div class="card-title">Përdorues të Regjistruar</div>
+      <div class="card-value">2,567</div>
+      <div class="card-description">Gjithsej përdorues në platformë</div>
+    </div>
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="card-title">Kuize të Përfunduara</div>
+      <div class="card-value">8,910</div>
+      <div class="card-description">Kuize të kaluara me sukses nga përdoruesit</div>
+    </div>
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-users-cog"></i></div>
+      <div class="card-title">Administratorë Aktivë</div>
+      <div class="card-value">5</div>
+      <div class="card-description">Anëtarë të ekipit me qasje administratori</div>
+    </div>
+  </section>
+
+  <section id="recent-activity-section" class="section-block">
+    <h2>Aktivitetet e Fundit</h2>
+    <div class="activity-item">
+      <span class="icon"><i class="fas fa-plus-circle"></i></span>
+      <span class="text">Administratori **Mario Rossi** shtoi një LearnHub të ri: "**Hyrje në Mësimin e Makinerive**".</span>
+      <span class="timestamp">5 minuta më parë</span>
+    </div>
+    <div class="activity-item">
+      <span class="icon"><i class="fas fa-edit"></i></span>
+      <span class="text">Përdoruesja **Laura Bianchi** ka përditësuar profilin.</span>
+      <span class="timestamp">1 orë më parë</span>
+    </div>
+    <div class="activity-item">
+      <span class="icon"><i class="fas fa-book-open"></i></span>
+      <span class="text">LearnHub-i "**Bazat e Blockchain**" arriti 500 regjistrime.</span>
+      <span class="timestamp">2 orë më parë</span>
+    </div>
+    <div class="activity-item">
+      <span class="icon"><i class="fas fa-question-circle"></i></span>
+      <span class="text">U krijua një kuiz i ri për "**Python i Avancuar**".</span>
+      <span class="timestamp">Dje</span>
+    </div>
+  </section>
+
+  <section id="learnhubs-management-section" class="section-block" style="display: none;">
+    <h2>Menaxhimi i LearnHubs</h2>
+    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Shto LearnHub të Ri</button>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulli LearnHub</th>
+        <th>Krijuesi</th>
+        <th>Statusi</th>
+        <th>Data e Krijimit</th>
+        <th>Veprimet</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>001</td>
+        <td>Hyrje në Zhvillimin e Uebit</td>
+        <td>Luca Verdi</td>
+        <td><span class="status-badge published">Publikuar</span></td>
+        <td>2023-01-15</td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
+          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>002</td>
+        <td>Dizajn UX/UI për Fillestarë</td>
+        <td>Anna Neri</td>
+        <td><span class="status-badge draft">Draft</span></td>
+        <td>2023-02-20</td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
+          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>003</td>
+        <td>Bazat e Shkencës së të Dhënave</td>
+        <td>Marco Gialli</td>
+        <td><span class="status-badge published">Publikuar</span></td>
+        <td>2023-03-10</td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
+          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="users-management-section" class="section-block" style="display: none;">
+    <h2>Menaxhimi i Përdoruesve</h2>
+    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-user-plus"></i> Shto Përdorues të Ri</button>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>ID Përdoruesi</th>
+        <th>Emri i Plotë</th>
+        <th>Email</th>
+        <th>Roli</th>
+        <th>Statusi</th>
+        <th>Veprimet</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>U001</td>
+        <td>Mario Rossi</td>
+        <td>m.rossi&#64;example.com</td>
+        <td>Student</td>
+        <td><span class="status-badge active">Aktiv</span></td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
+          <button class="delete" title="Çaktivizo Përdoruesin"><i class="fas fa-user-slash"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>U002</td>
+        <td>Laura Bianchi</td>
+        <td>l.bianchi&#64;example.com</td>
+        <td>Student</td>
+        <td><span class="status-badge inactive">Joaktiv</span></td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
+          <button class="delete" title="Aktivizo Përdoruesin"><i class="fas fa-user-check"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>U003</td>
+        <td>Giulia Neri</td>
+        <td>g.neri&#64;example.com</td>
+        <td>Admin</td>
+        <td><span class="status-badge active">Aktiv</span></td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
+          <button class="delete" title="Çaktivizo Përdoruesin"><i class="fas fa-user-slash"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="quiz-management-section" class="section-block" style="display: none;">
+    <h2>Menaxhimi i Kuizeve</h2>
+    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Shto Kuiz të Ri</button>
+    <table class="data-table">
+      <thead>
+      <tr>
+        <th>ID Kuizi</th>
+        <th>Titulli i Kuizit</th>
+        <th>LearnHub-i i Asociuar</th>
+        <th>Nr. Pyetjeve</th>
+        <th>Statusi</th>
+        <th>Veprimet</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Q001</td>
+        <td>Kuizi Bazë i Zhvillimit të Uebit</td>
+        <td>Hyrje në Zhvillimin e Uebit</td>
+        <td>10</td>
+        <td><span class="status-badge published">Publikuar</span></td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko Kuizin"><i class="fas fa-edit"></i></button>
+          <button class="delete" title="Fshi Kuizin"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>Q002</td>
+        <td>Kuizi i Avancuar UX/UI</td>
+        <td>Dizajn UX/UI për Fillestarë</td>
+        <td>15</td>
+        <td><span class="status-badge draft">Draft</span></td>
+        <td class="action-buttons">
+          <button class="edit" title="Modifiko Kuizin"><i class="fas fa-edit"></i></button>
+          <button class="delete" title="Fshi Kuizin"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
 </div>

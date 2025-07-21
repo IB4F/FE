@@ -5,6 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import * as Grade from "../../../../shared/components/svg/grades";
 import * as Category from "../../../../shared/components/svg/categories";
 import {LearnHubsService} from "../../../../../api-client";
+import {LinksListComponent} from "./links-list/links-list.component";
 
 @Component({
   selector: 'app-courses-tabs',
@@ -20,12 +21,16 @@ import {LearnHubsService} from "../../../../../api-client";
     Grade.SeventhSvgComponent,
     Grade.EighthSvgComponent,
     Grade.NinethComponent,
+    Grade.TenthComponent,
+    Grade.EleventhComponent,
+    Grade.TwelvethComponent,
     Category.AnglishtSvgComponent,
     Category.MatematikSvgComponent,
     Category.ShkencSvgComponent,
     Category.GjeografiSvgComponent,
     Category.HistoriSvgComponent,
     Category.LetersiSvgComponent,
+    LinksListComponent
   ],
   templateUrl: './courses-tabs.component.html',
   styleUrl: './courses-tabs.component.scss'
@@ -48,6 +53,8 @@ export class CoursesTabsComponent implements OnInit {
     [Subjects.History]: 'Histori',
     [Subjects.Science]: 'Shkencë'
   };
+
+  courses: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -78,14 +85,16 @@ export class CoursesTabsComponent implements OnInit {
     this.getCourses(this.selectedTab, this.selectedSubject);
   }
 
-  getCourses(typeClass: TypeClass, subject: Subjects) {
-    this._learnHubsService.apiLearnHubsFilterLearnhubsGet(typeClass, subject).subscribe({
-      next: (response) => {
-        console.log('Courses fetched:', response);
-      },
-      error: (error) => {
-        console.error('Error fetching courses:', error);
-      }
-    });
-  }
+    getCourses(typeClass: TypeClass, subject: Subjects) {
+      this._learnHubsService.apiLearnHubsFilterLearnhubsGet(typeClass, subject).subscribe({
+        next: (response) => {
+          this.courses = response;
+          console.log('Courses fetched:', response);
+        },
+        error: (error) => {
+          this.courses = [];
+          console.error('Error fetching courses:', error);
+        }
+      });
+    }
 }

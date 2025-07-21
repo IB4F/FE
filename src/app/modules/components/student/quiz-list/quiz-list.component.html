@@ -1,0 +1,45 @@
+<div class="quiz-dashboard">
+  <aside class="quiz-sidebar" [class.collapsed]="isSidebarCollapsed">
+    <div class="sidebar-header" (click)="toggleSidebar()">
+      <h2>Kuizet e Tua</h2>
+      <span class="toggle-icon" [class.rotated]="!isSidebarCollapsed" title="Shiko kuizet">&#9660;</span>
+    </div>
+
+    <div *ngIf="quizzes.length === 0" class="no-quizzes">
+      Nuk ka kuize të disponueshme.
+    </div>
+    <ul class="quiz-navigation-list">
+      <li
+        *ngFor="let quiz of quizzes; let i = index"
+        [class.active]="quiz.id === currentQuiz?.id"
+        [class.answered]="quiz.isAnswered"
+        (click)="selectQuiz(quiz); $event.stopPropagation();"
+      >
+        <span class="quiz-index">{{ i + 1 }}.</span>
+        <span class="quiz-question-preview" *ngIf="!isSidebarCollapsed">{{ quiz.question }}</span>
+        <span *ngIf="quiz.isAnswered && !isSidebarCollapsed" class="answered-indicator">&#10003;</span>
+      </li>
+    </ul>
+    <div class="score-display" *ngIf="!isSidebarCollapsed">
+      Pikët: <strong>{{ totalScore }}</strong>
+    </div>
+  </aside>
+
+  <main class="quiz-main-content">
+    <ng-container *ngIf="currentQuiz; else noQuizSelected">
+      <app-quiz
+        [question]="currentQuiz.question"
+        [options]="currentQuiz.options"
+        (optionSelected)="handleOptionSelection($event)"
+      ></app-quiz>
+      <button class="test-confetti-btn" (click)="triggerConfetti()">
+        Test Konfeti
+      </button>
+    </ng-container>
+    <ng-template #noQuizSelected>
+      <div class="welcome-message">
+        Përzgjidh një kuiz nga lista për të filluar!
+      </div>
+    </ng-template>
+  </main>
+</div>

@@ -7,6 +7,7 @@ export * from './createQuizzDTO';
 export * from './forgotPasswordDTO';
 export * from './learnHubCreateDTO';
 export * from './loginDTO';
+export * from './optionDTO';
 export * from './paginationRequestDTO';
 export * from './payment';
 export * from './paymentSessionRequestDTO';

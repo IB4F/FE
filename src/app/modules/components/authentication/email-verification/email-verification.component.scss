@@ -1,0 +1,374 @@
+/* Importo fontet nga Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@700&display=swap');
+
+/* Variabla për ngjyrat */
+$primary-blue: #4A90E2; // Blu për butonin kryesor
+$success-green: #2ECC71; // Jeshile e gjallë për sukses
+$error-red: #E74C3C; // Kuq për gabim
+$text-dark: #2C3E50; // Tekst i errët primar
+$text-light: #ECF0F1; // Tekst i lehtë
+$background-start: #C3E0E5; // Ngjyra fillestare e sfondit
+$background-end: #6DD5ED; // Ngjyra e fundit e sfondit
+$card-background: rgba(255, 255, 255, 0.9); // Sfond transparent për kontainerin
+$shadow-light: rgba(0, 0, 0, 0.15); // Hije e lehtë
+$shadow-dark: rgba(0, 0, 0, 0.3); // Hije më e errët
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  // Sfond me gradient më dinamik
+  background: linear-gradient(135deg, $background-start 0%, $background-end 100%);
+  font-family: 'Poppins', sans-serif; // Font modern për trupin
+  color: $text-dark;
+  overflow: hidden; // Parandalon scroll-in e padëshiruar nga animacionet e sfondit
+  position: relative; // Për elementët e sfondit absolut
+
+  // Efekti "blob" ose forma abstrakte në sfond
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    z-index: -1;
+  }
+
+  &::before {
+    background: linear-gradient(135deg, #FFD700, #FF6347); // Portokalli/Verdhë
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -150px;
+    animation: blob-move 15s infinite alternate ease-in-out;
+  }
+
+  &::after {
+    background: linear-gradient(135deg, #9370DB, #87CEEB); // Vjollcë/Qiellore
+    width: 500px;
+    height: 500px;
+    bottom: -150px;
+    right: -200px;
+    animation: blob-move 18s infinite alternate-reverse ease-in-out;
+  }
+}
+
+@keyframes blob-move {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -30px) scale(1.05);
+  }
+  50% {
+    transform: translate(-50px, 50px) scale(0.9);
+  }
+  75% {
+    transform: translate(30px, 40px) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.verification-container {
+  background-color: $card-background;
+  padding: 50px;
+  border-radius: 25px; // Kënde më të rrumbullakëta
+  box-shadow: 0 20px 40px $shadow-dark; // Hije më e thellë dhe e përhapur
+  text-align: center;
+  max-width: 550px;
+  width: 90%;
+  animation: fadeInScale 1s ease-out forwards; // Animacion i ri
+  border: 1px solid rgba(255, 255, 255, 0.3); // Kufi i lehtë për efekt glassmorphism
+  backdrop-filter: blur(10px); // Efekt sfumimi në sfond
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Gjendja e ngarkimit */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; // Rrit lartësinë minimale
+}
+
+.spinner {
+  border: 6px solid rgba(255, 255, 255, 0.3); // Kufij më të qartë
+  border-top: 6px solid $primary-blue; // Blu primare
+  border-radius: 50%;
+  width: 60px; // Më i madh
+  height: 60px;
+  animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; // Animacion më elastik
+  margin-bottom: 25px;
+  box-shadow: 0 0 15px rgba($primary-blue, 0.5); // Hije tek spinneri
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 1.3em;
+  color: $text-dark;
+  font-weight: 600;
+}
+
+/* Mesazhet e Alertit */
+.alert {
+  padding: 40px 30px;
+  border-radius: 18px; // Më i rrumbullakët
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; // Rrit hapësirën
+  position: relative; // Për pseudo-elementin
+  overflow: hidden; // Fsheh tepricat e animacionit
+  animation: slideInUp 0.8s ease-out forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  z-index: -1;
+  background-size: 40px 40px;
+  animation: background-pan 60s linear infinite; // Animacion patterni
+}
+
+@keyframes background-pan {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+
+.success-alert {
+  background-color: lighten($success-green, 40%); // Sfond më i zbehtë
+  border: 2px solid $success-green; // Kufi më i theksuar
+  color: darken($success-green, 25%); // Tekst më i errët
+  &::before {
+    background-image: radial-gradient(circle, $success-green 10%, transparent 10%);
+  }
+}
+
+.error-alert {
+  background-color: lighten($error-red, 40%); // Sfond më i zbehtë
+  border: 2px solid $error-red; // Kufi më i theksuar
+  color: darken($error-red, 25%); // Tekst më i errët
+  &::before {
+    background-image: radial-gradient(circle, $error-red 10%, transparent 10%);
+  }
+}
+
+.alert-title {
+  margin: 0;
+  font-size: 2.2em; // Titull më i madh
+  font-weight: 700; // Më i theksuar
+  font-family: 'Montserrat', sans-serif; // Font tjetër për titujt
+  letter-spacing: -0.02em; // Kërning i lehtë negativ
+}
+
+.alert-message {
+  margin: 0;
+  font-size: 1.2em;
+  line-height: 1.7;
+  max-width: 85%;
+}
+
+/* Ikona (Tik/Kryq) */
+.icon-wrapper {
+  margin-bottom: 20px;
+  position: relative;
+  width: 90px; // Ikona më të mëdha
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark, .cross {
+  width: 80px; // SVG aktualisht më i madh
+  height: 80px;
+  stroke-width: 3; // Linja më të trasha
+  stroke-miterlimit: 10;
+  display: block;
+}
+
+.checkmark {
+  stroke: $success-green;
+  box-shadow: inset 0px 0px 0px $success-green;
+  animation: fill .6s ease-in-out .6s forwards, scale .4s ease-in-out 1.1s both;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke: $success-green;
+  fill: none;
+  animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 1s forwards;
+}
+
+.cross {
+  stroke: $error-red;
+  box-shadow: inset 0px 0px 0px $error-red;
+  animation: fill .6s ease-in-out .6s forwards, scale .4s ease-in-out 1.1s both;
+}
+
+.cross__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke: $error-red;
+  fill: none;
+  animation: stroke 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.cross__path {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 1s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.15, 1.15, 1);
+  }
+  // Shkallë më e madhe
+}
+
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 45px;
+  }
+  // Efekt mbushjeje më i madh
+}
+
+/* Butoni */
+.resend-button {
+  background-color: $primary-blue;
+  color: $text-light;
+  padding: 15px 30px; // Më i madh
+  border: none;
+  border-radius: 8px; // Pak i rrumbullakosur
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition: background-color 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 20px rgba($primary-blue, 0.3); // Hije më e theksuar
+  letter-spacing: 0.05em; // Hapësira midis shkronjave
+  text-transform: uppercase; // Shkronja të mëdha
+  margin-top: 15px; // Hapësirë nga mesazhi
+}
+
+.resend-button:hover {
+  background-color: darken($primary-blue, 10%);
+  transform: translateY(-3px) scale(1.02); // Efekt "ngritjeje" më i theksuar
+  box-shadow: 0 12px 25px rgba($primary-blue, 0.4);
+}
+
+.resend-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba($primary-blue, 0.3);
+}
+
+/* Rregullime responsive */
+@media (max-width: 768px) {
+  .verification-container {
+    padding: 30px;
+    border-radius: 18px;
+    width: 95%; // Më i gjerë në ekranet e vogla
+  }
+
+  .alert-title {
+    font-size: 1.8em;
+  }
+
+  .alert-message {
+    font-size: 1.1em;
+  }
+
+  .checkmark, .cross {
+    width: 70px;
+    height: 70px;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .resend-button {
+    padding: 12px 20px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .verification-container {
+    padding: 20px;
+  }
+
+  .alert-title {
+    font-size: 1.6em;
+  }
+
+  .alert-message {
+    font-size: 0.95em;
+  }
+
+  .loading-text {
+    font-size: 1.1em;
+  }
+}

@@ -114,6 +114,7 @@ export class LearnhubComponent implements OnInit {
           this.getLearnHublist();
         },
         error: (error) => {
+          console.log(error)
           this.toast.danger(error?.error?.message, 'GABIM', 3000);
         }
       }

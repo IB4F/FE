@@ -11,6 +11,7 @@ export const PortalLayoutsRoutes: Routes = [
     children: [
       {
         path: '',
+        title: 'Landing Page',
         pathMatch: 'full',
         loadComponent: () => import('../landing-page/landing-page.component')
           .then(m => m.LandingPageComponent)
@@ -80,6 +81,12 @@ export const PortalLayoutsRoutes: Routes = [
                 title: 'Modifiko Learnhub',
                 loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-learnhub.component')
                   .then(m => m.ManageLearnhubComponent)
+              },
+              {
+                path: 'manage/quiz/:id',
+                title: 'Menaxho Quizet',
+                loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-quiz/manage-quiz.component')
+                  .then(m => m.ManageQuizComponent)
               }
             ]
           }
@@ -95,6 +102,7 @@ export const PortalLayoutsRoutes: Routes = [
           },
           {
             path: 'dashboard',
+            title: 'dashboard',
             canActivate: [roleGuard('Student', 'Admin')],
             loadComponent: () => import('../student/dashboard/dashboard.component')
               .then(m => m.DashboardComponent)
@@ -106,10 +114,10 @@ export const PortalLayoutsRoutes: Routes = [
               .then(m => m.CoursesComponent)
           },
           {
-            path: 'quiz',
+            path: 'quiz-list/:id',
             canActivate: [roleGuard('Student', 'Admin')],
-            loadComponent: () => import('../student/quiz/quiz.component')
-              .then(m => m.QuizComponent)
+            loadComponent: () => import('../student/quiz-list/quiz-list.component')
+              .then(m => m.QuizListComponent)
           },
 
         ]

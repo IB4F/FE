@@ -1,0 +1,464 @@
+/* dashboard.component.scss */
+
+.dashboard-container {
+  font-family: 'Lufga-Regular', sans-serif; // Assicurati che il font sia importato globalmente o qui
+  padding: 2.5rem; // Aumento del padding generale
+  background-color: #f8f9fa; // Sfondo molto chiaro per la dashboard
+  display: grid;
+  gap: 40px; // Aumento del gap per più "respiro"
+  max-width: 1300px; // Aumento leggero della larghezza massima
+  margin: 0 auto;
+  border-radius: 15px; // Bordo arrotondato per il contenitore principale
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #a7e1f4, #c9ecf8); // Sfumatura azzurra molto chiara e rilassante
+  color: #34495e; // Testo scuro ma non nero per un contrasto soft
+  padding: 3.5rem; // Più padding per un effetto "spazioso"
+  border-radius: 20px; // Bordi più arrotondati
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); // Ombra più morbida e diffusa
+  position: relative;
+
+  .welcome-content {
+    h2 {
+      font-size: 3em; // Testo più grande per il benvenuto
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      color: #2c3e50; // Colore leggermente più scuro per il titolo
+    }
+
+    .motivation-quote {
+      font-size: 1.25em;
+      opacity: 0.85; // Leggermente meno opaco per risaltare un po'
+      margin-bottom: 2rem; // Più spazio sotto la citazione
+      line-height: 1.5;
+    }
+
+    .cta-button {
+      background-color: #5cb3e3; // Un blu più caldo e invitante
+      color: white;
+      padding: 16px 32px; // Padding generoso per il pulsante
+      border: none;
+      border-radius: 10px; // Bordi arrotondati per il pulsante
+      font-size: 1.15em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        background-color: #4a91c9; // Sfumatura più scura al hover
+        transform: translateY(-3px); // Effetto sollevamento più pronunciato
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); // Ombra al hover
+      }
+    }
+  }
+
+  // --- Inizio della classe .banner-illustration ---
+  .banner-illustration {
+    width: 500px;
+    max-width: 500px; // Leggermente più grande
+    height: auto;
+    margin-left: 30px;
+    // Puoi aggiungere altri stili qui se necessario per il tuo SVG specifico, ad esempio:
+    // display: block;
+    // object-fit: contain;
+  }
+  // --- Fine della classe .banner-illustration ---
+}
+
+.metrics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Rende le card responsive e più larghe
+  gap: 30px; // Aumento del gap
+  padding: 1rem 0; // Aggiunto un leggero padding verticale
+}
+
+.metric-card {
+  background-color: #ffffff;
+  padding: 30px; // Più padding interno
+  border-radius: 15px; // Bordi più arrotondati
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05); // Ombra più leggera e soft
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+
+  &:hover {
+    transform: translateY(-5px); // Effetto sollevamento
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); // Ombra più marcata al hover
+  }
+
+  .metric-icon {
+    font-size: 3em; // Icone più grandi
+    color: #6b77e8; // Un viola-blu soft per le icone
+    margin-bottom: 12px;
+
+    svg {
+      width: 1em;
+      height: 1em;
+      display: block;
+    }
+  }
+
+  .metric-value {
+    font-size: 2.5em; // Valore più grande
+    font-weight: 700;
+    color: #34495e; // Colore del testo più scuro
+    margin-bottom: 8px;
+  }
+
+  .metric-label {
+    font-size: 1em; // Leggermente più grande
+    color: #7f8c8d; // Grigio soft per le label
+    text-transform: uppercase;
+    letter-spacing: 0.8px; // Più spaziatura per le lettere
+  }
+
+  .progress-bar-overall {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 10px; // Barra più alta
+    background-color: #87e0b5; // Un verde acquamarina soft
+    border-bottom-left-radius: 15px;
+    transition: width 0.6s ease-out; // Transizione più fluida
+  }
+}
+
+.recent-learnhubs {
+  h3 {
+    font-size: 2.2em; // Titolo sezione più grande
+    color: #2c3e50;
+    margin-bottom: 30px; // Più spazio
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .learnhub-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); // Carte leggermente più grandi
+    gap: 30px; // Aumento del gap
+  }
+
+  .learnhub-dashboard-card {
+    background-color: #ffffff;
+    border-radius: 15px; // Bordi più arrotondati
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); // Ombra morbida
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    border: 1px solid #eef1f4; // Bordo molto sottile e chiaro
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12); // Ombra più accentuata al hover
+    }
+
+    .card-header {
+      background-color: #f5f8fb; // Sfondo header più chiaro
+      padding: 20px 28px; // Più padding
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e0e6ed;
+
+      h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 1.3em; // Titolo card leggermente più grande
+        font-weight: 700;
+      }
+
+      .hub-progress-percent {
+        background-color: #87e0b5; // Verde acquamarina soft
+        color: #34495e; // Testo scuro sulla percentuale
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+    }
+
+    .card-body {
+      padding: 25px 28px; // Più padding
+      flex-grow: 1;
+
+      .progress-bar-hub {
+        height: 12px; // Barra più alta
+        background-color: #e9eff2; // Sfondo barra molto chiaro
+        border-radius: 6px;
+        margin-bottom: 18px; // Più spazio sotto la barra
+        overflow: hidden;
+
+        .progress-fill {
+          height: 100%;
+          background-color: #a7e1f4; // Blu chiaro per il progresso specifico
+          border-radius: 6px;
+          transition: width 0.5s ease-out;
+        }
+      }
+
+      .last-activity {
+        font-size: 1em; // Leggermente più grande
+        color: #5b718b;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .continue-hub-button {
+        display: block;
+        width: 100%;
+        padding: 14px 25px; // Padding generoso
+        background-color: #5cb3e3; // Stesso blu della CTA principale
+        color: white;
+        border: none;
+        border-radius: 10px; // Bordi arrotondati
+        font-size: 1.05em;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        &:hover {
+          background-color: #4a91c9;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .dashboard-container {
+    padding: 2rem;
+    gap: 30px;
+  }
+  .welcome-banner {
+    padding: 3rem;
+
+    .welcome-content {
+      h2 {
+        font-size: 2.5em;
+      }
+
+      .motivation-quote {
+        font-size: 1.1em;
+      }
+
+      .cta-button {
+        padding: 14px 28px;
+        font-size: 1.05em;
+      }
+    }
+
+    // --- Media Query per .banner-illustration a 1024px ---
+    .banner-illustration {
+      max-width: 220px;
+    }
+    // --- Fine Media Query per .banner-illustration a 1024px ---
+  }
+
+  .metrics-summary {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+  }
+  .metric-card {
+    padding: 25px;
+
+    .metric-icon {
+      font-size: 2.8em;
+    }
+
+    .metric-value {
+      font-size: 2.2em;
+    }
+
+    .metric-label {
+      font-size: 0.95em;
+    }
+  }
+
+  .recent-learnhubs {
+    h3 {
+      font-size: 2em;
+      margin-bottom: 25px;
+    }
+
+    .learnhub-cards-container {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .learnhub-dashboard-card {
+      .card-header {
+        padding: 18px 25px;
+
+        h4 {
+          font-size: 1.2em;
+        }
+      }
+
+      .card-body {
+        padding: 22px 25px;
+
+        .continue-hub-button {
+          padding: 12px 22px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem;
+    gap: 25px;
+  }
+
+  .welcome-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 2.5rem;
+
+    .welcome-content {
+      h2 {
+        font-size: 2em;
+        margin-bottom: 0.7rem;
+      }
+
+      .motivation-quote {
+        font-size: 1em;
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 1em;
+      }
+    }
+
+    // --- Media Query per .banner-illustration a 768px ---
+    .banner-illustration {
+      margin-top: 25px;
+      max-width: 180px;
+      margin-left: 0; // Rimuovi il margine sinistro quando gli elementi sono in colonna
+    }
+    // --- Fine Media Query per .banner-illustration a 768px ---
+  }
+
+  .metrics-summary {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .metric-card {
+    padding: 20px;
+    align-items: center;
+    text-align: center;
+
+    .metric-icon {
+      font-size: 2.5em;
+    }
+
+    .metric-value {
+      font-size: 2em;
+    }
+
+    .metric-label {
+      font-size: 0.9em;
+    }
+  }
+
+  .recent-learnhubs {
+    h3 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    .learnhub-cards-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .learnhub-dashboard-card {
+      .card-header {
+        padding: 15px 20px;
+
+        h4 {
+          font-size: 1.1em;
+        }
+      }
+
+      .card-body {
+        padding: 18px 20px;
+
+        .continue-hub-button {
+          padding: 10px 18px;
+          font-size: 0.95em;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 1rem;
+    gap: 20px;
+  }
+
+  .welcome-banner {
+    padding: 2rem;
+
+    .welcome-content {
+      h2 {
+        font-size: 1.7em;
+      }
+
+      .motivation-quote {
+        font-size: 0.9em;
+        margin-bottom: 1rem;
+      }
+
+      .cta-button {
+        padding: 10px 18px;
+        font-size: 0.9em;
+      }
+    }
+
+    // --- Media Query per .banner-illustration a 480px ---
+    .banner-illustration {
+      max-width: 150px;
+    }
+    // --- Fine Media Query per .banner-illustration a 480px ---
+  }
+
+  .metric-card {
+    padding: 18px;
+
+    .metric-icon {
+      font-size: 2.2em;
+    }
+
+    .metric-value {
+      font-size: 1.6em;
+    }
+
+    .metric-label {
+      font-size: 0.8em;
+    }
+  }
+
+  .recent-learnhubs {
+    h3 {
+      font-size: 1.5em;
+    }
+  }
+}
