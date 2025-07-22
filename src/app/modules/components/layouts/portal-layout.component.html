@@ -1,7 +1,7 @@
 <div class="container">
-  <app-header class="header"></app-header>
+  <app-header class="header" (toggleSidenav)="toggleSideNav()"
+              [isSideNavOpen]="isSideNavOpen"></app-header>
   @if (showSideNav()) {
-    <!-- Layout con sidenav -->
     <mat-sidenav-container class="content-container">
       <mat-sidenav #sidenav
                    mode="side"
@@ -13,13 +13,6 @@
       </mat-sidenav>
 
       <mat-sidenav-content [class.sidenav-closed]="!isSideNavOpen">
-        <button mat-icon-button
-                class="toggle-btn"
-                (click)="toggleSideNav()"
-                [matTooltip]="isSideNavOpen ? 'Mbyll menu' : 'Hap menu'">
-          <mat-icon>{{isSideNavOpen ? 'chevron_left' : 'chevron_right'}}</mat-icon>
-        </button>
-
         <main class="content-admin">
           <router-outlet></router-outlet>
         </main>

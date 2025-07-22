@@ -17,11 +17,46 @@ $yellowNotification: #ee9849;
     align-items: center;
     justify-content: space-between;
 
-    .h-left .logo {
-      max-width: 200px;
+    .h-left {
+      display: flex;
+      align-items: center;
 
-      img {
-        max-width: 100%;
+      .sidenav-toggle-btn {
+        margin-right: 30px;
+        color: $blueCustom;
+        background-color: transparent;
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+
+        &:hover {
+          background-color: rgba($blueCustom, 0.1);
+          transform: scale(1.05);
+          cursor: pointer;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+
+      .logo {
+        max-width: 200px;
+
+        img {
+          max-width: 100%;
+        }
       }
     }
 

@@ -1,6 +1,14 @@
 <div class="header">
   <div class="container">
     <div class="h-left">
+      <button mat-icon-button
+              *ngIf="showPanel()"
+              class="sidenav-toggle-btn"
+              (click)="onToggleSidenavClick()"
+              [matTooltip]="isSideNavOpen ? 'Mbyll menu' : 'Hap menu'">
+        <mat-icon>{{ isSideNavOpen ? 'chevron_left' : 'menu' }}</mat-icon>
+      </button>
+
       <div class="logo">
         <a routerLink="/">
           <img src="assets/svgImages/logo.svg" alt="brainGain-logo">
@@ -14,12 +22,6 @@
            [matTooltip]="(user$ | async)?.firstName + ' ' + (user$ | async)?.lastName">
         {{ initials$ | async }}
       </div>
-<!--      <mat-icon class="cart" routerLink="paguaj">shopping_cart</mat-icon>-->
-      <!--      <div class="quiz" routerLink="kurset" matTooltip="Shko ke Kurset">-->
-      <!--        <add-quiz-svg></add-quiz-svg>-->
-      <!--      </div>-->
-      <!--Do ta shtojm si feature me von kete pjesen e notificationit -->
-<!--      <mat-icon class="notification" routerLink="/student/kurset">notifications</mat-icon>-->
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item routerLink="settings">
           <mat-icon>person</mat-icon>

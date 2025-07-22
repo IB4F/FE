@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core'; // Importa Input
 import {Router, RouterLink} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {MatMenuModule} from "@angular/material/menu";
@@ -37,6 +37,10 @@ export class HeaderComponent implements OnInit {
       return `${firstNameInitial}${lastNameInitial}`.toUpperCase();
     })
   );
+
+  @Output() toggleSidenav = new EventEmitter<void>();
+  @Input() isSideNavOpen: boolean = true;
+
   constructor(
     private _tokenStorageService: TokenStorageService,
     private _authService: AuthService,
@@ -54,6 +58,10 @@ export class HeaderComponent implements OnInit {
         this.userRole = null;
       }
     });
+  }
+
+  onToggleSidenavClick(): void {
+    this.toggleSidenav.emit();
   }
 
   logout() {
