@@ -1,8 +1,11 @@
 /* Stili globali o variabili se usi un file separato per le variabili */
 $primary-blue: #259ccb;
-$light-blue-bg: #e0f7fa;
+$light-blue-bg: #e0f7fa; // Questo era il colore delle step-card, lo manterrò per il banner se preferisci o posso cambiarlo
 $dark-text-blue: #0a4670;
 $white-text: #ffffff;
+
+// Nuovo colore per lo sfondo delle step-card, un azzurro più chiaro o un colore pastello
+$step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguersi ma rimanere armonioso
 
 .container {
   padding: 100px 30px;
@@ -162,5 +165,124 @@ $white-text: #ffffff;
     width: 80%;
     font-size: 1em;
     height: 40px;
+  }
+}
+
+/* Nuove regole per la sezione "registration-flow" */
+.registration-flow {
+  margin: 100px 0;
+  text-align: center;
+  padding: 0 20px;
+
+  .flow-title {
+    font-size: 2.2em;
+    color: $dark-text-blue;
+    margin-bottom: 60px;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+      font-size: 1.8em;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1.5em;
+      margin-bottom: 30px;
+    }
+  }
+
+  .flow-steps {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; // Allinea gli elementi in alto
+    gap: 30px; // Spazio tra le card
+
+    @media (max-width: 992px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .step-card {
+    background-color: $step-card-bg; // Nuovo colore di sfondo per le card
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    max-width: 350px;
+    min-height: 250px; // Assicura altezza uniforme
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; // Allinea contenuto in alto
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .number-wrapper { // Cambiato da .icon-wrapper a .number-wrapper
+      background-color: $primary-blue;
+      border-radius: 50%;
+      padding: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+      font-size: 45px; // Dimensione del numero
+      font-weight: bold;
+      color: $white-text; // Colore bianco per il numero
+      line-height: 1; // Rimuove spazio extra sopra/sotto il numero
+    }
+
+    h3 {
+      color: $dark-text-blue;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      font-weight: bold;
+
+      @media (max-width: 768px) {
+        font-size: 1.3em;
+      }
+    }
+
+    p {
+      color: $dark-text-blue;
+      font-size: 1em;
+      line-height: 1.6;
+      opacity: 0.9;
+
+      @media (max-width: 768px) {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 992px) {
+      width: 80%;
+      max-width: 450px; // Aumenta larghezza su schermi medi
+    }
+
+    @media (max-width: 576px) {
+      width: 100%;
+      padding: 25px;
+      min-height: unset; // Rimuove altezza fissa su mobile
+    }
+  }
+
+  .arrow-icon {
+    font-size: 3em;
+    color: $primary-blue;
+    margin-top: 50px; // Sposta le frecce in alto per allinearsi meglio
+
+    @media (max-width: 992px) {
+      transform: rotate(90deg); // Ruota la freccia per la vista in colonna
+      margin: 20px 0; // Spazio tra le card e le frecce
+      font-size: 2.5em;
+    }
   }
 }

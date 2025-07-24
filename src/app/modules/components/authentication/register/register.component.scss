@@ -1,13 +1,5 @@
 $blueCustom: #259ccb;
 
-// .signup-container {
-//     display: flex;
-//     justify-content: flex-end;
-//     font-family: Arial, sans-serif;
-//     position: relative;
-//     height: 100%;
-// }
-
 .container {
   display: flex;
   flex-direction: column;
@@ -31,7 +23,6 @@ $blueCustom: #259ccb;
   }
 }
 
-
 .register-body {
   background: white;
   padding: 40px;
@@ -51,6 +42,7 @@ $blueCustom: #259ccb;
   justify-content: space-between;
   font-family: Arial, sans-serif;
   position: relative;
+  gap: 40px;
 }
 
 .register-panel {
@@ -86,7 +78,6 @@ $blueCustom: #259ccb;
   }
 }
 
-
 .register-body p {
   margin-top: 20px;
 }
@@ -100,7 +91,6 @@ $blueCustom: #259ccb;
 
 ::ng-deep .mdc-notched-outline > * {
   border-color: $blueCustom !important;
-
 }
 
 ::ng-deep .mdc-notched-outline__notch {

@@ -1,22 +1,22 @@
 <div class="container">
-  <!-- Billing cycle selector -->
   <form [formGroup]="packegeForm">
     <mat-radio-group formControlName="billingCycle" class="billing-switcher">
-      <mat-radio-button value="annual" class="radio-option">Vjecare</mat-radio-button>
+      <mat-radio-button value="annual" class="radio-option">Vjetore</mat-radio-button>
       <mat-radio-button value="monthly" class="radio-option">Mujore</mat-radio-button>
     </mat-radio-group>
   </form>
 
-  <!-- Dynamic cards based on selected billing cycle -->
   <div class="cards-container">
     <div class="card"
-         *ngFor="let card of currentCards"
+         *ngFor="let card of currentCards; let i = index"
          [ngClass]="{
            'selected': selectedCard === card,
-           'non-selected': selectedCard && selectedCard !== card
+           'non-selected': selectedCard && selectedCard !== card,
+           'best-value': card.isBestValue
          }"
          (click)="selectCard(card)">
-      <img src="assets/svgImages/price.svg" alt="Price Tag">
+      <div *ngIf="card.isBestValue" class="best-value-badge">Zgjedhja Më e Mirë</div>
+      <img src="assets/svgImages/price.svg" alt="Etiketë Çmimi">
       <h2>{{ card.title }}</h2>
       <ul class="card-content">
         <li *ngFor="let feature of card.features" [class.disabled]="!feature.available">
@@ -26,6 +26,9 @@
         </li>
       </ul>
       <p class="price">{{ card.priceDisplay }}</p>
+      <button class="select-button" [class.selected-button]="selectedCard === card">
+        {{ selectedCard === card ? 'Përzgjedhur' : 'Përzgjidh' }}
+      </button>
     </div>
   </div>
 </div>

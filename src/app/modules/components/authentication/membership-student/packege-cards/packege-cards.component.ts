@@ -17,6 +17,7 @@ interface Card {
   price: number;
   priceDisplay: string;
   features: Feature[];
+  isBestValue?: boolean; // Added for the "best value" indicator
 }
 
 type BillingCycle = 'annual' | 'monthly';
@@ -93,26 +94,26 @@ export class PackegeCardsComponent implements OnInit {
     // Clear existing cards
     this.cards = { annual: [], monthly: [] };
 
-    // Define feature templates for each package type
+    // Define feature templates for each package type in Albanian
     const featureTemplates: Record<string, Feature[]> = {
       "Bazë": [
-        { text: '3 HD video lessons', available: true },
-        { text: '1 Official exam', available: true },
-        { text: 'Practice quizzes', available: false },
-        { text: 'Email support', available: false }
+        { text: '3 mësime video HD', available: true },
+        { text: '1 provim zyrtar', available: true },
+        { text: 'Kuize praktike', available: false },
+        { text: 'Mbështetje me email', available: false }
       ],
       "Standarde": [
-        { text: '10 HD video lessons', available: true },
-        { text: '3 Official exams', available: true },
-        { text: 'Practice quizzes', available: true },
-        { text: 'Priority email support', available: true }
+        { text: '10 mësime video HD', available: true },
+        { text: '3 provime zyrtare', available: true },
+        { text: 'Kuize praktike', available: true },
+        { text: 'Mbështetje me email prioritare', available: true }
       ],
       "Premium": [
-        { text: 'Unlimited HD video lessons', available: true },
-        { text: '5 Official exams', available: true },
-        { text: 'Practice quizzes', available: true },
-        { text: '24/7 Priority support', available: true },
-        { text: 'Personal tutor sessions', available: true }
+        { text: 'Mësime video HD të pakufizuara', available: true },
+        { text: '5 provime zyrtare', available: true },
+        { text: 'Kuize praktike', available: true },
+        { text: 'Mbështetje prioritare 24/7', available: true },
+        { text: 'Sesione me tutor personal', available: true }
       ]
     };
 
@@ -126,17 +127,34 @@ export class PackegeCardsComponent implements OnInit {
         features: [...featureTemplates[item.name]]
       };
 
+      // Mark "Standarde" as the best value
+      if (item.name === 'Standarde') {
+        card.isBestValue = true;
+      }
+
       if (item.type === 'yearly') {
         this.cards.annual.push(card);
       } else if (item.type === 'monthly') {
         this.cards.monthly.push(card);
       }
     });
+
+    // Sort cards to ensure "Standarde" (best value) is in the middle if applicable,
+    // assuming there are always three packages: Bazë, Standarde, Premium.
+    // This sorting ensures the "best-value" class is applied to the middle card.
+    this.cards.annual.sort((a, b) => {
+      const order = ["Bazë", "Standarde", "Premium"];
+      return order.indexOf(a.title) - order.indexOf(b.title);
+    });
+    this.cards.monthly.sort((a, b) => {
+      const order = ["Bazë", "Standarde", "Premium"];
+      return order.indexOf(a.title) - order.indexOf(b.title);
+    });
   }
 
   private getPriceDisplay(price: number, type: string): string {
     return type === 'yearly'
-      ? `${price} €/year`
-      : `${price} €/month`;
+      ? `${price} €/vit`
+      : `${price} €/muaj`;
   }
 }

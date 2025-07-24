@@ -205,7 +205,6 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   getClassName(name: string): string | undefined {
-    console.log(name)
     const foundClass = this.classesList.find(c => c.name === name);
     return foundClass ? foundClass.id : '';
   }
