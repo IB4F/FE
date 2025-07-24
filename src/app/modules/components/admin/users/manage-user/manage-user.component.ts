@@ -8,7 +8,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
@@ -43,6 +43,7 @@ export class ManageUserComponent implements OnInit {
     private adminUserService: AdminUserService,
     private toast: NgToastService,
     private _formBuilder: FormBuilder,
+    private location: Location
   ) {
     this.userForm = this._formBuilder.group({
       firstName: [''],
@@ -95,5 +96,9 @@ export class ManageUserComponent implements OnInit {
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       }
     );
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

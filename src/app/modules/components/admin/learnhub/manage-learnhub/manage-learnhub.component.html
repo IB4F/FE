@@ -97,7 +97,6 @@
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
-          <!-- Icona Aggiungi Quiz (blu) -->
           <mat-icon
             *ngIf="row.get('id')?.value"
             matTooltip="Menaxho Kuizet"
@@ -106,7 +105,6 @@
             visibility
           </mat-icon>
 
-          <!-- Icona Elimina (grigio) -->
           <mat-icon
             matTooltip="Fshije Linkun"
             class="delete-icon"
@@ -117,6 +115,11 @@
       </div>
     </div>
     <div class="btn-container">
+      <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
+              color="warn">
+        <mat-icon>arrow_back</mat-icon>
+        Learnhub
+      </button>
       <button mat-raised-button color="primary" (click)="handleButtonClick()" [disabled]="!isFormValid()">
         {{ isEditMode ? 'Përditëso' : 'Krijo' }}
       </button>

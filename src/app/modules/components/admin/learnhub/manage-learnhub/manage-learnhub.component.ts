@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {requiredRowsValidator} from "../../../../../helpers/customValidators/links.validator";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-manage-learnhub',
@@ -29,7 +29,8 @@ import {MatButton} from "@angular/material/button";
     MatFormFieldModule,
     MatSliderModule,
     MatTooltipModule,
-    MatButton
+    MatButton,
+    MatButtonModule
   ],
   templateUrl: './manage-learnhub.component.html',
   styleUrl: './manage-learnhub.component.scss'
@@ -51,6 +52,7 @@ export class ManageLearnhubComponent implements OnInit {
     private route: ActivatedRoute,
     private _detailsService: DetailsService,
     public router: Router,
+    private location: Location
   ) {
   }
 
@@ -217,6 +219,10 @@ export class ManageLearnhubComponent implements OnInit {
   goToQuiz(link: AbstractControl) {
     const linkId = link.get('id')?.value;
     this.router.navigate(['/admin/learnhub/manage/quiz', linkId]);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
 }

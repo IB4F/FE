@@ -10,7 +10,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
 import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatSort, MatSortModule} from "@angular/material/sort";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
 import {QuizzesService} from "../../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
@@ -18,6 +18,7 @@ import {ConfirmModalComponent} from "../../../../../shared/components/confirm-mo
 import {MatDialog} from "@angular/material/dialog";
 import {QuizModalComponent} from "./quiz-modal/quiz-modal.component";
 import {ActivatedRoute, ParamMap} from "@angular/router";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-manage-quiz',
@@ -33,7 +34,8 @@ import {ActivatedRoute, ParamMap} from "@angular/router";
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './manage-quiz.component.html',
   styleUrl: './manage-quiz.component.scss'
@@ -59,6 +61,7 @@ export class ManageQuizComponent implements OnInit {
     private toast: NgToastService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
+    private location: Location
   ) {
   }
 
@@ -172,5 +175,10 @@ export class ManageQuizComponent implements OnInit {
       }
     });
   }
+
+  goBack(): void {
+    this.location.back();
+  }
+
 
 }

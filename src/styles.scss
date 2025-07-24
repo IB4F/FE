@@ -199,33 +199,32 @@ button {
   justify-content: flex-end;
   margin-bottom: 25px;
   padding-right: 0;
+  gap: 20px;
 
-  .add-button {
-    /* background-color: var(--primary-color); */
-    /* CORREZIONE: Rimosso background-color per mantenere il tema Material di default (es. indigo-pink) */
-    color: white; /* Il testo dovrebbe essere bianco sul colore di default di Material */
+  .add-button,
+  .back-button {
+    color: white;
     font-weight: 600;
     padding: 10px 24px;
     border-radius: 28px;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    /* box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3); */
-    /* CORREZIONE: Rimosso o modificato l'ombra se non più appropriata al colore di default */
-    /* Lasciamo che Material gestisca l'ombra o ne mettiamo una più generica */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Ombra generica più adatta
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
 
-    &:hover {
-      /* background-color: darken($primary-color-sass, 10%); */
-      /* CORREZIONE: Rimosso, il tema Material gestirà l'hover */
-      transform: translateY(-3px);
-      /* box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); */
-      /* CORREZIONE: Rimosso o modificato */
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); // Ombra generica più intensa all'hover
-    }
 
-    mat-icon {
-      margin-right: 8px;
-      font-size: 20px;
-    }
+  .back-button {
+    background-color: #6c757d;
+  }
+
+  .add-button:hover,
+  .back-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  mat-icon {
+    margin-right: 8px;
+    font-size: 20px;
   }
 }
 

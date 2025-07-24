@@ -51,19 +51,6 @@
     }
   }
 
-  .button-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    padding-right: 8px;
-
-    .add-button {
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-  }
-
   .mat-elevation-z8 {
     width: 100%;
     overflow-x: auto;
