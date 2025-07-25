@@ -106,7 +106,33 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1); /* Sottile linea di divisione */
 }
 
-/* Media Queries per schermi più piccoli */
+/* --- Media Queries per la reattività --- */
+
+/* Tablet in modalità orizzontale e schermi medi (da 769px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .footer-links {
+    justify-content: space-around; /* Mantieni le sezioni distribuite */
+    max-width: 90%; /* Occupano più larghezza */
+  }
+
+  .footer-section {
+    min-width: unset; /* Rimuovi la larghezza minima */
+    width: 45%; /* Due colonne per riga */
+    margin: 15px 10px; /* Spazio leggermente più contenuto */
+    text-align: left; /* Mantieni allineamento a sinistra se preferisci */
+  }
+
+  .footer-section h3::after {
+    left: 0; /* Mantieni la sottolineatura a sinistra */
+    transform: none;
+  }
+
+  .social-icon {
+    justify-content: flex-start; /* Mantieni allineamento a sinistra */
+  }
+}
+
+/* Smartphone e tablet in modalità verticale (fino a 768px) */
 @media (max-width: 768px) {
   .footer-links {
     flex-direction: column; /* Impila le sezioni verticalmente */
@@ -114,7 +140,7 @@
   }
 
   .footer-section {
-    min-width: unset; /* Rimuove il vincolo di larghezza minima */
+    min-width: unset; /* Rimuovi il vincolo di larghezza minima */
     width: 90%; /* Occupa quasi tutta la larghezza disponibile */
     text-align: center; /* Centra il testo */
     margin: 15px 0;

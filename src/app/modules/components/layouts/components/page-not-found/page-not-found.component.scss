@@ -5,39 +5,47 @@ $font-family-secondary: 'Cabin', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 
   .center-content {
+    display: flex;
+    justify-content: center;
     text-align: center;
+    width: 100%;
   }
 
   .not-found-container {
-    height: 200px;
     position: relative;
+    margin-bottom: 20px;
   }
 
   .not-found-body {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
     max-width: 520px;
     width: 100%;
     line-height: 1.4;
     text-align: center;
+    padding: 0 15px;
+    box-sizing: border-box;
 
     h1 {
       font-size: 200px;
       font-family: $font-family-primary;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
       font-weight: 900;
       margin: 0;
       color: #262626;
       text-transform: uppercase;
       letter-spacing: -40px;
+      line-height: 1;
     }
 
     h2 {
@@ -60,10 +68,59 @@ $font-family-secondary: 'Cabin', sans-serif;
       margin: 0;
       letter-spacing: 3px;
       padding-left: 6px;
+      margin-bottom: 10px;
     }
 
     span {
       text-shadow: -8px 0 0 #fff;
+    }
+  }
+}
+
+/* --- Media Queries --- */
+
+/* Per schermi più piccoli, come i tablet (es. larghezza massima di 768px) */
+@media screen and (max-width: 768px) {
+  .not-found-body {
+    h1 {
+      font-size: 150px;
+      letter-spacing: -30px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    h3 {
+      font-size: 14px;
+    }
+
+    span {
+      text-shadow: -6px 0 0 #fff;
+    }
+  }
+}
+
+/* Per schermi ancora più piccoli, come i telefoni (es. larghezza massima di 480px) */
+@media screen and (max-width: 480px) {
+  .not-found-body {
+    h1 {
+      font-size: 100px;
+      letter-spacing: -20px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    span {
+      text-shadow: -4px 0 0 #fff;
     }
   }
 }

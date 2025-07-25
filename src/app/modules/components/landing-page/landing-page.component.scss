@@ -9,12 +9,11 @@ $blue: #2962ff;
   animation-delay: 0s;
 }
 
-
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 87px 0 0 0;
+  padding: 87px 15px 0 15px; // Aggiunto padding laterale
 
   .left {
     flex-direction: column;
@@ -40,14 +39,14 @@ $blue: #2962ff;
       position: relative;
 
       &:hover {
-        >svg {
+        > svg {
           path {
             stroke-dashoffset: 0;
           }
         }
       }
 
-      >svg {
+      > svg {
         position: absolute;
         width: 70px;
         top: -31px;
@@ -59,7 +58,6 @@ $blue: #2962ff;
           stroke-dasharray: 26px;
           stroke-dashoffset: 26px;
           transition: all 1s;
-          // animation: dashAnimation2 3s linear infinite;
         }
       }
 
@@ -82,21 +80,35 @@ $blue: #2962ff;
           }
         }
       }
+    }
+  }
 
+  .description-image {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // Rende l'SVG al suo interno responsive
+    svg {
+      max-width: 100%;
+      height: auto;
     }
   }
 }
+
+/* =============================================== */
+/* ================== KEYFRAMES ================== */
+/* =============================================== */
 
 @keyframes floating {
   0% {
     opacity: 1;
     transform: translateY(0px);
   }
-
   50% {
     transform: translateY(-10px);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0px);
@@ -108,7 +120,6 @@ $blue: #2962ff;
     opacity: 0.5;
     text-shadow: 2px 2px 10px $blue;
   }
-
   100% {
     opacity: 1;
     text-shadow: 2px 2px 20px $blue;
@@ -119,8 +130,63 @@ $blue: #2962ff;
   from {
     stroke-dashoffset: 200;
   }
-
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+
+/* =============================================== */
+/* ============== RESPONSIVE RULES =============== */
+/* =============================================== */
+
+// Tablet e schermi piccoli (fino a 992px)
+@media (max-width: 992px) {
+  .container {
+    align-items: center;
+
+    .left {
+      .lg-title {
+        font-size: 48px;
+        line-height: 58px;
+      }
+    }
+  }
+}
+
+// Mobile (fino a 768px)
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; // Impila gli elementi verticalmente
+    text-align: center;
+    padding-top: 40px;
+
+    .left {
+      width: 100%; // La colonna di testo occupa tutta la larghezza
+      padding-right: 0;
+      align-items: center;
+      margin-bottom: 40px; // Aggiunge spazio tra testo e SVG
+
+      .lg-title {
+        font-size: 36px;
+        line-height: 46px;
+
+        > svg {
+          width: 50px;
+          top: -20px;
+          right: auto; // Lasciamo che si centri con il testo
+        }
+
+        span {
+          svg {
+            bottom: -10px;
+          }
+        }
+      }
+    }
+
+    .description-image {
+      width: 100%; // L'immagine occupa tutta la larghezza
+    }
   }
 }

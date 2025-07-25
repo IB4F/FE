@@ -1,6 +1,10 @@
 $blueCustom: #259ccb;
 $yellowNotification: #ee9849;
 
+// Variabili per i breakpoints
+$breakpoint-mobile: 767px;
+$breakpoint-tablet: 1023px;
+
 .header {
   width: 100%;
   display: flex;
@@ -64,27 +68,18 @@ $yellowNotification: #ee9849;
       display: flex;
       align-items: center;
 
-      .quiz {
-        cursor: pointer;
-        transition: transform 0.3s;
-
-        &:hover {
-          transform: scale(1.5);
-        }
-      }
-
-      button {
+      & > button {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 13px 29px;
-        font-family: Lufga-Regular;
         font-size: 16px;
         line-height: 14px;
         letter-spacing: 0.16px;
         transition: all 0.3s;
         border-radius: 21px;
         margin-right: 10px;
+        white-space: nowrap;
 
         &:nth-child(1) {
           color: $blueCustom;
@@ -130,7 +125,6 @@ $yellowNotification: #ee9849;
         display: flex;
         align-items: center;
         padding: 13px 29px;
-        font-family: Lufga-Regular;
         font-size: 16px;
         line-height: 14px;
         letter-spacing: 0.16px;
@@ -141,11 +135,13 @@ $yellowNotification: #ee9849;
         border-radius: 21px;
         cursor: pointer;
         transition: background-color 0.3s;
+        white-space: nowrap;
 
         &:hover {
           background-color: darken($blueCustom, 10%);
         }
       }
+
 
       .mat-menu-content {
         padding: 0;
@@ -154,7 +150,6 @@ $yellowNotification: #ee9849;
           display: flex;
           align-items: center;
           padding: 12px 16px;
-          font-family: Lufga-Regular;
           font-size: 14px;
           line-height: 18px;
           letter-spacing: 0.1px;
@@ -188,7 +183,6 @@ $yellowNotification: #ee9849;
       .mat-icon {
         margin: 0 10px;
         cursor: pointer;
-
       }
 
       .notification {
@@ -198,6 +192,101 @@ $yellowNotification: #ee9849;
       .cart {
         margin-left: 25px;
         color: #0a4670;
+      }
+    }
+  }
+}
+
+
+// --- Media Queries per la responsività ---
+
+@media (max-width: $breakpoint-tablet) {
+  .header {
+    .container {
+      width: 95%;
+      padding: 15px 0;
+
+      .h-left {
+        .sidenav-toggle-btn {
+          margin-right: 15px;
+          width: 40px;
+          height: 40px;
+
+          mat-icon {
+            font-size: 20px;
+          }
+        }
+
+        .logo {
+          max-width: 150px;
+        }
+      }
+
+      .h-right {
+        & > button {
+          padding: 8px 15px;
+          font-size: 13px;
+          margin-right: 8px;
+          border-radius: 18px;
+          min-width: 0;
+        }
+
+        .user-menu {
+          padding: 8px 15px;
+          font-size: 13px;
+          border-radius: 18px;
+          min-width: 0;
+        }
+
+        .mat-icon {
+          margin: 0 8px;
+        }
+      }
+    }
+  }
+}
+
+// Stili specifici per schermi mobile (max 767px)
+@media (max-width: $breakpoint-mobile) {
+  .header {
+    .container {
+      padding: 10px 0;
+
+      .h-left {
+        .sidenav-toggle-btn {
+          margin-right: 10px;
+          width: 36px;
+          height: 36px;
+
+          mat-icon {
+            font-size: 18px;
+          }
+        }
+
+        .logo {
+          max-width: 120px;
+        }
+      }
+
+      .h-right {
+        & > button {
+          padding: 6px 12px;
+          font-size: 12px;
+          margin-right: 5px;
+          border-radius: 15px;
+          min-width: 0;
+        }
+
+        .user-menu {
+          padding: 6px 12px;
+          font-size: 12px;
+          border-radius: 15px;
+          min-width: 0;
+        }
+
+        .mat-icon {
+          margin: 0 5px;
+        }
       }
     }
   }

@@ -5,27 +5,34 @@ $blueCustom: #259ccb;
   flex-direction: column;
   height: 100vh;
   align-items: center;
+  justify-content: center; /* Center content vertically on smaller screens */
+  padding: 15px; /* Add some padding for smaller screens */
+  box-sizing: border-box; /* Include padding in element's total width and height */
 
   >img {
     margin: 20px 0;
     cursor: pointer;
     width: fit-content;
+    max-width: 150px; /* Limit logo size on smaller screens */
   }
 }
 
 .login-container {
   display: flex;
+  flex-direction: row; /* Default for larger screens */
+  width: 100%; /* Ensure it takes full width initially */
+  max-width: 1200px; /* Max width for the entire container on larger screens */
   height: 100%;
   justify-content: space-between;
   font-family: Arial, sans-serif;
   position: relative;
+  align-items: center; /* Align items in the center */
 }
-
 
 .login-body {
   background: white;
   padding: 40px;
-  width: 49%;
+  width: 49%; /* Default for larger screens */
   border: 1px solid white;
   border-radius: 25px;
   position: relative;
@@ -33,12 +40,13 @@ $blueCustom: #259ccb;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
-
 
 .login-body h2,
 .info-section h2 {
   margin-bottom: 20px;
+  text-align: center; /* Center headings for better aesthetics */
 }
 
 .login-form .btn-container button {
@@ -49,6 +57,7 @@ $blueCustom: #259ccb;
   border: none;
   border-radius: 40px;
   cursor: pointer;
+  font-size: 16px; /* Adjust font size for readability */
 
   &:disabled {
     opacity: 0.5;
@@ -65,15 +74,25 @@ $blueCustom: #259ccb;
     text-decoration: underline;
     color: #2e34df;
     cursor: pointer;
+    font-size: 14px; /* Adjust font size */
   }
 }
 
 .login-body form {
-  max-width: 680px;
+  width: 100%; /* Ensure form takes full width of its parent */
+  max-width: 400px; /* Limit form width within the body */
 }
 
 .login-body p {
   margin-top: 20px;
+  text-align: center; /* Center paragraph text */
+  font-size: 14px;
+}
+
+.signup-text {
+  display: flex;
+  justify-content: center; /* Center the "Nuk ke një llogari?" text */
+  align-items: center;
 }
 
 .login-body a {
@@ -81,31 +100,33 @@ $blueCustom: #259ccb;
   text-decoration: underline;
   color: #2e34df;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .mat-mdc-form-field {
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Increase spacing between form fields */
 }
-
 
 .login-form {
   width: 100%;
-  max-width: 680px;
+  max-width: 680px; /* Keep this max-width for the form content itself */
 }
 
 mat-icon {
   color: #536065;
 }
 
-
 .right {
   margin: auto;
-  width: 49%;
+  width: 49%; /* Default for larger screens */
   display: flex;
   justify-content: flex-end;
+  align-items: center; /* Vertically center the image */
 
   >img {
     width: 100%;
+    max-width: 500px; /* Limit max width of the image */
+    height: auto; /* Maintain aspect ratio */
   }
 }
 
@@ -119,4 +140,97 @@ mat-icon {
 
 ::ng-deep .mdc-notched-outline__notch {
   border-left: none !important;
+}
+
+/* --- Media Queries --- */
+
+/* For Tablet and smaller screens (e.g., max-width: 992px) */
+@media (max-width: 992px) {
+  .login-container {
+    flex-direction: column; /* Stack elements vertically */
+    height: auto; /* Allow height to adjust */
+    padding: 0 20px; /* Add some horizontal padding */
+  }
+
+  .login-body {
+    width: 100%; /* Full width on tablets */
+    padding: 30px; /* Slightly less padding */
+    margin-bottom: 20px; /* Space between login form and image */
+  }
+
+  .right {
+    width: 80%; /* Adjust image width for tablets */
+    margin: 20px auto; /* Center the image and add margin */
+    justify-content: center; /* Center the image horizontally */
+  }
+
+  .right > img {
+    max-width: 400px; /* Further limit image size on tablets */
+  }
+}
+
+/* For Mobile screens (e.g., max-width: 768px) */
+@media (max-width: 768px) {
+  .container {
+    height: auto; /* Allow container to grow beyond 100vh if content is long */
+    padding: 10px;
+  }
+
+  .container > img {
+    margin: 15px 0;
+    max-width: 120px;
+  }
+
+  .login-body {
+    padding: 20px; /* Reduce padding further for mobile */
+    border-radius: 15px; /* Slightly less rounded corners */
+  }
+
+  .login-body h2 {
+    font-size: 24px; /* Adjust heading size */
+  }
+
+  .mat-mdc-form-field {
+    margin-bottom: 10px; /* Reduce spacing between form fields */
+  }
+
+  .login-form .btn-container button {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .forget-pass span,
+  .login-body p,
+  .login-body a {
+    font-size: 13px; /* Adjust font sizes for mobile */
+  }
+
+  .right {
+    width: 90%; /* Increase image width for better visibility on mobile */
+    margin: 15px auto;
+  }
+
+  .right > img {
+    max-width: 300px; /* Limit image size for mobile */
+  }
+}
+
+/* For very small mobile screens (e.g., max-width: 480px) */
+@media (max-width: 480px) {
+  .login-body {
+    padding: 15px;
+  }
+
+  .login-body h2 {
+    font-size: 22px;
+  }
+
+  .login-form .btn-container button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .right > img {
+    max-width: 250px;
+  }
 }
