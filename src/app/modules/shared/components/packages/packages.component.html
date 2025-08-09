@@ -18,6 +18,10 @@
       <div *ngIf="card.isBestValue" class="best-value-badge">Zgjedhja Më e Mirë</div>
       <img src="assets/svgImages/price.svg" alt="Etiketë Çmimi">
       <h2>{{ card.title }}</h2>
+      <p *ngIf="card.maxUsers && card.maxUsers > 1" class="max-users-text">
+        <mat-icon>people</mat-icon>
+        Për {{ card.maxUsers }} persona
+      </p>
       <ul class="card-content">
         <li *ngFor="let feature of card.features" [class.disabled]="!feature.available">
           <mat-icon *ngIf="feature.available" class="check-icon">check_circle</mat-icon>

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatIconModule } from "@angular/material/icon";
-import { CommonModule } from "@angular/common";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { MatRadioModule } from "@angular/material/radio";
-import { MembershipStudentService } from "../../../../../services/membership-student.service";
-import { PaymentService } from "../../../../../api-client";
+import {Component, Input} from '@angular/core';
+import {MatIconModule} from "@angular/material/icon";
+import {MatRadioModule} from "@angular/material/radio";
+import {CommonModule} from "@angular/common";
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {MembershipStudentService} from "../../../../services/membership-student.service";
+import {DetailsService, PaymentService} from "../../../../api-client";
 
 interface Feature {
   text: string;
@@ -17,13 +17,14 @@ interface Card {
   price: number;
   priceDisplay: string;
   features: Feature[];
-  isBestValue?: boolean; // Added for the "best value" indicator
+  isBestValue?: boolean;
+  maxUsers?: number;
 }
 
 type BillingCycle = 'annual' | 'monthly';
 
 @Component({
-  selector: 'app-packege-cards',
+  selector: 'app-packages',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,10 +32,11 @@ type BillingCycle = 'annual' | 'monthly';
     ReactiveFormsModule,
     MatRadioModule
   ],
-  templateUrl: './packege-cards.component.html',
-  styleUrl: './packege-cards.component.scss'
+  templateUrl: './packages.component.html',
+  styleUrl: './packages.component.scss'
 })
-export class PackegeCardsComponent implements OnInit {
+export class PackagesComponent {
+  @Input() userType!: string;
   cards: Record<BillingCycle, Card[]> = {
     annual: [],
     monthly: []
@@ -47,8 +49,10 @@ export class PackegeCardsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private membershipStudentService: MembershipStudentService,
-    private _paymentInfoService: PaymentService
-  ) { }
+    private _paymentInfoService: PaymentService,
+    private detailsService: DetailsService
+  ) {
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -84,7 +88,7 @@ export class PackegeCardsComponent implements OnInit {
   }
 
   private getPaymentInfo() {
-    this._paymentInfoService.apiPaymentsGet().subscribe(res => {
+    this.detailsService.apiDetailsGetPlansUserTypeGet(this.userType).subscribe(res => {
       this.paymentInfo = res;
       this.mapApiDataToCards();
     });
@@ -92,28 +96,28 @@ export class PackegeCardsComponent implements OnInit {
 
   private mapApiDataToCards() {
     // Clear existing cards
-    this.cards = { annual: [], monthly: [] };
+    this.cards = {annual: [], monthly: []};
 
     // Define feature templates for each package type in Albanian
     const featureTemplates: Record<string, Feature[]> = {
       "Bazë": [
-        { text: '3 mësime video HD', available: true },
-        { text: '1 provim zyrtar', available: true },
-        { text: 'Kuize praktike', available: false },
-        { text: 'Mbështetje me email', available: false }
+        {text: '3 mësime video HD', available: true},
+        {text: '1 provim zyrtar', available: true},
+        {text: 'Kuize praktike', available: false},
+        {text: 'Mbështetje me email', available: false}
       ],
       "Standarde": [
-        { text: '10 mësime video HD', available: true },
-        { text: '3 provime zyrtare', available: true },
-        { text: 'Kuize praktike', available: true },
-        { text: 'Mbështetje me email prioritare', available: true }
+        {text: '10 mësime video HD', available: true},
+        {text: '3 provime zyrtare', available: true},
+        {text: 'Kuize praktike', available: true},
+        {text: 'Mbështetje me email prioritare', available: true}
       ],
       "Premium": [
-        { text: 'Mësime video HD të pakufizuara', available: true },
-        { text: '5 provime zyrtare', available: true },
-        { text: 'Kuize praktike', available: true },
-        { text: 'Mbështetje prioritare 24/7', available: true },
-        { text: 'Sesione me tutor personal', available: true }
+        {text: 'Mësime video HD të pakufizuara', available: true},
+        {text: '5 provime zyrtare', available: true},
+        {text: 'Kuize praktike', available: true},
+        {text: 'Mbështetje prioritare 24/7', available: true},
+        {text: 'Sesione me tutor personal', available: true}
       ]
     };
 
@@ -121,14 +125,15 @@ export class PackegeCardsComponent implements OnInit {
     this.paymentInfo.forEach(item => {
       const card: Card = {
         id: item.id,
-        title: item.name,
+        title: item.registrationPlanName,
         price: item.price / 100,
         priceDisplay: this.getPriceDisplay(item.price / 100, item.type),
-        features: [...featureTemplates[item.name]]
+        features: [...featureTemplates[item.registrationPlanName]],
+        maxUsers: item.maxUsers
       };
 
       // Mark "Standarde" as the best value
-      if (item.name === 'Standarde') {
+      if (item.registrationPlanName === 'Standarde') {
         card.isBestValue = true;
       }
 

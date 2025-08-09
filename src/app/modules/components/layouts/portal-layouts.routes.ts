@@ -103,23 +103,33 @@ export const PortalLayoutsRoutes: Routes = [
           {
             path: 'dashboard',
             title: 'dashboard',
-            canActivate: [roleGuard('Student', 'Admin')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family')],
             loadComponent: () => import('../student/dashboard/dashboard.component')
               .then(m => m.DashboardComponent)
           },
           {
             path: 'kurset',
-            canActivate: [roleGuard('Student', 'Admin')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family')],
             loadComponent: () => import('../student/courses/courses.component')
               .then(m => m.CoursesComponent)
           },
           {
             path: 'quiz-list/:id',
-            canActivate: [roleGuard('Student', 'Admin')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family')],
             loadComponent: () => import('../student/quiz-list/quiz-list.component')
               .then(m => m.QuizListComponent)
           },
 
+        ]
+      },
+      {
+        path: 'family',
+        children: [
+          {
+            path: 'membership',
+            loadComponent: () => import('../authentication/register-family/register-family.component')
+              .then(m => m.RegisterFamilyComponent)
+          }
         ]
       }
     ]

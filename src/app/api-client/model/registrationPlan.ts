@@ -17,5 +17,8 @@ export interface RegistrationPlan {
     price?: number;
     stripeProductName?: string | null;
     payments?: Array<Payment> | null;
+    isFamilyPlan?: boolean;
+    userType?: string | null;
+    maxUsers?: number;
 }
 

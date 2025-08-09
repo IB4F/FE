@@ -30,6 +30,7 @@ export enum Difficulty {
 
 export enum UserRole {
   STUDENT = 'Student',
+  FAMILY = 'Family',
   SUPERVIZOR = 'Supervizor',
   ADMIN = 'Admin'
 }

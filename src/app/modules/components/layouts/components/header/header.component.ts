@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit {
   }
 
   showDashboard(): boolean {
-    return this.userRole === UserRole.STUDENT;
+    return this.userRole === UserRole.STUDENT || this.userRole === UserRole.FAMILY;
   }
 
   showPanel(): boolean {

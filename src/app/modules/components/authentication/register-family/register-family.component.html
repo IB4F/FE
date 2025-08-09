@@ -1,0 +1,176 @@
+<div class="container">
+  <div class="banner">
+    <h1>Përfshirja Familjare në Edukim: Një Platformë e Unifikuar</h1>
+    <img class="image" src="assets/svgImages/family.svg"
+         alt="Ilustrim i një familjeje, që simbolizon përfshirjen prindërore në edukim.">
+  </div>
+
+  <div class="title">
+    <h1>Bëhuni pjesë e platformës sonë si Familje</h1>
+    <p>
+      Regjistrohuni tani si <b>familje</b> për të përfituar nga të gjitha mjetet për të <b>ndjekur
+      progresin</b> e fëmijës
+      tuaj në shkollë. Me një
+      regjistrim të thjeshtë,
+      do të keni qasje në sistemin tonë të plotë për të <b>shikuar performancën</b>, <b>komunikuar me
+      mësuesit</b> dhe
+      <b>monitoruar frekuentimin</b>.
+    </p>
+    <p>
+      Mos humbisni këtë mundësi - regjistrohuni sot dhe transformoni mënyrën si administroni studentët në shkollën tuaj!
+    </p>
+  </div>
+
+  <div class="registration-flow">
+    <h2 class="flow-title">Si Funksionon Regjistrimi për Familjen</h2>
+    <div class="flow-steps">
+      <div class="step-card">
+        <div class="number-wrapper">
+          1
+        </div>
+        <h3>Plotësoni Informacionin e Prindit</h3>
+        <p>Filloni duke futur të dhënat tuaja personale dhe duke specifikuar numrin e fëmijëve që dëshironi të
+          regjistroni në platformë.</p>
+      </div>
+      <div class="arrow-icon">
+        &#10140;
+      </div>
+      <div class="step-card">
+        <div class="number-wrapper">
+          2
+        </div>
+        <h3>Plotësoni të Dhënat e Fëmijëve</h3>
+        <p>Më pas, plotësoni informacionin e kërkuar për secilin fëmijë, duke u siguruar që të dhënat të jenë të sakta
+          dhe të plota.</p>
+      </div>
+      <div class="arrow-icon">
+        &#10140;
+      </div>
+      <div class="step-card">
+        <div class="number-wrapper">
+          3
+        </div>
+        <h3>Zgjidhni Paketën dhe Pagesën</h3>
+        <p>Së fundi, zgjidhni paketën e abonimit që preferoni dhe vazhdoni me pagesën për të përfunduar regjistrimin
+          tuaj dhe të fëmijëve tuaj.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-and-form">
+    <div class="visual-section">
+      <img class="image" src="assets/svgImages/kids.svg"
+           alt="Ilustrim i një familjeje.">
+    </div>
+    <div class="form-section-wrapper">
+      <form [formGroup]="registerFamilyForm" class="form-container">
+
+        <h2 class="form-title">Regjistrimi</h2>
+
+        <div class="form-section parent-info">
+          <h3>Të Dhënat e Prindit</h3>
+          <mat-form-field appearance="outline">
+            <mat-label>Emri</mat-label>
+            <input matInput formControlName="firstName">
+            <mat-error *ngIf="registerFamilyForm.get('firstName')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Mbiemri</mat-label>
+            <input matInput formControlName="lastName">
+            <mat-error *ngIf="registerFamilyForm.get('lastName')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+            <mat-error *ngIf="registerFamilyForm.get('email')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Numri i telefonit</mat-label>
+            <input matInput formControlName="phoneNumber">
+            <mat-error *ngIf="registerFamilyForm.get('phoneNumber')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" formControlName="password"
+                   [type]="hidePass ? 'password' : 'text'" required>
+            <mat-icon matSuffix
+                      matTooltip="1. Të paktën 8 karaktere 2. Të paktën një karakter special 3. Të paktën një shkronjë të madhe 4. Të paktën një numër">
+              info
+            </mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
+              <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerFamilyForm.get('password')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-section children-counter-wrapper">
+          <h3>Sa fëmijë dëshironi të regjistroni?</h3>
+          <div class="children-counter">
+            <button mat-icon-button (click)="decrementChildren()" [disabled]="numberOfChildren <= 1">-</button>
+            <span class="count">{{ numberOfChildren }}</span>
+            <button mat-icon-button (click)="incrementChildren()" [disabled]="numberOfChildren >= 10">+</button>
+          </div>
+          <button mat-raised-button color="accent" (click)="confirmChildrenCount()" class="confirm-button">Konfirmo
+            numrin
+            e fëmijëve
+          </button>
+        </div>
+
+        <div *ngIf="showChildrenForms" formArrayName="familyMembers" class="form-section family-members-section">
+          <h3>Të Dhënat e Fëmijëve</h3>
+          <div *ngFor="let member of familyMembers.controls; let i = index" [formGroupName]="i"
+               class="family-member-card">
+            <h4>Fëmija {{ i + 1 }}</h4>
+            <mat-form-field appearance="outline">
+              <mat-label>Emri</mat-label>
+              <input matInput formControlName="firstName">
+              <mat-error *ngIf="member.get('familyMembers')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Mbiemri</mat-label>
+              <input matInput formControlName="lastName">
+              <mat-error *ngIf="member.get('lastName')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Klasa aktuale</mat-label>
+              <mat-select placeholder="Klasa aktuale" formControlName="currentClass" required>
+                <mat-option *ngFor="let class of classesList" [value]="class.id">
+                  {{ class.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="member.get('currentClass')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-packages #packageComponent
+              [userType]="'family'">
+</app-packages>
+
+<div class="button-wrapper">
+  <button mat-raised-button color="primary" class="final-button"
+          (click)="handlePayment()">
+    Finalizo Regjistrimin
+  </button>
+</div>

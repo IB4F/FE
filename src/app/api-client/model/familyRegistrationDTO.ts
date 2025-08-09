@@ -7,15 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FamilyMemberInput } from './familyMemberInput';
 
 
-export interface SchoolRegistrationDTO { 
-    schoolName: string;
+export interface FamilyRegistrationDTO { 
     email: string;
-    phoneNumber: string;
-    profession: string;
-    city: string;
-    postalCode: string;
+    password: string;
+    firstName: string;
+    lastName: string;
     planId: string;
+    familyMembers: Array<FamilyMemberInput>;
 }
 

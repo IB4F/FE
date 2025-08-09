@@ -1,0 +1,312 @@
+$blueCustom: #259ccb;
+$blueBanner: #31bff32b;
+$blueText: #0a4670;
+$primary-blue: #259ccb;
+$dark-text-blue: #0a4670;
+$white-text: #ffffff;
+$step-card-bg: #f5fafd;
+
+.container {
+  padding: 40px 30px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .banner {
+    border-radius: 20px;
+    padding: 40px 90px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(to right, #6dd5ed, #2193b0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      width: 50%;
+      text-align: center;
+      margin-bottom: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      width: 300px;
+    }
+  }
+
+  .title {
+    text-align: center;
+    margin: 50px 0 50px 0;
+
+    h1 {
+      color: $blueText;
+      margin-bottom: 20px;
+    }
+
+    p {
+      opacity: 0.75;
+      line-height: 1.6;
+      margin: 20px 0;
+    }
+  }
+}
+
+.registration-flow {
+  margin: 100px 0;
+  text-align: center;
+  padding: 0 20px;
+
+  .flow-title {
+    font-size: 2.2em;
+    color: $dark-text-blue;
+    margin-bottom: 60px;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+      font-size: 1.8em;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 1.5em;
+      margin-bottom: 30px;
+    }
+  }
+
+  .flow-steps {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+
+    @media (max-width: 992px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .step-card {
+    background-color: $step-card-bg;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    max-width: 350px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .number-wrapper {
+      background-color: $primary-blue;
+      border-radius: 50%;
+      padding: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 45px;
+      font-weight: bold;
+      color: $white-text;
+      line-height: 1;
+    }
+
+    h3 {
+      color: $dark-text-blue;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      font-weight: bold;
+
+      @media (max-width: 768px) {
+        font-size: 1.3em;
+      }
+    }
+
+    p {
+      color: $dark-text-blue;
+      font-size: 1em;
+      line-height: 1.6;
+      opacity: 0.9;
+
+      @media (max-width: 768px) {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 992px) {
+      width: 80%;
+      max-width: 450px;
+    }
+
+    @media (max-width: 576px) {
+      width: 100%;
+      padding: 25px;
+      min-height: unset;
+    }
+  }
+
+  .arrow-icon {
+    font-size: 3em;
+    color: $primary-blue;
+    margin-top: 50px;
+
+    @media (max-width: 992px) {
+      transform: rotate(90deg);
+      margin: 20px 0;
+      font-size: 2.5em;
+    }
+  }
+}
+
+.content-and-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 30px;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+
+.visual-section {
+  flex: 1;
+  text-align: center;
+
+  .image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+}
+
+.form-section-wrapper {
+  flex: 1;
+}
+
+// Nuove classi per il form
+.form-container {
+  padding: 40px;
+  background-color: #f5fafd;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 800px;
+  margin-top: 50px;
+
+  .form-title {
+    text-align: center;
+    color: $dark-text-blue;
+    font-size: 2.2em;
+    margin-bottom: 30px;
+  }
+
+  .form-section {
+    margin-bottom: 40px;
+    h3 {
+      color: $dark-text-blue;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      border-bottom: 2px solid $primary-blue;
+      padding-bottom: 10px;
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .children-counter-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .confirm-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: $blueText; // Colore per il pulsante di conferma
+      color: white;
+    }
+  }
+
+  .children-counter {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+
+    button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      border-radius: 0;
+      background-color: transparent;
+      color: $primary-blue;
+      &:disabled {
+        color: #ccc;
+      }
+    }
+
+    .count {
+      display: inline-block;
+      width: 50px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+  }
+
+  .family-members-section {
+    .family-member-card {
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+
+      h4 {
+        color: $dark-text-blue;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+}
+
+.button-wrapper {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.final-button {
+  padding: 10px 40px;
+  font-size: 1.1em;
+}

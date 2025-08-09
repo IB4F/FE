@@ -1,5 +1,4 @@
 import {Component, ViewChild} from '@angular/core';
-import {PackegeCardsComponent} from "./packege-cards/packege-cards.component";
 import {RegisterComponent} from "../register/register.component";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
 import {CommonModule} from "@angular/common";
@@ -9,12 +8,13 @@ import {loadStripe, Stripe} from "@stripe/stripe-js";
 import {environment} from "../../../../../envirorment/envirorment";
 import {MatButton} from "@angular/material/button";
 import {NgToastService} from "ng-angular-popup";
+import {PackagesComponent} from "../../../shared/components/packages/packages.component";
 
 @Component({
   selector: 'app-membership-student',
   standalone: true,
   imports: [
-    PackegeCardsComponent,
+    PackagesComponent,
     RegisterComponent,
     CommonModule,
     MatProgressSpinnerModule,
@@ -25,7 +25,7 @@ import {NgToastService} from "ng-angular-popup";
 })
 export class MembershipStudentComponent {
   @ViewChild(RegisterComponent) registerComponent!: RegisterComponent;
-  @ViewChild(PackegeCardsComponent) packageComponent!: PackegeCardsComponent;
+  @ViewChild(PackagesComponent) packageComponent!: PackagesComponent;
   private stripePromise: Promise<Stripe | null> = loadStripe(environment.stripePublishableKey);
 
   loading = false;

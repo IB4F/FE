@@ -96,6 +96,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate([ROUTES.ADMIN]);
         break;
       case UserRole.STUDENT:
+      case UserRole.FAMILY:
         this.router.navigate([ROUTES.STUDENT]);
         break;
       default:

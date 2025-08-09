@@ -35,7 +35,6 @@ $gradientEnd: #259ccb;
 .card {
   position: relative;
   width: 280px; // Karta më të vogla në desktop
-  // max-width: 320px; // Fshirë max-width për të lejuar width të vendoset
   background: white;
   border-radius: 1rem; // Qoshe më të rrumbullakosura
   padding: 2rem 1.5rem;
@@ -61,6 +60,23 @@ $gradientEnd: #259ccb;
     color: $darkBlue;
     margin: 0.5rem 0 1rem;
     font-weight: 700;
+  }
+
+  .max-users-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: $darkBlue;
+    font-weight: 600;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+
+    mat-icon {
+      margin-right: 0.5rem;
+      color: $primaryBlue;
+      font-size: 1.2rem;
+    }
   }
 
   .price {

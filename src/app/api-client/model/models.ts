@@ -4,6 +4,8 @@ export * from './city';
 export * from './class';
 export * from './createLinkDTO';
 export * from './createQuizzDTO';
+export * from './familyMemberInput';
+export * from './familyRegistrationDTO';
 export * from './forgotPasswordDTO';
 export * from './learnHubCreateDTO';
 export * from './loginDTO';

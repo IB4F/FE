@@ -36,6 +36,7 @@ export interface User {
     refreshTokenExpiry?: string | null;
     payments?: Array<Payment> | null;
     createAt?: string;
+    parentUserId?: string | null;
 }
 export namespace User {
 }

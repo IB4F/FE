@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PackegeCardsComponent } from './packege-cards.component';
+import { RegisterFamilyComponent } from './register-family.component';
 
-describe('PackegeCardsComponent', () => {
-  let component: PackegeCardsComponent;
-  let fixture: ComponentFixture<PackegeCardsComponent>;
+describe('RegisterFamilyComponent', () => {
+  let component: RegisterFamilyComponent;
+  let fixture: ComponentFixture<RegisterFamilyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PackegeCardsComponent]
+      imports: [RegisterFamilyComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PackegeCardsComponent);
+    fixture = TestBed.createComponent(RegisterFamilyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

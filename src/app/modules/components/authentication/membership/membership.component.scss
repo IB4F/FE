@@ -1,6 +1,8 @@
 /* Variabili migliorate per una palette più sofisticata */
 $primary-accent: #6c63ff; // Un viola-blu moderno per accenti principali
 $secondary-accent: #007bff; // Un blu più classico ma vibrante
+$tertiary-accent: #28a745; // Un verde vibrante per l'accento terziario
+
 $background-start: #f8faff; // Blu chiarissimo, quasi bianco per lo sfondo
 $background-end: #e6f0ff;   // Un blu molto tenue per la fine del gradiente
 $text-dark: #333d47;      // Grigio scuro per il testo principale
@@ -15,70 +17,69 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
   justify-content: center;
   min-height: 100vh;
   padding: 40px 20px;
-  // Gradiente di sfondo più morbido e ampio
   background: linear-gradient(145deg, $background-start 0%, $background-end 100%);
-  overflow: hidden; // Previene scroll indesiderati per alcuni effetti
+  overflow: hidden;
 }
 
 .logo {
   width: 180px;
   height: auto;
-  margin-bottom: 70px; // Spazio aumentato per il logo
+  margin-bottom: 70px;
   cursor: pointer;
   transition: transform 0.3s ease, filter 0.3s ease;
 
   &:hover {
     transform: scale(1.08);
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1)); // Ombra discreta al logo
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   }
 }
 
 .cards-wrapper {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem; // Spazio maggiore tra le card
+  gap: 3rem;
   width: 100%;
-  max-width: 960px; // Larghezza massima leggermente maggiore
-  padding: 0 15px; // Padding laterale per schermi più piccoli
+  max-width: 960px;
+  padding: 0 15px;
+  margin-bottom: 50px;
+
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem; // Ancora più spazio su desktop
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem;
   }
 
   .card {
     background: $text-light;
-    border-radius: 20px; // Bordi morbidi
-    box-shadow: 0 10px 30px $shadow-light; // Ombra elegante
-    padding: 3rem; // Padding generoso
+    border-radius: 20px;
+    box-shadow: 0 10px 30px $shadow-light;
+    padding: 3rem;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative; // Per effetti di sfondo interni
+    position: relative;
     overflow: hidden;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
 
     &:hover {
-      transform: translateY(-12px); // Sollevamento più marcato
-      box-shadow: 0 15px 40px $shadow-medium; // Ombra più intensa
+      transform: translateY(-12px);
+      box-shadow: 0 15px 40px $shadow-medium;
     }
 
-    // Effetto gradiente sul bordo superiore della card
     &::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 8px; // Altezza del bordo gradiente
+      height: 8px;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
-      // Gradiente specifico per ogni card
     }
 
     .card-title {
-      font-size: 2rem; // Titolo leggermente ridotto
+      font-size: 2rem;
       margin-bottom: 1rem;
       font-weight: 700;
       color: $text-dark;
@@ -86,23 +87,25 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
     }
 
     .card-description {
-      font-size: 1rem; // Testo descrizione più piccolo
-      color: #6a7482; // Grigio più caldo per la descrizione
-      margin-bottom: 2.5rem; // Spazio adeguato
+      font-size: 1rem;
+      color: #6a7482;
+      margin-bottom: 2.5rem;
       line-height: 1.7;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .btn {
       font-weight: 600;
-      padding: 0.9rem 2.2rem; // Padding leggermente ridotto per i bottoni
-      border-radius: 10px; // Bordi più arrotondati per i bottoni
+      padding: 0.9rem 2.2rem;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
-      max-width: 260px; // Larghezza massima dei bottoni
-      font-size: 1rem; // Dimensione testo bottone normale
-      border: none; // Rimuovi il bordo di default
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // Ombra leggera per i bottoni
+      max-width: 260px;
+      font-size: 1rem;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     &.student-card {
@@ -138,17 +141,57 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
         }
       }
     }
+
+    &.family-card {
+      &::before {
+        background: linear-gradient(to right, $tertiary-accent, lighten($tertiary-accent, 15%));
+      }
+      .card-title {
+        color: $tertiary-accent;
+      }
+      .primary-btn {
+        background-color: $tertiary-accent;
+        color: $text-light;
+        &:hover {
+          background-color: darken($tertiary-accent, 8%);
+          box-shadow: 0 6px 20px rgba($tertiary-accent, 0.5);
+        }
+      }
+    }
+  }
+}
+
+.btn {
+  &.secondary-btn {
+    background-color: transparent;
+    color: $primary-accent;
+    border: 2px solid $primary-accent;
+    box-shadow: none;
+    padding: 0.9rem 2.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 260px;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: $primary-accent;
+      color: $text-light;
+      box-shadow: 0 4px 15px rgba($primary-accent, 0.5);
+    }
   }
 }
 
 /* Stili generali per reset e tipografia */
 body {
-  font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; // 'Inter' è un ottimo font moderno
+  font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased; // Migliora il rendering del font su WebKit
-  -moz-osx-font-smoothing: grayscale; // Migliora il rendering del font su Firefox
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
