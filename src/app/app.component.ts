@@ -1,4 +1,4 @@
-import {AfterContentChecked, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {LoginComponent} from "./modules/components/authentication/login/login.component";
 import {NgToastModule, ToasterPosition} from "ng-angular-popup";
@@ -16,20 +16,16 @@ import {LoaderComponent} from "./modules/shared/components/loader/loader.compone
     LoaderComponent
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements AfterContentChecked {
+export class AppComponent {
   title = 'brain-gain-fe';
   isLoading$ = this.loaderService.isLoading$;
   protected readonly ToasterPosition = ToasterPosition;
 
   constructor(
-    private loaderService: LoaderService,
-    private changeDetector: ChangeDetectorRef
+    private loaderService: LoaderService
   ) {
-  }
-
-  ngAfterContentChecked(): void {
-    this.changeDetector.detectChanges();
   }
 }

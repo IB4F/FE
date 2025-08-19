@@ -8,16 +8,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Let 401 be handled by the refresh interceptor
+      if (error.status === 401) {
+        return throwError(() => error);
+      }
+
       if (error.status === 0) {
-        // Errore di rete
-        notificationService.danger('Errore di rete. Controlla la connessione.', 'ERROR', 3000);
+        notificationService.warning('Network error. Check your connection.', 'WARNING', 3000);
       } else if (error.status >= 500) {
-        // Errore del server
-        notificationService.danger('Errore del server. Riprova più tardi.', 'ERROR', 3000);
-      } else {
-        // Altri errori
-        // notificationService.danger(`Errore: ${error.message}`, 'ERROR', 3000);
-        console.log('errore')
+        notificationService.danger('Server error. Please try again later.', 'ERROR', 3000);
+      } else if (error.error && (error.error.message || error.error.error)) {
+        const message = error.error.message || error.error.error;
+        notificationService.warning(message, 'WARNING', 3000);
       }
       return throwError(() => error);
     })

@@ -6,20 +6,9 @@ import { LoaderService } from '../modules/shared/components/loader/loader.servic
 
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loaderService = inject(LoaderService);
-  let requestsInProgress = 0;
-
-  // Show loader for all requests
-  requestsInProgress++;
-  if (requestsInProgress === 1) {
-    loaderService.show();
-  }
+  loaderService.show();
 
   return next(req).pipe(
-    finalize(() => {
-      requestsInProgress--;
-      if (requestsInProgress === 0) {
-        loaderService.hide();
-      }
-    })
+    finalize(() => loaderService.hide())
   );
 };

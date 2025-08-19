@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
+import {isPlatformBrowser} from "@angular/common";
 
 @Injectable({providedIn: 'root'})
 export class TokenStorageService {
@@ -8,18 +9,24 @@ export class TokenStorageService {
 
   public isLoggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor() {
-    const token = this.getAccessToken();
-    this.loggedInSubject.next(!!token);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = this.getAccessToken();
+      this.loggedInSubject.next(!!token);
+      if (token) {
+        this.parseAndSetRole(token);
+      }
+    }
   }
 
   // GETTERS (optimized for speed)
-  getAccessToken = (): string | null => localStorage.getItem('accessToken');
-  getRefreshToken = (): string | null => localStorage.getItem('refreshToken');
+  getAccessToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('accessToken') : null;
+  getRefreshToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
   getRole = (): string | null => this.userRoleSubject.value;
 
   // SETTERS (optimized for speed)
   saveTokens = (tokens: { accessToken: string; refreshToken: string }): void => {
+    if (!isPlatformBrowser(this.platformId)) return;
     localStorage.setItem('accessToken', tokens.accessToken);
     localStorage.setItem('refreshToken', tokens.refreshToken);
     this.parseAndSetRole(tokens.accessToken);
@@ -28,6 +35,7 @@ export class TokenStorageService {
 
   // UTILITIES (optimized for speed)
   clearTokens = (): void => {
+    if (!isPlatformBrowser(this.platformId)) return;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.loggedInSubject.next(false);
@@ -35,6 +43,7 @@ export class TokenStorageService {
   };
 
   loadTokensFromStorage = (): void => {
+    if (!isPlatformBrowser(this.platformId)) return;
     const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
     if (accessToken && refreshToken) {
@@ -55,14 +64,19 @@ export class TokenStorageService {
   }
 
   private parseJwt(token: string): any {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    return JSON.parse(jsonPayload);
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const globalAtob = typeof atob === 'function' ? atob : (b64: string) => Buffer.from(b64, 'base64').toString('binary');
+      const jsonPayload = decodeURIComponent(
+        globalAtob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
   }
 }

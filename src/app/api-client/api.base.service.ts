@@ -10,7 +10,7 @@
 import { HttpHeaders, HttpParams, HttpParameterCodec } from '@angular/common/http';
 import { CustomHttpParameterCodec } from './encoder';
 import { Configuration } from './configuration';
-import {environment} from "../../envirorment/envirorment";
+import {environment} from "@env";
 
 export class BaseService {
     protected basePath = environment.apiUrl;

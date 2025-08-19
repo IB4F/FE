@@ -1,12 +1,17 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import {BehaviorSubject, catchError, filter, switchMap, take, throwError} from 'rxjs';
 import {AuthService} from "../api-client";
+import {Router} from "@angular/router";
+
+const isRefreshingSubject = new BehaviorSubject<boolean>(false);
+let refreshTokenInFlight: BehaviorSubject<string | null> | null = null;
 
 export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const tokenStorage = inject(TokenStorageService);
+  const router = inject(Router);
 
   return next(req).pipe(
     catchError((error) => {
@@ -16,21 +21,44 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         !req.url.includes('/refresh')
       ) {
         const refreshToken = tokenStorage.getRefreshToken();
-        if (refreshToken) {
-          return authService.refreshPost({ refreshToken }).pipe(
-            switchMap((newTokens) => {
-              tokenStorage.saveTokens(newTokens);
-              const clonedReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${newTokens.accessToken}` }
-              });
-              return next(clonedReq);
-            }),
-            catchError((err) => {
-              authService.logoutPost();
-              return throwError(() => err);
-            })
-          );
+        if (!refreshToken) {
+          tokenStorage.clearTokens();
+          router.navigate(['/hyr']);
+          return throwError(() => error);
         }
+
+        if (!refreshTokenInFlight) {
+          refreshTokenInFlight = new BehaviorSubject<string | null>(null);
+          isRefreshingSubject.next(true);
+          authService.refreshPost({ refreshToken }).subscribe({
+            next: (newTokens) => {
+              tokenStorage.saveTokens(newTokens);
+              refreshTokenInFlight?.next(newTokens.accessToken);
+              refreshTokenInFlight?.complete();
+              refreshTokenInFlight = null;
+              isRefreshingSubject.next(false);
+            },
+            error: () => {
+              tokenStorage.clearTokens();
+              authService.logoutPost();
+              refreshTokenInFlight?.error(error);
+              refreshTokenInFlight = null;
+              isRefreshingSubject.next(false);
+              router.navigate(['/hyr']);
+            }
+          });
+        }
+
+        return (refreshTokenInFlight as BehaviorSubject<string | null>).pipe(
+          filter((token): token is string => !!token),
+          take(1),
+          switchMap((newAccessToken: string) => {
+            const clonedReq = req.clone({
+              setHeaders: { Authorization: `Bearer ${newAccessToken}` }
+            });
+            return next(clonedReq);
+          })
+        );
       }
       return throwError(() => error);
     })

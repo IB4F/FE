@@ -5,7 +5,7 @@ import {CommonModule} from "@angular/common";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthService, StudentRegistrationDTO} from "../../../../api-client";
 import {loadStripe, Stripe} from "@stripe/stripe-js";
-import {environment} from "../../../../../envirorment/envirorment";
+import {environment} from "@env";
 import {MatButton} from "@angular/material/button";
 import {NgToastService} from "ng-angular-popup";
 import {PackagesComponent} from "../../../shared/components/packages/packages.component";

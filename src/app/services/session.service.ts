@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {Router} from "@angular/router";
+import {isPlatformBrowser} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +8,10 @@ import {Router} from "@angular/router";
 export class SessionService {
   private inactivityTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private router: Router) {
-    this.setupInactivityListener();
+  constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupInactivityListener();
+    }
   }
 
   private setupInactivityListener() {
@@ -20,7 +23,7 @@ export class SessionService {
   private resetTimer() {
     clearTimeout(this.inactivityTimer);
     this.inactivityTimer = setTimeout(() => {
-      this.router.navigate(['/login'], { queryParams: { sessionTimeout: true } });
+      this.router.navigate(['/hyr'], { queryParams: { sessionTimeout: true } });
     }, 30 * 60 * 1000); // 30 minutes
   }
 }

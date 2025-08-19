@@ -9,7 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {loadStripe, Stripe} from "@stripe/stripe-js";
-import {environment} from "../../../../../envirorment/envirorment";
+import {environment} from "@env";
 import {
   AuthService,
   Class,
