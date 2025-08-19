@@ -1,6 +1,14 @@
+<!-- Class restriction message -->
+<div *ngIf="!canNavigateAllTabs && userTypeClass" class="class-restriction-message">
+  <p>Ju jeni të regjistruar për {{ userTypeClass }}. Mund të shikoni vetëm kurset për këtë klasë.</p>
+</div>
+
 <div class="tabs">
-  <button *ngFor="let typeClass of typeClasses" (click)="selectTab(typeClass)"
-          [class.active]="selectedTab === typeClass">
+  <button *ngFor="let typeClass of typeClasses"
+          (click)="selectTab(typeClass)"
+          [class.active]="selectedTab === typeClass"
+          [class.disabled]="isTabDisabled(typeClass)"
+          [disabled]="isTabDisabled(typeClass)">
     <ng-container [ngSwitch]="typeClass">
       <app-first-svg *ngSwitchCase="TypeClass.First"></app-first-svg>
       <app-second-svg *ngSwitchCase="TypeClass.Second"></app-second-svg>
@@ -13,7 +21,7 @@
       <app-nineth-svg *ngSwitchCase="TypeClass.Nineth"></app-nineth-svg>
       <app-tenth-svg *ngSwitchCase="TypeClass.Tenth"></app-tenth-svg>
       <app-eleventh-svg *ngSwitchCase="TypeClass.Eleventh"></app-eleventh-svg>
-      <app-twelveth-svg *ngSwitchCase="TypeClass.Twelventh"></app-twelveth-svg>
+      <app-twelveth-svg *ngSwitchCase="TypeClass.Twelveth"></app-twelveth-svg>
     </ng-container>
   </button>
 </div>

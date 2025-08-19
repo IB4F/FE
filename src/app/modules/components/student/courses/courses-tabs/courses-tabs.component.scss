@@ -7,6 +7,23 @@ $transition-duration: 0.3s;
 $hover-color: blue;
 $button-padding: 0.5rem 1rem; // Questo non sarà usato direttamente sui bottoni delle tab, ma è una variabile generale
 
+.class-restriction-message {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  text-align: center;
+  
+  p {
+    margin: 0;
+    color: #856404;
+    font-family: $font-family;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+}
+
 .tabs {
   display: grid;
   // Per schermi desktop e grandi tablet: tenta di mostrare tutti e 12 su una riga
@@ -54,6 +71,17 @@ $button-padding: 0.5rem 1rem; // Questo non sarà usato direttamente sui bottoni
 
     &:not(.active) {
       opacity: $inactive-opacity; // Rende gli SVG inattivi meno visibili
+    }
+
+    &.disabled {
+      opacity: 0.3; // Rende i tab disabilitati molto meno visibili
+      cursor: not-allowed; // Cambia il cursore per indicare che non è cliccabile
+      pointer-events: none; // Disabilita completamente gli eventi del mouse
+      
+      // Stili per l'SVG all'interno del pulsante disabilitato
+      ::ng-deep svg {
+        filter: grayscale(100%); // Rende l'SVG in scala di grigi
+      }
     }
   }
 }

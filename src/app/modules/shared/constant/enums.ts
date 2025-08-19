@@ -10,7 +10,7 @@ export enum TypeClass {
   Nineth = 'Klasa 9',
   Tenth = 'Klasa 10',
   Eleventh = 'Klasa 11',
-  Twelventh = 'Klasa 12',
+  Twelveth = 'Klasa 12',
 }
 
 export enum Subjects {
