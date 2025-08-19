@@ -14,7 +14,6 @@ import {requiredRowsValidator} from "../../../../../helpers/customValidators/lin
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
-import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-manage-learnhub',
@@ -72,41 +71,15 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   getLearnHubInfo() {
-    const classes$ = this._detailsService.apiDetailsGetClassGet();
-    const subjects$ = this._detailsService.apiDetailsGetSubjectsGet();
-    const learnhub$ = this.idLearnHub ? this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub) : null;
-
-    forkJoin([classes$, subjects$]).subscribe({
-      next: ([classes, subjects]) => {
-        this.classesList = classes;
-        this.subjectList = subjects;
-
-        if (learnhub$) {
-          learnhub$.subscribe({
-            next: (resp) => {
-              this.learHub = resp;
-              this.patchFormWithLearnhubData();
-            },
-            error: (error) => {
-              this.toast.danger(error?.error?.message, 'GABIM', 3000);
-            }
-          })
-        }
+    this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub).subscribe({
+      next: (resp) => {
+        this.learHub = resp;
+        this.patchFormWithLearnhubData();
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'GABIM', 3000);
       }
-    });
-    // this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub).subscribe({
-    //   next: (resp) => {
-    //     this.learHub = resp;
-    //     console.log(resp)
-    //     this.patchFormWithLearnhubData();
-    //   },
-    //   error: (error) => {
-    //     this.toast.danger(error?.error?.message, 'GABIM', 3000);
-    //   }
-    // })
+    })
   }
 
   initializeCategoryManagementForm() {
@@ -122,13 +95,11 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   patchFormWithLearnhubData() {
-    console.log(this.learHub.classType);
-    console.log(this.learHub.subject);
     if (this.learHub) {
       this.learnHubFormGroup.patchValue({
         title: this.learHub.title,
-        classType: this.getClassName(this.learHub.classType),
-        subject: this.getSubjectName(this.learHub.subject),
+        classType: this.learHub.classType,
+        subject: this.learHub.subject,
         description: this.learHub.description,
         difficulty: this.learHub.difficulty,
         isFree: this.learHub.isFree
@@ -195,13 +166,14 @@ export class ManageLearnhubComponent implements OnInit {
     const formData = this.learnHubFormGroup.getRawValue();
     const formattedData: LearnHubCreateDTO = {
       ...formData,
-      isFree: formData.isFree === 'true'
+      isFree: formData.isFree
     };
     if (this.idLearnHub) {
       this.learnHubsService.apiLearnHubsUpdateLearnhubPut(this.idLearnHub, formattedData).subscribe({
         next: (resp) => {
           this.getLearnHubInfo();
-          this.toast.success(resp?.message, 'SUCCESS', 3000);
+          this.learnHubFormGroup.markAsPristine();
+          this.toast.success('U perditësua!', 'SUKSES', 3000);
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       });
@@ -211,6 +183,7 @@ export class ManageLearnhubComponent implements OnInit {
         next: (resp) => {
           this.idLearnHub = resp;
           this.getLearnHubInfo();
+          this.learnHubFormGroup.markAsPristine();
           this.toast.success('Learnhubi u krijua', 'SUCCESS', 3000);
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
@@ -233,16 +206,6 @@ export class ManageLearnhubComponent implements OnInit {
     this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
       this.subjectList = res;
     })
-  }
-
-  getClassName(name: string): string | undefined {
-    const foundClass = this.classesList.find(c => c.name === name);
-    return foundClass ? foundClass.id : '';
-  }
-
-  getSubjectName(name: string): string | undefined {
-    const foundSubject = this.subjectList.find(s => s.name === name);
-    return foundSubject ? foundSubject.id : '';
   }
 
   goToQuiz(link: AbstractControl) {

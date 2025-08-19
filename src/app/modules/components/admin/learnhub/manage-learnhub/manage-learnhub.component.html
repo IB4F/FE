@@ -120,7 +120,7 @@
         <mat-icon>arrow_back</mat-icon>
         Learnhub
       </button>
-      <button mat-raised-button color="primary" (click)="handleButtonClick()" [disabled]="!isFormValid()">
+      <button mat-raised-button color="primary" (click)="handleButtonClick()" [disabled]="!isFormValid() || learnHubFormGroup.pristine">
         {{ isEditMode ? 'Përditëso' : 'Krijo' }}
       </button>
     </div>

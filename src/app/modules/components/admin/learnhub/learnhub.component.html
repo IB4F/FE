@@ -14,18 +14,18 @@
       Shto LearnHub
     </button>
   </div>
+  <div class="search-bar-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Kërko LearnHub</mat-label>
+      <input
+        matInput
+        placeholder="Shkruaj titull, pershkrim, klasa, lend..."
+        (keyup)="applyFilter($event)"
+      >
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
   <ng-container *ngIf="this.dataSource.data.length > 0">
-    <div class="search-bar-container">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Kërko LearnHub</mat-label>
-        <input
-          matInput
-          placeholder="Shkruaj titull, pershkrim, klasa, lend..."
-          (keyup)="applyFilter($event)"
-        >
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-    </div>
     <div class="modern-table-container">
       <table mat-table [dataSource]="dataSource" matSort>
 
@@ -41,12 +41,12 @@
 
         <ng-container matColumnDef="klasa">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Klasa</th>
-          <td mat-cell *matCellDef="let element">{{ element.classType }}</td>
+          <td mat-cell *matCellDef="let element">{{ getClassName(element.classType) }}</td>
         </ng-container>
 
         <ng-container matColumnDef="lenda">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Lenda</th>
-          <td mat-cell *matCellDef="let element">{{ element.subject }}</td>
+          <td mat-cell *matCellDef="let element">{{ getSubjectName(element.subject) }}</td>
         </ng-container>
 
         <ng-container matColumnDef="links">
@@ -89,6 +89,6 @@
     </mat-paginator>
   </ng-container>
   <div *ngIf="dataSource.data.length === 0" class="no-data-message">
-    <p>Nuk ka LearnHubs të disponueshëm. Mund të shtoni të reja duke përdorur butonin "Shto LearnHub".</p>
+    <p>{{ getNoDataMessage() }}</p>
   </div>
 </div>

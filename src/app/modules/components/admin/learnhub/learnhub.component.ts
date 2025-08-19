@@ -8,7 +8,7 @@ import {MatSort, MatSortModule} from "@angular/material/sort";
 import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {LearnHubsService} from "../../../../api-client";
+import {Class, DetailsService, LearnHubsService, Subjects} from "../../../../api-client";
 import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
 import {NgToastService} from "ng-angular-popup";
 import {Router} from "@angular/router";
@@ -43,6 +43,9 @@ export class LearnhubComponent implements OnInit {
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
 
+  classesList: Class[] = [];
+  subjectList: Subjects[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -50,12 +53,19 @@ export class LearnhubComponent implements OnInit {
     private _learnHubsService: LearnHubsService,
     private toast: NgToastService,
     public router: Router,
+    private _detailsService: DetailsService,
   ) {
   }
 
   ngOnInit() {
+    this.loadCombos();
     this.getLearnHublist();
     this.setupSearchDebounce();
+  }
+
+  private loadCombos() {
+    this.getClassesList();
+    this.getSubjectsList();
   }
 
   private setupSearchDebounce() {
@@ -92,6 +102,28 @@ export class LearnhubComponent implements OnInit {
     });
   }
 
+  private getClassesList() {
+    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
+      this.classesList = res;
+    })
+  }
+
+  private getSubjectsList() {
+    this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
+      this.subjectList = res;
+    })
+  }
+
+  getClassName(id: any): string {
+    const foundClass = this.classesList.find(c => c.id === id);
+    return foundClass ? foundClass.name : id;
+  }
+
+  getSubjectName(id: any): string {
+    const foundSubject = this.subjectList.find(s => s.id === id);
+    return foundSubject ? foundSubject.name : id;
+  }
+
   onPageChange(event: PageEvent) {
     this.pageNumber = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -100,6 +132,13 @@ export class LearnhubComponent implements OnInit {
 
   goToAddLearnHub() {
     this.router.navigate(['/admin/learnhub/manage']);
+  }
+
+  getNoDataMessage(): string {
+    if (this.currentSearchTerm && this.currentSearchTerm.trim() !== '') {
+      return `Nuk u gjetën rezultate për kërkimin "${this.currentSearchTerm}". Provoni të ndryshoni termat e kërkimit.`;
+    }
+    return 'Nuk ka LearnHubs të disponueshëm. Mund të shtoni të reja duke përdorur butonin "Shto LearnHub".';
   }
 
   onEdit(learnHub: any) {
