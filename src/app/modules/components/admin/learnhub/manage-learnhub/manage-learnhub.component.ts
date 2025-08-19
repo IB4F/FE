@@ -14,6 +14,7 @@ import {requiredRowsValidator} from "../../../../../helpers/customValidators/lin
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-manage-learnhub',
@@ -71,15 +72,41 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   getLearnHubInfo() {
-    this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub).subscribe({
-      next: (resp) => {
-        this.learHub = resp;
-        this.patchFormWithLearnhubData();
+    const classes$ = this._detailsService.apiDetailsGetClassGet();
+    const subjects$ = this._detailsService.apiDetailsGetSubjectsGet();
+    const learnhub$ = this.idLearnHub ? this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub) : null;
+
+    forkJoin([classes$, subjects$]).subscribe({
+      next: ([classes, subjects]) => {
+        this.classesList = classes;
+        this.subjectList = subjects;
+
+        if (learnhub$) {
+          learnhub$.subscribe({
+            next: (resp) => {
+              this.learHub = resp;
+              this.patchFormWithLearnhubData();
+            },
+            error: (error) => {
+              this.toast.danger(error?.error?.message, 'GABIM', 3000);
+            }
+          })
+        }
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'GABIM', 3000);
       }
-    })
+    });
+    // this.learnHubsService.apiLearnHubsGetSingleLearnhubGet(this.idLearnHub).subscribe({
+    //   next: (resp) => {
+    //     this.learHub = resp;
+    //     console.log(resp)
+    //     this.patchFormWithLearnhubData();
+    //   },
+    //   error: (error) => {
+    //     this.toast.danger(error?.error?.message, 'GABIM', 3000);
+    //   }
+    // })
   }
 
   initializeCategoryManagementForm() {
@@ -95,6 +122,8 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   patchFormWithLearnhubData() {
+    console.log(this.learHub.classType);
+    console.log(this.learHub.subject);
     if (this.learHub) {
       this.learnHubFormGroup.patchValue({
         title: this.learHub.title,

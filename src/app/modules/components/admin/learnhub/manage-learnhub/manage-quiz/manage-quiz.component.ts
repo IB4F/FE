@@ -17,7 +17,7 @@ import {NgToastService} from "ng-angular-popup";
 import {ConfirmModalComponent} from "../../../../../shared/components/confirm-modal/confirm-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 import {QuizModalComponent} from "./quiz-modal/quiz-modal.component";
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 
 @Component({
@@ -61,7 +61,8 @@ export class ManageQuizComponent implements OnInit {
     private toast: NgToastService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    public router: Router
   ) {
   }
 
@@ -178,6 +179,16 @@ export class ManageQuizComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  //manage quizzes
+
+  goToAddQuiz() {
+    this.router.navigate(['/admin/learnhub/manage/quiz', this.linkId, 'add-quiz']);
+  }
+
+  onEditQuiz(quiz: any) {
+    this.router.navigate(['/admin/learnhub/manage/quiz', this.linkId, 'edit-quiz', quiz.id]);
   }
 
 

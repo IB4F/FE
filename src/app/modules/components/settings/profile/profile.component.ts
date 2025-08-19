@@ -6,7 +6,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {provideNativeDateAdapter} from "@angular/material/core";
+import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
+import {Class} from "../../../../api-client";
+import {UserRole} from "../../../shared/constant/enums";
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +21,9 @@ import {provideNativeDateAdapter} from "@angular/material/core";
     MatInputModule,
     MatDatepickerModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -28,9 +33,15 @@ export class ProfileComponent {
   @Input() profileFormGroup!: FormGroup;
   @Input() userInitials: string | null = null;
   @Input() fullName: string = '';
+  @Input() userRole: string | null = null;
+  @Input() classList: Class [] = [];
   @Output() saveChanges = new EventEmitter<void>();
 
   onSaveChanges() {
     this.saveChanges.emit();
+  }
+
+  showClassField(): boolean {
+    return this.userRole !== UserRole.ADMIN;
   }
 }

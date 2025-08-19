@@ -6,11 +6,12 @@ import {MatButtonModule} from "@angular/material/button";
 import {passwordValidator} from "../../../helpers/customValidators/check-password.validator";
 import {map, Subject, take, takeUntil} from "rxjs";
 import {UserService} from "../../../services/user.service";
-import {ProfileTabs} from "../../shared/constant/enums";
+import {ProfileTabs, UserRole} from "../../shared/constant/enums";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {ProfileComponent} from "./profile/profile.component";
-import {AuthService, User} from "../../../api-client";
+import {AuthService, Class, DetailsService, User} from "../../../api-client";
 import {NgToastService} from "ng-angular-popup";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-settings',
@@ -45,18 +46,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
   selectedTab: ProfileTabs = ProfileTabs.PersonalInfo;
 
   private unsubscribe$ = new Subject<void>();
+  classesList: Class[] = [];
+  userRole: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
     private _authService: AuthService,
     private toast: NgToastService,
+    private _detailsService: DetailsService,
+    private _tokenStorageService: TokenStorageService
   ) {
     this.initializeForms();
   }
 
   ngOnInit() {
-    this.loadUserData();
+    this.userRole = this._tokenStorageService.getRole();
+    this.getClassesList();
   }
 
   ngOnDestroy() {
@@ -69,6 +75,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       email: [''],
       firstName: [''],
       lastName: [''],
+      currentClass: [{value: '', disabled: true}],
       role: [''],
       birthday: [null],
       school: [''],
@@ -89,6 +96,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          currentClass: user.currentClass,
           role: user.role,
           birthday: user.dateOfBirth,
           school: user.school
@@ -96,6 +104,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
       }
     });
+  }
+
+  private getClassesList() {
+    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
+      this.classesList = res;
+      this.loadUserData();
+    })
   }
 
   selectTab(tab: ProfileTabs) {
@@ -142,4 +157,5 @@ export class SettingsComponent implements OnInit, OnDestroy {
       })
     }
   }
+
 }

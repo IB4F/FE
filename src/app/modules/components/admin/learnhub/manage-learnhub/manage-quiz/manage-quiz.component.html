@@ -14,7 +14,7 @@
       <mat-icon>arrow_back</mat-icon>
       Menaxho Learnhub
     </button>
-    <button mat-raised-button color="primary" class="add-button" (click)="addExam()">
+    <button mat-raised-button color="primary" class="add-button" (click)="goToAddQuiz()">
       <mat-icon>add</mat-icon>
       Shto Quiz
     </button>
@@ -52,7 +52,7 @@
               <mat-icon>expand_more</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="editExam(element)">
+              <button mat-menu-item (click)="onEditQuiz(element)">
                 <mat-icon>edit</mat-icon>
                 <span>Modifiko</span>
               </button>

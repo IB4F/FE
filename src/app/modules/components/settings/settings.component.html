@@ -1,10 +1,12 @@
 <div class="profile-page-container">
   <div class="sidebar-navigation">
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo" (click)="selectTab(ProfileTabs.PersonalInfo)">
+    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
+            (click)="selectTab(ProfileTabs.PersonalInfo)">
       <mat-icon>person</mat-icon>
       <span>Profili</span>
     </button>
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.ChangePassword" (click)="selectTab(ProfileTabs.ChangePassword)">
+    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.ChangePassword"
+            (click)="selectTab(ProfileTabs.ChangePassword)">
       <mat-icon>lock</mat-icon>
       <span>Ndrysho Passwordin</span>
     </button>
@@ -15,6 +17,8 @@
       <app-profile [profileFormGroup]="profileFormGroup"
                    [userInitials]="(userInitials$ | async)"
                    [fullName]="fullName"
+                   [classList]="classesList"
+                   [userRole]="userRole"
                    (saveChanges)="saveProfileData()">
       </app-profile>
     </ng-container>

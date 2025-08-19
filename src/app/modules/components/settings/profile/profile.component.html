@@ -20,6 +20,14 @@
         <input matInput formControlName="lastName">
       </mat-form-field>
     </div>
+    <mat-form-field appearance="outline" *ngIf="showClassField()">
+      <mat-label>Klasa aktuale</mat-label>
+      <mat-select placeholder="Klasa aktuale" formControlName="currentClass">
+        <mat-option *ngFor="let class of classList" [value]="class.id">
+          {{ class.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
       <input matInput placeholder="Email" formControlName="email">

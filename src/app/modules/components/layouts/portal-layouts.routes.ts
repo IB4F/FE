@@ -87,6 +87,18 @@ export const PortalLayoutsRoutes: Routes = [
                 title: 'Menaxho Quizet',
                 loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-quiz/manage-quiz.component')
                   .then(m => m.ManageQuizComponent)
+              },
+              {
+                path: 'manage/quiz/:linkId/add-quiz',
+                title: 'Shto Quiz',
+                loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-quiz/quizzes/quizzes.component')
+                  .then(m => m.QuizzesComponent)
+              },
+              {
+                path: 'manage/quiz/:linkId/edit-quiz/:quizId',
+                title: 'Modifiko Quiz',
+                loadComponent: () => import('../admin/learnhub/manage-learnhub/manage-quiz/quizzes/quizzes.component')
+                  .then(m => m.QuizzesComponent)
               }
             ]
           }

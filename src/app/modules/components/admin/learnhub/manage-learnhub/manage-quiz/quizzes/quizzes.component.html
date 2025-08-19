@@ -1,0 +1,75 @@
+<div class="app-container">
+  <div class="section-title">
+    <h1 *ngIf="isEditMode">Administrimi - Modifiko Kuizin</h1>
+    <h1 *ngIf="!isEditMode">Administrimi - Shto Kuiz të Ri</h1>
+    <p>
+      {{ isEditMode ? 'Në këtë seksion mund të modifikoni kuizin ekzistues. Sigurohuni që informacioni të jetë i saktë përpara se të ruani ndryshimet.' : 'Në këtë seksion mund të shtoni një kuiz të ri. Plotësoni të gjitha fushat e kërkuara për të krijuar një kuiz të ri në sistem.' }}
+    </p>
+  </div>
+  <div class="action-button-row">
+    <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
+            class="back-button" color="warn">
+      <mat-icon>arrow_back</mat-icon>
+      Kthehu te lista
+    </button>
+  </div>
+
+  <div class="quiz-form-container">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Ndrysho Pyetjen e Kuizit' : 'Shto Pyetje të Re Kuizi' }}</h3>
+    </div>
+    <div class="quiz-form-content">
+      <form [formGroup]="quizFormGroup">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teksti i Pyetjes</mat-label>
+          <textarea matInput formControlName="question" rows="3" required></textarea>
+          <mat-error *ngIf="quizFormGroup.get('question')?.hasError('required')">
+            Teksti i pyetjes është i detyrueshëm.
+          </mat-error>
+        </mat-form-field>
+
+        <div formArrayName="options" class="options-section">
+          <p class="section-title-options">Opsionet e Përgjigjes</p>
+          <div *ngFor="let option of options?.controls; let i = index" [formGroupName]="i" class="option-item">
+            <p class="option-label">Opsioni {{ i + 1 }}</p>
+            <div class="option-input-group">
+              <mat-form-field appearance="outline" class="flex-grow">
+                <mat-label>Teksti i Opsionit</mat-label>
+                <textarea matInput formControlName="optionText" rows="3"></textarea>
+                <mat-error *ngIf="option.get('optionText')?.hasError('required')">
+                  Ky fushë nuk mund të jetë bosh.
+                </mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="isCorrect" class="option-checkbox">E Saktë</mat-checkbox>
+            </div>
+          </div>
+          <mat-error *ngIf="quizFormGroup.get('options')?.hasError('oneCorrectOption')" class="options-error">
+            Duhet të zgjidhni saktësisht një opsion të saktë.
+          </mat-error>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Shpjegimi i Përgjigjes (Opsionale)</mat-label>
+          <textarea matInput formControlName="explanation" rows="10"></textarea>
+          <mat-error *ngIf="quizFormGroup.get('explanation')?.hasError('required')">
+            Shpjegimi është i detyrueshëm.
+          </mat-error>
+        </mat-form-field>
+
+        <div class="points-section">
+          <mat-label>Pikët e Pyetjes: {{ quizFormGroup.get('points')?.value }}</mat-label>
+          <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="false">
+            <input matSliderThumb formControlName="points">
+          </mat-slider>
+        </div>
+
+        <div class="form-actions">
+          <button mat-flat-button color="primary" [disabled]="!isFormValid()"
+                  (click)="handleButtonClick()">
+            {{ isEditMode ? 'Ruaj Ndryshimet' : 'Shto Pyetje' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
