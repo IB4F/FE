@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CreateStudentBySchoolDTO } from './createStudentBySchoolDTO';
 
 
 export interface SchoolRegistrationDTO { 
@@ -17,5 +18,6 @@ export interface SchoolRegistrationDTO {
     city: string;
     postalCode: string;
     planId: string;
+    students: Array<CreateStudentBySchoolDTO>;
 }
 

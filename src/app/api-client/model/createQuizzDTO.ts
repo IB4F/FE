@@ -15,5 +15,7 @@ export interface CreateQuizzDTO {
     explanation?: string | null;
     points?: number;
     options?: Array<OptionDTO> | null;
+    audioUrl?: string | null;
+    imageUrl?: string | null;
 }
 
