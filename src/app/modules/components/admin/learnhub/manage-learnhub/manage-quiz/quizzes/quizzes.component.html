@@ -21,6 +21,17 @@
     <div class="quiz-form-content">
       <form [formGroup]="quizFormGroup">
         <mat-form-field appearance="outline" class="full-width">
+          <mat-label>LLoj i Kuicit</mat-label>
+          <mat-select formControlName="quizType" required>
+            <mat-option *ngFor="let type of quizTypes" [value]="type.id">
+              {{ type.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="quizFormGroup.get('quizType')?.hasError('required')">
+            Fushë e detyrueshme
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Teksti i Pyetjes</mat-label>
           <textarea matInput formControlName="question" rows="3" required></textarea>
           <mat-error *ngIf="quizFormGroup.get('question')?.hasError('required')">

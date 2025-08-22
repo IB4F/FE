@@ -12,10 +12,11 @@ import { OptionDTO } from './optionDTO';
 
 export interface CreateQuizzDTO { 
     question?: string | null;
+    questionAudioId?: string | null;
     explanation?: string | null;
+    explanationAudioId?: string | null;
     points?: number;
     options?: Array<OptionDTO> | null;
-    audioUrl?: string | null;
-    imageUrl?: string | null;
+    quizType?: string | null;
 }
 

@@ -3,9 +3,9 @@ import {CommonModule, Location} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {ActivatedRoute, ParamMap} from "@angular/router";
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {QuizzesService} from '../../../../../../../api-client';
+import {DetailsService, QuizType, QuizzesService} from '../../../../../../../api-client';
 import {NgToastService} from "ng-angular-popup";
 import {oneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
 import {MatDialogModule} from "@angular/material/dialog";
@@ -42,7 +42,8 @@ export class QuizzesComponent implements OnInit {
   quizId: string | null = null;
   linkId!: string;
   quizFormGroup!: FormGroup;
-  quizData: any | null = null;
+
+  quizTypes: QuizType[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,19 +51,21 @@ export class QuizzesComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private quizzesService: QuizzesService,
     private toast: NgToastService,
-    private router: Router
+    private _detailsService: DetailsService,
   ) {
   }
 
   ngOnInit(): void {
+    this.loadCombos();
+    // Inizializza il form con valori di default
     this.initializeQuizForm();
+
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.linkId = params.get('linkId') as string;
       this.quizId = params.get('quizId');
       if (this.isEditMode) {
+        // Se è in modalità modifica, carica i dati del quiz
         this.loadQuizData(this.quizId as string);
-      } else {
-        this.initializeQuizForm();
       }
     });
   }
@@ -70,8 +73,8 @@ export class QuizzesComponent implements OnInit {
   loadQuizData(id: string): void {
     this.quizzesService.apiQuizzesGetSingleQuizGet(id).subscribe({
       next: (resp) => {
-        this.quizData = resp;
-        this.initializeQuizForm();
+        // Applica la patch ai valori del form solo dopo aver ricevuto i dati
+        this.patchFormValues(resp);
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'GABIM', 3000);
@@ -82,20 +85,38 @@ export class QuizzesComponent implements OnInit {
 
   initializeQuizForm() {
     this.quizFormGroup = this._formBuilder.group({
-      question: [this.quizData?.question || '', Validators.required],
-      explanation: [this.quizData?.explanation || '', Validators.required],
+      quizType: ['', Validators.required],
+      question: ['', Validators.required],
+      explanation: ['', Validators.required],
       options: this._formBuilder.array(
-        this.quizData?.options?.length > 0
-          ? this.quizData.options.map((option: any) => this.createOption(option))
-          : [
-            this.createOption(),
-            this.createOption(),
-            this.createOption(),
-            this.createOption()
-          ],
+        [
+          this.createOption(),
+          this.createOption(),
+          this.createOption(),
+          this.createOption()
+        ],
         oneCorrectOptionValidator()
       ),
-      points: [this.quizData?.points || 1, Validators.required]
+      points: [1, Validators.required]
+    });
+  }
+
+  patchFormValues(data: any) {
+    const optionsArray = this.quizFormGroup.get('options') as FormArray;
+    while (optionsArray.length !== 0) {
+      optionsArray.removeAt(0);
+    }
+
+    data.options.forEach((option: any) => {
+      optionsArray.push(this.createOption(option));
+    });
+
+    console.log(data.quizType)
+    this.quizFormGroup.patchValue({
+      quizType: data.quizType,
+      question: data.question,
+      explanation: data.explanation,
+      points: data.points
     });
   }
 
@@ -108,6 +129,16 @@ export class QuizzesComponent implements OnInit {
       optionText: [option?.optionText || '', Validators.required],
       isCorrect: [option?.isCorrect || false]
     });
+  }
+
+  private loadCombos() {
+    this.getQuizTypeList();
+  }
+
+  private getQuizTypeList() {
+    this._detailsService.apiDetailsGetQuizTypesGet().subscribe(res => {
+      this.quizTypes = res;
+    })
   }
 
   isFormValid(): boolean {
@@ -134,7 +165,7 @@ export class QuizzesComponent implements OnInit {
       this.quizzesService.apiQuizzesUpdateQuizPut(this.quizId, formattedData).subscribe({
         next: (resp) => {
           this.toast.success('Kuici u perditesua me sukses', 'SUKSES', 3000);
-          this.router.navigate(['/your-quiz-list-route']); // Reindirizza a una pagina di elenco
+          this.goBack();
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       });
@@ -142,7 +173,7 @@ export class QuizzesComponent implements OnInit {
       this.quizzesService.apiQuizzesPostQuizPost(this.linkId, formattedData).subscribe({
         next: (resp) => {
           this.toast.success('Kuici u krijua me sukses', 'SUKSES', 3000);
-          this.router.navigate(['/your-quiz-list-route']); // Reindirizza a una pagina di elenco
+          this.goBack();
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       });
