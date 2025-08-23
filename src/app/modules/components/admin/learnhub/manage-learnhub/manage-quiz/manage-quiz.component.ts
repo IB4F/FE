@@ -12,7 +12,7 @@ import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/pag
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {CommonModule, Location} from "@angular/common";
 import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
-import {QuizzesService} from "../../../../../../api-client";
+import {DetailsService, QuizType, QuizzesService} from "../../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ConfirmModalComponent} from "../../../../../shared/components/confirm-modal/confirm-modal.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -55,6 +55,7 @@ export class ManageQuizComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   linkId!: string;
+  quizTypes: QuizType[] = [];
 
   constructor(
     private quizzesService: QuizzesService,
@@ -62,7 +63,8 @@ export class ManageQuizComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private location: Location,
-    public router: Router
+    public router: Router,
+    private _detailsService: DetailsService,
   ) {
   }
 
@@ -70,6 +72,7 @@ export class ManageQuizComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.linkId = params.get('id') as string;
     });
+    this.loadCombos();
     this.getQuizList();
     this.setupSearchDebounce();
   }
@@ -189,6 +192,21 @@ export class ManageQuizComponent implements OnInit {
 
   onEditQuiz(quiz: any) {
     this.router.navigate(['/admin/learnhub/manage/quiz', this.linkId, 'edit-quiz', quiz.id]);
+  }
+
+  private loadCombos() {
+    this.getQuizTypeList();
+  }
+
+  private getQuizTypeList() {
+    this._detailsService.apiDetailsGetQuizTypesGet().subscribe(res => {
+      this.quizTypes = res;
+    })
+  }
+
+  getQuizTypeName(id: any): string {
+    const foundClass = this.quizTypes.find(c => c.id === id);
+    return foundClass ? foundClass.name : id;
   }
 
 

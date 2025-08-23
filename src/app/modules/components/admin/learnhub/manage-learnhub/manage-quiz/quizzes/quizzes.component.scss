@@ -7,18 +7,12 @@ $accent-green: #27ae60;
 $danger-red: #e74c3c;
 $border-color-subtle: #bdc3c7;
 
-// Mixin per ombreggiatura
-@mixin box-shadow-elevated {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
 .quiz-form-container {
   padding: 30px;
   background-color: white;
   border-radius: 10px;
-  @include box-shadow-elevated;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 90%;
-  //max-width: 850px;
   margin: 0 auto;
   border: 1px solid $border-color-subtle;
 }
@@ -72,12 +66,163 @@ $border-color-subtle: #bdc3c7;
       }
     }
 
+    // Audio section styles
+    .audio-section {
+      background-color: $secondary-light-gray;
+      border: 1px solid $border-color-subtle;
+      border-radius: 8px;
+      padding: 20px;
+
+      .audio-section-label {
+        display: block;
+        font-weight: 600;
+        color: $primary-dark-blue;
+        margin-bottom: 15px;
+        font-size: 1rem;
+      }
+
+      .existing-audio {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background-color: white;
+        border-radius: 8px;
+        border: 1px solid $accent-green;
+
+        .audio-player {
+          flex-grow: 1;
+
+          audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            
+            &::-webkit-media-controls-panel {
+              background-color: $accent-green;
+            }
+            
+            &::-webkit-media-controls-play-button {
+              background-color: white;
+              border-radius: 50%;
+            }
+            
+            &::-webkit-media-controls-current-time-display,
+            &::-webkit-media-controls-time-remaining-display {
+              color: white;
+            }
+          }
+        }
+
+        .audio-actions {
+          display: flex;
+          gap: 8px;
+
+          button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: scale(1.1);
+            }
+
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    // File upload styles
+    .file-upload-section {
+      background-color: $secondary-light-gray;
+      border: 2px dashed $border-color-subtle;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $accent-green;
+        background-color: lighten($secondary-light-gray, 2%);
+      }
+
+      .file-upload-label {
+        display: block;
+        font-weight: 600;
+        color: $primary-dark-blue;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+      }
+
+      .file-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid $border-color-subtle;
+        border-radius: 6px;
+        background-color: white;
+        font-size: 0.9rem;
+        color: $text-color-dark;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $accent-green;
+          box-shadow: 0 0 0 2px rgba($accent-green, 0.2);
+        }
+
+        &::-webkit-file-upload-button {
+          background-color: $accent-green;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 500;
+          margin-right: 10px;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: darken($accent-green, 8%);
+          }
+        }
+      }
+
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: white;
+        border-radius: 6px;
+        border: 1px solid $accent-green;
+
+        mat-icon {
+          color: $accent-green;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        span {
+          color: $text-color-dark;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+    }
+
     .options-section {
       background-color: $secondary-light-gray;
       border: 1px solid $border-color-subtle;
       border-radius: 8px;
       padding: 25px;
-      position: relative;
 
       .section-title-options {
         text-align: center;
@@ -89,29 +234,29 @@ $border-color-subtle: #bdc3c7;
 
       .option-item {
         display: flex;
-        align-items: flex-start;
+        flex-direction: column;
         gap: 15px;
-        margin-bottom: 15px;
-        padding: 10px 0;
-        border-bottom: 1px dashed $border-color-subtle;
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid $border-color-subtle;
+        border-radius: 8px;
+        background-color: white;
 
         &:last-child {
           margin-bottom: 0;
-          border-bottom: none;
         }
 
         .option-label {
-          font-weight: 500;
-          color: $text-color-dark;
-          min-width: 70px;
-          padding-top: 10px;
+          font-weight: 600;
+          color: $primary-dark-blue;
+          font-size: 1rem;
+          margin: 0;
         }
 
         .option-input-group {
-          flex-grow: 1;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 15px;
 
           mat-form-field {
             flex-grow: 1;

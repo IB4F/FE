@@ -31,6 +31,7 @@
             Fushë e detyrueshme
           </mat-error>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Teksti i Pyetjes</mat-label>
           <textarea matInput formControlName="question" rows="3" required></textarea>
@@ -38,6 +39,40 @@
             Teksti i pyetjes është i detyrueshëm.
           </mat-error>
         </mat-form-field>
+
+        <!-- Question Audio Section -->
+        <div class="audio-section">
+          <label class="audio-section-label">Audio për Pyetjen</label>
+
+          <!-- Existing Question Audio -->
+          <div *ngIf="existingQuestionAudio && !selectedQuestionAudio" class="existing-audio">
+            <div class="audio-player">
+              <audio controls>
+                <source [src]="existingQuestionAudio.url" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div class="audio-actions">
+              <button type="button" mat-icon-button color="warn" (click)="removeQuestionAudio()" matTooltip="Hiq Audio">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- New Question Audio Upload -->
+          <div *ngIf="!existingQuestionAudio || selectedQuestionAudio" class="file-upload-section">
+            <label class="file-upload-label">Audio për Pyetjen (Opsionale)</label>
+            <input type="file"
+                   #questionAudioInput
+                   accept="audio/*"
+                   (change)="onQuestionAudioSelected($event)"
+                   class="file-input">
+            <div class="file-info" *ngIf="selectedQuestionAudio">
+              <mat-icon>audiotrack</mat-icon>
+              <span>{{ selectedQuestionAudio.name }}</span>
+            </div>
+          </div>
+        </div>
 
         <div formArrayName="options" class="options-section">
           <p class="section-title-options">Opsionet e Përgjigjes</p>
@@ -53,6 +88,35 @@
               </mat-form-field>
               <mat-checkbox formControlName="isCorrect" class="option-checkbox">E Saktë</mat-checkbox>
             </div>
+
+            <!-- Option Image Upload (only for image quiz types) -->
+            <div class="file-upload-section" *ngIf="shouldShowImageFields()">
+              <label class="file-upload-label">Imazh për Opsionin {{ i + 1 }} (Opsionale)</label>
+
+              <!-- Existing Option Image -->
+              <div *ngIf="existingOptionImages[i] && !selectedOptionImages[i]" class="existing-image">
+                <div class="image-preview">
+                  <img [src]="existingOptionImages[i]?.url" [alt]="'Option ' + (i + 1) + ' image'" class="option-image">
+                </div>
+                <div class="image-actions">
+                  <button type="button" mat-icon-button color="warn" (click)="removeOptionImage(i)" matTooltip="Hiq Imazh">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- New Option Image Upload -->
+              <div *ngIf="!existingOptionImages[i] || selectedOptionImages[i]">
+                <input type="file"
+                       accept="image/*"
+                       (change)="onOptionImageSelected($event, i)"
+                       class="file-input">
+                <div class="file-info" *ngIf="selectedOptionImages[i]">
+                  <mat-icon>image</mat-icon>
+                  <span>{{ selectedOptionImages[i]?.name }}</span>
+                </div>
+              </div>
+            </div>
           </div>
           <mat-error *ngIf="quizFormGroup.get('options')?.hasError('oneCorrectOption')" class="options-error">
             Duhet të zgjidhni saktësisht një opsion të saktë.
@@ -66,6 +130,41 @@
             Shpjegimi është i detyrueshëm.
           </mat-error>
         </mat-form-field>
+
+        <!-- Explanation Audio Section -->
+        <div class="audio-section">
+          <label class="audio-section-label">Audio për Shpjegimin</label>
+
+          <!-- Existing Explanation Audio -->
+          <div *ngIf="existingExplanationAudio && !selectedExplanationAudio" class="existing-audio">
+            <div class="audio-player">
+              <audio controls>
+                <source [src]="existingExplanationAudio.url" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div class="audio-actions">
+              <button type="button" mat-icon-button color="warn" (click)="removeExplanationAudio()"
+                      matTooltip="Hiq Audio">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- New Explanation Audio Upload -->
+          <div *ngIf="!existingExplanationAudio || selectedExplanationAudio" class="file-upload-section">
+            <label class="file-upload-label">Audio për Shpjegimin (Opsionale)</label>
+            <input type="file"
+                   #explanationAudioInput
+                   accept="audio/*"
+                   (change)="onExplanationAudioSelected($event)"
+                   class="file-input">
+            <div class="file-info" *ngIf="selectedExplanationAudio">
+              <mat-icon>audiotrack</mat-icon>
+              <span>{{ selectedExplanationAudio.name }}</span>
+            </div>
+          </div>
+        </div>
 
         <div class="points-section">
           <mat-label>Pikët e Pyetjes: {{ quizFormGroup.get('points')?.value }}</mat-label>
