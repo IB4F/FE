@@ -7,7 +7,14 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from '@angular/material/icon';
 import {MatSliderModule} from "@angular/material/slider";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {Class, DetailsService, LearnHubCreateDTO, LearnHubsService, Subjects} from "../../../../../api-client";
+import {
+  Class,
+  DetailsService,
+  LearnHubCreateDTO,
+  LearnHubsService,
+  LinksService,
+  Subjects
+} from "../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ActivatedRoute, Router} from "@angular/router";
 import {requiredRowsValidator} from "../../../../../helpers/customValidators/links.validator";
@@ -52,7 +59,8 @@ export class ManageLearnhubComponent implements OnInit {
     private route: ActivatedRoute,
     private _detailsService: DetailsService,
     public router: Router,
-    private location: Location
+    private location: Location,
+    private linksService: LinksService
   ) {
   }
 
@@ -147,8 +155,24 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   removeRow(index: number) {
-    this.links.removeAt(index);
-    this.updateRowNumbers();
+    const linkControl = this.links.at(index);
+    const linkId = linkControl.get('id')?.value;
+
+    if (linkId) {
+      this.linksService.apiLinksDeleteLinkDelete(linkId).subscribe({
+        next: (resp) => {
+          this.links.removeAt(index);
+          this.updateRowNumbers();
+          this.toast.success('Lidhja u fshi me sukses!', 'SUKSES', 3000);
+        },
+        error: (error) => {
+          this.toast.danger(error?.error?.message || 'Gabim gjatë fshirjes së lidhjes', 'GABIM', 3000);
+        }
+      });
+    } else {
+      this.links.removeAt(index);
+      this.updateRowNumbers();
+    }
   }
 
   updateRowNumbers() {
