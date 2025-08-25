@@ -1,0 +1,229 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <div class="header-content">
+      <h2>{{ isEditMode ? 'Modifiko Kuizin e Vegjël' : 'Shto Kuiz të Vegjël' }}</h2>
+      <p class="header-subtitle">{{ isEditMode ? 'Përditëso informacionin e kuizit' : 'Krijo një kuiz të ri për nxënësit' }}</p>
+    </div>
+    <button mat-icon-button (click)="close()" class="close-button" matTooltip="Mbyll">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="modal-content">
+    <div class="quiz-form-container">
+      <div class="quiz-form-content">
+        <form [formGroup]="quizFormGroup">
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>LLoj i Kuicit</mat-label>
+              <mat-select formControlName="quizType" required>
+                <mat-option *ngFor="let type of data.quizTypes" [value]="type.id">
+                  {{ type.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="quizFormGroup.get('quizType')?.hasError('required')">
+                Fushë e detyrueshme
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Teksti i Pyetjes</mat-label>
+              <textarea matInput formControlName="question" rows="3" required placeholder="Shkruani pyetjen tuaj këtu..."></textarea>
+              <mat-error *ngIf="quizFormGroup.get('question')?.hasError('required')">
+                Teksti i pyetjes është i detyrueshëm.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Question Audio Section -->
+          <div class="audio-section">
+            <label class="audio-section-label">Audio për Pyetjen</label>
+
+            <!-- Existing Question Audio -->
+            <div *ngIf="existingQuestionAudio && !selectedQuestionAudio" class="existing-audio">
+              <div class="audio-player">
+                <audio controls>
+                  <source [src]="existingQuestionAudio.url" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+              <div class="audio-actions">
+                <button type="button" mat-icon-button color="warn" (click)="removeQuestionAudio()" matTooltip="Hiq Audio">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- New Question Audio Upload -->
+            <div *ngIf="!existingQuestionAudio || selectedQuestionAudio" class="file-upload-section">
+              <label class="file-upload-label">Audio për Pyetjen (Opsionale)</label>
+              <div class="file-upload-area">
+                <input type="file"
+                       #questionAudioInput
+                       accept="audio/*"
+                       (change)="onQuestionAudioSelected($event)"
+                       class="file-input">
+                <div class="upload-placeholder">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>Klikoni për të zgjedhur një file audio</span>
+                  <small>MP3, WAV, ose formate të tjera audio</small>
+                </div>
+              </div>
+              <div class="file-info" *ngIf="selectedQuestionAudio">
+                <mat-icon>audiotrack</mat-icon>
+                <span>{{ selectedQuestionAudio.name }}</span>
+                <button type="button" mat-icon-button color="warn" (click)="selectedQuestionAudio = null" matTooltip="Hiq file">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div formArrayName="options" class="options-section">
+            <p class="section-title-options">Opsionet e Përgjigjes</p>
+            <div *ngFor="let option of options?.controls; let i = index" [formGroupName]="i" class="option-item">
+              <p class="option-label">Opsioni {{ i + 1 }}</p>
+              <div class="option-input-group">
+                <mat-form-field appearance="outline" class="flex-grow">
+                  <mat-label>Teksti i Opsionit</mat-label>
+                  <textarea matInput formControlName="optionText" rows="3"></textarea>
+                  <mat-error *ngIf="option.get('optionText')?.hasError('required')">
+                    Ky fushë nuk mund të jetë bosh.
+                  </mat-error>
+                </mat-form-field>
+                <mat-checkbox formControlName="isCorrect" class="option-checkbox">E Saktë</mat-checkbox>
+              </div>
+
+              <!-- Option Image Upload (only for image quiz types) -->
+              <div class="file-upload-section" *ngIf="shouldShowImageFields()">
+                <label class="file-upload-label">Imazh për Opsionin {{ i + 1 }} (Opsionale)</label>
+
+                <!-- Existing Option Image -->
+                <div *ngIf="existingOptionImages[i] && !selectedOptionImages[i]" class="existing-image">
+                  <div class="image-preview">
+                    <img [src]="existingOptionImages[i]?.url" [alt]="'Option ' + (i + 1) + ' image'" class="option-image">
+                  </div>
+                  <div class="image-actions">
+                    <button type="button" mat-icon-button color="warn" (click)="removeOptionImage(i)" matTooltip="Hiq Imazh">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- New Option Image Upload -->
+                <div *ngIf="!existingOptionImages[i] || selectedOptionImages[i]">
+                  <div class="file-upload-area">
+                    <input type="file"
+                           accept="image/*"
+                           (change)="onOptionImageSelected($event, i)"
+                           class="file-input">
+                    <div class="upload-placeholder">
+                      <mat-icon>image</mat-icon>
+                      <span>Klikoni për të zgjedhur një imazh</span>
+                      <small>JPG, PNG, GIF ose formate të tjera imazhi</small>
+                    </div>
+                  </div>
+                  <div class="file-info" *ngIf="selectedOptionImages[i]">
+                    <mat-icon>image</mat-icon>
+                    <span>{{ selectedOptionImages[i]?.name }}</span>
+                    <button type="button" mat-icon-button color="warn" (click)="selectedOptionImages[i] = null" matTooltip="Hiq file">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <mat-error *ngIf="quizFormGroup.get('options')?.hasError('oneCorrectOption')" class="options-error">
+              Duhet të zgjidhni saktësisht një opsion të saktë.
+            </mat-error>
+          </div>
+
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Shpjegimi i Përgjigjes (Opsionale)</mat-label>
+              <textarea matInput formControlName="explanation" rows="6" placeholder="Shkruani shpjegimin e përgjigjes së saktë..."></textarea>
+              <mat-error *ngIf="quizFormGroup.get('explanation')?.hasError('required')">
+                Shpjegimi është i detyrueshëm.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Explanation Audio Section -->
+          <div class="audio-section">
+            <label class="audio-section-label">Audio për Shpjegimin</label>
+
+            <!-- Existing Explanation Audio -->
+            <div *ngIf="existingExplanationAudio && !selectedExplanationAudio" class="existing-audio">
+              <div class="audio-player">
+                <audio controls>
+                  <source [src]="existingExplanationAudio.url" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+              <div class="audio-actions">
+                <button type="button" mat-icon-button color="warn" (click)="removeExplanationAudio()"
+                        matTooltip="Hiq Audio">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- New Explanation Audio Upload -->
+            <div *ngIf="!existingExplanationAudio || selectedExplanationAudio" class="file-upload-section">
+              <label class="file-upload-label">Audio për Shpjegimin (Opsionale)</label>
+              <div class="file-upload-area">
+                <input type="file"
+                       #explanationAudioInput
+                       accept="audio/*"
+                       (change)="onExplanationAudioSelected($event)"
+                       class="file-input">
+                <div class="upload-placeholder">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>Klikoni për të zgjedhur një file audio</span>
+                  <small>MP3, WAV, ose formate të tjera audio</small>
+                </div>
+              </div>
+              <div class="file-info" *ngIf="selectedExplanationAudio">
+                <mat-icon>audiotrack</mat-icon>
+                <span>{{ selectedExplanationAudio.name }}</span>
+                <button type="button" mat-icon-button color="warn" (click)="selectedExplanationAudio = null" matTooltip="Hiq file">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="points-section">
+            <div class="points-header">
+              <mat-label>Pikët e Pyetjes</mat-label>
+              <div class="points-display">
+                <span class="points-value">{{ quizFormGroup.get('points')?.value }}</span>
+                <span class="points-label">pikë</span>
+              </div>
+            </div>
+            <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="true">
+              <input matSliderThumb formControlName="points">
+            </mat-slider>
+            <div class="points-scale">
+              <span>1</span>
+              <span>5</span>
+              <span>10</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-actions">
+    <button mat-button (click)="close()" class="cancel-button">
+      Anulo
+    </button>
+    <button mat-flat-button color="primary" [disabled]="!isFormValid()"
+            (click)="handleSave()" class="save-button">
+      {{ isEditMode ? 'Ruaj Ndryshimet' : 'Shto Kuizin e Vegjël' }}
+    </button>
+  </div>
+</div>

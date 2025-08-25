@@ -167,11 +167,23 @@
         </div>
 
         <div class="points-section">
-          <mat-label>Pikët e Pyetjes: {{ quizFormGroup.get('points')?.value }}</mat-label>
-          <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="false">
+          <div class="points-header">
+            <mat-label>Pikët e Pyetjes</mat-label>
+            <div class="points-display">
+              <span class="points-value">{{ quizFormGroup.get('points')?.value }}</span>
+              <span class="points-label">pikë</span>
+            </div>
+          </div>
+          <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="true">
             <input matSliderThumb formControlName="points">
           </mat-slider>
+          <div class="points-scale">
+            <span>1</span>
+            <span>5</span>
+            <span>10</span>
+          </div>
         </div>
+
 
         <div class="form-actions">
           <button mat-flat-button color="primary" [disabled]="!isFormValid()"
@@ -180,6 +192,61 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Child Quizzes Section -->
+  <div *ngIf="showChildQuizzesSection" class="child-quizzes-section">
+    <div class="section-title">
+      <h2>Kuizet e Vegjël</h2>
+      <p>Menaxhoni kuizet e vegjël që i përkasin këtij kuizi kryesor.</p>
+    </div>
+
+    <div class="child-quizzes-header">
+      <button mat-raised-button color="primary"
+              [disabled]="!canAddChildQuizzes()"
+              (click)="openAddChildQuizModal()"
+              matTooltip="Shto kuiz të vegjël"
+              class="add-child-quiz-button">
+        <mat-icon>add</mat-icon>
+        Shto Kuiz të Vegjël
+      </button>
+
+      <div *ngIf="!canAddChildQuizzes()" class="warning-message">
+        <mat-icon>warning</mat-icon>
+        <span>Ju duhet të ruani kuizin kryesor para se të shtoni kuize të vegjël</span>
+      </div>
+    </div>
+
+    <div class="child-quizzes-list" *ngIf="childQuizzes.length > 0">
+      <div *ngFor="let childQuiz of childQuizzes; let i = index" class="child-quiz-item">
+        <div class="child-quiz-info">
+          <div class="quiz-number">{{ i + 1 }}.</div>
+          <div class="quiz-details">
+            <h4>{{ childQuiz.question }}</h4>
+            <p class="quiz-type">Lloji: {{ getQuizTypeName(childQuiz.quizType) }}</p>
+            <p class="quiz-points">Pikët: {{ childQuiz.points }}</p>
+          </div>
+        </div>
+        <div class="child-quiz-actions">
+          <button mat-icon-button color="primary"
+                  (click)="editChildQuiz(childQuiz)"
+                  matTooltip="Modifiko kuizin e vegjël">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn"
+                  (click)="deleteChildQuiz(childQuiz)"
+                  matTooltip="Fshi kuizin e vegjël">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="childQuizzes.length === 0 && canAddChildQuizzes()" class="no-child-quizzes">
+      <mat-icon>quiz</mat-icon>
+      <p>Nuk ka kuize të vegjël të shtuar ende.</p>
+      <p>Klikoni butonin "Shto Kuiz të Vegjël" për të filluar.</p>
     </div>
   </div>
 </div>

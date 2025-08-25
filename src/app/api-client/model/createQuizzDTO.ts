@@ -18,5 +18,6 @@ export interface CreateQuizzDTO {
     points?: number;
     options?: Array<OptionDTO> | null;
     quizType?: string | null;
+    parentQuizId?: string | null;
 }
 

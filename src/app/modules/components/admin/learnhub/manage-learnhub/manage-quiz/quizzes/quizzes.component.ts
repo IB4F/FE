@@ -8,7 +8,7 @@ import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from
 import {DetailsService, QuizType, QuizzesService, FileService} from '../../../../../../../api-client';
 import {NgToastService} from "ng-angular-popup";
 import {oneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatDialogModule, MatDialog} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
@@ -43,8 +43,8 @@ import {environment} from "@env";
   styleUrl: './quizzes.component.scss'
 })
 export class QuizzesComponent implements OnInit {
-  @ViewChild('questionAudioInput', { static: false }) questionAudioInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('explanationAudioInput', { static: false }) explanationAudioInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('questionAudioInput', {static: false}) questionAudioInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('explanationAudioInput', {static: false}) explanationAudioInput!: ElementRef<HTMLInputElement>;
 
   quizId: string | null = null;
   linkId!: string;
@@ -58,9 +58,13 @@ export class QuizzesComponent implements OnInit {
   // Existing audio data
   existingQuestionAudio: { id: string; url: string } | null = null;
   existingExplanationAudio: { id: string; url: string } | null = null;
-  
+
   // Existing option images data
   existingOptionImages: ({ id: string; url: string } | null)[] = [null, null, null, null];
+
+  // Child quiz properties
+  childQuizzes: any[] = [];
+  showChildQuizzesSection: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -70,6 +74,7 @@ export class QuizzesComponent implements OnInit {
     private fileService: FileService,
     private toast: NgToastService,
     private _detailsService: DetailsService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -93,12 +98,118 @@ export class QuizzesComponent implements OnInit {
       next: (resp) => {
         // Applica la patch ai valori del form solo dopo aver ricevuto i dati
         this.patchFormValues(resp);
+        this.childQuizzes = resp.childQuizzes || [];
+        // Show child quizzes section after parent quiz is loaded
+        this.showChildQuizzesSection = true;
       },
       error: (error) => {
         this.toast.danger(error?.error?.message, 'GABIM', 3000);
         this.goBack();
       }
     });
+  }
+
+  // Load child quizzes for the current parent quiz
+  loadChildQuizzes(): void {
+    if (this.quizId) {
+      this.quizzesService.apiQuizzesGetChildQuizzesGet(this.quizId).subscribe({
+        next: (result) => {
+          this.childQuizzes = result || [];
+        },
+        error: (error) => {
+          this.toast.danger(error?.error?.message, 'GABIM', 3000);
+        }
+      });
+    }
+  }
+
+  // Check if child quizzes can be added (parent must have an ID)
+  canAddChildQuizzes(): boolean {
+    return this.isEditMode && !!this.quizId;
+  }
+
+  // Open modal to add child quiz
+  openAddChildQuizModal(): void {
+    if (!this.canAddChildQuizzes()) {
+      this.toast.warning('Ju duhet të ruani kuizin kryesor para se të shtoni kuize të vegjël', 'KUJDES', 3000);
+      return;
+    }
+
+    // Import the modal component dynamically
+    import('./child-quiz-modal/child-quiz-modal.component').then(({ChildQuizModalComponent}) => {
+      const dialogRef = this.dialog.open(ChildQuizModalComponent, {
+        width: '90%',
+        maxWidth: '1200px',
+        height: '90vh',
+        data: {
+          linkId: this.linkId,
+          parentQuizId: this.quizId,
+          quizTypes: this.quizTypes
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadChildQuizzes();
+        }
+      });
+    });
+  }
+
+  // Edit child quiz
+  editChildQuiz(childQuiz: any): void {
+    // Import the modal component dynamically
+    import('./child-quiz-modal/child-quiz-modal.component').then(({ChildQuizModalComponent}) => {
+      const dialogRef = this.dialog.open(ChildQuizModalComponent, {
+        width: '90%',
+        maxWidth: '1200px',
+        height: '90vh',
+        data: {
+          linkId: this.linkId,
+          parentQuizId: this.quizId,
+          quizTypes: this.quizTypes,
+          childQuiz: childQuiz,
+          isEditMode: true
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.loadChildQuizzes();
+        }
+      });
+    });
+  }
+
+  // Delete child quiz
+  deleteChildQuiz(childQuiz: any): void {
+    if (confirm('A jeni të sigurt që dëshironi të fshini këtë kuiz të vegjël?')) {
+      this.quizzesService.apiQuizzesDeleteQuizDelete(childQuiz.id).subscribe({
+        next: (response) => {
+          // Handle JSON response from delete endpoint
+          console.log('Delete response:', response);
+          
+          // Check if the response indicates success
+          if (response && (response.success || response.message || response.status === 'success')) {
+            this.loadChildQuizzes();
+            this.toast.success('Kuizi i vegjël u fshi me sukses', 'SUKSES', 3000);
+          } else {
+            // If response doesn't indicate success, show a generic success message
+            this.loadChildQuizzes();
+            this.toast.success('Kuizi i vegjël u fshi me sukses', 'SUKSES', 3000);
+          }
+        },
+        error: (error) => {
+          console.error('Delete error:', error);
+          // Handle different error response formats
+          const errorMessage = error?.error?.message || 
+                              error?.error?.error || 
+                              error?.message || 
+                              'Ndodhi një gabim gjatë fshirjes së kuizit';
+          this.toast.danger(errorMessage, 'GABIM', 3000);
+        }
+      });
+    }
   }
 
   initializeQuizForm() {
@@ -243,6 +354,11 @@ export class QuizzesComponent implements OnInit {
     return quizType?.name || '';
   }
 
+  getQuizTypeName(quizTypeId: string): string {
+    const quizType = this.quizTypes.find(type => type.id === quizTypeId);
+    return quizType?.name || '';
+  }
+
   shouldShowImageFields(): boolean {
     const quizTypeName = this.getSelectedQuizTypeName();
     return quizTypeName.toLowerCase().includes('imazhe');
@@ -304,7 +420,7 @@ export class QuizzesComponent implements OnInit {
         const explanationAudioId = uploadResults[1]?.fileId || this.existingExplanationAudio?.id || null;
 
         // Extract option image IDs
-        const optionImageIds = uploadResults.slice(2, 6).map((result: any, index: number) => 
+        const optionImageIds = uploadResults.slice(2, 6).map((result: any, index: number) =>
           result?.fileId || this.existingOptionImages[index]?.id || null
         );
 
