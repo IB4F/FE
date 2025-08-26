@@ -1,4 +1,20 @@
 // Modern Modal Design with Enhanced UX - Simplified Color Scheme
+
+// Required field indicator
+.required-field {
+  color: #ef4444;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+// Warning icon for missing required images
+.warning-icon {
+  color: #f59e0b;
+  font-size: 18px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .modal-container {
   display: flex;
   flex-direction: column;

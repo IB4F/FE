@@ -155,7 +155,9 @@ export class ChildQuizModalComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.quizFormGroup.valid;
+    const formValid = this.quizFormGroup.valid;
+    const imagesValid = this.validateImageOptions();
+    return formValid && imagesValid;
   }
 
   get isEditMode(): boolean {
@@ -212,6 +214,66 @@ export class ChildQuizModalComponent implements OnInit {
   shouldShowImageFields(): boolean {
     const quizTypeName = this.getSelectedQuizTypeName();
     return quizTypeName.toLowerCase().includes('imazhe');
+  }
+
+  // Add method to check if images are required for the selected quiz type
+  areImagesRequired(): boolean {
+    const quizTypeName = this.getSelectedQuizTypeName();
+    return quizTypeName.toLowerCase().includes('imazhe');
+  }
+
+  // Add method to validate that all image options are provided when required
+  validateImageOptions(): boolean {
+    if (!this.areImagesRequired()) {
+      return true; // Images not required, validation passes
+    }
+
+    // Check if all options have either a selected image or existing image
+    for (let i = 0; i < 4; i++) {
+      const hasSelectedImage = this.selectedOptionImages[i] !== null;
+      const hasExistingImage = this.existingOptionImages[i] !== null;
+      
+      if (!hasSelectedImage && !hasExistingImage) {
+        return false; // Missing image for this option
+      }
+    }
+    
+    return true; // All options have images
+  }
+
+  // Get validation error message for missing images
+  getImageValidationError(): string {
+    if (!this.areImagesRequired()) {
+      return '';
+    }
+    
+    const missingOptions: number[] = [];
+    for (let i = 0; i < 4; i++) {
+      const hasSelectedImage = this.selectedOptionImages[i] !== null;
+      const hasExistingImage = this.existingOptionImages[i] !== null;
+      
+      if (!hasSelectedImage && !hasExistingImage) {
+        missingOptions.push(i + 1);
+      }
+    }
+    
+    if (missingOptions.length > 0) {
+      return `Opsionet ${missingOptions.join(', ')} duhet të kenë imazhe.`;
+    }
+    
+    return '';
+  }
+
+  // Check if a specific option is missing an image
+  isOptionMissingImage(index: number): boolean {
+    if (!this.areImagesRequired()) {
+      return false;
+    }
+    
+    const hasSelectedImage = this.selectedOptionImages[index] !== null;
+    const hasExistingImage = this.existingOptionImages[index] !== null;
+    
+    return !hasSelectedImage && !hasExistingImage;
   }
 
   // File upload methods
