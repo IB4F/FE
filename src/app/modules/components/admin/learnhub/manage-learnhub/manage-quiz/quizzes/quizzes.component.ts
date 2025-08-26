@@ -20,6 +20,7 @@ import {forkJoin, Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {ViewChild, ElementRef} from "@angular/core";
 import {environment} from "@env";
+import {ConfirmModalComponent} from "../../../../../../shared/components/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-quizzes',
@@ -123,15 +124,26 @@ export class QuizzesComponent implements OnInit {
     }
   }
 
-  // Check if child quizzes can be added (parent must have an ID)
+  // Check if child quizzes can be added (parent must have an ID and not exceed max limit)
   canAddChildQuizzes(): boolean {
-    return this.isEditMode && !!this.quizId;
+    return this.isEditMode && this.childQuizzes.length < 3;
+  }
+
+  // Get the reason why child quizzes cannot be added
+  getChildQuizzesDisabledReason(): string {
+    if (!this.isEditMode) {
+      return 'Ju duhet të ruani kuizin kryesor para se të shtoni nën-kuize';
+    }
+    if (this.childQuizzes.length >= 3) {
+      return 'Ju keni arritur numrin maksimal të nën-kuizeve (3)';
+    }
+    return '';
   }
 
   // Open modal to add child quiz
   openAddChildQuizModal(): void {
     if (!this.canAddChildQuizzes()) {
-      this.toast.warning('Ju duhet të ruani kuizin kryesor para se të shtoni kuize të vegjël', 'KUJDES', 3000);
+      this.toast.warning(this.getChildQuizzesDisabledReason(), 'KUJDES', 3000);
       return;
     }
 
@@ -183,33 +195,27 @@ export class QuizzesComponent implements OnInit {
 
   // Delete child quiz
   deleteChildQuiz(childQuiz: any): void {
-    if (confirm('A jeni të sigurt që dëshironi të fshini këtë kuiz të vegjël?')) {
-      this.quizzesService.apiQuizzesDeleteQuizDelete(childQuiz.id).subscribe({
-        next: (response) => {
-          // Handle JSON response from delete endpoint
-          console.log('Delete response:', response);
-          
-          // Check if the response indicates success
-          if (response && (response.success || response.message || response.status === 'success')) {
+
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      data: {
+        title: 'Fshi Nën-Kuizin',
+        message: 'A jeni të sigurt që dëshironi të fshini nën-kuizin?',
+        id: childQuiz.id
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.success) {
+        this.quizzesService.apiQuizzesDeleteQuizDelete(childQuiz.id).subscribe({
+          next: () => {
             this.loadChildQuizzes();
-            this.toast.success('Kuizi i vegjël u fshi me sukses', 'SUKSES', 3000);
-          } else {
-            // If response doesn't indicate success, show a generic success message
-            this.loadChildQuizzes();
-            this.toast.success('Kuizi i vegjël u fshi me sukses', 'SUKSES', 3000);
+            this.toast.success('Kuizi i u fshi me sukses', 'SUKSES', 3000);
+          },
+          error: () => {
+            this.toast.danger('Ndodhi një gabim gjatë fshirjes së kuizit', 'GABIM', 3000);
           }
-        },
-        error: (error) => {
-          console.error('Delete error:', error);
-          // Handle different error response formats
-          const errorMessage = error?.error?.message || 
-                              error?.error?.error || 
-                              error?.message || 
-                              'Ndodhi një gabim gjatë fshirjes së kuizit';
-          this.toast.danger(errorMessage, 'GABIM', 3000);
-        }
-      });
-    }
+        });
+      }
+    })
   }
 
   initializeQuizForm() {

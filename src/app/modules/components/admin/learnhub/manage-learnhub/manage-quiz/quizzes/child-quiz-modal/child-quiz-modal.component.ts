@@ -76,7 +76,6 @@ export class ChildQuizModalComponent implements OnInit {
     this.initializeQuizForm();
 
     if (this.data.isEditMode && this.data.childQuiz) {
-      console.log(this.data.childQuiz)
       this.patchFormValues(this.data.childQuiz);
     }
   }
@@ -156,7 +155,6 @@ export class ChildQuizModalComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    console.log(this.quizFormGroup)
     return this.quizFormGroup.valid;
   }
 

@@ -447,3 +447,13 @@ button {
     }
   }
 }
+
+
+.mat-slider-thumb-label {
+  display: none !important;
+}
+
+// Also hide the value indicator for a complete solution
+.mat-mdc-slider .mdc-slider__thumb .mdc-slider__value-indicator {
+  display: none !important;
+}

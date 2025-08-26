@@ -198,8 +198,8 @@
   <!-- Child Quizzes Section -->
   <div *ngIf="showChildQuizzesSection" class="child-quizzes-section">
     <div class="section-title">
-      <h2>Kuizet e Vegjël</h2>
-      <p>Menaxhoni kuizet e vegjël që i përkasin këtij kuizi kryesor.</p>
+      <h2>Nën-kuiz</h2>
+      <p>Menaxhoni seksionet e ketyre nën-kuizeve.</p>
     </div>
 
     <div class="child-quizzes-header">
@@ -209,12 +209,12 @@
               matTooltip="Shto kuiz të vegjël"
               class="add-child-quiz-button">
         <mat-icon>add</mat-icon>
-        Shto Kuiz të Vegjël
+        Shto Nën-kuiz
       </button>
 
       <div *ngIf="!canAddChildQuizzes()" class="warning-message">
         <mat-icon>warning</mat-icon>
-        <span>Ju duhet të ruani kuizin kryesor para se të shtoni kuize të vegjël</span>
+        <span>{{ getChildQuizzesDisabledReason() }}</span>
       </div>
     </div>
 
@@ -245,8 +245,8 @@
 
     <div *ngIf="childQuizzes.length === 0 && canAddChildQuizzes()" class="no-child-quizzes">
       <mat-icon>quiz</mat-icon>
-      <p>Nuk ka kuize të vegjël të shtuar ende.</p>
-      <p>Klikoni butonin "Shto Kuiz të Vegjël" për të filluar.</p>
+      <p>Nuk ka nën-kuize të shtuar ende.</p>
+      <p>Klikoni butonin "Shto" për të filluar.</p>
     </div>
   </div>
 </div>

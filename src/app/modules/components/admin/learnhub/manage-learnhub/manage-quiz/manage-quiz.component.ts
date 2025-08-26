@@ -119,7 +119,6 @@ export class ManageQuizComponent implements OnInit {
   }
 
   onDelete(quiz: any) {
-    console.log(quiz);
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
         title: 'Fshi Quizin',
@@ -129,7 +128,6 @@ export class ManageQuizComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result.success) {
-        console.log(quiz.id)
         this.deleteQuiz(quiz.id);
       }
     })
