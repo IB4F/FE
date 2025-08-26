@@ -1,20 +1,84 @@
 .modal-container {
-  padding: 16px;
-  min-width: 300px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  min-width: 400px;
+  max-width: 500px;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  color: #111827;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 .close-button {
-  margin-left: auto;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #374151;
+  }
 }
 
-mat-dialog-content p {
+.modal-content {
+  padding: 20px 24px;
+}
+
+.message-text {
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
   margin: 0;
-  color: rgba(0, 0, 0, 0.87);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px 20px;
+  background: #f9fafb;
+}
+
+.cancel-button {
+  color: #6b7280;
+  
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.confirm-button {
+  color: #2563eb;
+  font-weight: 500;
+  
+  &:hover {
+    background-color: #eff6ff;
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .modal-container {
+    min-width: 90vw;
+    max-width: 90vw;
+    margin: 20px;
+  }
+  
+  .modal-actions {
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
 }
