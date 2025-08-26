@@ -18,6 +18,21 @@ $shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 $shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 $shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
 
+// Required field indicator
+.required-field {
+  color: $danger-red;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+// Warning icon for missing required images
+.warning-icon {
+  color: $warning-orange;
+  font-size: 18px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .quiz-form-container {
   max-width: 900px;
   margin: 0 auto;

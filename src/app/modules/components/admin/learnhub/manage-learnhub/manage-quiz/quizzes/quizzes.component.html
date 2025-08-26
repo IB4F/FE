@@ -101,7 +101,13 @@
 
             <!-- Option Image Upload (only for image quiz types) -->
             <div class="file-upload-section" *ngIf="shouldShowImageFields()">
-              <label class="file-upload-label">Imazh për Opsionin {{ i + 1 }} (Opsionale)</label>
+              <label class="file-upload-label">
+                Imazh për Opsionin {{ i + 1 }} 
+                <span *ngIf="areImagesRequired()" class="required-field">*</span>
+                <mat-icon *ngIf="isOptionMissingImage(i)" 
+                         class="warning-icon" 
+                         matTooltip="Imazhi është i detyrueshëm për këtë opsion">warning</mat-icon>
+              </label>
 
               <!-- Existing Option Image -->
               <div *ngIf="existingOptionImages[i] && !selectedOptionImages[i]" class="existing-image">
@@ -144,6 +150,9 @@
           </div>
           <mat-error *ngIf="quizFormGroup.get('options')?.hasError('oneCorrectOption')" class="options-error">
             Duhet të zgjidhni saktësisht një opsion të saktë.
+          </mat-error>
+          <mat-error *ngIf="areImagesRequired() && !validateImageOptions()" class="options-error">
+            {{ getImageValidationError() }}
           </mat-error>
         </div>
 
