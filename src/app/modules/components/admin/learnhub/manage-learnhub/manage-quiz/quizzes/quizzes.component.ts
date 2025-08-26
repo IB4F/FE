@@ -67,6 +67,11 @@ export class QuizzesComponent implements OnInit {
   childQuizzes: any[] = [];
   showChildQuizzesSection: boolean = false;
 
+  // Image preview properties
+  showImagePreview: boolean = false;
+  previewImageUrl: string = '';
+  previewImageTitle: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -459,6 +464,28 @@ export class QuizzesComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  // Image preview methods
+  previewImage(imageUrl: string, title: string): void {
+    if (imageUrl) {
+      this.previewImageUrl = imageUrl;
+      this.previewImageTitle = title;
+      this.showImagePreview = true;
+    }
+  }
+
+  previewOptionImage(index: number): void {
+    const optionImage = this.existingOptionImages[index];
+    if (optionImage?.url) {
+      this.previewImage(optionImage.url, `Option ${index + 1}`);
+    }
+  }
+
+  closeImagePreview(): void {
+    this.showImagePreview = false;
+    this.previewImageUrl = '';
+    this.previewImageTitle = '';
   }
 
 }

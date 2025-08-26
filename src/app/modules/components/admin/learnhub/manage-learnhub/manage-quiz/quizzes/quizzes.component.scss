@@ -212,52 +212,60 @@ $shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04
         }
       }
 
-      .file-input {
-        width: 95%;
-        padding: 16px;
-        border: 2px solid $border-light;
-        border-radius: 12px;
-        background: $background-white;
-        font-size: 0.95rem;
-        color: $text-primary;
-        cursor: pointer;
-        transition: all 0.3s ease;
+      .file-upload-area {
+        position: relative;
+        width: 100%;
 
-        &:focus {
-          outline: none;
-          border-color: $primary-blue;
-          box-shadow: 0 0 0 4px rgba($primary-blue, 0.08);
+        .file-input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+          z-index: 2;
         }
 
-        &::-webkit-file-upload-button {
-          background: $primary-blue !important;
-          color: $background-white !important;
-          border: none !important;
-          padding: 14px 28px !important;
-          border-radius: 12px !important;
-          cursor: pointer !important;
-          font-weight: 700 !important;
-          font-size: 1rem !important;
-          margin-right: 16px !important;
-          transition: all 0.3s ease !important;
-          box-shadow: 0 4px 12px rgba($primary-blue, 0.3) !important;
-          position: relative !important;
-          overflow: hidden !important;
+        .upload-placeholder {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 32px 16px;
+          border: 2px dashed #cbd5e1;
+          border-radius: 12px;
+          background: white;
+          transition: all 0.2s ease;
+          text-align: center;
+          color: #64748b;
+          min-height: 120px;
 
-          &::before {
-            content: '📁';
-            margin-right: 8px;
-            font-size: 1.1rem;
+          mat-icon {
+            color: #94a3b8;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
           }
 
-          &:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 20px rgba($primary-blue, 0.4) !important;
-            background: $primary-dark !important;
+          span {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #475569;
           }
 
-          &:active {
-            transform: translateY(0) !important;
+          small {
+            color: #94a3b8;
+            font-size: 0.875rem;
+          }
+        }
+
+        &:hover .upload-placeholder {
+          border-color: #3b82f6;
+          background: rgba(59, 130, 246, 0.02);
+
+          mat-icon {
+            color: #3b82f6;
+            transform: scale(1.1);
           }
         }
       }
@@ -265,26 +273,30 @@ $shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04
       .file-info {
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 12px;
-        margin-top: 16px;
-        padding: 16px 20px;
-        background: $background-white;
-        border-radius: 12px;
-        border: 2px solid $success-green;
-        box-shadow: $shadow-sm;
+        margin-top: 12px;
+        padding: 12px 16px;
+        background: #eff6ff;
+        border-radius: 8px;
+        color: #1e40af;
+        border: 1px solid #dbeafe;
 
         mat-icon {
-          color: $success-green;
           font-size: 20px;
-          width: 20px;
-          height: 20px;
+          color: #3b82f6;
         }
 
         span {
-          color: $text-primary;
-          font-size: 0.95rem;
-          font-weight: 600;
+          font-weight: 500;
+          flex: 1;
+        }
+
+        button {
+          transition: all 0.2s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
         }
       }
     }
@@ -370,6 +382,47 @@ $shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04
             .mat-mdc-checkbox-inner-container {
               width: 24px;
               height: 24px;
+            }
+          }
+        }
+
+        .existing-image {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 16px;
+          padding: 16px;
+          background: white;
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+          .image-preview {
+            .option-image {
+              max-width: 120px;
+              max-height: 120px;
+              border-radius: 8px;
+              border: 2px solid #e2e8f0;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              transition: all 0.2s ease;
+
+              &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+              }
+            }
+          }
+
+          .image-actions {
+            display: flex;
+            gap: 8px;
+
+            button {
+              transition: all 0.2s ease;
+
+              &:hover {
+                transform: scale(1.1);
+              }
             }
           }
         }
@@ -505,7 +558,136 @@ $shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04
   }
 }
 
+// Image Preview Modal
+.image-preview-modal {
+  position: fixed !important;
+  top: 80px !important; // Account for header height
+  left: 0 !important;
+  width: 100% !important;
+  height: calc(100% - 80px) !important; // Subtract header height
+  background: rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2147483647 !important;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+  pointer-events: auto !important;
+
+  .modal-content {
+    background: white;
+    border-radius: 16px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease;
+    position: relative;
+    z-index: 2147483647 !important;
+    pointer-events: auto !important;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .close-button {
+        color: #64748b;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: #1e293b;
+          background: rgba(100, 116, 139, 0.1);
+        }
+      }
+    }
+
+    .modal-body {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: calc(90vh - 80px);
+      overflow: auto;
+
+      .preview-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+// Clickable image styling
+.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 // Enhanced global Material styles
+
+// Ensure modal is always on top
+::ng-deep .image-preview-modal {
+  z-index: 2147483647 !important;
+  position: fixed !important;
+  top: 80px !important; // Account for header height
+  left: 0 !important;
+  width: 100% !important;
+  height: calc(100% - 80px) !important; // Subtract header height
+}
+
+::ng-deep .image-preview-modal * {
+  z-index: inherit !important;
+}
+
+// Override any Angular Material overlays
+::ng-deep .cdk-overlay-container {
+  z-index: 2147483646 !important;
+}
+
+::ng-deep .cdk-overlay-pane {
+  z-index: 2147483646 !important;
+}
+
 ::ng-deep {
   .mat-mdc-checkbox.mat-checked .mat-mdc-checkbox-background,
   .mat-mdc-radio-button.mat-mdc-radio-checked .mat-mdc-radio-outer-circle,

@@ -62,14 +62,24 @@
           <!-- New Question Audio Upload -->
           <div *ngIf="!existingQuestionAudio || selectedQuestionAudio" class="file-upload-section">
             <label class="file-upload-label">Audio për Pyetjen (Opsionale)</label>
-            <input type="file"
-                   #questionAudioInput
-                   accept="audio/*"
-                   (change)="onQuestionAudioSelected($event)"
-                   class="file-input">
+            <div class="file-upload-area">
+              <input type="file"
+                     #questionAudioInput
+                     accept="audio/*"
+                     (change)="onQuestionAudioSelected($event)"
+                     class="file-input">
+              <div class="upload-placeholder">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>Klikoni për të zgjedhur një file audio</span>
+                <small>MP3, WAV, ose formate të tjera audio</small>
+              </div>
+            </div>
             <div class="file-info" *ngIf="selectedQuestionAudio">
               <mat-icon>audiotrack</mat-icon>
               <span>{{ selectedQuestionAudio.name }}</span>
+              <button type="button" mat-icon-button color="warn" (click)="selectedQuestionAudio = null" matTooltip="Hiq file">
+                <mat-icon>close</mat-icon>
+              </button>
             </div>
           </div>
         </div>
@@ -96,7 +106,11 @@
               <!-- Existing Option Image -->
               <div *ngIf="existingOptionImages[i] && !selectedOptionImages[i]" class="existing-image">
                 <div class="image-preview">
-                  <img [src]="existingOptionImages[i]?.url" [alt]="'Option ' + (i + 1) + ' image'" class="option-image">
+                  <img [src]="existingOptionImages[i]?.url" 
+                       [alt]="'Option ' + (i + 1) + ' image'" 
+                       class="option-image clickable"
+                       (click)="previewOptionImage(i)"
+                       matTooltip="Klikoni për të parë më të madh">
                 </div>
                 <div class="image-actions">
                   <button type="button" mat-icon-button color="warn" (click)="removeOptionImage(i)" matTooltip="Hiq Imazh">
@@ -107,13 +121,23 @@
 
               <!-- New Option Image Upload -->
               <div *ngIf="!existingOptionImages[i] || selectedOptionImages[i]">
-                <input type="file"
-                       accept="image/*"
-                       (change)="onOptionImageSelected($event, i)"
-                       class="file-input">
+                <div class="file-upload-area">
+                  <input type="file"
+                         accept="image/*"
+                         (change)="onOptionImageSelected($event, i)"
+                         class="file-input">
+                  <div class="upload-placeholder">
+                    <mat-icon>image</mat-icon>
+                    <span>Klikoni për të zgjedhur një imazh</span>
+                    <small>JPG, PNG, GIF ose formate të tjera imazhi</small>
+                  </div>
+                </div>
                 <div class="file-info" *ngIf="selectedOptionImages[i]">
                   <mat-icon>image</mat-icon>
                   <span>{{ selectedOptionImages[i]?.name }}</span>
+                  <button type="button" mat-icon-button color="warn" (click)="selectedOptionImages[i] = null" matTooltip="Hiq file">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
               </div>
             </div>
@@ -154,14 +178,24 @@
           <!-- New Explanation Audio Upload -->
           <div *ngIf="!existingExplanationAudio || selectedExplanationAudio" class="file-upload-section">
             <label class="file-upload-label">Audio për Shpjegimin (Opsionale)</label>
-            <input type="file"
-                   #explanationAudioInput
-                   accept="audio/*"
-                   (change)="onExplanationAudioSelected($event)"
-                   class="file-input">
+            <div class="file-upload-area">
+              <input type="file"
+                     #explanationAudioInput
+                     accept="audio/*"
+                     (change)="onExplanationAudioSelected($event)"
+                     class="file-input">
+              <div class="upload-placeholder">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>Klikoni për të zgjedhur një file audio</span>
+                <small>MP3, WAV, ose formate të tjera audio</small>
+              </div>
+            </div>
             <div class="file-info" *ngIf="selectedExplanationAudio">
               <mat-icon>audiotrack</mat-icon>
               <span>{{ selectedExplanationAudio.name }}</span>
+              <button type="button" mat-icon-button color="warn" (click)="selectedExplanationAudio = null" matTooltip="Hiq file">
+                <mat-icon>close</mat-icon>
+              </button>
             </div>
           </div>
         </div>
@@ -247,6 +281,21 @@
       <mat-icon>quiz</mat-icon>
       <p>Nuk ka nën-kuize të shtuar ende.</p>
       <p>Klikoni butonin "Shto" për të filluar.</p>
+    </div>
+  </div>
+
+  <!-- Image Preview Modal -->
+  <div *ngIf="showImagePreview" class="image-preview-modal" (click)="closeImagePreview()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ previewImageTitle }}</h3>
+        <button mat-icon-button (click)="closeImagePreview()" class="close-button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img [src]="previewImageUrl" [alt]="previewImageTitle" class="preview-image">
+      </div>
     </div>
   </div>
 </div>
