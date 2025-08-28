@@ -57,7 +57,7 @@ export class ForgetPasswordComponent implements OnInit {
 
   sendEmail() {
     const email: ForgotPasswordDTO = {email: this.emailForm.get('email')?.value};
-    this._authService.requestResetPost(email).subscribe({
+    this._authService.apiAuthRequestResetPost(email).subscribe({
       next: (resp) => {
         this.toast.success('Email-i u dergua me sukses!', 'SUKSES', 5000);
         this.closeModal();

@@ -13,7 +13,7 @@ import { Configuration } from './configuration';
 import {environment} from "@env";
 
 export class BaseService {
-    protected basePath = environment.apiUrl;
+  protected basePath = environment.apiUrl;
     public defaultHeaders = new HttpHeaders();
     public configuration: Configuration;
     public encoder: HttpParameterCodec;

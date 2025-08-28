@@ -43,11 +43,11 @@ export class EmailVerificationComponent implements OnInit {
 
     switch (verificationType) {
       case 'family':
-        serviceCall = this._authService.verifyFamilyEmailGet(token);
+        serviceCall = this._authService.apiAuthVerifyFamilyEmailGet(token);
         this.message = 'Email-i juaj i familjes është verifikuar me sukses!';
         break;
       default:
-        serviceCall = this._authService.verifyEmailGet(token);
+        serviceCall = this._authService.apiAuthVerifyEmailGet(token);
         this.message = 'Email-i juaj është verifikuar me sukses!';
         break;
     }

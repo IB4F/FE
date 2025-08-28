@@ -65,7 +65,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this._authService.logoutPost().subscribe();
+    this._authService.apiAuthLogoutPost().subscribe();
     this._tokenStorageService.clearTokens();
     this.userService.clearUserData();
     this.router.navigate(['']);

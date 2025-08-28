@@ -120,7 +120,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   onChangePassword(passwords: { currentPassword: string, newPassword: string }) {
     if (this.changePasswordFormGroup.valid) {
 
-      this._authService.resetPost(passwords).subscribe(
+      this._authService.apiAuthResetPost(passwords).subscribe(
         {
           next: (response) => {
             console.log(response);
@@ -146,7 +146,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           ...user,
           ...this.profileFormGroup.value
         };
-        this._authService.idPut(userId, userDetail).subscribe({
+        this._authService.apiAuthIdPut(userId, userDetail).subscribe({
             next: () => {
               this.userService.loadUserData(true).subscribe();
               this.toast.success('Të dhënat u përditësuan me sukses!', 'SUCCESS', 3000)

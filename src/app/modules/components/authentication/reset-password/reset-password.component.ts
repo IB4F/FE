@@ -64,7 +64,7 @@ export class ResetPasswordComponent implements OnInit {
         newPassword: this.resetPassForm.value.password
       };
 
-      this._authService.resetPost(resetPasswordObj).subscribe({
+      this._authService.apiAuthResetPost(resetPasswordObj).subscribe({
         next: (resp) => {
           this.toast.success(resp?.message, 'SUKSES', 3000);
           this.router.navigate(['hyr']);

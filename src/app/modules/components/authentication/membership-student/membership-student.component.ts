@@ -51,7 +51,7 @@ export class MembershipStudentComponent {
       return;
     }
 
-    this._authService.registerStudentPost(registerData).subscribe({
+    this._authService.apiAuthRegisterStudentPost(registerData).subscribe({
       next: async (response) => {
         const stripe = await this.stripePromise;
         await stripe?.redirectToCheckout({

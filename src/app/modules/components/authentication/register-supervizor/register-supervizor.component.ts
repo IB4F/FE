@@ -83,7 +83,7 @@ export class RegisterSupervizorComponent implements OnInit {
     const registerData: SchoolRegistrationDTO = {
       ...this.registerSupervizorFormGroup.value
     };
-    this._authService.registerSchoolPost(registerData).subscribe({
+    this._authService.apiAuthRegisterSchoolPost(registerData).subscribe({
       next: (resp) => {
         this.toast.success(resp?.message, 'SUCCESS', 3000);
         this.registerSupervizorFormGroup.reset();

@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    this._authService.loginPost(this.loginFormGroup.value).pipe(
+    this._authService.apiAuthLoginPost(this.loginFormGroup.value).pipe(
       switchMap(resp => {
         this._tokenStorageService.saveTokens(resp?.data);
         this.toast.success(resp?.message, 'SUCCESS', 3000);

@@ -20,7 +20,7 @@ export class UserService {
   }
 
   private fetchFromApi(): Observable<User> {
-    return this._authService.meGet().pipe(
+    return this._authService.apiAuthMeGet().pipe(
       tap(user => this.currentUser.next(user)),
       shareReplay({bufferSize: 1, refCount: true})
     );

@@ -144,7 +144,7 @@ export class RegisterFamilyComponent implements OnInit {
       return;
     }
 
-    this._authService.registerFamilyPost(familyRegistrationDTO).subscribe({
+    this._authService.apiAuthRegisterFamilyPost(familyRegistrationDTO).subscribe({
       next: async (response) => {
         const stripe = await this.stripePromise;
         await stripe?.redirectToCheckout({
