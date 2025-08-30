@@ -65,10 +65,15 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this._authService.apiAuthLogoutPost().subscribe();
-    this._tokenStorageService.clearTokens();
-    this.userService.clearUserData();
-    this.router.navigate(['']);
+    this._authService.apiAuthLogoutPost().subscribe({
+      next: () => {
+        this._tokenStorageService.clearTokens();
+        this.userService.clearUserData();
+        this.router.navigate(['']);
+      },
+      error: () => {
+      }
+    });
   }
 
   showDashboard(): boolean {
