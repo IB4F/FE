@@ -30,6 +30,10 @@ export class LinksListComponent implements OnInit {
     this.router.navigate(['/student/quiz-list', linkId]);
   }
 
+  hasQuizzes(link: any): boolean {
+    return link.quizzesCount && link.quizzesCount > 0;
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'Completed':

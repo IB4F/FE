@@ -11,10 +11,19 @@
       <ol>
         <li *ngFor="let link of course.links" class="link-item">
           <div class="link-content">
-            <a (click)="goToQuizList(link.id)" target="_blank" rel="noopener noreferrer" class="link-title">
+            <a *ngIf="hasQuizzes(link)" 
+               (click)="goToQuizList(link.id)" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="link-title">
               {{ link.title }}
               <span class="quiz-count">({{ link.quizzesCount }})</span>
             </a>
+            <span *ngIf="!hasQuizzes(link)" 
+                  class="link-title disabled-link">
+              {{ link.title }}
+              <span class="quiz-count">({{ link.quizzesCount }})</span>
+            </span>
             <div *ngIf="link.status" class="status-badge" [class]="getStatusClass(link.status)">
               <mat-icon class="status-icon">{{ getStatusIcon(link.status) }}</mat-icon>
               <span class="status-text">{{ getStatusText(link.status) }}</span>
