@@ -7,7 +7,7 @@ import {ActivatedRoute, ParamMap} from "@angular/router";
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {DetailsService, QuizType, QuizzesService, FileService} from '../../../../../../../api-client';
 import {NgToastService} from "ng-angular-popup";
-import {oneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
+import {atLeastOneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
 import {MatDialogModule, MatDialog} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatInputModule} from "@angular/material/input";
@@ -235,7 +235,7 @@ export class QuizzesComponent implements OnInit {
           this.createOption(),
           this.createOption()
         ],
-        oneCorrectOptionValidator()
+        atLeastOneCorrectOptionValidator()
       ),
       points: [1, Validators.required]
     });

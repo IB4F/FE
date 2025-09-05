@@ -1,8 +1,27 @@
 <div class="quiz-container">
   <div class="quiz-box question">
     <div class="box-content">
-      <div class="icon">?</div>
-      <div class="text">{{ question }}</div>
+      <div class="question-header">
+        <div class="icon">?</div>
+        <div class="text">{{ question }}</div>
+        <div class="audio-control" *ngIf="hasQuestionAudio()">
+          <button 
+            class="audio-button" 
+            (click)="toggleAudio()"
+            [class.playing]="isPlaying"
+            type="button"
+          >
+            <span class="audio-icon" [class.playing]="isPlaying">
+              {{ isPlaying ? '⏸️' : '🔊' }}
+            </span>
+          </button>
+        </div>
+      </div>
+      <!-- Multiple answer instruction -->
+      <div class="multiple-answer-instruction" *ngIf="multipleAnswer">
+        <div class="instruction-icon">ℹ️</div>
+        <div class="instruction-text">Mund të zgjidhni më shumë se një përgjigje të saktë</div>
+      </div>
     </div>
   </div>
 
@@ -10,12 +29,18 @@
     <div
       *ngFor="let option of options; let i = index"
       class="quiz-box option"
-      [class.selected]="selectedOption === option.optionText"
-      (click)="setSelectedOption(option.optionText)"
+      [class.selected]="isOptionSelected(option.id)"
+      (click)="setSelectedOption(option.id)"
     >
       <div class="box-content">
-        <div class="icon">{{ getOptionLetter(i) }}</div>
-        <div class="text">{{ option.optionText }}</div>
+        <div class="option-header">
+          <div class="icon">{{ getOptionLetter(i) }}</div>
+          <div class="text">{{ option.optionText }}</div>
+        </div>
+        
+        <div class="option-image" *ngIf="hasImage(option)">
+          <img [src]="option.optionImageUrl!" [alt]="option.optionText" />
+        </div>
       </div>
     </div>
   </div>
@@ -23,7 +48,7 @@
   <button
     class="submit-button"
     (click)="submitAnswer()"
-    [disabled]="!selectedOption"
+    [disabled]="multipleAnswer ? selectedOptionIds.length === 0 : !selectedOptionId"
   >
     Dërgo Përgjigjen
   </button>

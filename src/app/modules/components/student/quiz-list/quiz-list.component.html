@@ -1,45 +1,125 @@
 <div class="quiz-dashboard">
-  <aside class="quiz-sidebar" [class.collapsed]="isSidebarCollapsed">
-    <div class="sidebar-header" (click)="toggleSidebar()">
-      <h2>Kuizet e Tua</h2>
-      <span class="toggle-icon" [class.rotated]="!isSidebarCollapsed" title="Shiko kuizet">&#9660;</span>
+  <!-- Header with back button and progress -->
+  <header class="quiz-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-icon">←</span>
+      Kthehu te Kurset
+    </button>
+    
+    <div class="progress-info" *ngIf="progress">
+      <div class="progress-stats">
+        <div class="stat-item">
+          <span class="stat-label">Kuizet e Përfunduara:</span>
+          <span class="stat-value">{{ progress.completedQuizzes }}/{{ progress.totalQuizzes }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Pikët e Fituara:</span>
+          <span class="stat-value">{{ progress.totalPointsEarned }}/{{ progress.totalPossiblePoints }}</span>
+        </div>
+      </div>
+      
+      <div class="progress-bar-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+        <span class="progress-text">{{ getProgressPercentage() | number:'1.0-0' }}%</span>
+      </div>
+      
+      <div class="target-indicator" *ngIf="getTargetAchieved()">
+        <span class="target-icon">🎯</span>
+        Objektivi i Arritur! (70%+)
+      </div>
     </div>
+  </header>
 
-    <div *ngIf="quizzes.length === 0" class="no-quizzes">
-      Nuk ka kuize të disponueshme.
-    </div>
-    <ul class="quiz-navigation-list">
-      <li
-        *ngFor="let quiz of quizzes; let i = index"
-        [class.active]="quiz.id === currentQuiz?.id"
-        [class.answered]="quiz.isAnswered"
-        (click)="selectQuiz(quiz); $event.stopPropagation();"
-      >
-        <span class="quiz-index">{{ i + 1 }}.</span>
-        <span class="quiz-question-preview" *ngIf="!isSidebarCollapsed">{{ quiz.question }}</span>
-        <span *ngIf="quiz.isAnswered && !isSidebarCollapsed" class="answered-indicator">&#10003;</span>
-      </li>
-    </ul>
-    <div class="score-display" *ngIf="!isSidebarCollapsed">
-      Pikët: <strong>{{ totalScore }}</strong>
-    </div>
-  </aside>
-
+  <!-- Quiz content -->
   <main class="quiz-main-content">
-    <ng-container *ngIf="currentQuiz; else noQuizSelected">
+    <!-- Quiz type indicator -->
+    <div class="quiz-type-indicator" *ngIf="currentQuiz">
+      <span class="quiz-type-badge" [class.child-quiz]="isChildQuiz">
+        {{ isChildQuiz ? 'Kuiz Ndihmes' : 'Kuiz' }}
+      </span>
+      <span class="quiz-points">{{ currentQuiz.points }} pikë</span>
+    </div>
+
+    <!-- Current quiz -->
+    <ng-container *ngIf="currentQuiz && !showExplanation">
       <app-quiz
         [question]="currentQuiz.question"
         [options]="currentQuiz.options"
+        [questionAudioUrl]="currentQuiz.questionAudioUrl"
+        [multipleAnswer]="currentQuiz.multipleAnswer"
         (optionSelected)="handleOptionSelection($event)"
+        (multipleOptionsSelected)="handleMultipleOptionsSelection($event)"
       ></app-quiz>
-      <button class="test-confetti-btn" (click)="triggerConfetti()">
-        Test Konfeti
-      </button>
     </ng-container>
-    <ng-template #noQuizSelected>
-      <div class="welcome-message">
-        Përzgjidh një kuiz nga lista për të filluar!
+
+    <!-- Explanation screen -->
+    <div class="explanation-container" *ngIf="showExplanation">
+      <div class="explanation-box">
+        <div class="explanation-header">
+          <span class="explanation-icon">💡</span>
+          <h3>Shpjegimi</h3>
+        </div>
+        
+        <div class="explanation-content">
+          <p>{{ explanation }}</p>
+          
+          <div class="explanation-audio" *ngIf="explanationAudioUrl">
+            <button 
+              class="explanation-audio-button" 
+              (click)="toggleExplanationAudio()"
+              [class.playing]="isExplanationAudioPlaying"
+              type="button"
+            >
+              <span class="audio-icon" [class.playing]="isExplanationAudioPlaying">
+                {{ isExplanationAudioPlaying ? '⏸️' : '🔊' }}
+              </span>
+              <span class="audio-text">
+                {{ isExplanationAudioPlaying ? 'Ndalo Audio' : 'Luaj Audio' }}
+              </span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="explanation-actions">
+          <button 
+            class="understood-button" 
+            (click)="onExplanationUnderstood()"
+            [class.has-child-quiz]="hasChildQuizzes"
+          >
+            {{ hasChildQuizzes ? 'E Kuptova - Vazhdo me Kuizin Ndihmes' : 'E Kuptova - Vazhdo' }}
+          </button>
+        </div>
       </div>
-    </ng-template>
+    </div>
+
+    <!-- Completion message -->
+    <div class="completion-message" *ngIf="dataLoaded && !currentQuiz && progress && progress.completedQuizzes === progress.totalQuizzes">
+      <div class="completion-box">
+        <div class="completion-icon">🎉</div>
+        <h2>Urime!</h2>
+        <p>Ke përfunduar të gjitha kuizet me sukses!</p>
+        
+        <div class="final-stats" *ngIf="progress">
+          <div class="final-stat">
+            <span class="stat-number">{{ progress.totalPointsEarned }}</span>
+            <span class="stat-label">Pikë të Fituara</span>
+          </div>
+          <div class="final-stat">
+            <span class="stat-number">{{ progress.completedQuizzes }}</span>
+            <span class="stat-label">Kuizet e Përfunduara</span>
+          </div>
+          <div class="final-stat">
+            <span class="stat-number">{{ getProgressPercentage() | number:'1.0-0' }}%</span>
+            <span class="stat-label">Sukses</span>
+          </div>
+        </div>
+        
+        <button class="back-to-courses" (click)="goBack()">
+          Kthehu te Kurset
+        </button>
+      </div>
+    </div>
   </main>
 </div>

@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {oneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
+import {atLeastOneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
 import {MatIconModule} from '@angular/material/icon';
@@ -62,7 +62,7 @@ export class QuizModalComponent implements OnInit {
           this.createOption(),
           this.createOption(),
           this.createOption()
-        ], oneCorrectOptionValidator()
+        ], atLeastOneCorrectOptionValidator()
       ),
       points: [this.data.exam?.points || 1, Validators.required]
     });

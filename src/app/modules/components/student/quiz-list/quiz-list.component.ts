@@ -1,10 +1,36 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuizzesService } from '../../../../api-client';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { StudentService } from '../../../../api-client';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import {QuizComponent} from "./quiz/quiz.component";
 import confetti from 'canvas-confetti';
+
+interface QuizProgress {
+  totalQuizzes: number;
+  completedQuizzes: number;
+  currentQuizIndex: number;
+  totalPointsEarned: number;
+  totalPossiblePoints: number;
+  lastCompletedQuizId: string | null;
+  lastCompletedAt: string | null;
+}
+
+interface QuizData {
+  id: string;
+  question: string;
+  points: number;
+  options: Array<{
+    id: string;
+    optionText: string;
+    optionImageUrl: string | null;
+  }>;
+  questionAudioUrl: string | null;
+  explanationAudioUrl: string | null;
+  quizzTypeName: string;
+  parentQuizId: string | null;
+  multipleAnswer: boolean;
+}
 
 @Component({
   selector: 'app-quiz-list',
@@ -13,145 +39,305 @@ import confetti from 'canvas-confetti';
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss'],
 })
-export class QuizListComponent implements OnInit {
+export class QuizListComponent implements OnInit, OnDestroy {
   linkId!: string;
-  quizzes: any[] = [];
-  currentQuiz: any | null = null; // Il quiz attualmente visualizzato
-  totalScore: number = 0; // Punteggio totale dell'utente
-  isSidebarCollapsed: boolean = false;
+  parentQuizIds: string[] = [];
+  progress: QuizProgress | null = null;
+  currentQuiz: QuizData | null = null;
+  currentQuizIndex: number = 0;
+  isChildQuiz: boolean = false;
+  currentParentQuizId: string | null = null;
+  showExplanation: boolean = false;
+  explanation: string | null = null;
+  explanationAudioUrl: string | null = null;
+  nextChildQuizId: string | null = null;
+  hasChildQuizzes: boolean = false;
+  quizStartedAt: string | null = null;
+  dataLoaded: boolean = false;
+  isExplanationAudioPlaying: boolean = false;
+  explanationAudio: HTMLAudioElement | null = null;
 
   constructor(
-    private quizzesService: QuizzesService,
+    private studentService: StudentService,
     private route: ActivatedRoute,
+    private router: Router,
     private toast: NgToastService,
     private renderer2: Renderer2,
-    private elementRef: ElementRef // Per il canvas dei confetti
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.linkId = params.get('id') as string;
       if (this.linkId) {
-        this.getQuizListByLinkId();
+        this.loadQuizzesAndProgress();
       }
     });
   }
 
-  getQuizListByLinkId() {
-    this.quizzesService.apiQuizzesGetListQuizzesGet(this.linkId).subscribe({
+  loadQuizzesAndProgress() {
+    this.studentService.apiStudentQuizzesLinkIdGet(this.linkId).subscribe({
       next: (result) => {
-        this.quizzes = result;
-        // Trova il primo quiz non risposto all'inizializzazione
-        this.findAndSetInitialQuiz();
-        console.log(result);
+        this.parentQuizIds = result.parentQuizIds || [];
+        this.progress = result.progress || null;
+        this.currentQuizIndex = this.progress?.currentQuizIndex || 0;
+        
+        if (this.parentQuizIds.length > 0 && this.currentQuizIndex < this.parentQuizIds.length) {
+          this.loadCurrentQuiz();
+        } else if (this.progress && this.progress.completedQuizzes === this.progress.totalQuizzes) {
+          this.showCompletionMessage();
+        }
+        this.dataLoaded = true;
       },
       error: (err) => {
-        this.toast.danger(err?.error?.message, 'GABIM', 3000);
+        this.toast.danger(err?.error?.message || 'Gabim në ngarkimin e kuizeve', 'GABIM', 3000);
+        this.dataLoaded = true;
       },
     });
   }
 
-  // Trova e imposta il primo quiz non risposto
-  findAndSetInitialQuiz() {
-    const firstUnansweredQuiz = this.quizzes.find((quiz) => !quiz.isAnswered);
-    if (firstUnansweredQuiz) {
-      this.currentQuiz = firstUnansweredQuiz;
-    } else if (this.quizzes.length > 0) {
-      // Se tutti sono stati risposti, mostra il primo (o un messaggio di completamento)
-      this.currentQuiz = this.quizzes[0];
-      this.toast.info(
-        "Hai completato tutti i quiz! Rivedi le tue risposte o attendi nuovi quiz.",
-        "Quiz Completati",
-        5000
-      );
+  loadCurrentQuiz() {
+    if (this.currentQuizIndex >= this.parentQuizIds.length) {
+      this.showCompletionMessage();
+      return;
     }
+
+    const quizId = this.parentQuizIds[this.currentQuizIndex];
+    this.currentParentQuizId = quizId;
+    this.isChildQuiz = false;
+    
+    this.studentService.apiStudentQuizzesSingleQuizIdGet(quizId).subscribe({
+      next: (quiz) => {
+        this.currentQuiz = quiz;
+        this.startQuiz(quizId);
+      },
+      error: (err) => {
+        this.toast.danger(err?.error?.message || 'Gabim në ngarkimin e kuizit', 'GABIM', 3000);
+      },
+    });
   }
 
-  // Metodo per selezionare un quiz dalla lista
-  selectQuiz(quiz: any) {
-    this.currentQuiz = quiz;
+  startQuiz(quizId: string) {
+    this.studentService.apiStudentQuizzesQuizIdStartPost(quizId).subscribe({
+      next: (result) => {
+        this.quizStartedAt = result.startedAt;
+      },
+      error: (err) => {
+        console.warn('Could not start quiz timer:', err);
+      },
+    });
   }
 
-  // Metodo chiamato quando un'opzione viene selezionata nel componente Quiz
-  handleOptionSelection(selectedOptionText: string) {
-    // QUI ANDRÀ LA LOGICA PER VERIFICARE LA RISPOSTA E ACCUMULARE PUNTI
-    // Esempio: Se la risposta fosse corretta (simulato):
-    console.log(`Opzione selezionata: ${selectedOptionText}`);
-    console.log(`Quiz corrente:`, this.currentQuiz);
+  handleOptionSelection(selectedOptionId: string) {
+    if (!this.currentQuiz || !this.quizStartedAt) return;
 
-    // Esempio per simulare l'incremento del punteggio e i confetti
-    // In un'applicazione reale, questa logica verrebbe da una risposta API
-    if (
-      selectedOptionText === 'Roma' &&
-      this.currentQuiz?.question === 'Cili është kryeqyteti i Italisë?'
-    ) {
-      this.totalScore += this.currentQuiz.points;
-      this.triggerConfetti();
-      this.toast.success("Risposta corretta!", "Bravissimo!", 2000);
-      // Marca il quiz come risposto (questo in un'applicazione reale dovrebbe venire dal backend)
-      if (this.currentQuiz) {
-        this.currentQuiz.isAnswered = true;
-      }
-      // Passa al prossimo quiz non risposto
-      this.moveToNextUnansweredQuiz();
+    const selectedOption = this.currentQuiz.options.find(opt => opt.id === selectedOptionId);
+    if (!selectedOption) return;
+    
+    const submission = {
+      quizId: this.currentQuiz.id,
+      answerId: selectedOption.id,
+      startedAt: this.quizStartedAt
+    };
 
-    } else if (
-      selectedOptionText === 'Dante Aligieri' &&
-      this.currentQuiz?.question === 'Kush e shkroi "Komedia Hyjnore"?'
-    ) {
-      this.totalScore += this.currentQuiz.points;
-      this.triggerConfetti();
-      this.toast.success("Risposta corretta!", "Bravissimo!", 2000);
-      if (this.currentQuiz) {
-        this.currentQuiz.isAnswered = true;
-      }
-      this.moveToNextUnansweredQuiz();
-    } else if (
-      selectedOptionText === 'Python' &&
-      this.currentQuiz?.question === 'Cili gjuhë programimi njihet për sintaksën e saj "të folur" dhe përdorimin e gjerë të hapësirave të bardha për të përcaktuar blloqet e kodit?'
-    ) {
-      this.totalScore += this.currentQuiz.points;
-      this.triggerConfetti();
-      this.toast.success("Risposta corretta!", "Bravissimo!", 2000);
-      if (this.currentQuiz) {
-        this.currentQuiz.isAnswered = true;
-      }
-      this.moveToNextUnansweredQuiz();
-    }
-    else {
-      this.toast.danger("Risposta errata. Riprova!", "Ops!", 2000);
-    }
+    this.studentService.apiStudentQuizzesSubmitPost(submission).subscribe({
+      next: (result) => {
+        if (result.answer) {
+          // Correct answer
+          this.handleCorrectAnswer();
+        } else {
+          // Incorrect answer
+          this.handleIncorrectAnswer(result);
+        }
+      },
+      error: (err) => {
+        console.error('Quiz submission error:', err);
+        this.toast.danger(
+          err?.error?.message || 'Gabim në dërgimin e përgjigjes. Ju lutem provoni përsëri.',
+          'GABIM',
+          4000
+        );
+      },
+    });
   }
 
-  moveToNextUnansweredQuiz() {
-    const currentIndex = this.quizzes.findIndex(q => q.id === this.currentQuiz?.id);
-    const remainingQuizzes = this.quizzes.slice(currentIndex + 1);
-    const nextUnanswered = remainingQuizzes.find(q => !q.isAnswered);
+  handleMultipleOptionsSelection(selectedOptionIds: string[]) {
+    if (!this.currentQuiz || !this.quizStartedAt) return;
 
-    if (nextUnanswered) {
-      this.currentQuiz = nextUnanswered;
+    const selectedOptions = this.currentQuiz.options.filter(opt => selectedOptionIds.includes(opt.id));
+    if (selectedOptions.length === 0) return;
+    
+    const submission = {
+      quizId: this.currentQuiz.id,
+      answerIds: selectedOptionIds,
+      startedAt: this.quizStartedAt
+    };
+
+    this.studentService.apiStudentQuizzesSubmitPost(submission).subscribe({
+      next: (result) => {
+        if (result.answer) {
+          // Correct answer
+          this.handleCorrectAnswer();
+        } else {
+          // Incorrect answer
+          this.handleIncorrectAnswer(result);
+        }
+      },
+      error: (err) => {
+        console.error('Quiz submission error:', err);
+        this.toast.danger(
+          err?.error?.message || 'Gabim në dërgimin e përgjigjes. Ju lutem provoni përsëri.',
+          'GABIM',
+          4000
+        );
+      },
+    });
+  }
+
+  handleCorrectAnswer() {
+    // Add points (no deduction for correct answers)
+    if (this.progress) {
+      this.progress.totalPointsEarned += this.currentQuiz!.points;
+      this.progress.completedQuizzes++;
+    }
+    
+    this.triggerConfetti();
+    this.toast.success("Përgjigje e saktë!", "Bravissimo!", 2000);
+    
+    // Move to next parent quiz
+    this.moveToNextParentQuiz();
+  }
+
+  handleIncorrectAnswer(result: any) {
+    // Deduct 2 points for incorrect answer
+    if (this.progress) {
+      this.progress.totalPointsEarned = Math.max(0, this.progress.totalPointsEarned - 2);
+    }
+    
+    this.explanation = result.explanation;
+    this.explanationAudioUrl = result.explanationAudioUrl;
+    this.nextChildQuizId = result.childQuizId;
+    this.hasChildQuizzes = !!result.childQuizId;
+    this.showExplanation = true;
+    
+    this.toast.danger("Përgjigje e gabuar. -2 pikë", "Ops!", 3000);
+  }
+
+  onExplanationUnderstood() {
+    this.showExplanation = false;
+    this.stopExplanationAudio(); // Stop any playing explanation audio
+    
+    if (this.hasChildQuizzes && this.nextChildQuizId) {
+      // Load child quiz
+      this.loadChildQuiz(this.nextChildQuizId);
     } else {
-      this.toast.info("Hai completato tutti i quiz disponibili!", "Congratulazioni!", 5000);
-      this.currentQuiz = null; // O potresti mostrare una schermata di riepilogo
+      // No child quizzes, move to next parent quiz
+      this.moveToNextParentQuiz();
     }
   }
 
+  loadChildQuiz(childQuizId: string) {
+    this.isChildQuiz = true;
+    
+    this.studentService.apiStudentQuizzesSingleQuizIdGet(childQuizId).subscribe({
+      next: (quiz) => {
+        this.currentQuiz = quiz;
+        this.startQuiz(childQuizId);
+      },
+      error: (err) => {
+        this.toast.danger(err?.error?.message || 'Gabim në ngarkimin e kuizit fëmijë', 'GABIM', 3000);
+        // If child quiz fails to load, move to next parent quiz
+        this.moveToNextParentQuiz();
+      },
+    });
+  }
 
-  // Metodo per attivare i confetti
+  moveToNextParentQuiz() {
+    this.currentQuizIndex++;
+    this.isChildQuiz = false;
+    
+    if (this.currentQuizIndex < this.parentQuizIds.length) {
+      this.loadCurrentQuiz();
+    } else {
+      this.showCompletionMessage();
+    }
+  }
+
+  showCompletionMessage() {
+    this.currentQuiz = null;
+    this.toast.success(
+      "Urime! Ke përfunduar të gjitha kuizet!",
+      "Përfunduar",
+      5000
+    );
+  }
+
+
   triggerConfetti() {
-    const duration = 3000; // in milliseconds
-
+    const duration = 3000;
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 }
     });
-
-    // Clear confetti after a certain duration
     setTimeout(() => confetti.reset(), duration);
   }
 
-  toggleSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  goBack() {
+    this.router.navigate(['/student/kurset']);
+  }
+
+  getProgressPercentage(): number {
+    if (!this.progress || this.progress.totalPossiblePoints === 0) return 0;
+    return (this.progress.totalPointsEarned / this.progress.totalPossiblePoints) * 100;
+  }
+
+  getTargetAchieved(): boolean {
+    return this.getProgressPercentage() >= 70;
+  }
+
+  toggleExplanationAudio() {
+    if (!this.explanationAudioUrl) return;
+
+    if (this.isExplanationAudioPlaying) {
+      this.stopExplanationAudio();
+    } else {
+      this.playExplanationAudio();
+    }
+  }
+
+  private playExplanationAudio() {
+    if (!this.explanationAudioUrl) return;
+
+    this.stopExplanationAudio(); // Stop any existing audio
+    
+    this.explanationAudio = new Audio(this.explanationAudioUrl);
+    this.explanationAudio.onended = () => {
+      this.isExplanationAudioPlaying = false;
+    };
+    this.explanationAudio.onerror = () => {
+      this.isExplanationAudioPlaying = false;
+      console.error('Error playing explanation audio');
+    };
+    
+    this.explanationAudio.play().then(() => {
+      this.isExplanationAudioPlaying = true;
+    }).catch((error) => {
+      console.error('Error playing explanation audio:', error);
+      this.isExplanationAudioPlaying = false;
+    });
+  }
+
+  private stopExplanationAudio() {
+    if (this.explanationAudio) {
+      this.explanationAudio.pause();
+      this.explanationAudio.currentTime = 0;
+      this.explanationAudio = null;
+    }
+    this.isExplanationAudioPlaying = false;
+  }
+
+  ngOnDestroy() {
+    this.stopExplanationAudio();
   }
 }

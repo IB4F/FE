@@ -141,8 +141,8 @@
                 </div>
               </div>
             </div>
-            <mat-error *ngIf="quizFormGroup.get('options')?.hasError('oneCorrectOption')" class="options-error">
-              Duhet të zgjidhni saktësisht një opsion të saktë.
+            <mat-error *ngIf="quizFormGroup.get('options')?.hasError('atLeastOneCorrectOption')" class="options-error">
+              Duhet të zgjidhni të paktën një opsion të saktë.
             </mat-error>
             <mat-error *ngIf="areImagesRequired() && !validateImageOptions()" class="options-error">
               {{ getImageValidationError() }}

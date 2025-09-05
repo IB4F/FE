@@ -20,6 +20,7 @@ export * from './registrationPlan';
 export * from './resetPasswordDTO';
 export * from './schoolRegistrationDTO';
 export * from './setPasswordDTO';
+export * from './studentQuizSubmissionDTO';
 export * from './studentRegistrationDTO';
 export * from './subjects';
 export * from './user';

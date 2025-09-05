@@ -1,35 +1,123 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importa CommonModule per *ngFor
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface QuizOption {
+  id: string;
+  optionText: string;
+  optionImageUrl: string | null;
+}
 
 @Component({
   selector: 'app-quiz',
   standalone: true,
-  imports: [CommonModule], // Aggiungi CommonModule qui
+  imports: [CommonModule],
   templateUrl: './quiz.component.html',
   styleUrl: './quiz.component.scss',
 })
-export class QuizComponent {
+export class QuizComponent implements OnDestroy {
   @Input() question: string = '';
-  @Input() options: { optionText: string }[] = [];
+  @Input() options: QuizOption[] = [];
+  @Input() questionAudioUrl: string | null = null;
+  @Input() multipleAnswer: boolean = false;
   @Output() optionSelected = new EventEmitter<string>();
+  @Output() multipleOptionsSelected = new EventEmitter<string[]>();
 
-  selectedOption: string | null = null; // Variabile per tenere traccia dell'opzione selezionata
+  selectedOptionId: string | null = null;
+  selectedOptionIds: string[] = [];
+  isPlaying: boolean = false;
+  audio: HTMLAudioElement | null = null;
 
   getOptionLetter(index: number): string {
     return String.fromCharCode(65 + index); // A, B, C, D...
   }
 
-  // Metodo per impostare l'opzione selezionata (al click dell'utente)
-  setSelectedOption(optionText: string) {
-    this.selectedOption = optionText;
-    console.log(`Opzione selezionata internamente: ${this.selectedOption}`);
+  setSelectedOption(optionId: string) {
+    if (this.multipleAnswer) {
+      // Toggle selection for multiple choice
+      const index = this.selectedOptionIds.indexOf(optionId);
+      if (index > -1) {
+        this.selectedOptionIds.splice(index, 1);
+      } else {
+        this.selectedOptionIds.push(optionId);
+      }
+    } else {
+      // Single selection
+      this.selectedOptionId = optionId;
+    }
   }
 
-  // Metodo per inviare la risposta (al click del pulsante Submit)
   submitAnswer() {
-    if (this.selectedOption) {
-      this.optionSelected.emit(this.selectedOption); // Emette l'opzione selezionata al componente padre
-      this.selectedOption = null; // Resetta la selezione dopo l'invio
+    if (this.multipleAnswer) {
+      if (this.selectedOptionIds.length > 0) {
+        this.multipleOptionsSelected.emit([...this.selectedOptionIds]);
+        this.selectedOptionIds = [];
+      }
+    } else {
+      if (this.selectedOptionId) {
+        this.optionSelected.emit(this.selectedOptionId);
+        this.selectedOptionId = null;
+      }
     }
+  }
+
+  hasImage(option: QuizOption): boolean {
+    return !!option.optionImageUrl;
+  }
+
+  isOptionSelected(optionId: string): boolean {
+    if (this.multipleAnswer) {
+      return this.selectedOptionIds.includes(optionId);
+    } else {
+      return this.selectedOptionId === optionId;
+    }
+  }
+
+  hasQuestionAudio(): boolean {
+    return !!this.questionAudioUrl;
+  }
+
+  toggleAudio() {
+    if (!this.questionAudioUrl) return;
+
+    if (this.isPlaying) {
+      this.stopAudio();
+    } else {
+      this.playAudio();
+    }
+  }
+
+  private playAudio() {
+    if (!this.questionAudioUrl) return;
+
+    this.stopAudio(); // Stop any existing audio
+    
+    this.audio = new Audio(this.questionAudioUrl);
+    this.audio.onended = () => {
+      this.isPlaying = false;
+    };
+    this.audio.onerror = () => {
+      this.isPlaying = false;
+      console.error('Error playing audio');
+    };
+    
+    this.audio.play().then(() => {
+      this.isPlaying = true;
+    }).catch((error) => {
+      console.error('Error playing audio:', error);
+      this.isPlaying = false;
+    });
+  }
+
+  private stopAudio() {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      this.audio = null;
+    }
+    this.isPlaying = false;
+  }
+
+  ngOnDestroy() {
+    this.stopAudio();
   }
 }
