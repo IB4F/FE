@@ -67,16 +67,34 @@
         margin: 0;
 
         li {
-          margin-bottom: 8px; // Spazio sotto ogni elemento del link
+          margin-bottom: 12px; // Increased spacing for better layout
 
-          a {
+          .link-item {
+            width: 100%;
+          }
+
+          .link-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+
+            // When no status badge is present, let the link title take full width
+            &:has(.link-title:only-child) {
+              justify-content: flex-start;
+            }
+          }
+
+          .link-title {
             color: #007bff;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 1.05em; // Dimensione del font aumentata
-            line-height: 1.5; // Migliora la leggibilità se il testo è lungo
+            font-size: 1.05em;
+            line-height: 1.5;
+            flex: 1;
 
             &:hover {
               text-decoration: underline;
@@ -84,13 +102,76 @@
             }
 
             .quiz-count {
-              margin-left: 8px; /* Spazio tra il titolo del link e il conteggio */
-              font-size: 0.85em; /* Dimensione del font leggermente più piccola */
-              color: #6c757d; /* Un colore leggermente attenuato */
+              margin-left: 8px;
+              font-size: 0.85em;
+              color: #6c757d;
               font-weight: 500;
-              background-color: #e9ecef; /* Un leggero sfondo */
+              background-color: #e9ecef;
               padding: 3px 7px;
               border-radius: 4px;
+            }
+          }
+
+          .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+
+            .status-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+            }
+
+            .status-text {
+              font-size: 0.8em;
+            }
+
+            // Status-specific styles
+            &.status-completed {
+              background-color: #d4edda;
+              color: #155724;
+              border: 1px solid #c3e6cb;
+
+              .status-icon {
+                color: #28a745;
+              }
+            }
+
+            &.status-not-started {
+              background-color: #f8d7da;
+              color: #721c24;
+              border: 1px solid #f5c6cb;
+
+              .status-icon {
+                color: #dc3545;
+              }
+            }
+
+            &.status-in-progress {
+              background-color: #fff3cd;
+              color: #856404;
+              border: 1px solid #ffeaa7;
+
+              .status-icon {
+                color: #ffc107;
+              }
+            }
+
+            &.status-unknown {
+              background-color: #e2e3e5;
+              color: #383d41;
+              border: 1px solid #d6d8db;
+
+              .status-icon {
+                color: #6c757d;
+              }
             }
           }
         }

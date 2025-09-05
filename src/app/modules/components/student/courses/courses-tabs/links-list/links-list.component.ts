@@ -1,12 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-links-list',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    MatIconModule
   ],
   templateUrl: './links-list.component.html',
   styleUrl: './links-list.component.scss'
@@ -26,5 +28,44 @@ export class LinksListComponent implements OnInit {
 
   goToQuizList(linkId: string) { // Metodo per la navigazione
     this.router.navigate(['/student/quiz-list', linkId]);
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Completed':
+        return 'status-completed';
+      case 'Not Started':
+        return 'status-not-started';
+      case 'In Progress':
+        return 'status-in-progress';
+      default:
+        return 'status-unknown';
+    }
+  }
+
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'Completed':
+        return 'Përfunduar';
+      case 'Not Started':
+        return 'Nuk është filluar';
+      case 'In Progress':
+        return 'Në progres';
+      default:
+        return 'E panjohur';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case 'Completed':
+        return 'check_circle';
+      case 'Not Started':
+        return 'radio_button_unchecked';
+      case 'In Progress':
+        return 'play_circle';
+      default:
+        return 'help';
+    }
   }
 }

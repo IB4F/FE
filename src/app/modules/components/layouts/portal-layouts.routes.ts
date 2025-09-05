@@ -121,7 +121,7 @@ export const PortalLayoutsRoutes: Routes = [
           },
           {
             path: 'kurset',
-            canActivate: [roleGuard('Student', 'Admin', 'Family')],
+            // canActivate: [roleGuard('Student', 'Admin', 'Family')],
             loadComponent: () => import('../student/courses/courses.component')
               .then(m => m.CoursesComponent)
           },
