@@ -14,6 +14,7 @@ interface QuizProgress {
   totalPossiblePoints: number;
   lastCompletedQuizId: string | null;
   lastCompletedAt: string | null;
+  correctAnswerQuiz: number;
 }
 
 interface QuizData {
@@ -195,9 +196,10 @@ export class QuizListComponent implements OnInit, OnDestroy {
   }
 
   handleCorrectAnswer() {
-    // Add points (no deduction for correct answers)
+    // Add points and increment correct answer count
     if (this.progress) {
       this.progress.totalPointsEarned += this.currentQuiz!.points;
+      this.progress.correctAnswerQuiz++;
       this.progress.completedQuizzes++;
     }
     

@@ -12,6 +12,7 @@
 export interface StudentQuizSubmissionDTO { 
     quizId?: string;
     answerId?: string | null;
+    answerIds?: Array<string> | null;
     startedAt?: string | null;
 }
 
