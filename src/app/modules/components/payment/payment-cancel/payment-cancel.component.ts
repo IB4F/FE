@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
-import { Router, RouterLink, ActivatedRoute } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-payment-success',
+  selector: 'app-payment-cancel',
   standalone: true,
   imports: [
     CommonModule,
     RouterLink
   ],
-  templateUrl: './payment-success.component.html',
-  styleUrl: './payment-success.component.scss'
+  templateUrl: './payment-cancel.component.html',
+  styleUrl: './payment-cancel.component.scss'
 })
-export class PaymentSuccessComponent implements OnInit {
+export class PaymentCancelComponent implements OnInit {
   redirectCountdown = 3;
   private countdownInterval: any;
-  sessionId: string | null = null;
 
   constructor(
     private router: Router,
@@ -23,11 +23,6 @@ export class PaymentSuccessComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Check for session_id from Stripe
-    this.route.queryParams.subscribe(params => {
-      this.sessionId = params['session_id'] || null;
-    });
-
     this.startCountdown();
   }
 
@@ -36,8 +31,8 @@ export class PaymentSuccessComponent implements OnInit {
       this.redirectCountdown--;
       if (this.redirectCountdown <= 0) {
         clearInterval(this.countdownInterval);
-        this.router.navigate(['/hyr'], { 
-          queryParams: { message: 'registration-success' } 
+        this.router.navigate(['/regjistrohu'], { 
+          queryParams: { message: 'payment-cancelled' } 
         });
       }
     }, 1000);
@@ -49,9 +44,9 @@ export class PaymentSuccessComponent implements OnInit {
     }
   }
 
-  goToLogin(): void {
-    this.router.navigate(['/hyr'], { 
-      queryParams: { message: 'registration-success' } 
+  goToRegistration(): void {
+    this.router.navigate(['/regjistrohu'], { 
+      queryParams: { message: 'payment-cancelled' } 
     });
   }
 }

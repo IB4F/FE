@@ -19,10 +19,21 @@
       </svg>
     </div>
     <div class="email-text-content">
-      <p class="email-message">Një email për aktivizimin e llogarisë tuaj është dërguar në adresën tuaj.</p>
-      <p class="email-tip">Ju lutemi kontrolloni <b>kutinë tuaj hyrëse</b> dhe <b>spamin</b>.</p>
+      <p class="email-message">Abonimi juaj u aktivizua me sukses! Një email për verifikimin e llogarisë tuaj është dërguar.</p>
+      <p class="email-tip">Ju lutemi kontrolloni <b>kutinë tuaj hyrëse</b> dhe <b>spamin</b> për të verifikuar llogarinë tuaj.</p>
     </div>
   </div>
 
-  <button class="action-button" routerLink="/">Kthehu te faqja kryesore</button>
+  <div class="countdown-section">
+    <p class="countdown-text">Ridrejtohet automatikisht në <span class="countdown-number">{{ redirectCountdown }}</span> sekonda...</p>
+  </div>
+
+  <div class="action-buttons">
+    <button class="primary-button" (click)="goToLogin()">
+      Vazhdo te Hyrja
+    </button>
+    <button class="secondary-button" routerLink="/">
+      Kthehu te Faqja Kryesore
+    </button>
+  </div>
 </div>

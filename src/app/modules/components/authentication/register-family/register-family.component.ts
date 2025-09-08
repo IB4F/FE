@@ -20,6 +20,7 @@ import {
 import {NgToastService} from "ng-angular-popup";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
+import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 
 @Component({
   selector: 'app-register-family',
@@ -56,7 +57,8 @@ export class RegisterFamilyComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
     private toast: NgToastService,
-    private _detailsService: DetailsService
+    private _detailsService: DetailsService,
+    private errorHandler: SubscriptionErrorHandlerService
   ) {
   }
 
@@ -134,28 +136,45 @@ export class RegisterFamilyComponent implements OnInit {
     this.loading = true;
     const registerForm: any = this.registerFamilyForm.value;
     const selectedPackage: any = this.packageComponent.selectedCard;
+    
+    // Validate required data
+    if (!registerForm || !selectedPackage?.id) {
+      this.toast.danger('Ju lutemi plotësoni të gjitha fushat dhe zgjidhni një paketë', 'GABIM', 3000);
+      this.loading = false;
+      return;
+    }
+
     const familyRegistrationDTO: FamilyRegistrationDTO = {
       ...registerForm,
       planId: selectedPackage?.id,
     }
 
-    if (!familyRegistrationDTO) {
-      this.loading = false;
-      return;
-    }
-
     this._authService.apiAuthRegisterFamilyPost(familyRegistrationDTO).subscribe({
       next: async (response) => {
-        const stripe = await this.stripePromise;
-        await stripe?.redirectToCheckout({
-          sessionId: response.sessionId
-        });
+        try {
+          // Show success message for registration initiation
+          this.toast.success('Regjistrimi i familjes u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
+          
+          const stripe = await this.stripePromise;
+          if (stripe && response.sessionId) {
+            await stripe.redirectToCheckout({
+              sessionId: response.sessionId
+            });
+          } else {
+            throw new Error('Stripe session not available');
+          }
+        } catch (error) {
+          console.error('Stripe redirect failed:', error);
+          this.toast.danger('Gabim në ridrejtimin e pagesës. Ju lutemi provoni përsëri.', 'GABIM', 3000);
+          this.loading = false;
+        }
       },
       error: (err) => {
-        this.toast.danger(err?.error?.error, 'GABIM', 3000);
-        console.error('Registration failed:', err);
+        console.error('Family registration failed:', err);
+        this.errorHandler.handleRegistrationError(err);
         this.loading = false;
       }
     });
   }
+
 }

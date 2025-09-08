@@ -1,0 +1,38 @@
+<div class="payment-cancel-card">
+  <div class="icon-section">
+    <svg class="cancel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+      <circle class="cancel-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="cancel-x" fill="none" d="M16 16l20 20M36 16L16 36"/>
+    </svg>
+  </div>
+
+  <h2 class="main-title">Pagesa u anulua</h2>
+  <p class="subtitle">Nuk u bë asnjë tarifim. Mund të provoni përsëri.</p>
+
+  <hr class="divider">
+
+  <div class="cancel-notification">
+    <div class="cancel-icon-wrapper">
+      <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+    </div>
+    <div class="cancel-text-content">
+      <p class="cancel-message">Pagesa u anulua me sukses. Nuk u bë asnjë tarifim në llogarinë tuaj.</p>
+      <p class="cancel-tip">Mund të vazhdoni me regjistrimin tuaj duke klikuar butonin më poshtë.</p>
+    </div>
+  </div>
+
+  <div class="countdown-section">
+    <p class="countdown-text">Ridrejtohet automatikisht në <span class="countdown-number">{{ redirectCountdown }}</span> sekonda...</p>
+  </div>
+
+  <div class="action-buttons">
+    <button class="primary-button" (click)="goToRegistration()">
+      Provo Përsëri Regjistrimin
+    </button>
+    <button class="secondary-button" routerLink="/">
+      Kthehu te Faqja Kryesore
+    </button>
+  </div>
+</div>

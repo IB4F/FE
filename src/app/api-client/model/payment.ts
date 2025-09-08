@@ -17,6 +17,7 @@ export interface Payment {
     user?: User;
     email?: string | null;
     registrationType?: string | null;
+    registrationData?: string | null;
     stripeSessionId?: string | null;
     stripePaymentIntentId?: string | null;
     amount?: number;

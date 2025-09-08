@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { Payment } from './payment';
+import { Subscription } from './subscription';
 
 
 export interface RegistrationPlan { 
@@ -15,10 +16,19 @@ export interface RegistrationPlan {
     registrationPlanName?: string | null;
     type?: string | null;
     price?: number;
+    monthlyPrice?: number;
+    yearlyPrice?: number;
+    stripeMonthlyPriceId?: string | null;
+    stripeYearlyPriceId?: string | null;
+    stripeProductId?: string | null;
     stripeProductName?: string | null;
-    payments?: Array<Payment> | null;
     isFamilyPlan?: boolean;
     userType?: string | null;
     maxUsers?: number;
+    isSubscription?: boolean;
+    trialDays?: number;
+    allowCancellation?: boolean;
+    payments?: Array<Payment> | null;
+    subscriptions?: Array<Subscription> | null;
 }
 

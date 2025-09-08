@@ -16,4 +16,6 @@ export * from './quizzes.service';
 import { QuizzesService } from './quizzes.service';
 export * from './student.service';
 import { StudentService } from './student.service';
-export const APIS = [AdminUserService, AuthService, DetailsService, FileService, LearnHubsService, LinksService, PaymentService, QuizzesService, StudentService];
+export * from './subscription.service';
+import { SubscriptionService } from './subscription.service';
+export const APIS = [AdminUserService, AuthService, DetailsService, FileService, LearnHubsService, LinksService, PaymentService, QuizzesService, StudentService, SubscriptionService];

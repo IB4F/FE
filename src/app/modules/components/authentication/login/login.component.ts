@@ -51,6 +51,23 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.initaliazeLoginForm();
+    this.checkForRegistrationSuccess();
+  }
+
+  private checkForRegistrationSuccess(): void {
+    // Check for registration success message from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+    
+    if (message === 'registration-success') {
+      this.toast.success('Regjistrimi u përfundua me sukses! Ju lutemi hyni në llogarinë tuaj.', 'SUKSES', 5000);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (message === 'payment-cancelled') {
+      this.toast.warning('Pagesa u anulua. Mund të provoni regjistrimin përsëri.', 'ANULUAR', 4000);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }
 
   initaliazeLoginForm() {

@@ -1,124 +1,114 @@
-/* Variabili per colori e font (opzionale, ma buona pratica) */
-$primary-green: #4CAF50; // Colore principale per il successo
-$secondary-blue: #2196F3; // Colore per icone email e link
-$text-dark: #333333; // Colore del testo scuro
-$text-light: #666666; // Colore del testo più leggero
-$background-light: #F5F7FA; // Sfondo chiaro per il card
-$border-light: #e0e0e0; // Bordo sottile
+/* Variables for colors and styling */
+$primary-red: #f44336; // Primary color for cancellation
+$secondary-orange: #ff9800; // Secondary color for warnings
+$text-dark: #333333; // Dark text color
+$text-light: #666666; // Light text color
+$background-light: #F5F7FA; // Light background
+$border-light: #e0e0e0; // Light border
 
-
-.payment-success-card {
+.payment-cancel-card {
   font-family: 'Roboto', sans-serif;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata ma morbida */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 40px;
   text-align: center;
   max-width: 500px;
-  margin: 50px auto; /* Centra la card sulla pagina */
-  animation: fadeIn 0.8s ease-out; /* Animazione di apparizione */
+  margin: 50px auto;
+  animation: fadeIn 0.8s ease-out;
   border: 1px solid $border-light;
-  overflow: hidden; // Per gestire le animazioni interne
-
-  /* Se vuoi che la card occupi l'intera visualizzazione o sia una modal */
-  /*
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  height: auto;
-  max-height: 90vh;
-  z-index: 1000;
-  */
+  overflow: hidden;
 
   .icon-section {
     margin-bottom: 30px;
-    position: relative; // Per posizionare il checkmark
+    position: relative;
 
-    .success-checkmark {
+    .cancel-icon {
       width: 100px;
       height: 100px;
       display: block;
       margin: 0 auto;
 
-      .checkmark-circle {
+      .cancel-circle {
         stroke-dasharray: 166;
         stroke-dashoffset: 166;
         stroke-width: 2;
-        stroke: $primary-green;
+        stroke: $primary-red;
         fill: none;
         animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
       }
 
-      .checkmark-check {
+      .cancel-x {
         transform-origin: 50% 50%;
         stroke-dasharray: 48;
         stroke-dashoffset: 48;
         stroke-width: 2;
-        stroke: $primary-green;
+        stroke: $primary-red;
         fill: none;
-        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; /* Ritardo per apparire dopo il cerchio */
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
       }
     }
   }
 
   .main-title {
-    font-size: 2.2em; /* Titolo più grande */
-    color: $primary-green;
+    font-size: 2.2em;
+    font-weight: 600;
+    color: $text-dark;
     margin-bottom: 10px;
-    font-weight: 700; /* Più spesso */
+    line-height: 1.2;
   }
 
   .subtitle {
     font-size: 1.1em;
     color: $text-light;
     margin-bottom: 30px;
+    line-height: 1.4;
   }
 
   .divider {
     border: none;
-    border-top: 1px solid $border-light;
-    margin: 30px auto;
-    width: 60%; /* Linea più corta per un aspetto più pulito */
+    height: 1px;
+    background: linear-gradient(to right, transparent, $border-light, transparent);
+    margin: 30px 0;
   }
 
-  .email-notification {
+  .cancel-notification {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px; /* Spazio tra icona e testo */
+    align-items: flex-start;
+    background-color: #fff3e0;
+    border: 1px solid #ffcc02;
+    border-radius: 8px;
+    padding: 20px;
     margin-bottom: 30px;
-    text-align: left; /* Il testo all'interno si allinea a sinistra rispetto all'icona */
+    text-align: left;
 
-    .email-icon-wrapper {
-      flex-shrink: 0; /* Impedisce all'icona di ridimensionarsi */
-      .email-icon {
-        width: 36px;
-        height: 36px;
-        fill: $secondary-blue;
+    .cancel-icon-wrapper {
+      margin-right: 15px;
+      flex-shrink: 0;
+
+      .info-icon {
+        width: 24px;
+        height: 24px;
+        fill: $secondary-orange;
       }
     }
 
-    .email-text-content {
-      p {
-        margin: 0;
-        line-height: 1.6;
-        color: $text-dark;
-      }
+    .cancel-text-content {
+      flex: 1;
 
-      .email-message {
+      .cancel-message {
         font-size: 1em;
+        color: $text-dark;
+        margin-bottom: 8px;
+        line-height: 1.4;
         font-weight: 500;
       }
 
-      .email-tip {
+      .cancel-tip {
         font-size: 0.9em;
         color: $text-light;
-
-        strong {
-          color: $text-dark; // Rende le parole chiave più visibili
-        }
+        line-height: 1.4;
+        margin: 0;
       }
     }
   }
@@ -138,7 +128,7 @@ $border-light: #e0e0e0; // Bordo sottile
 
       .countdown-number {
         font-weight: 600;
-        color: $primary-green;
+        color: $primary-red;
         font-size: 1.2em;
       }
     }
@@ -150,7 +140,7 @@ $border-light: #e0e0e0; // Bordo sottile
     gap: 15px;
 
     .primary-button {
-      background: linear-gradient(135deg, $primary-green, #45a049);
+      background: linear-gradient(135deg, $primary-red, #d32f2f);
       color: white;
       border: none;
       padding: 15px 30px;
@@ -159,12 +149,12 @@ $border-light: #e0e0e0; // Bordo sottile
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        background: linear-gradient(135deg, #45a049, #388e3c);
+        box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        background: linear-gradient(135deg, #d32f2f, #b71c1c);
       }
 
       &:active {
@@ -194,7 +184,7 @@ $border-light: #e0e0e0; // Bordo sottile
   }
 }
 
-/* Animazioni */
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -209,5 +199,26 @@ $border-light: #e0e0e0; // Bordo sottile
 @keyframes stroke {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .payment-cancel-card {
+    margin: 20px;
+    padding: 30px 20px;
+    max-width: none;
+
+    .main-title {
+      font-size: 1.8em;
+    }
+
+    .action-buttons {
+      .primary-button,
+      .secondary-button {
+        padding: 12px 25px;
+        font-size: 1em;
+      }
+    }
   }
 }

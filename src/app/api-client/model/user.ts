@@ -9,6 +9,7 @@
  */
 import { Payment } from './payment';
 import { UserRole } from './userRole';
+import { Subscription } from './subscription';
 import { ApprovalStatus } from './approvalStatus';
 
 
@@ -37,6 +38,11 @@ export interface User {
     payments?: Array<Payment> | null;
     createAt?: string;
     parentUserId?: string | null;
+    activeSubscriptionId?: string | null;
+    activeSubscription?: Subscription;
+    subscriptionExpiresAt?: string | null;
+    readonly hasActiveSubscription?: boolean;
+    subscriptions?: Array<Subscription> | null;
 }
 export namespace User {
 }

@@ -52,6 +52,12 @@ export const routes: Routes = [
       .then(m => m.PaymentSuccessComponent),
   },
   {
+    path: 'cancel',
+    title: 'Pagesa Anuluar',
+    loadComponent: () => import('./modules/components/payment/payment-cancel/payment-cancel.component')
+      .then(m => m.PaymentCancelComponent),
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

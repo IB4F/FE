@@ -9,6 +9,7 @@ import {environment} from "@env";
 import {MatButton} from "@angular/material/button";
 import {NgToastService} from "ng-angular-popup";
 import {PackagesComponent} from "../../../shared/components/packages/packages.component";
+import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 
 @Component({
   selector: 'app-membership-student',
@@ -34,6 +35,7 @@ export class MembershipStudentComponent {
     public membershipStudentService: MembershipStudentService,
     private _authService: AuthService,
     private toast: NgToastService,
+    private errorHandler: SubscriptionErrorHandlerService,
   ) {
   }
 
@@ -41,28 +43,45 @@ export class MembershipStudentComponent {
     this.loading = true;
     const registerForm: any = this.registerComponent.registerFormGroup.value;
     const selectedPackage: any = this.packageComponent.selectedCard;
+    
+    // Validate required data
+    if (!registerForm || !selectedPackage?.id) {
+      this.toast.danger('Ju lutemi plotësoni të gjitha fushat dhe zgjidhni një paketë', 'GABIM', 3000);
+      this.loading = false;
+      return;
+    }
+
     const registerData: StudentRegistrationDTO = {
       ...registerForm,
       planId: selectedPackage?.id,
     }
 
-    if (!registerData) {
-      this.loading = false;
-      return;
-    }
-
     this._authService.apiAuthRegisterStudentPost(registerData).subscribe({
       next: async (response) => {
-        const stripe = await this.stripePromise;
-        await stripe?.redirectToCheckout({
-          sessionId: response.sessionId
-        });
+        try {
+          // Show success message for registration initiation
+          this.toast.success('Regjistrimi u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
+          
+          const stripe = await this.stripePromise;
+          if (stripe && response.sessionId) {
+            await stripe.redirectToCheckout({
+              sessionId: response.sessionId
+            });
+          } else {
+            throw new Error('Stripe session not available');
+          }
+        } catch (error) {
+          console.error('Stripe redirect failed:', error);
+          this.toast.danger('Gabim në ridrejtimin e pagesës. Ju lutemi provoni përsëri.', 'GABIM', 3000);
+          this.loading = false;
+        }
       },
       error: (err) => {
-        this.toast.danger(err?.error?.error, 'GABIM', 3000);
         console.error('Registration failed:', err);
+        this.errorHandler.handleRegistrationError(err);
         this.loading = false;
       }
     });
   }
+
 }

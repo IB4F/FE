@@ -1,0 +1,168 @@
+<div class="subscription-dashboard">
+  <div class="dashboard-header">
+    <h1>Abonimi Im</h1>
+    <p>Menaxhoni abonimin dhe faturimin tuaj</p>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Duke ngarkuar abonimin...</p>
+    </div>
+
+    <!-- No Subscription State -->
+    <div *ngIf="!loading && !subscription" class="no-subscription">
+      <mat-card class="no-subscription-card">
+        <mat-card-content>
+          <div class="no-subscription-content">
+            <mat-icon class="no-subscription-icon">subscription</mat-icon>
+            <h2>Nuk keni abonim aktiv</h2>
+            <p>Ju nuk keni një abonim aktiv në këtë moment.</p>
+            <button mat-raised-button color="primary" routerLink="/membership">
+              Shiko Planet e Disponueshme
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Active Subscription State -->
+    <div *ngIf="!loading && subscription" class="subscription-content">
+      <!-- Subscription Overview Card -->
+      <mat-card class="subscription-overview-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="subscription-icon">subscription</mat-icon>
+            Abonimi Juaj
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="subscription-details">
+            <div class="plan-info">
+              <h3>{{ subscription.plan?.name || 'Plan i panjohur' }}</h3>
+              <div class="status-badge" [ngClass]="{
+                'status-active': isActive(),
+                'status-trial': isInTrial(),
+                'status-paused': !isActive() && !isInTrial()
+              }">
+                {{ getStatusText() }}
+              </div>
+            </div>
+            
+            <div class="billing-info">
+              <div class="billing-amount">
+                <span class="amount">{{ getFormattedAmount() }}</span>
+                <span class="interval">/ {{ getBillingIntervalText() }}</span>
+              </div>
+              <div class="billing-dates">
+                <p *ngIf="subscription.currentPeriodStart">
+                  <strong>Fillimi i periudhës:</strong> {{ getFormattedDate(subscription.currentPeriodStart) }}
+                </p>
+                <p *ngIf="subscription.currentPeriodEnd">
+                  <strong>Fundi i periudhës:</strong> {{ getFormattedDate(subscription.currentPeriodEnd) }}
+                </p>
+                <p *ngIf="subscription.trialEnd">
+                  <strong>Fundi i provës:</strong> {{ getFormattedDate(subscription.trialEnd) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Subscription Actions Card -->
+      <mat-card class="subscription-actions-card">
+        <mat-card-header>
+          <mat-card-title>Veprimet e Abonimit</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="actions-grid">
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="onChangePlan()"
+              class="action-button">
+              <mat-icon>swap_horiz</mat-icon>
+              Ndrysho Planin
+            </button>
+
+            <button 
+              mat-raised-button 
+              color="accent" 
+              (click)="onViewBillingHistory()"
+              class="action-button">
+              <mat-icon>receipt</mat-icon>
+              Historia e Faturimit
+            </button>
+
+            <button 
+              *ngIf="canPause()"
+              mat-stroked-button 
+              color="warn" 
+              (click)="onPauseSubscription()"
+              class="action-button">
+              <mat-icon>pause</mat-icon>
+              Pauzo Abonimin
+            </button>
+
+            <button 
+              *ngIf="canResume()"
+              mat-stroked-button 
+              color="primary" 
+              (click)="onResumeSubscription()"
+              class="action-button">
+              <mat-icon>play_arrow</mat-icon>
+              Rifillo Abonimin
+            </button>
+
+            <button 
+              *ngIf="canCancel()"
+              mat-stroked-button 
+              color="warn" 
+              (click)="onCancelSubscription()"
+              class="action-button cancel-button">
+              <mat-icon>cancel</mat-icon>
+              Anulo Abonimin
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Subscription Details Card -->
+      <mat-card class="subscription-details-card">
+        <mat-card-header>
+          <mat-card-title>Detajet e Abonimit</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label>ID e Abonimit:</label>
+              <span>{{ subscription.id }}</span>
+            </div>
+            <div class="detail-item">
+              <label>ID e Klientit Stripe:</label>
+              <span>{{ subscription.stripeCustomerId || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>ID e Abonimit Stripe:</label>
+              <span>{{ subscription.stripeSubscriptionId || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Data e Krijimit:</label>
+              <span>{{ getFormattedDate(subscription.createdAt) }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Data e Përditësimit:</label>
+              <span>{{ getFormattedDate(subscription.updatedAt) }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Lloji i Regjistrimit:</label>
+              <span>{{ subscription.registrationType || 'N/A' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
