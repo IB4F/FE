@@ -38,6 +38,7 @@ export enum UserRole {
 export enum ProfileTabs {
   PersonalInfo = 1,
   ChangePassword = 2,
+  SubscriptionDashboard = 3,
 }
 
 export enum NavigationDirection {

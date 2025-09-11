@@ -10,6 +10,11 @@
       <mat-icon>lock</mat-icon>
       <span>Ndrysho Passwordin</span>
     </button>
+    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
+            (click)="selectTab(ProfileTabs.SubscriptionDashboard)">
+      <mat-icon>subscription</mat-icon>
+      <span>Abonimi Im</span>
+    </button>
   </div>
 
   <div class="content-area">
@@ -27,6 +32,10 @@
       <app-change-password [changePasswordFormGroup]="changePasswordFormGroup"
                            (passwordChangeRequest)="onChangePassword($event)">
       </app-change-password>
+    </ng-container>
+
+    <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard">
+      <app-subscription-dashboard></app-subscription-dashboard>
     </ng-container>
   </div>
 </div>

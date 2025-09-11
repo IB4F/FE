@@ -40,7 +40,7 @@
         <mat-card-content>
           <div class="subscription-details">
             <div class="plan-info">
-              <h3>{{ subscription.plan?.name || 'Plan i panjohur' }}</h3>
+              <h3>{{ subscription.subscriptionPackage?.name || 'Plan i panjohur' }}</h3>
               <div class="status-badge" [ngClass]="{
                 'status-active': isActive(),
                 'status-trial': isInTrial(),
