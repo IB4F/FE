@@ -1,7 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
-import {PackagesComponent} from "../../../shared/components/packages/packages.component";
 import {CommonModule} from "@angular/common";
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from "@angular/material/input";
@@ -15,11 +14,15 @@ import {
   Class,
   DetailsService,
   FamilyRegistrationDTO,
-  StudentRegistrationDTO
+  StudentRegistrationDTO,
+  SubscriptionPackageService,
+  FamilyPricingRequestDTO,
+  FamilyPricingResponseDTO
 } from "../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 
 @Component({
@@ -32,7 +35,7 @@ import {SubscriptionErrorHandlerService} from "../../../../services/subscription
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    PackagesComponent,
+    MatProgressSpinnerModule,
     MatTooltip,
     MatOption,
     MatSelect
@@ -41,7 +44,6 @@ import {SubscriptionErrorHandlerService} from "../../../../services/subscription
   styleUrl: './register-family.component.scss'
 })
 export class RegisterFamilyComponent implements OnInit {
-  @ViewChild(PackagesComponent) packageComponent!: PackagesComponent;
   private stripePromise: Promise<Stripe | null> = loadStripe(environment.stripePublishableKey);
   loading = false;
 
@@ -50,14 +52,20 @@ export class RegisterFamilyComponent implements OnInit {
 
   numberOfChildren: number = 1;
   showChildrenForms: boolean = false;
+  showParentForm: boolean = false;
+  currentStep: 'memberCountAndPackage' | 'parentInfo' | 'childrenInfo' | 'payment' = 'memberCountAndPackage';
 
   classesList: Class[] = [];
+  familyPricingData: FamilyPricingResponseDTO[] = [];
+  pricingLoading: boolean = false;
+  selectedPackage: any = null;
 
   constructor(
     private _formBuilder: FormBuilder,
     private _authService: AuthService,
     private toast: NgToastService,
     private _detailsService: DetailsService,
+    private _subscriptionPackageService: SubscriptionPackageService,
     private errorHandler: SubscriptionErrorHandlerService
   ) {
   }
@@ -65,6 +73,7 @@ export class RegisterFamilyComponent implements OnInit {
   ngOnInit() {
     this.loadCombos();
     this.registerFamilyFormInitialize();
+    this.calculateFamilyPricing();
   }
 
   private loadCombos() {
@@ -94,24 +103,61 @@ export class RegisterFamilyComponent implements OnInit {
     return this.registerFamilyForm.get('familyMembers') as FormArray;
   }
 
-  // Il metodo per incrementare/decrementare rimane lo stesso,
-  // ma non aggiornerà più il FormArray in tempo reale.
   incrementChildren() {
     if (this.numberOfChildren < 10) {
       this.numberOfChildren++;
+      this.selectedPackage = null; // Reset package selection when count changes
+      this.calculateFamilyPricing();
     }
   }
 
   decrementChildren() {
     if (this.numberOfChildren > 1) {
       this.numberOfChildren--;
+      this.selectedPackage = null; // Reset package selection when count changes
+      this.calculateFamilyPricing();
     }
   }
 
-  // Questo è il nuovo metodo che gestirà la conferma
-  confirmChildrenCount() {
+  proceedToParentInfo() {
+    this.currentStep = 'parentInfo';
+    this.showParentForm = true;
+  }
+
+  proceedToChildrenInfo() {
+    this.currentStep = 'childrenInfo';
     this.showChildrenForms = true;
     this.updateChildrenForms();
+  }
+
+  proceedToPayment() {
+    this.currentStep = 'payment';
+  }
+
+  goBackToMemberCountAndPackage() {
+    this.currentStep = 'memberCountAndPackage';
+    this.showParentForm = false;
+    this.showChildrenForms = false;
+  }
+
+  goBackToParentInfo() {
+    this.currentStep = 'parentInfo';
+    this.showChildrenForms = false;
+  }
+
+  goBackToChildrenInfo() {
+    this.currentStep = 'childrenInfo';
+  }
+
+  selectPackage(pricing: FamilyPricingResponseDTO) {
+    this.selectedPackage = {
+      id: pricing.packageId || '',
+      title: pricing.name || '',
+      price: (pricing.totalPrice || 0) / 100,
+      priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €/muaj`,
+      features: [],
+      maxUsers: pricing.maxMembers
+    };
   }
 
   // Questo metodo aggiorna il FormArray in base a numberOfChildren
@@ -132,13 +178,31 @@ export class RegisterFamilyComponent implements OnInit {
     })
   }
 
+  private calculateFamilyPricing() {
+    this.pricingLoading = true;
+    const request: FamilyPricingRequestDTO = {
+      familyMembers: this.numberOfChildren
+    };
+
+    this._subscriptionPackageService.apiSubscriptionPackageFamilyCalculatePricePost(request).subscribe({
+      next: (response) => {
+        this.familyPricingData = response;
+        this.pricingLoading = false;
+      },
+      error: (error) => {
+        console.error('Error calculating family pricing:', error);
+        this.toast.danger('Gabim në llogaritjen e çmimeve. Ju lutemi provoni përsëri.', 'GABIM', 3000);
+        this.pricingLoading = false;
+      }
+    });
+  }
+
   handlePayment(): void {
     this.loading = true;
     const registerForm: any = this.registerFamilyForm.value;
-    const selectedPackage: any = this.packageComponent.selectedCard;
     
     // Validate required data
-    if (!registerForm || !selectedPackage?.id) {
+    if (!registerForm || !this.selectedPackage?.id) {
       this.toast.danger('Ju lutemi plotësoni të gjitha fushat dhe zgjidhni një paketë', 'GABIM', 3000);
       this.loading = false;
       return;
@@ -146,7 +210,7 @@ export class RegisterFamilyComponent implements OnInit {
 
     const familyRegistrationDTO: FamilyRegistrationDTO = {
       ...registerForm,
-      planId: selectedPackage?.id,
+      subscriptionPackageId: this.selectedPackage?.id,
     }
 
     this._authService.apiAuthRegisterFamilyPost(familyRegistrationDTO).subscribe({
@@ -178,3 +242,4 @@ export class RegisterFamilyComponent implements OnInit {
   }
 
 }
+

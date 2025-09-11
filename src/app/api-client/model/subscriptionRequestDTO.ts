@@ -13,7 +13,7 @@ import { BillingInterval } from './billingInterval';
 export interface SubscriptionRequestDTO { 
     email: string;
     registrationType: string;
-    planId: string;
+    subscriptionPackageId: string;
     registrationData: string;
     billingInterval: BillingInterval;
     familyMemberCount?: number | null;

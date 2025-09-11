@@ -15,7 +15,7 @@ export interface FamilyRegistrationDTO {
     password: string;
     firstName: string;
     lastName: string;
-    planId: string;
+    subscriptionPackageId: string;
     familyMembers: Array<FamilyMemberInput>;
     phoneNumber?: string | null;
 }

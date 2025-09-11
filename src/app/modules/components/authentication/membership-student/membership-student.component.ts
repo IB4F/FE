@@ -43,7 +43,7 @@ export class MembershipStudentComponent {
     this.loading = true;
     const registerForm: any = this.registerComponent.registerFormGroup.value;
     const selectedPackage: any = this.packageComponent.selectedCard;
-    
+
     // Validate required data
     if (!registerForm || !selectedPackage?.id) {
       this.toast.danger('Ju lutemi plotësoni të gjitha fushat dhe zgjidhni një paketë', 'GABIM', 3000);
@@ -53,7 +53,7 @@ export class MembershipStudentComponent {
 
     const registerData: StudentRegistrationDTO = {
       ...registerForm,
-      planId: selectedPackage?.id,
+      subscriptionPackageId: selectedPackage?.id,
     }
 
     this._authService.apiAuthRegisterStudentPost(registerData).subscribe({
@@ -61,7 +61,7 @@ export class MembershipStudentComponent {
         try {
           // Show success message for registration initiation
           this.toast.success('Regjistrimi u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
-          
+
           const stripe = await this.stripePromise;
           if (stripe && response.sessionId) {
             await stripe.redirectToCheckout({

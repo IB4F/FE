@@ -9,11 +9,7 @@
  */
 
 
-export interface PaymentSessionRequestDTO { 
-    email?: string | null;
-    registrationType?: string | null;
-    planId?: string;
-    familyMemberCount?: number | null;
-    registrationData?: string | null;
+export interface FamilyPricingRequestDTO { 
+    familyMembers: number;
 }
 

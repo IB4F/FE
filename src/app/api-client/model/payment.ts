@@ -8,7 +8,7 @@
  * Do not edit the class manually.
  */
 import { User } from './user';
-import { RegistrationPlan } from './registrationPlan';
+import { SubscriptionPackage } from './subscriptionPackage';
 
 
 export interface Payment { 
@@ -24,7 +24,7 @@ export interface Payment {
     currency?: string | null;
     status?: string | null;
     createdAt?: string;
-    planId?: string | null;
-    plan?: RegistrationPlan;
+    subscriptionPackageId?: string | null;
+    subscriptionPackage?: SubscriptionPackage;
 }
 

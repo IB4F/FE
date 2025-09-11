@@ -23,6 +23,12 @@ export class TokenStorageService {
   getAccessToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('accessToken') : null;
   getRefreshToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
   getRole = (): string | null => this.userRoleSubject.value;
+  getUserId = (): string | null => {
+    const token = this.getAccessToken();
+    if (!token) return null;
+    const payload = this.parseJwt(token);
+    return payload?.sub || payload?.userId || null;
+  };
 
   // SETTERS (optimized for speed)
   saveTokens = (tokens: { accessToken: string; refreshToken: string }): void => {

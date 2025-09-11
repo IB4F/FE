@@ -21,39 +21,23 @@
     </p>
   </div>
 
-  <div class="registration-flow">
-    <h2 class="flow-title">Si Funksionon Regjistrimi për Familjen</h2>
-    <div class="flow-steps">
-      <div class="step-card">
-        <div class="number-wrapper">
-          1
-        </div>
-        <h3>Plotësoni Informacionin e Prindit</h3>
-        <p>Filloni duke futur të dhënat tuaja personale dhe duke specifikuar numrin e fëmijëve që dëshironi të
-          regjistroni në platformë.</p>
-      </div>
-      <div class="arrow-icon">
-        &#10140;
-      </div>
-      <div class="step-card">
-        <div class="number-wrapper">
-          2
-        </div>
-        <h3>Plotësoni të Dhënat e Fëmijëve</h3>
-        <p>Më pas, plotësoni informacionin e kërkuar për secilin fëmijë, duke u siguruar që të dhënat të jenë të sakta
-          dhe të plota.</p>
-      </div>
-      <div class="arrow-icon">
-        &#10140;
-      </div>
-      <div class="step-card">
-        <div class="number-wrapper">
-          3
-        </div>
-        <h3>Zgjidhni Paketën dhe Pagesën</h3>
-        <p>Së fundi, zgjidhni paketën e abonimit që preferoni dhe vazhdoni me pagesën për të përfunduar regjistrimin
-          tuaj dhe të fëmijëve tuaj.</p>
-      </div>
+  <!-- Progress Steps -->
+  <div class="progress-steps">
+    <div class="step" [class.active]="currentStep === 'memberCountAndPackage'" [class.completed]="currentStep !== 'memberCountAndPackage'">
+      <div class="step-number">1</div>
+      <div class="step-title">Anëtarët dhe Paketa</div>
+    </div>
+    <div class="step" [class.active]="currentStep === 'parentInfo'" [class.completed]="currentStep === 'childrenInfo' || currentStep === 'payment'">
+      <div class="step-number">2</div>
+      <div class="step-title">Të Dhënat e Prindit</div>
+    </div>
+    <div class="step" [class.active]="currentStep === 'childrenInfo'" [class.completed]="currentStep === 'payment'">
+      <div class="step-number">3</div>
+      <div class="step-title">Të Dhënat e Fëmijëve</div>
+    </div>
+    <div class="step" [class.active]="currentStep === 'payment'">
+      <div class="step-number">4</div>
+      <div class="step-title">Pagesa</div>
     </div>
   </div>
 
@@ -62,12 +46,60 @@
       <img class="image" src="assets/svgImages/kids.svg"
            alt="Ilustrim i një familjeje.">
     </div>
+    
     <div class="form-section-wrapper">
       <form [formGroup]="registerFamilyForm" class="form-container">
+        <h2 class="form-title">Regjistrimi i Familjes</h2>
 
-        <h2 class="form-title">Regjistrimi</h2>
+        <!-- Step 1: Member Count and Package Selection -->
+        <div *ngIf="currentStep === 'memberCountAndPackage'" class="form-section member-count-and-package-section">
+          <h3>Sa fëmijë dëshironi të regjistroni dhe zgjidhni paketën?</h3>
+          
+          <!-- Member Count Selection -->
+          <div class="member-count-section">
+            <h4>Numri i fëmijëve:</h4>
+            <div class="children-counter">
+              <button mat-icon-button (click)="decrementChildren()" [disabled]="numberOfChildren <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="count">{{ numberOfChildren }}</span>
+              <button mat-icon-button (click)="incrementChildren()" [disabled]="numberOfChildren >= 10">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Package Selection -->
+          <div class="package-selection-section">
+            <h4>Zgjidhni paketën:</h4>
+            <div *ngIf="familyPricingData.length > 0 && !pricingLoading" class="package-cards">
+              <div *ngFor="let pricing of familyPricingData" 
+                   class="package-card" 
+                   [class.selected]="selectedPackage?.id === pricing.packageId"
+                   (click)="selectPackage(pricing)">
+                <div class="package-title">{{ pricing.name }}</div>
+                <div class="package-price">{{ pricing.totalPriceFormatted }}</div>
+                <div *ngIf="pricing.breakdown" class="package-breakdown">{{ pricing.breakdown }}</div>
+                <div class="package-selection-indicator">
+                  <mat-icon *ngIf="selectedPackage?.id === pricing.packageId">check_circle</mat-icon>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="pricingLoading" class="pricing-loading">
+              <mat-spinner diameter="30"></mat-spinner>
+              <span>Duke llogaritur çmimet...</span>
+            </div>
+          </div>
+          
+          <button mat-raised-button color="primary" (click)="proceedToParentInfo()" 
+                  [disabled]="!selectedPackage" class="next-button">
+            Vazhdo me të Dhënat e Prindit
+          </button>
+        </div>
 
-        <div class="form-section parent-info">
+        <!-- Step 2: Parent Information -->
+        <div *ngIf="currentStep === 'parentInfo'" class="form-section parent-info">
           <h3>Të Dhënat e Prindit</h3>
           <mat-form-field appearance="outline">
             <mat-label>Emri</mat-label>
@@ -113,30 +145,29 @@
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
-        </div>
-
-        <div class="form-section children-counter-wrapper">
-          <h3>Sa fëmijë dëshironi të regjistroni?</h3>
-          <div class="children-counter">
-            <button mat-icon-button (click)="decrementChildren()" [disabled]="numberOfChildren <= 1">-</button>
-            <span class="count">{{ numberOfChildren }}</span>
-            <button mat-icon-button (click)="incrementChildren()" [disabled]="numberOfChildren >= 10">+</button>
+          
+          <div class="button-group">
+            <button mat-button (click)="goBackToMemberCountAndPackage()" class="back-button">
+              <mat-icon>arrow_back</mat-icon>
+              Kthehu
+            </button>
+            <button mat-raised-button color="primary" (click)="proceedToChildrenInfo()" 
+                    [disabled]="registerFamilyForm.invalid" class="next-button">
+              Vazhdo me të Dhënat e Fëmijëve
+            </button>
           </div>
-          <button mat-raised-button color="accent" (click)="confirmChildrenCount()" class="confirm-button">Konfirmo
-            numrin
-            e fëmijëve
-          </button>
         </div>
 
-        <div *ngIf="showChildrenForms" formArrayName="familyMembers" class="form-section family-members-section">
-          <h3>Të Dhënat e Fëmijëve</h3>
+        <!-- Step 3: Children Information -->
+        <div *ngIf="currentStep === 'childrenInfo'" formArrayName="familyMembers" class="form-section family-members-section">
+          <h3>Të Dhënat e Fëmijëve ({{ numberOfChildren }} fëmijë)</h3>
           <div *ngFor="let member of familyMembers.controls; let i = index" [formGroupName]="i"
                class="family-member-card">
             <h4>Fëmija {{ i + 1 }}</h4>
             <mat-form-field appearance="outline">
               <mat-label>Emri</mat-label>
               <input matInput formControlName="firstName">
-              <mat-error *ngIf="member.get('familyMembers')?.hasError('required')">
+              <mat-error *ngIf="member.get('firstName')?.hasError('required')">
                 Fushë e detyrueshme
               </mat-error>
             </mat-form-field>
@@ -159,18 +190,53 @@
               </mat-error>
             </mat-form-field>
           </div>
+          
+          <div class="button-group">
+            <button mat-button (click)="goBackToParentInfo()" class="back-button">
+              <mat-icon>arrow_back</mat-icon>
+              Kthehu
+            </button>
+            <button mat-raised-button color="primary" (click)="proceedToPayment()" 
+                    [disabled]="familyMembers.invalid" class="next-button">
+              Vazhdo me Pagesën
+            </button>
+          </div>
         </div>
       </form>
     </div>
   </div>
-</div>
-<app-packages #packageComponent
-              [userType]="'family'">
-</app-packages>
 
-<div class="button-wrapper">
-  <button mat-raised-button color="primary" class="final-button"
-          (click)="handlePayment()">
-    Finalizo Regjistrimin
-  </button>
+  <!-- Step 4: Payment -->
+  <div *ngIf="currentStep === 'payment'" class="payment-section">
+    <div class="payment-summary">
+      <h3>Përmbledhje e Regjistrimit</h3>
+      <div class="summary-card">
+        <div class="summary-item">
+          <span class="label">Numri i fëmijëve:</span>
+          <span class="value">{{ numberOfChildren }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Paketa e zgjedhur:</span>
+          <span class="value">{{ selectedPackage?.title }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Çmimi total:</span>
+          <span class="value">{{ selectedPackage?.priceDisplay }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button mat-button (click)="goBackToChildrenInfo()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Kthehu
+      </button>
+      <button mat-raised-button color="primary" class="final-button"
+              (click)="handlePayment()" [disabled]="loading">
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+        <span *ngIf="!loading">Finalizo Regjistrimin</span>
+        <span *ngIf="loading">Duke përfunduar...</span>
+      </button>
+    </div>
+  </div>
 </div>

@@ -11,7 +11,7 @@ import { BillingInterval } from './billingInterval';
 import { User } from './user';
 import { SubscriptionStatus } from './subscriptionStatus';
 import { SubscriptionPayment } from './subscriptionPayment';
-import { RegistrationPlan } from './registrationPlan';
+import { SubscriptionPackage } from './subscriptionPackage';
 
 
 export interface Subscription { 
@@ -21,8 +21,8 @@ export interface Subscription {
     stripeSubscriptionId?: string | null;
     stripeCustomerId?: string | null;
     stripePriceId?: string | null;
-    planId?: string;
-    plan?: RegistrationPlan;
+    subscriptionPackageId?: string;
+    subscriptionPackage?: SubscriptionPackage;
     status?: SubscriptionStatus;
     startDate?: string;
     endDate?: string | null;

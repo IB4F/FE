@@ -17,7 +17,7 @@ export interface SchoolRegistrationDTO {
     profession: string;
     city: string;
     postalCode: string;
-    planId: string;
+    subscriptionPackageId: string;
     students: Array<CreateStudentBySchoolDTO>;
 }
 

@@ -17,6 +17,6 @@ export interface StudentRegistrationDTO {
     School: string;
     CurrentClass: string;
     Password: string;
-    planId?: string;
+    subscriptionPackageId?: string;
 }
 
