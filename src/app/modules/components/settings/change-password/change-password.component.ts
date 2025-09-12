@@ -7,6 +7,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
+import {ChangePasswordDTO} from "../../../../api-client/model/changePasswordDTO";
 
 @Component({
   selector: 'app-change-password',
@@ -25,7 +26,7 @@ import {passwordValidator} from "../../../../helpers/customValidators/check-pass
 })
 export class ChangePasswordComponent implements OnInit{
   @Input() changePasswordFormGroup!: FormGroup;
-  @Output() passwordChangeRequest = new EventEmitter<{ currentPassword: string, newPassword: string }>();
+  @Output() passwordChangeRequest = new EventEmitter<ChangePasswordDTO>();
 
   hidePass = true;
   hidePass1 = true;

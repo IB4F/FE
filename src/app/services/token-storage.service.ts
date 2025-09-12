@@ -27,7 +27,7 @@ export class TokenStorageService {
     const token = this.getAccessToken();
     if (!token) return null;
     const payload = this.parseJwt(token);
-    return payload?.sub || payload?.userId || null;
+    return payload?.sub || payload?.nameid || null;
   };
 
   // SETTERS (optimized for speed)

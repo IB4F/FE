@@ -13,6 +13,7 @@ import {SubscriptionDashboardComponent} from "./subscription-dashboard/subscript
 import {AuthService, Class, DetailsService, User} from "../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {ChangePasswordDTO} from "../../../api-client/model/changePasswordDTO";
 
 @Component({
   selector: 'app-settings',
@@ -119,10 +120,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.selectedTab = tab;
   }
 
-  onChangePassword(passwords: { currentPassword: string, newPassword: string }) {
+  onChangePassword(passwords: ChangePasswordDTO) {
     if (this.changePasswordFormGroup.valid) {
 
-      this._authService.apiAuthResetPost(passwords).subscribe(
+      this._authService.apiAuthChangePasswordPost(passwords).subscribe(
         {
           next: (response) => {
             console.log(response);

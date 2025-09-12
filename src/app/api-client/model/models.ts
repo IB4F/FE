@@ -2,6 +2,7 @@ export * from './adminUserDetailsDTO';
 export * from './approvalStatus';
 export * from './billingInterval';
 export * from './cancelSubscriptionDTO';
+export * from './changePasswordDTO';
 export * from './changePlanDTO';
 export * from './city';
 export * from './class';
