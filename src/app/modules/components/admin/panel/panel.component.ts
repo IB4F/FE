@@ -4,6 +4,8 @@ import { AdminDashboardService } from '../../../../api-client/api/adminDashboard
 import { NgToastService } from 'ng-angular-popup';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { TokenStorageService } from '../../../../services/token-storage.service';
 import { AdminStatsDTO } from "../../../../api-client/model/adminStatsDTO";
 import { RecentActivityDTO } from 'src/app/api-client/model/recentActivityDTO';
 import { AdminAnalyticsDTO } from 'src/app/api-client/model/adminAnalyticsDTO';
@@ -28,6 +30,9 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   // Subject per gestire la cancellazione delle subscription
   private destroy$ = new Subject<void>();
+
+  // Flag per controllare se il componente è ancora attivo
+  private isComponentActive = true;
 
   // Esporre Math per il template
   Math = Math;
@@ -93,20 +98,50 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminDashboardService: AdminDashboardService,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private router: Router,
+    private tokenStorageService: TokenStorageService
   ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
+
+    // Ascolta i cambiamenti dello stato di autenticazione
+    this.tokenStorageService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isLoggedIn: boolean) => {
+        if (!isLoggedIn) {
+          this.handleLogout();
+        }
+      });
+
+    // Aggiungi listener per eventi di navigazione e chiusura pagina
+    window.addEventListener('beforeunload', this.handleLogout.bind(this));
+    window.addEventListener('unload', this.handleLogout.bind(this));
   }
 
   ngOnDestroy(): void {
     // Cancella tutte le subscription quando il componente viene distrutto
+    this.isComponentActive = false;
     this.destroy$.next();
     this.destroy$.complete();
+
+    // Rimuovi i listener degli eventi
+    window.removeEventListener('beforeunload', this.handleLogout.bind(this));
+    window.removeEventListener('unload', this.handleLogout.bind(this));
   }
 
   loadDashboardData(): void {
+    // Verifica se il componente è ancora attivo prima di caricare i dati
+    if (!this.isComponentActive) {
+      return;
+    }
+
+    // Verifica se l'utente è ancora autenticato
+    if (!this.tokenStorageService.getAccessToken()) {
+      return;
+    }
+
     this.loadStats();
     this.loadRecentActivities();
     this.loadAnalytics();
@@ -122,16 +157,32 @@ export class PanelComponent implements OnInit, OnDestroy {
     this.loadSystemHealth();
   }
 
+  // Metodo per fermare tutte le chiamate API
+  stopAllApiCalls(): void {
+    this.isComponentActive = false;
+    this.destroy$.next();
+  }
+
+  // Metodo per gestire il logout - può essere chiamato da eventi esterni
+  handleLogout(): void {
+    this.stopAllApiCalls();
+  }
+
   loadStats(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingStats = true;
     this.adminDashboardService.apiAdminDashboardStatsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: AdminStatsDTO) => {
+          if (!this.isComponentActive) return;
           this.stats = response;
           this.isLoadingStats = false;
         },
         error: (error) => {
+          if (!this.isComponentActive) return;
           console.error('Gabim në ngarkimin e statistikave:', error);
           this.toast.danger('Gabim në ngarkimin e statistikave', 'Gabim', 3000);
           this.isLoadingStats = false;
@@ -140,19 +191,24 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   loadRecentActivities(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingActivities = true;
     this.adminDashboardService.apiAdminDashboardRecentActivitiesGet(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: RecentActivityDTO[]) => {
-        this.recentActivities = response;
-        this.isLoadingActivities = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e aktiviteteve të fundit:', error);
-        this.toast.danger('Gabim në ngarkimin e aktiviteteve të fundit', 'Gabim', 3000);
-        this.isLoadingActivities = false;
-      }
+        next: (response: RecentActivityDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.recentActivities = response;
+          this.isLoadingActivities = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e aktiviteteve të fundit:', error);
+          this.toast.danger('Gabim në ngarkimin e aktiviteteve të fundit', 'Gabim', 3000);
+          this.isLoadingActivities = false;
+        }
     });
   }
 
@@ -162,134 +218,174 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   // Metoda për të ngarkuar të dhënat nga të gjitha endpoint-et
   loadAnalytics(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingAnalytics = true;
     this.adminDashboardService.apiAdminDashboardAnalyticsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: AdminAnalyticsDTO) => {
-        this.analytics = response;
-        this.isLoadingAnalytics = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e analizave:', error);
-        this.toast.danger('Gabim në ngarkimin e analizave', 'Gabim', 3000);
-        this.isLoadingAnalytics = false;
-      }
+        next: (response: AdminAnalyticsDTO) => {
+          if (!this.isComponentActive) return;
+          this.analytics = response;
+          this.isLoadingAnalytics = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e analizave:', error);
+          this.toast.danger('Gabim në ngarkimin e analizave', 'Gabim', 3000);
+          this.isLoadingAnalytics = false;
+        }
     });
   }
 
   loadGeographicDistribution(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingGeographic = true;
     this.adminDashboardService.apiAdminDashboardGeographicDistributionGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: GeographicStatsDTO[]) => {
-        this.geographicStats = response;
-        this.isLoadingGeographic = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e shpërndarjes gjeografike:', error);
-        this.toast.danger('Gabim në ngarkimin e shpërndarjes gjeografike', 'Gabim', 3000);
-        this.isLoadingGeographic = false;
-      }
+        next: (response: GeographicStatsDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.geographicStats = response;
+          this.isLoadingGeographic = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e shpërndarjes gjeografike:', error);
+          this.toast.danger('Gabim në ngarkimin e shpërndarjes gjeografike', 'Gabim', 3000);
+          this.isLoadingGeographic = false;
+        }
     });
   }
 
   loadLearnHubStats(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingLearnHubStats = true;
     this.adminDashboardService.apiAdminDashboardLearnhubStatsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: LearnHubStatsDTO[]) => {
-        this.learnHubStats = response;
-        this.isLoadingLearnHubStats = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e statistikave të LearnHubs:', error);
-        this.toast.danger('Gabim në ngarkimin e statistikave të LearnHubs', 'Gabim', 3000);
-        this.isLoadingLearnHubStats = false;
-      }
+        next: (response: LearnHubStatsDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.learnHubStats = response;
+          this.isLoadingLearnHubStats = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e statistikave të LearnHubs:', error);
+          this.toast.danger('Gabim në ngarkimin e statistikave të LearnHubs', 'Gabim', 3000);
+          this.isLoadingLearnHubStats = false;
+        }
     });
   }
 
   loadMonthlyRevenue(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingRevenue = true;
     this.adminDashboardService.apiAdminDashboardMonthlyRevenueGet(12)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: MonthlyRevenueDTO[]) => {
-        this.monthlyRevenue = response;
-        this.isLoadingRevenue = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e të ardhurave mujore:', error);
-        this.toast.danger('Gabim në ngarkimin e të ardhurave mujore', 'Gabim', 3000);
-        this.isLoadingRevenue = false;
-      }
+        next: (response: MonthlyRevenueDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.monthlyRevenue = response;
+          this.isLoadingRevenue = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e të ardhurave mujore:', error);
+          this.toast.danger('Gabim në ngarkimin e të ardhurave mujore', 'Gabim', 3000);
+          this.isLoadingRevenue = false;
+        }
     });
   }
 
   loadChallengingQuizzes(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingChallengingQuizzes = true;
     this.adminDashboardService.apiAdminDashboardMostChallengingQuizzesGet(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: QuizPerformanceDTO[]) => {
-        this.challengingQuizzes = response;
-        this.isLoadingChallengingQuizzes = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e kuizeve më të vështirë:', error);
-        this.toast.danger('Gabim në ngarkimin e kuizeve më të vështirë', 'Gabim', 3000);
-        this.isLoadingChallengingQuizzes = false;
-      }
+        next: (response: QuizPerformanceDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.challengingQuizzes = response;
+          this.isLoadingChallengingQuizzes = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e kuizeve më të vështirë:', error);
+          this.toast.danger('Gabim në ngarkimin e kuizeve më të vështirë', 'Gabim', 3000);
+          this.isLoadingChallengingQuizzes = false;
+        }
     });
   }
 
   loadTopPerformingLearnHubs(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingTopLearnHubs = true;
     this.adminDashboardService.apiAdminDashboardTopPerformingLearnhubsGet(10)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: LearnHubPerformanceDTO[]) => {
-        this.topPerformingLearnHubs = response;
-        this.isLoadingTopLearnHubs = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e LearnHubs më të suksesshëm:', error);
-        this.toast.danger('Gabim në ngarkimin e LearnHubs më të suksesshëm', 'Gabim', 3000);
-        this.isLoadingTopLearnHubs = false;
-      }
+        next: (response: LearnHubPerformanceDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.topPerformingLearnHubs = response;
+          this.isLoadingTopLearnHubs = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e LearnHubs më të suksesshëm:', error);
+          this.toast.danger('Gabim në ngarkimin e LearnHubs më të suksesshëm', 'Gabim', 3000);
+          this.isLoadingTopLearnHubs = false;
+        }
     });
   }
 
   loadUserGrowth(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingUserGrowth = true;
     this.adminDashboardService.apiAdminDashboardUserGrowthGet(30)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (response: UserGrowthDTO[]) => {
-        this.userGrowth = response;
-        this.isLoadingUserGrowth = false;
-      },
-      error: (error) => {
-        console.error('Gabim në ngarkimin e rritjes së përdoruesve:', error);
-        this.toast.danger('Gabim në ngarkimin e rritjes së përdoruesve', 'Gabim', 3000);
-        this.isLoadingUserGrowth = false;
-      }
+        next: (response: UserGrowthDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.userGrowth = response;
+          this.isLoadingUserGrowth = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Gabim në ngarkimin e rritjes së përdoruesve:', error);
+          this.toast.danger('Gabim në ngarkimin e rritjes së përdoruesve', 'Gabim', 3000);
+          this.isLoadingUserGrowth = false;
+        }
     });
   }
 
   loadQuizStats(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingQuizStats = true;
     this.adminDashboardService.apiAdminDashboardQuizStatsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
       next: (response: QuizStatsDTO[]) => {
+        if (!this.isComponentActive) return;
         this.quizStats = response;
         this.isLoadingQuizStats = false;
       },
       error: (error) => {
+        if (!this.isComponentActive) return;
         console.error('Gabim në ngarkimin e statistikave të Kuizeve:', error);
         this.toast.danger('Gabim në ngarkimin e statistikave të Kuizeve', 'Gabim', 3000);
         this.isLoadingQuizStats = false;
@@ -298,15 +394,20 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   loadSubscriptionStats(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingSubscriptionStats = true;
     this.adminDashboardService.apiAdminDashboardSubscriptionStatsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
       next: (response: SubscriptionStatsDTO[]) => {
+        if (!this.isComponentActive) return;
         this.subscriptionStats = response;
         this.isLoadingSubscriptionStats = false;
       },
       error: (error) => {
+        if (!this.isComponentActive) return;
         console.error('Gabim në ngarkimin e statistikave të abonimeve:', error);
         this.toast.danger('Gabim në ngarkimin e statistikave të abonimeve', 'Gabim', 3000);
         this.isLoadingSubscriptionStats = false;
@@ -315,15 +416,20 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   loadRegistrationStats(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingRegistrationStats = true;
     this.adminDashboardService.apiAdminDashboardUserRegistrationStatsGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
       next: (response: UserRegistrationStatsDTO[]) => {
+        if (!this.isComponentActive) return;
         this.registrationStats = response;
         this.isLoadingRegistrationStats = false;
       },
       error: (error) => {
+        if (!this.isComponentActive) return;
         console.error('Gabim në ngarkimin e statistikave të regjistrimeve:', error);
         this.toast.danger('Gabim në ngarkimin e statistikave të regjistrimeve', 'Gabim', 3000);
         this.isLoadingRegistrationStats = false;
@@ -332,15 +438,20 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   loadSystemHealth(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     this.isLoadingSystemHealth = true;
     this.adminDashboardService.apiAdminDashboardSystemHealthGet()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
       next: (response: { [key: string]: any }) => {
+        if (!this.isComponentActive) return;
         this.systemHealth = response;
         this.isLoadingSystemHealth = false;
       },
       error: (error) => {
+        if (!this.isComponentActive) return;
         console.error('Gabim në ngarkimin e shëndetit të sistemit:', error);
         this.toast.danger('Gabim në ngarkimin e shëndetit të sistemit', 'Gabim', 3000);
         this.isLoadingSystemHealth = false;
@@ -468,19 +579,19 @@ export class PanelComponent implements OnInit, OnDestroy {
     const date = new Date(dateString);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+
     // If it's within the last hour, show relative time
     if (diffInMinutes < 60) {
       if (diffInMinutes < 1) return 'Tani';
       return `${diffInMinutes} minuta më parë`;
     }
-    
+
     // If it's within the last 24 hours, show hours
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) {
       return `${diffInHours} orë më parë`;
     }
-    
+
     // Otherwise show formatted date
     return date.toLocaleDateString('sq-AL', {
       year: 'numeric',
@@ -500,8 +611,8 @@ export class PanelComponent implements OnInit, OnDestroy {
       return value > 0;
     }
     if (typeof value === 'string') {
-      return value.toLowerCase().includes('ok') || 
-             value.toLowerCase().includes('healthy') || 
+      return value.toLowerCase().includes('ok') ||
+             value.toLowerCase().includes('healthy') ||
              value.toLowerCase().includes('aktiv');
     }
     return false;
