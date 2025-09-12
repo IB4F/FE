@@ -11,7 +11,18 @@
          class="banner-illustration">
   </section>
 
-  <section class="metrics-summary">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <p>Duke ngarkuar të dhënat e dashboard...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-container">
+    <p>{{ error }}</p>
+    <button (click)="loadDashboardData()" class="retry-button">Provo përsëri</button>
+  </div>
+
+  <section class="metrics-summary" *ngIf="dashboardData && !loading && !error">
     <div class="metric-card">
       <div class="metric-icon">
         <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -20,9 +31,9 @@
                 clip-rule="evenodd"></path>
         </svg>
       </div>
-      <div class="metric-value">72%</div>
+      <div class="metric-value">{{ dashboardData.stats?.totalProgress || 0 }}%</div>
       <div class="metric-label">Progres Total</div>
-      <div class="progress-bar-overall" style="width: 72%;"></div>
+      <div class="progress-bar-overall" [style.width.%]="dashboardData.stats?.totalProgress || 0"></div>
     </div>
 
     <div class="metric-card">
@@ -34,7 +45,7 @@
                 clip-rule="evenodd"></path>
         </svg>
       </div>
-      <div class="metric-value">1450</div>
+      <div class="metric-value">{{ dashboardData.stats?.pointsCollected || 0 }}</div>
       <div class="metric-label">Pikë të Grumbulluara</div>
     </div>
 
@@ -47,56 +58,39 @@
                 clip-rule="evenodd"></path>
         </svg>
       </div>
-      <div class="metric-value">3/5</div>
+      <div class="metric-value">{{ dashboardData.stats?.completedLearnHubs || 0 }}/{{ dashboardData.stats?.totalLearnHubs || 0 }}</div>
       <div class="metric-label">LearnHubs të Përfunduara</div>
     </div>
   </section>
 
-  <section class="recent-learnhubs">
+  <section class="recent-learnhubs" *ngIf="dashboardData && !loading && !error">
     <h3>LearnHub-et e Tua të Fundit</h3>
     <div class="learnhub-cards-container">
-      <div class="learnhub-dashboard-card">
+      <div *ngIf="!dashboardData.latestLearnHubs || dashboardData.latestLearnHubs.length === 0" class="no-learnhubs">
+        <p>Nuk ka LearnHub-e të fundit për të shfaqur.</p>
+      </div>
+
+      <div *ngFor="let learnHub of dashboardData.latestLearnHubs" class="learnhub-dashboard-card">
         <div class="card-header">
-          <h4>LearnHub: Hyrje në Dizajn</h4>
-          <span class="hub-progress-percent">75%</span>
+          <h4>{{ learnHub.title || 'LearnHub pa titull' }}</h4>
+          <span class="hub-progress-percent">{{ learnHub.progressPercentage || 0 }}%</span>
         </div>
         <div class="card-body">
           <div class="progress-bar-hub">
-            <div class="progress-fill" style="width: 75%;"></div>
+            <div class="progress-fill" [style.width.%]="learnHub.progressPercentage || 0"></div>
           </div>
-          <p class="last-activity">Ushtrimi i fundit: Ngjyrat dhe Psikologjia</p>
-          <button class="continue-hub-button">Vazhdo</button>
+          <p class="last-activity" *ngIf="learnHub.lastExercise">
+            Ushtrimi i fundit: {{ learnHub.lastExercise }}
+          </p>
+          <p class="last-activity" *ngIf="learnHub.lastActivityAt">
+            Aktiviteti i fundit: {{ learnHub.lastActivityAt | date:'dd/MM/yyyy HH:mm' }}
+          </p>
+          <div class="points-info">
+            <span class="points-earned">{{ learnHub.pointsEarned || 0 }}/{{ learnHub.totalPossiblePoints || 0 }} pikë</span>
+          </div>
+          <button class="continue-hub-button" [routerLink]="['/student/quiz-list', learnHub.lastExerciseLinkId]">Vazhdo</button>
         </div>
       </div>
-
-      <div class="learnhub-dashboard-card">
-        <div class="card-header">
-          <h4>LearnHub: Bazat e Programimit</h4>
-          <span class="hub-progress-percent">40%</span>
-        </div>
-        <div class="card-body">
-          <div class="progress-bar-hub">
-            <div class="progress-fill" style="width: 40%;"></div>
-          </div>
-          <p class="last-activity">Ushtrimi i fundit: Variablat dhe Llojet e të Dhënave</p>
-          <button class="continue-hub-button">Vazhdo</button>
-        </div>
-      </div>
-
-      <div class="learnhub-dashboard-card">
-        <div class="card-header">
-          <h4>LearnHub: Matematikë Aplikative</h4>
-          <span class="hub-progress-percent">90%</span>
-        </div>
-        <div class="card-body">
-          <div class="progress-bar-hub">
-            <div class="progress-fill" style="width: 90%;"></div>
-          </div>
-          <p class="last-activity">Ushtrimi i fundit: Ekuacionet Diferenciale</p>
-          <button class="continue-hub-button">Vazhdo</button>
-        </div>
-      </div>
-
     </div>
   </section>
 

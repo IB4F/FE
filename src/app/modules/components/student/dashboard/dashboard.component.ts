@@ -3,6 +3,7 @@ import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {Subject, takeUntil} from "rxjs";
 import {UserService} from "../../../../services/user.service";
+import {DashboardDTO, DashboardService} from "../../../../api-client";
 
 @Component({
   selector: 'app-dashboard',
@@ -19,13 +20,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   user$ = this.userService.user$;
   name!: string;
 
+  // Dashboard data
+  dashboardData: DashboardDTO | null = null;
+  loading = false;
+  error: string | null = null;
+
   constructor(
     private userService: UserService,
+    private dashboardService: DashboardService,
   ) {
   }
 
   ngOnInit() {
     this.loadUserData();
+    this.loadDashboardData();
   }
 
   ngOnDestroy() {
@@ -44,6 +52,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.name = '';
       }
     });
+  }
+
+  loadDashboardData() {
+    this.loading = true;
+    this.error = null;
+
+    this.dashboardService.apiDashboardStudentGet()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (data: DashboardDTO) => {
+          this.dashboardData = data;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading dashboard data:', error);
+          this.error = 'Errore nel caricamento dei dati della dashboard';
+          this.loading = false;
+        }
+      });
   }
 
 }
