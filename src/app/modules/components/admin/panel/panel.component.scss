@@ -268,7 +268,378 @@ body {
   &.pending { background-color: $secondary-blue; }
 }
 
+/* Stili per stati di caricamento e vuoto */
+.loading-spinner {
+  display: inline-block;
+  font-size: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #666;
+  
+  .loading-spinner {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: #999;
+  text-align: center;
+  
+  i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #ddd;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+/* Animazione per il pulsante di refresh */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* Stile per pulsante disabilitato */
+.button-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  
+  &:hover {
+    background-color: #ccc;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Stili per le nuove sezioni */
+
+/* Grid per entrate mensili */
+.revenue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.revenue-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  .revenue-month {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  
+  .revenue-amount {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .revenue-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+}
+
+/* Grid per distribuzione geografica */
+.geographic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.geographic-card {
+  background: white;
+  border: 1px solid $border-grey;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: $secondary-blue;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .city-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-dark;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .geo-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #666;
+      
+      i {
+        color: $secondary-blue;
+        width: 16px;
+      }
+    }
+  }
+}
+
+/* Lista performance LearnHubs */
+.performance-list {
+  margin-top: 20px;
+}
+
+.performance-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border: 1px solid $border-grey;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: $primary-green;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .rank {
+    background: linear-gradient(135deg, $primary-green, #45a049);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  
+  .content {
+    flex-grow: 1;
+    
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: $text-dark;
+      margin-bottom: 10px;
+    }
+    
+    .stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        color: #666;
+        
+        i {
+          color: $secondary-blue;
+        }
+      }
+    }
+  }
+}
+
+/* Lista quiz difficili */
+.quiz-list {
+  margin-top: 20px;
+}
+
+.quiz-item {
+  background: white;
+  border: 1px solid $border-grey;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: $warning-orange;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    
+    .quiz-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $text-dark;
+      flex-grow: 1;
+      margin-right: 15px;
+    }
+    
+    .difficulty-badge {
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  .quiz-details {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    
+    .detail {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      color: #666;
+      
+      i {
+        color: $secondary-blue;
+      }
+    }
+  }
+  
+  .learnhub-context {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: $primary-green;
+    font-weight: 500;
+    
+    i {
+      color: $primary-green;
+    }
+  }
+}
+
+/* Grid salute del sistema */
+.system-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.health-item {
+  background: white;
+  border: 1px solid $border-grey;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .health-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+  }
+  
+  .health-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: $danger-red;
+    
+    &.healthy {
+      color: $primary-green;
+    }
+  }
+}
+
 /* Media Queries për Responsivitet */
+
+/* Tablet Landscape (1024px and below) */
+@media (max-width: 1024px) {
+  .admin-main-content-panel {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+  }
+  
+  .revenue-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .geographic-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .system-health-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+/* Tablet Portrait (900px and below) */
 @media (max-width: 900px) {
   body {
     padding: 20px;
@@ -289,8 +660,41 @@ body {
   }
   .card-icon { font-size: 36px; }
   .card-value { font-size: 32px; }
+  
+  /* New sections responsive */
+  .revenue-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+  }
+  
+  .geographic-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+  
+  .performance-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    
+    .content .stats {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  
+  .quiz-item .quiz-details {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .system-health-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+  }
 }
 
+/* Mobile (600px and below) */
 @media (max-width: 600px) {
   body {
     padding: 15px;
@@ -332,5 +736,213 @@ body {
     align-items: flex-start;
     .icon { margin-bottom: 10px; }
     .timestamp { margin-left: 0; margin-top: 5px; }
+  }
+  
+  /* New sections mobile optimization */
+  .revenue-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .revenue-card {
+    padding: 20px;
+    
+    .revenue-month {
+      font-size: 16px;
+    }
+    
+    .revenue-amount {
+      font-size: 24px;
+    }
+    
+    .revenue-details {
+      font-size: 13px;
+    }
+  }
+  
+  .geographic-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .geographic-card {
+    padding: 15px;
+    
+    .city-name {
+      font-size: 16px;
+    }
+    
+    .geo-stats .stat-item {
+      font-size: 13px;
+    }
+  }
+  
+  .performance-item {
+    padding: 15px;
+    gap: 12px;
+    
+    .rank {
+      width: 35px;
+      height: 35px;
+      font-size: 14px;
+    }
+    
+    .content .title {
+      font-size: 16px;
+    }
+    
+    .content .stats .stat {
+      font-size: 13px;
+    }
+  }
+  
+  .quiz-item {
+    padding: 15px;
+    
+    .quiz-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      
+      .quiz-title {
+        font-size: 15px;
+        margin-right: 0;
+      }
+    }
+    
+    .quiz-details {
+      gap: 8px;
+      
+      .detail {
+        font-size: 13px;
+      }
+    }
+    
+    .learnhub-context {
+      font-size: 13px;
+    }
+  }
+  
+  .system-health-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .health-item {
+    padding: 15px;
+    
+    .health-label {
+      font-size: 13px;
+    }
+    
+    .health-value {
+      font-size: 16px;
+    }
+  }
+  
+  /* Button responsive */
+  .button-primary {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  /* Loading and empty states mobile */
+  .loading-container {
+    padding: 30px 20px;
+    
+    .loading-spinner {
+      font-size: 28px;
+    }
+    
+    p {
+      font-size: 14px;
+    }
+  }
+  
+  .empty-state {
+    padding: 40px 20px;
+    
+    i {
+      font-size: 40px;
+    }
+    
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+/* Extra Small Mobile (400px and below) */
+@media (max-width: 400px) {
+  body {
+    padding: 10px;
+  }
+  
+  .panel-header, .dashboard-grid, .section-block {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .panel-header h1 {
+    font-size: 20px;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+  
+  .card-icon { 
+    font-size: 32px; 
+  }
+  
+  .card-value { 
+    font-size: 28px; 
+  }
+  
+  .section-block {
+    padding: 15px;
+  }
+  
+  .section-block h2 {
+    font-size: 20px;
+  }
+  
+  .revenue-card {
+    padding: 15px;
+    
+    .revenue-amount {
+      font-size: 20px;
+    }
+  }
+  
+  .geographic-card {
+    padding: 12px;
+  }
+  
+  .performance-item {
+    padding: 12px;
+    
+    .rank {
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+    }
+  }
+  
+  .quiz-item {
+    padding: 12px;
+  }
+  
+  .system-health-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .health-item {
+    padding: 12px;
+  }
+  
+  .button-primary {
+    padding: 10px 16px;
+    font-size: 13px;
   }
 }

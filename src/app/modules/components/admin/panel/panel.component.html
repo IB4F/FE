@@ -2,202 +2,242 @@
 
   <div class="panel-header">
     <h1>Paneli i Administratorit</h1>
+    <button class="button-primary" (click)="refreshData()" [disabled]="isLoadingStats || isLoadingActivities">
+      <i class="fas fa-sync-alt" [class.spinning]="isLoadingStats || isLoadingActivities"></i>
+      Rifresko
+    </button>
   </div>
 
   <section id="dashboard-section" class="dashboard-grid">
     <div class="card">
       <div class="card-icon"><i class="fas fa-book-reader"></i></div>
       <div class="card-title">LearnHubs Aktivë</div>
-      <div class="card-value">124</div>
+      <div class="card-value">
+        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
+        <span *ngIf="!isLoadingStats">{{ stats.activeLearnHubs | number }}</span>
+      </div>
       <div class="card-description">Gjithsej LearnHubs të publikuar</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
       <div class="card-title">Përdorues të Regjistruar</div>
-      <div class="card-value">2,567</div>
+      <div class="card-value">
+        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
+        <span *ngIf="!isLoadingStats">{{ stats.totalRegisteredUsers | number }}</span>
+      </div>
       <div class="card-description">Gjithsej përdorues në platformë</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-check-circle"></i></div>
       <div class="card-title">Kuize të Përfunduara</div>
-      <div class="card-value">8,910</div>
+      <div class="card-value">
+        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
+        <span *ngIf="!isLoadingStats">{{ stats.completedQuizzes | number }}</span>
+      </div>
       <div class="card-description">Kuize të kaluara me sukses nga përdoruesit</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-users-cog"></i></div>
       <div class="card-title">Administratorë Aktivë</div>
-      <div class="card-value">5</div>
+      <div class="card-value">
+        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
+        <span *ngIf="!isLoadingStats">{{ stats.activeAdministrators | number }}</span>
+      </div>
       <div class="card-description">Anëtarë të ekipit me qasje administratori</div>
     </div>
   </section>
 
   <section id="recent-activity-section" class="section-block">
     <h2>Aktivitetet e Fundit</h2>
-    <div class="activity-item">
-      <span class="icon"><i class="fas fa-plus-circle"></i></span>
-      <span class="text">Administratori **Mario Rossi** shtoi një LearnHub të ri: "**Hyrje në Mësimin e Makinerive**".</span>
-      <span class="timestamp">5 minuta më parë</span>
+    
+    <!-- Loading state -->
+    <div *ngIf="isLoadingActivities" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar aktivitetet...</p>
     </div>
-    <div class="activity-item">
-      <span class="icon"><i class="fas fa-edit"></i></span>
-      <span class="text">Përdoruesja **Laura Bianchi** ka përditësuar profilin.</span>
-      <span class="timestamp">1 orë më parë</span>
+    
+    <!-- Empty state -->
+    <div *ngIf="!isLoadingActivities && recentActivities.length === 0" class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <p>Nuk ka aktivitete të fundit</p>
     </div>
-    <div class="activity-item">
-      <span class="icon"><i class="fas fa-book-open"></i></span>
-      <span class="text">LearnHub-i "**Bazat e Blockchain**" arriti 500 regjistrime.</span>
-      <span class="timestamp">2 orë më parë</span>
-    </div>
-    <div class="activity-item">
-      <span class="icon"><i class="fas fa-question-circle"></i></span>
-      <span class="text">U krijua një kuiz i ri për "**Python i Avancuar**".</span>
-      <span class="timestamp">Dje</span>
+    
+    <!-- Activities list -->
+    <div *ngIf="!isLoadingActivities && recentActivities.length > 0">
+      <div *ngFor="let activity of recentActivities" class="activity-item">
+        <span class="icon">
+          <i [class]="getActivityIcon(activity.type)"></i>
+        </span>
+        <span class="text">
+          <strong *ngIf="activity.userName">{{ activity.userName }}</strong>
+          {{ activity.description }}
+        </span>
+        <span class="timestamp">{{ formatTimestamp(activity.timestamp) }}</span>
+      </div>
     </div>
   </section>
 
-  <section id="learnhubs-management-section" class="section-block" style="display: none;">
-    <h2>Menaxhimi i LearnHubs</h2>
-    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Shto LearnHub të Ri</button>
-    <table class="data-table">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Titulli LearnHub</th>
-        <th>Krijuesi</th>
-        <th>Statusi</th>
-        <th>Data e Krijimit</th>
-        <th>Veprimet</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>001</td>
-        <td>Hyrje në Zhvillimin e Uebit</td>
-        <td>Luca Verdi</td>
-        <td><span class="status-badge published">Publikuar</span></td>
-        <td>2023-01-15</td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
-          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>002</td>
-        <td>Dizajn UX/UI për Fillestarë</td>
-        <td>Anna Neri</td>
-        <td><span class="status-badge draft">Draft</span></td>
-        <td>2023-02-20</td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
-          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>003</td>
-        <td>Bazat e Shkencës së të Dhënave</td>
-        <td>Marco Gialli</td>
-        <td><span class="status-badge published">Publikuar</span></td>
-        <td>2023-03-10</td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko"><i class="fas fa-edit"></i></button>
-          <button class="delete" title="Fshi"><i class="fas fa-trash-alt"></i></button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <!-- Sezione Të Ardhurat Mujore -->
+  <section id="revenue-section" class="section-block">
+    <h2>Të Ardhurat Mujore</h2>
+    
+    <div *ngIf="isLoadingRevenue" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar të dhënat e të ardhurave...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingRevenue && monthlyRevenue.length === 0" class="empty-state">
+      <i class="fas fa-chart-line"></i>
+      <p>Nuk ka të dhëna të ardhurash</p>
+    </div>
+    
+    <div *ngIf="!isLoadingRevenue && monthlyRevenue.length > 0" class="revenue-grid">
+      <div *ngFor="let revenue of monthlyRevenue" class="revenue-card">
+        <div class="revenue-month">{{ getMonthName(revenue.month) }} {{ revenue.year }}</div>
+        <div class="revenue-amount">{{ formatCurrency(revenue.revenue) }}</div>
+        <div class="revenue-details">
+          <span class="new-subscriptions">+{{ revenue.newSubscriptions || 0 }} abonime të reja</span>
+          <span class="cancellations">-{{ revenue.cancellations || 0 }} anulime</span>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section id="users-management-section" class="section-block" style="display: none;">
-    <h2>Menaxhimi i Përdoruesve</h2>
-    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-user-plus"></i> Shto Përdorues të Ri</button>
-    <table class="data-table">
-      <thead>
-      <tr>
-        <th>ID Përdoruesi</th>
-        <th>Emri i Plotë</th>
-        <th>Email</th>
-        <th>Roli</th>
-        <th>Statusi</th>
-        <th>Veprimet</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>U001</td>
-        <td>Mario Rossi</td>
-        <td>m.rossi&#64;example.com</td>
-        <td>Student</td>
-        <td><span class="status-badge active">Aktiv</span></td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
-          <button class="delete" title="Çaktivizo Përdoruesin"><i class="fas fa-user-slash"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>U002</td>
-        <td>Laura Bianchi</td>
-        <td>l.bianchi&#64;example.com</td>
-        <td>Student</td>
-        <td><span class="status-badge inactive">Joaktiv</span></td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
-          <button class="delete" title="Aktivizo Përdoruesin"><i class="fas fa-user-check"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>U003</td>
-        <td>Giulia Neri</td>
-        <td>g.neri&#64;example.com</td>
-        <td>Admin</td>
-        <td><span class="status-badge active">Aktiv</span></td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko Përdoruesin"><i class="fas fa-user-edit"></i></button>
-          <button class="delete" title="Çaktivizo Përdoruesin"><i class="fas fa-user-slash"></i></button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <!-- Sezione Shpërndarja Gjeografike -->
+  <section id="geographic-section" class="section-block">
+    <h2>Shpërndarja Gjeografike</h2>
+    
+    <div *ngIf="isLoadingGeographic" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar të dhënat gjeografike...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingGeographic && geographicStats.length === 0" class="empty-state">
+      <i class="fas fa-map-marker-alt"></i>
+      <p>Nuk ka të dhëna gjeografike</p>
+    </div>
+    
+    <div *ngIf="!isLoadingGeographic && geographicStats.length > 0" class="geographic-grid">
+      <div *ngFor="let geo of geographicStats" class="geographic-card">
+        <div class="city-name">{{ geo.city || 'Qyteti i panjohur' }}</div>
+        <div class="geo-stats">
+          <div class="stat-item">
+            <i class="fas fa-users"></i>
+            <span>{{ geo.userCount || 0 }} përdorues</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-school"></i>
+            <span>{{ geo.schoolCount || 0 }} shkolla</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-euro-sign"></i>
+            <span>{{ formatCurrency(geo.revenue) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section id="quiz-management-section" class="section-block" style="display: none;">
-    <h2>Menaxhimi i Kuizeve</h2>
-    <button class="button-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Shto Kuiz të Ri</button>
-    <table class="data-table">
-      <thead>
-      <tr>
-        <th>ID Kuizi</th>
-        <th>Titulli i Kuizit</th>
-        <th>LearnHub-i i Asociuar</th>
-        <th>Nr. Pyetjeve</th>
-        <th>Statusi</th>
-        <th>Veprimet</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>Q001</td>
-        <td>Kuizi Bazë i Zhvillimit të Uebit</td>
-        <td>Hyrje në Zhvillimin e Uebit</td>
-        <td>10</td>
-        <td><span class="status-badge published">Publikuar</span></td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko Kuizin"><i class="fas fa-edit"></i></button>
-          <button class="delete" title="Fshi Kuizin"><i class="fas fa-trash-alt"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>Q002</td>
-        <td>Kuizi i Avancuar UX/UI</td>
-        <td>Dizajn UX/UI për Fillestarë</td>
-        <td>15</td>
-        <td><span class="status-badge draft">Draft</span></td>
-        <td class="action-buttons">
-          <button class="edit" title="Modifiko Kuizin"><i class="fas fa-edit"></i></button>
-          <button class="delete" title="Fshi Kuizin"><i class="fas fa-trash-alt"></i></button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <!-- Sezione LearnHubs Më të Suksesshëm -->
+  <section id="top-learnhubs-section" class="section-block">
+    <h2>LearnHubs Më të Suksesshëm</h2>
+    
+    <div *ngIf="isLoadingTopLearnHubs" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar LearnHubs më të suksesshëm...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length === 0" class="empty-state">
+      <i class="fas fa-trophy"></i>
+      <p>Nuk ka LearnHubs më të suksesshëm</p>
+    </div>
+    
+    <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length > 0" class="performance-list">
+      <div *ngFor="let learnhub of topPerformingLearnHubs; let i = index" class="performance-item">
+        <div class="rank">#{{ i + 1 }}</div>
+        <div class="content">
+          <div class="title">{{ learnhub.title || 'Titull i panjohur' }}</div>
+          <div class="stats">
+            <span class="stat">
+              <i class="fas fa-users"></i>
+              {{ learnhub.totalStudents || 0 }} studentë
+            </span>
+            <span class="stat">
+              <i class="fas fa-chart-line"></i>
+              {{ formatPercentage(learnhub.completionRate) }} përfundim
+            </span>
+            <span class="stat">
+              <i class="fas fa-star"></i>
+              {{ Math.round((learnhub.averageScore || 0) * 100) }}% mesatare
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
+
+  <!-- Sezione Kuize Më të Vështirë -->
+  <section id="challenging-quizzes-section" class="section-block">
+    <h2>Kuize Më të Vështirë</h2>
+    
+    <div *ngIf="isLoadingChallengingQuizzes" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar kuize më të vështirë...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length === 0" class="empty-state">
+      <i class="fas fa-question-circle"></i>
+      <p>Nuk ka kuize të vështirë</p>
+    </div>
+    
+    <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length > 0" class="quiz-list">
+      <div *ngFor="let quiz of challengingQuizzes" class="quiz-item">
+        <div class="quiz-header">
+          <div class="quiz-title">{{ quiz.question || 'Pyetje e panjohur' }}</div>
+          <div class="difficulty-badge" [style.background-color]="getDifficultyColor(quiz.difficulty)">
+            {{ getDifficultyText(quiz.difficulty) }}
+          </div>
+        </div>
+        <div class="quiz-details">
+          <span class="detail">
+            <i class="fas fa-chart-bar"></i>
+            {{ formatPercentage(quiz.successRate) }} sukses
+          </span>
+          <span class="detail">
+            <i class="fas fa-play"></i>
+            {{ quiz.totalAttempts || 0 }} tentime
+          </span>
+          <span class="detail">
+            <i class="fas fa-clock"></i>
+            {{ Math.round(quiz.averageTimeSpent || 0) }}s mesatare
+          </span>
+        </div>
+        <div class="learnhub-context" *ngIf="quiz.learnHubTitle">
+          <i class="fas fa-book"></i>
+          {{ quiz.learnHubTitle }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sezione Shëndeti i Sistemit -->
+  <section id="system-health-section" class="section-block">
+    <h2>Shëndeti i Sistemit</h2>
+    
+    <div *ngIf="isLoadingSystemHealth" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke kontrolluar shëndetin e sistemit...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingSystemHealth" class="system-health-grid">
+      <div *ngFor="let key of getSystemHealthKeys()" class="health-item">
+        <div class="health-label">{{ key }}</div>
+        <div class="health-value" [class.healthy]="isSystemHealthy(key)">
+          {{ getSystemHealthValue(key) }}
+        </div>
+      </div>
+    </div>
+  </section>
+
 
 </div>

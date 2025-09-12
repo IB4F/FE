@@ -1,3 +1,5 @@
+export * from './adminDashboard.service';
+import { AdminDashboardService } from './adminDashboard.service';
 export * from './adminUser.service';
 import { AdminUserService } from './adminUser.service';
 export * from './auth.service';
@@ -20,4 +22,4 @@ export * from './subscription.service';
 import { SubscriptionService } from './subscription.service';
 export * from './subscriptionPackage.service';
 import { SubscriptionPackageService } from './subscriptionPackage.service';
-export const APIS = [AdminUserService, AuthService, DashboardService, DetailsService, FileService, LearnHubsService, LinksService, QuizzesService, StudentService, SubscriptionService, SubscriptionPackageService];
+export const APIS = [AdminDashboardService, AdminUserService, AuthService, DashboardService, DetailsService, FileService, LearnHubsService, LinksService, QuizzesService, StudentService, SubscriptionService, SubscriptionPackageService];

@@ -9,14 +9,13 @@
  */
 
 
-export interface LearnHubProgressDTO { 
+export interface LearnHubPerformanceDTO { 
     id?: string;
     title?: string | null;
-    progressPercentage?: number;
-    lastExercise?: string | null;
-    lastExerciseLinkId?: string | null;
-    lastActivityAt?: string | null;
-    pointsEarned?: number;
-    totalPossiblePoints?: number;
+    totalStudents?: number;
+    averageScore?: number;
+    completionRate?: number;
+    totalAttempts?: number;
+    engagementScore?: number;
 }
 
