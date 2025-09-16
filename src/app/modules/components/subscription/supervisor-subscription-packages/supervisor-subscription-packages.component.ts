@@ -6,7 +6,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SubscriptionPackageService, SubscriptionService, SupervisorSubscriptionRequestDTO } from '../../../../api-client';
+import {
+  SubscriptionPackageService,
+  SubscriptionService,
+  SupervisorSubscriptionRequestDTO
+} from '../../../../api-client';
 import { BillingInterval } from '../../../shared/constant/enums';
 import { NgToastService } from 'ng-angular-popup';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
@@ -66,7 +70,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.supervisorApplicationId = this.route.snapshot.queryParams['supervisorApplicationId'];
-    
+
     if (!this.supervisorApplicationId) {
       this.toast.danger('ID-ja e aplikimit të supervizorit nuk është e vlefshme', 'GABIM', 3000);
       this.router.navigate(['/hyr']);
