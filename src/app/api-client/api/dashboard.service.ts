@@ -36,6 +36,7 @@ export class DashboardService extends BaseService {
     }
 
     /**
+     * Get student dashboard data including progress stats and latest LearnHubs
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -90,7 +91,8 @@ export class DashboardService extends BaseService {
     }
 
     /**
-     * @param studentId 
+     * Get dashboard data for a specific student (admin/teacher access)
+     * @param studentId The ID of the student
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

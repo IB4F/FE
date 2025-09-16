@@ -9,9 +9,9 @@
  */
 
 
-export interface ChangePasswordDTO { 
-    currentPassword?: string | null;
-    newPassword?: string | null;
-    confirmPassword?: string | null;
+export interface SupervisorApprovalDTO { 
+    supervisorId?: string;
+    isApproved?: boolean;
+    rejectionReason?: string | null;
 }
 

@@ -239,5 +239,64 @@
     </div>
   </section>
 
+  <!-- Sezione Aplikimet e Supervisorit -->
+  <section id="supervisor-applications-section" class="section-block">
+    <h2>Aplikimet e Supervisorit</h2>
+    
+    <div *ngIf="isLoadingSupervisorApplications" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar aplikimet e supervisorit...</p>
+    </div>
+    
+    <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length > 0" class="supervisor-applications-grid">
+      <div *ngFor="let application of supervisorApplications" class="application-card">
+        <div class="application-header">
+          <h3>{{ application.schoolName }}</h3>
+          <div class="application-status pending">Në Pritje</div>
+        </div>
+        
+        <div class="application-details">
+          <div class="detail-row">
+            <span class="label">Personi i Kontaktit:</span>
+            <span class="value">{{ application.contactPersonFirstName }} {{ application.contactPersonLastName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Email:</span>
+            <span class="value">{{ application.contactPersonEmail }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Telefoni:</span>
+            <span class="value">{{ application.contactPersonPhone }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Qyteti:</span>
+            <span class="value">{{ application.city }}</span>
+          </div>
+          <div class="detail-row" *ngIf="application.additionalInfo">
+            <span class="label">Informacione Shtesë:</span>
+            <span class="value">{{ application.additionalInfo }}</span>
+          </div>
+        </div>
+        
+        <div class="application-actions">
+          <button class="btn-approve" (click)="approveSupervisorApplication(application)">
+            <i class="fas fa-check"></i>
+            Pranoj
+          </button>
+          <button class="btn-reject" (click)="rejectSupervisorApplication(application)">
+            <i class="fas fa-times"></i>
+            Refuzoj
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length === 0" class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>Nuk ka aplikime të reja</h3>
+      <p>Të gjitha aplikimet e supervisorit janë të trajtuara ose nuk ka aplikime të reja.</p>
+    </div>
+  </section>
+
 
 </div>

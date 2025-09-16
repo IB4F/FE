@@ -21,53 +21,54 @@
     <div class="register-panel">
       <form [formGroup]="registerSupervizorFormGroup">
         <h2>Plotëso Formularin</h2>
-        <div class="field-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Emri</mat-label>
-            <input matInput placeholder="Emri" formControlName="firstName" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('firstName')?.hasError('required')">
-              Fushë e detyrueshme
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Nr. Telefonit</mat-label>
-            <input matInput placeholder="Numer Telefoni" formControlName="phoneNumber" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('phoneNumber')?.hasError('required')">
-              Fushë e detyrueshme
-            </mat-error>
-          </mat-form-field>
-        </div>
-
         <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="Email" formControlName="email" required>
-          <mat-error *ngIf="registerSupervizorFormGroup.get('email')?.hasError('required')">
+          <mat-label>Emri i Shkollës</mat-label>
+          <input matInput placeholder="Emri i Shkollës" formControlName="schoolName" required>
+          <mat-error *ngIf="registerSupervizorFormGroup.get('schoolName')?.hasError('required')">
             Fushë e detyrueshme
           </mat-error>
         </mat-form-field>
 
         <div class="field-container">
           <mat-form-field appearance="outline">
-            <mat-label>Profesion</mat-label>
-            <input matInput placeholder="Profesion" formControlName="profession" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('profession')?.hasError('required')">
+            <mat-label>Emri i Personit të Kontaktit</mat-label>
+            <input matInput placeholder="Emri" formControlName="contactPersonFirstName" required>
+            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonFirstName')?.hasError('required')">
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Shkolla</mat-label>
-            <input matInput placeholder="Shkolla" formControlName="schoolName" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('schoolName')?.hasError('required')">
+            <mat-label>Mbiemri i Personit të Kontaktit</mat-label>
+            <input matInput placeholder="Mbiemri" formControlName="contactPersonLastName" required>
+            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonLastName')?.hasError('required')">
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
         </div>
 
+        <mat-form-field appearance="outline">
+          <mat-label>Email i Personit të Kontaktit</mat-label>
+          <input matInput placeholder="Email" formControlName="contactPersonEmail" required>
+          <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('required')">
+            Fushë e detyrueshme
+          </mat-error>
+          <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('email')">
+            Email i pavlefshëm
+          </mat-error>
+        </mat-form-field>
+
         <div class="field-container">
           <mat-form-field appearance="outline">
-            <mat-label>Qytet</mat-label>
-            <mat-select placeholder="Klasa aktuale" formControlName="city" required>
-              <mat-option *ngFor="let cities of citiesList" [value]="cities.id">
+            <mat-label>Telefoni i Personit të Kontaktit</mat-label>
+            <input matInput placeholder="Nr. Telefonit" formControlName="contactPersonPhone" required>
+            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('required')">
+              Fushë e detyrueshme
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Qyteti</mat-label>
+            <mat-select placeholder="Qyteti" formControlName="city" required>
+              <mat-option *ngFor="let cities of citiesList" [value]="cities.name">
                 {{ cities.name }}
               </mat-option>
             </mat-select>
@@ -75,14 +76,20 @@
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Kod Postar</mat-label>
-            <input matInput placeholder="Kod Postar" formControlName="postalCode" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('postalCode')?.hasError('required')">
-              Fushë e detyrueshme
-            </mat-error>
-          </mat-form-field>
         </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Adresa</mat-label>
+          <textarea matInput placeholder="Adresa e plotë" formControlName="address" rows="3" required></textarea>
+          <mat-error *ngIf="registerSupervizorFormGroup.get('address')?.hasError('required')">
+            Fushë e detyrueshme
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Informacione Shtesë (Opsionale)</mat-label>
+          <textarea matInput placeholder="Informacione shtesë" formControlName="additionalInfo" rows="3"></textarea>
+        </mat-form-field>
 
         <div class="btn-container">
           <button mat-button [disabled]="!isRegisterFormValid()" (click)="submitRequest()">Apliko</button>

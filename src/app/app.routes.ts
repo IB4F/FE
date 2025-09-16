@@ -34,6 +34,13 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'change-password-first-time',
+    title: 'Ndrysho Fjalëkalimin - Hyrja e Parë',
+    loadComponent: () => import('./modules/components/authentication/change-password-first-time/change-password-first-time.component')
+      .then(m => m.ChangePasswordFirstTimeComponent),
+    pathMatch: 'full'
+  },
+  {
     path: 'membership',
     title: 'Membership',
     loadComponent: () => import('./modules/components/authentication/membership/membership.component')

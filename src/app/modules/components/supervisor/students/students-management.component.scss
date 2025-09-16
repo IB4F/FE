@@ -1,0 +1,284 @@
+.students-management {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      h1 {
+        margin: 0;
+        color: #333;
+        font-size: 2rem;
+        font-weight: 500;
+      }
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .tab-content {
+    padding: 24px 0;
+  }
+
+  .success-card {
+    margin-bottom: 24px;
+    border-left: 4px solid #4caf50;
+
+    .success-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+
+      h3 {
+        margin: 0;
+        color: #4caf50;
+        font-size: 1.5rem;
+      }
+    }
+
+    .student-credentials {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+
+      .credential-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        gap: 12px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        label {
+          font-weight: 600;
+          min-width: 80px;
+          color: #333;
+        }
+
+        span {
+          flex: 1;
+          color: #666;
+        }
+
+        .email-text,
+        .password-text {
+          font-family: monospace;
+          background: #fff;
+          padding: 4px 8px;
+          border-radius: 4px;
+          border: 1px solid #ddd;
+          font-size: 0.9rem;
+        }
+
+        button {
+          width: 32px;
+          height: 32px;
+          line-height: 32px;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+
+    .success-actions {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .create-form-card {
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    mat-form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+  }
+
+  .loading-container,
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 16px 0;
+      color: #666;
+    }
+  }
+
+  .students-table-card {
+    .table-container {
+      overflow-x: auto;
+
+      .students-table {
+        width: 100%;
+
+        th {
+          font-weight: 600;
+          color: #333;
+        }
+
+        .email-text {
+          font-family: monospace;
+          font-size: 0.9rem;
+          margin-right: 8px;
+        }
+
+        .progress-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 120px;
+
+          mat-progress-bar {
+            flex: 1;
+            height: 8px;
+          }
+
+          .progress-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #666;
+            min-width: 40px;
+          }
+        }
+
+        .mat-mdc-row:hover {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin: 16px 0 8px 0;
+      color: #333;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+    }
+  }
+}
+
+// Material tabs customization
+::ng-deep .mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .mat-mdc-tab {
+    min-width: 200px;
+  }
+
+  .mat-mdc-tab-label {
+    font-weight: 500;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .students-management {
+    padding: 16px;
+
+    .page-header {
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+
+      .header-left {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+
+        h1 {
+          text-align: center;
+        }
+      }
+    }
+
+    .students-table-card {
+      .table-container {
+        .students-table {
+          min-width: 600px;
+        }
+      }
+    }
+  }
+}
+

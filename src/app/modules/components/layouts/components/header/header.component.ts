@@ -83,4 +83,16 @@ export class HeaderComponent implements OnInit {
   showPanel(): boolean {
     return this.userRole === UserRole.ADMIN;
   }
+
+  isSupervisor(): boolean {
+    return this.userRole === UserRole.SUPERVISOR;
+  }
+
+  onLogoClick(): void {
+    if (this.isLogged && this.isSupervisor()) {
+      this.router.navigate(['/supervizor/dashboard']);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
 }

@@ -11,7 +11,7 @@ import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {NgToastService} from "ng-angular-popup";
-import {AuthService, City, DetailsService, SchoolRegistrationDTO} from "../../../../api-client";
+import {City, DetailsService, SupervisorApplicationDTO, SupervisorService} from "../../../../api-client";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 
@@ -41,7 +41,7 @@ export class RegisterSupervizorComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _authService: AuthService,
+    private _supervisorService: SupervisorService,
     private router: Router,
     private toast: NgToastService,
     private _detailsService: DetailsService
@@ -55,13 +55,14 @@ export class RegisterSupervizorComponent implements OnInit {
 
   registerFormInitialize() {
     this.registerSupervizorFormGroup = this._formBuilder.group({
-      firstName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required]],
-      profession: ['', Validators.required],
-      city: ['', Validators.required],
-      postalCode: ['', Validators.required],
       schoolName: ['', Validators.required],
+      contactPersonFirstName: ['', Validators.required],
+      contactPersonLastName: ['', Validators.required],
+      contactPersonEmail: ['', [Validators.required, Validators.email]],
+      contactPersonPhone: ['', [Validators.required]],
+      city: ['', Validators.required],
+      address: ['', Validators.required],
+      additionalInfo: ['']
     });
   }
 
@@ -80,17 +81,17 @@ export class RegisterSupervizorComponent implements OnInit {
   }
 
   submitRequest() {
-    const registerData: SchoolRegistrationDTO = {
+    const applicationData: SupervisorApplicationDTO = {
       ...this.registerSupervizorFormGroup.value
     };
-    this._authService.apiAuthRegisterSchoolPost(registerData).subscribe({
+    this._supervisorService.apiSupervisorApplyPost(applicationData).subscribe({
       next: (resp) => {
-        this.toast.success(resp?.message, 'SUCCESS', 3000);
+        this.toast.success(resp?.message || 'Aplikimi u dërgua me sukses. Do të kontaktoheni së shpejti.', 'SUCCESS', 3000);
         this.registerSupervizorFormGroup.reset();
         this.router.navigate(['']);
       },
       error: (error) => {
-        this.toast.danger(error?.error?.message, 'ERROR', 3000);
+        this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë dërgimit të aplikimit.', 'ERROR', 3000);
       }
     });
   }

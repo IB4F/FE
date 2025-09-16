@@ -946,3 +946,208 @@ body {
     font-size: 13px;
   }
 }
+
+/* Stili per la sezione Aplikimet e Supervisorit */
+.supervisor-applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+
+  .application-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ff9800;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .application-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+
+      h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+
+      .application-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &.pending {
+          background: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffeaa7;
+        }
+
+        &.approved {
+          background: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+        }
+
+        &.rejected {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        }
+      }
+    }
+
+    .application-details {
+      margin-bottom: 24px;
+
+      .detail-row {
+        display: flex;
+        margin-bottom: 12px;
+        align-items: flex-start;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .label {
+          font-weight: 600;
+          color: #555;
+          min-width: 140px;
+          margin-right: 12px;
+        }
+
+        .value {
+          color: #333;
+          flex: 1;
+          word-break: break-word;
+        }
+      }
+    }
+
+    .application-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+
+        &.btn-approve {
+          background: #28a745;
+          color: white;
+
+          &:hover {
+            background: #218838;
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+
+        &.btn-reject {
+          background: #dc3545;
+          color: white;
+
+          &:hover {
+            background: #c82333;
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive design per supervisor applications */
+@media (max-width: 768px) {
+  .supervisor-applications-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    .application-card {
+      padding: 20px;
+
+      .application-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+
+        h3 {
+          font-size: 1.2rem;
+        }
+      }
+
+      .application-details {
+        .detail-row {
+          flex-direction: column;
+          gap: 4px;
+
+          .label {
+            min-width: auto;
+            margin-right: 0;
+          }
+        }
+      }
+
+      .application-actions {
+        flex-direction: column;
+        gap: 8px;
+
+        button {
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .supervisor-applications-grid {
+    .application-card {
+      padding: 16px;
+
+      .application-header {
+        h3 {
+          font-size: 1.1rem;
+        }
+      }
+
+      .application-actions {
+        button {
+          padding: 12px 16px;
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,9 @@
 export interface FamilyMemberInput { 
     firstName?: string | null;
     lastName?: string | null;
+    /**
+     * Class ID (Guid) or Class Name. Will be converted to Class ID internally.
+     */
     currentClass?: string | null;
 }
 

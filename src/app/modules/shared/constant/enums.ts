@@ -31,7 +31,7 @@ export enum Difficulty {
 export enum UserRole {
   STUDENT = 'Student',
   FAMILY = 'Family',
-  SUPERVIZOR = 'Supervizor',
+  SUPERVISOR = 'Supervisor',
   ADMIN = 'Admin'
 }
 
@@ -49,6 +49,7 @@ export enum NavigationDirection {
 export enum ROUTES {
   ADMIN = '/admin/panel',
   STUDENT = '/student/dashboard',
+  SUPERVISOR = '/supervizor/dashboard',
   DEFAULT = ''
 }
 

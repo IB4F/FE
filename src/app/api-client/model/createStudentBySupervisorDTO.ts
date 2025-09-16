@@ -9,9 +9,11 @@
  */
 
 
-export interface ChangePasswordDTO { 
-    currentPassword?: string | null;
-    newPassword?: string | null;
-    confirmPassword?: string | null;
+export interface CreateStudentBySupervisorDTO { 
+    firstName?: string | null;
+    lastName?: string | null;
+    currentClass?: string | null;
+    school?: string | null;
+    dateOfBirth?: string;
 }
 

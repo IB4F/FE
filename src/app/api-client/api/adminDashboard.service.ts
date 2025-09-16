@@ -60,6 +60,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get comprehensive analytics data
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -114,6 +115,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get geographic distribution of users
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -168,7 +170,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param learnHubId 
+     * Get LearnHub performance analytics for a specific LearnHub
+     * @param learnHubId LearnHub ID
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -223,6 +226,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get LearnHub statistics and performance data
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -277,7 +281,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param months 
+     * Get monthly revenue data for charts
+     * @param months Number of months to retrieve (default: 12)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -337,7 +342,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param limit 
+     * Get most challenging quizzes (lowest success rates)
+     * @param limit Number of quizzes to return (default: 10)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -397,6 +403,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get complete admin dashboard overview with all statistics and recent activities
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -451,6 +458,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get quiz statistics and performance data
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -505,7 +513,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param limit 
+     * Get recent activities for admin dashboard
+     * @param limit Number of activities to return (default: 10)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -565,6 +574,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get main statistics for admin dashboard cards
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -619,6 +629,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get subscription statistics and revenue data
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -673,6 +684,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get system health status
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -727,7 +739,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param limit 
+     * Get top performing LearnHubs based on engagement
+     * @param limit Number of LearnHubs to return (default: 10)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -787,7 +800,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param role 
+     * Get detailed user analytics for a specific role
+     * @param role User role to analyze
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -842,7 +856,8 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
-     * @param days 
+     * Get user growth data for charts
+     * @param days Number of days to retrieve (default: 30)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -902,6 +917,7 @@ export class AdminDashboardService extends BaseService {
     }
 
     /**
+     * Get user registration statistics by role
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

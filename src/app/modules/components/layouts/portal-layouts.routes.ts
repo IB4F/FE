@@ -2,12 +2,14 @@ import {Routes} from '@angular/router';
 import {PortalLayoutComponent} from "./portal-layout.component";
 import {roleGuard} from "../../../guards/role.guard";
 import {userResolver} from "../../../helpers/resolvers/user.resolver";
+import {mustChangePasswordGuard} from "../../../guards/must-change-password.guard";
 
 export const PortalLayoutsRoutes: Routes = [
   {
     path: '',
     component: PortalLayoutComponent,
     resolve: {user: userResolver},
+    canActivate: [mustChangePasswordGuard],
     children: [
       {
         path: '',
@@ -29,6 +31,34 @@ export const PortalLayoutsRoutes: Routes = [
             title: 'Apliko',
             loadComponent: () => import('../authentication/register-supervizor/register-supervizor.component')
               .then(m => m.RegisterSupervizorComponent),
+          },
+          {
+            path: 'dashboard',
+            title: 'Dashboard Supervisor',
+            canActivate: [roleGuard('Supervisor', 'Admin')],
+            loadComponent: () => import('../supervisor/dashboard/supervisor-dashboard.component')
+              .then(m => m.SupervisorDashboardComponent),
+          },
+          {
+            path: 'students',
+            title: 'Menaxhimi i Studentëve',
+            canActivate: [roleGuard('Supervisor', 'Admin')],
+            loadComponent: () => import('../supervisor/students/students-management.component')
+              .then(m => m.StudentsManagementComponent),
+          },
+          {
+            path: 'password-reset',
+            title: 'Reset Password',
+            canActivate: [roleGuard('Supervisor', 'Admin')],
+            loadComponent: () => import('../supervisor/password-reset/password-reset-management.component')
+              .then(m => m.PasswordResetManagementComponent),
+          },
+          {
+            path: 'students/:studentId/progress',
+            title: 'Detajet e Progresit të Studentit',
+            canActivate: [roleGuard('Supervisor', 'Admin')],
+            loadComponent: () => import('../supervisor/student-progress/student-progress-details.component')
+              .then(m => m.StudentProgressDetailsComponent),
           },
         ]
       },

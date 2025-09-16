@@ -36,7 +36,8 @@ export class StudentService extends BaseService {
     }
 
     /**
-     * @param linkId 
+     * Get detailed performance analytics for the current student
+     * @param linkId The ID of the link to get analytics for
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -91,7 +92,8 @@ export class StudentService extends BaseService {
     }
 
     /**
-     * @param linkId 
+     * Get all parent quizzes for a specific link with student progress (for students) This endpoint returns only parent quiz IDs and progress information
+     * @param linkId The ID of the link to get quizzes for
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -146,7 +148,8 @@ export class StudentService extends BaseService {
     }
 
     /**
-     * @param quizId 
+     * Start a quiz (record the start time for time tracking)
+     * @param quizId The ID of the quiz to start
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -201,7 +204,8 @@ export class StudentService extends BaseService {
     }
 
     /**
-     * @param quizId 
+     * Get a single quiz by ID (for students) This endpoint excludes sensitive information like correct answers for security
+     * @param quizId The ID of the quiz to retrieve
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -256,7 +260,8 @@ export class StudentService extends BaseService {
     }
 
     /**
-     * @param studentQuizSubmissionDTO 
+     * Submit a student\&#39;s answer to a quiz This endpoint validates the answer and determines the next quiz to present
+     * @param studentQuizSubmissionDTO The quiz submission containing quizId, answer, and start time
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

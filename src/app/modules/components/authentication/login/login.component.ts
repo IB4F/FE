@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     // Check for registration success message from URL params
     const urlParams = new URLSearchParams(window.location.search);
     const message = urlParams.get('message');
-    
+
     if (message === 'registration-success') {
       this.toast.success('Regjistrimi u përfundua me sukses! Ju lutemi hyni në llogarinë tuaj.', 'SUKSES', 5000);
       // Clean up URL
@@ -82,11 +82,23 @@ export class LoginComponent implements OnInit {
       switchMap(resp => {
         this._tokenStorageService.saveTokens(resp?.data);
         this.toast.success(resp?.message, 'SUCCESS', 3000);
+        
+        // Check if user must change password
+        if (resp?.data?.mustChangePassword) {
+          // Set the flag and redirect to password change page for first-time login
+          this._tokenStorageService.setMustChangePassword(true);
+          this.router.navigate(['/change-password-first-time']);
+          return this.userService.loadUserData(true);
+        }
+        
         return this.userService.loadUserData(true);
       })
     ).subscribe({
       next: () => {
-        this.navigateTo();
+        // Only navigate to dashboard if user doesn't need to change password
+        if (!this._tokenStorageService.getMustChangePassword()) {
+          this.navigateTo();
+        }
       },
       error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)
     });
@@ -111,6 +123,9 @@ export class LoginComponent implements OnInit {
     switch (role) {
       case UserRole.ADMIN:
         this.router.navigate([ROUTES.ADMIN]);
+        break;
+      case UserRole.SUPERVISOR:
+        this.router.navigate([ROUTES.SUPERVISOR]);
         break;
       case UserRole.STUDENT:
       case UserRole.FAMILY:

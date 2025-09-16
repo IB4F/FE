@@ -31,6 +31,12 @@ export interface User {
     profession?: string | null;
     city?: string | null;
     postalCode?: string | null;
+    isOneTimeLoginUsed?: boolean;
+    mustChangePasswordOnNextLogin?: boolean;
+    originalGeneratedPassword?: string | null;
+    supervisorId?: string | null;
+    supervisor?: User;
+    supervisedUsers?: Array<User> | null;
     passwordResetToken?: string | null;
     passwordResetTokenExpiry?: string | null;
     refreshToken?: string | null;

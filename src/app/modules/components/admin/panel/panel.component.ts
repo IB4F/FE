@@ -1,23 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminDashboardService } from '../../../../api-client/api/adminDashboard.service';
 import { NgToastService } from 'ng-angular-popup';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../../services/token-storage.service';
-import { AdminStatsDTO } from "../../../../api-client/model/adminStatsDTO";
-import { RecentActivityDTO } from 'src/app/api-client/model/recentActivityDTO';
-import { AdminAnalyticsDTO } from 'src/app/api-client/model/adminAnalyticsDTO';
-import { GeographicStatsDTO } from 'src/app/api-client/model/geographicStatsDTO';
-import { LearnHubStatsDTO } from 'src/app/api-client/model/learnHubStatsDTO';
-import { MonthlyRevenueDTO } from 'src/app/api-client/model/monthlyRevenueDTO';
-import { QuizPerformanceDTO } from 'src/app/api-client/model/quizPerformanceDTO';
-import { LearnHubPerformanceDTO } from 'src/app/api-client/model/learnHubPerformanceDTO';
-import { UserGrowthDTO } from 'src/app/api-client/model/userGrowthDTO';
-import { QuizStatsDTO } from 'src/app/api-client/model/quizStatsDTO';
-import { SubscriptionStatsDTO } from 'src/app/api-client/model/subscriptionStatsDTO';
-import { UserRegistrationStatsDTO } from 'src/app/api-client/model/userRegistrationStatsDTO';
+import {
+  AdminAnalyticsDTO, AdminDashboardService, AdminStatsDTO, GeographicStatsDTO,
+  LearnHubPerformanceDTO, LearnHubStatsDTO,
+  MonthlyRevenueDTO,
+  QuizPerformanceDTO, QuizStatsDTO, RecentActivityDTO,
+  SubscriptionStatsDTO,
+  SupervisorApplicationDTO, SupervisorApprovalDTO, SupervisorService,
+  UserGrowthDTO,
+  UserRegistrationStatsDTO
+} from 'src/app/api-client';
 
 @Component({
   selector: 'app-panel',
@@ -81,6 +78,10 @@ export class PanelComponent implements OnInit, OnDestroy {
   // Të dhëna për shëndetin e sistemit
   systemHealth: { [key: string]: any } = {};
 
+  // Të dhëna për aplikimet e supervisorit
+  supervisorApplications: SupervisorApplicationDTO[] = [];
+  isLoadingSupervisorApplications = true;
+
   // Gjendjet e ngarkimit
   isLoadingStats = true;
   isLoadingActivities = true;
@@ -98,6 +99,7 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   constructor(
     private adminDashboardService: AdminDashboardService,
+    private supervisorService: SupervisorService,
     private toast: NgToastService,
     private router: Router,
     private tokenStorageService: TokenStorageService
@@ -155,6 +157,7 @@ export class PanelComponent implements OnInit, OnDestroy {
     this.loadSubscriptionStats();
     this.loadRegistrationStats();
     this.loadSystemHealth();
+    this.loadSupervisorApplications();
   }
 
   // Metodo per fermare tutte le chiamate API
@@ -616,5 +619,78 @@ export class PanelComponent implements OnInit, OnDestroy {
              value.toLowerCase().includes('aktiv');
     }
     return false;
+  }
+
+  // Metodi per la gestione delle applicazioni supervisor
+  loadSupervisorApplications(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
+    this.isLoadingSupervisorApplications = true;
+
+    // Chiamata al nuovo endpoint per ottenere le applicazioni pendenti
+    this.supervisorService.apiSupervisorApplicationsGet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: SupervisorApplicationDTO[]) => {
+          if (!this.isComponentActive) return;
+          this.supervisorApplications = response;
+          this.isLoadingSupervisorApplications = false;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          console.error('Error loading supervisor applications:', error);
+          this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë ngarkimit të aplikimeve', 'Gabim', 3000);
+          this.supervisorApplications = [];
+          this.isLoadingSupervisorApplications = false;
+        }
+      });
+  }
+
+  approveSupervisorApplication(application: any): void {
+    // Assuming the backend returns applications with an ID field
+    const applicationId = application.supervisorId || application.supervisorId;
+
+    const approvalData: SupervisorApprovalDTO = {
+      supervisorId: applicationId,
+      isApproved: true
+    };
+
+    this.supervisorService.apiSupervisorApprovePost(approvalData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.toast.success('Aplikimi i supervisorit u pranua me sukses', 'Sukses', 3000);
+          this.loadSupervisorApplications();
+        },
+        error: (error) => {
+          console.error('Error approving supervisor application:', error);
+          this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë pranimit të aplikimit', 'Gabim', 3000);
+        }
+      });
+  }
+
+  rejectSupervisorApplication(application: any, rejectionReason: string = 'Refuzuar nga administratori'): void {
+    // Assuming the backend returns applications with an ID field
+    const applicationId = application.supervisorId || application.supervisorId;
+
+    const approvalData: SupervisorApprovalDTO = {
+      supervisorId: applicationId,
+      isApproved: false,
+      rejectionReason: rejectionReason
+    };
+
+    this.supervisorService.apiSupervisorApprovePost(approvalData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.toast.success('Aplikimi i supervisorit u refuzua me sukses', 'Sukses', 3000);
+          this.loadSupervisorApplications();
+        },
+        error: (error) => {
+          console.error('Error rejecting supervisor application:', error);
+          this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë refuzimit të aplikimit', 'Gabim', 3000);
+        }
+      });
   }
 }

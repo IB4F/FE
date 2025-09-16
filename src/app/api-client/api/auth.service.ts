@@ -105,7 +105,7 @@ export class AuthService extends BaseService {
     }
 
     /**
-     * Change Password for Authenticated User
+     * Change password for authenticated user
      * @param changePasswordDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -526,6 +526,7 @@ export class AuthService extends BaseService {
     }
 
     /**
+     * Initiate family registration (subscription-first flow)
      * @param familyRegistrationDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -590,6 +591,7 @@ export class AuthService extends BaseService {
     }
 
     /**
+     * Initiate school registration (subscription-first flow)
      * @param schoolRegistrationDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -654,6 +656,7 @@ export class AuthService extends BaseService {
     }
 
     /**
+     * Initiate student registration (subscription-first flow)
      * @param studentRegistrationDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
