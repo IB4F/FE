@@ -65,6 +65,12 @@ export const routes: Routes = [
       .then(m => m.PaymentCancelComponent),
   },
   {
+    path: 'subscription-packages',
+    title: 'Zgjidh Paketën e Subscriptionit',
+    loadComponent: () => import('./modules/components/subscription/supervisor-subscription-packages/supervisor-subscription-packages.component')
+      .then(m => m.SupervisorSubscriptionPackagesComponent),
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

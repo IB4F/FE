@@ -52,6 +52,7 @@ export * from './subscriptionStatsDTO';
 export * from './subscriptionStatus';
 export * from './supervisorApplicationDTO';
 export * from './supervisorApprovalDTO';
+export * from './supervisorSubscriptionRequestDTO';
 export * from './user';
 export * from './userGrowthDTO';
 export * from './userRegistrationStatsDTO';
