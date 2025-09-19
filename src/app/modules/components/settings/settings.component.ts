@@ -82,6 +82,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       role: [''],
       birthday: [null],
       school: [''],
+      phoneNumber: ['', this.phoneValidator],
     });
 
     this.changePasswordFormGroup = this.formBuilder.group({
@@ -95,6 +96,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(user => {
       if (user) {
+        // Convert E164 phone number back to phone object format for the component
+        let phoneNumberValue = null;
+        if (user.phoneNumber) {
+          phoneNumberValue = {
+            countryCode: this.getCountryCodeFromE164(user.phoneNumber),
+            number: this.getNumberFromE164(user.phoneNumber),
+            e164Number: user.phoneNumber
+          };
+        }
+        
         this.profileFormGroup.patchValue({
           email: user.email,
           firstName: user.firstName,
@@ -102,7 +113,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
           currentClass: user.currentClass,
           role: user.role,
           birthday: user.dateOfBirth,
-          school: user.school
+          school: user.school,
+          phoneNumber: phoneNumberValue
         });
         this.fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
       }
@@ -145,10 +157,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
         if (!userId) {
           return;
         }
+        
+        const formValue = this.profileFormGroup.value;
+        
+        // Extract phone number in E164 format
+        const phoneValue = formValue.phoneNumber;
+        const phoneNumber = phoneValue?.e164Number || phoneValue;
+        
         const userDetail: User = {
           ...user,
-          ...this.profileFormGroup.value
+          ...formValue,
+          phoneNumber: phoneNumber
         };
+        
         this._authService.apiAuthIdPut(userId, userDetail).subscribe({
             next: () => {
               this.userService.loadUserData(true).subscribe();
@@ -159,6 +180,62 @@ export class SettingsComponent implements OnInit, OnDestroy {
         );
       })
     }
+  }
+
+  // Custom validator for phone numbers
+  phoneValidator(control: any) {
+    if (!control.value) {
+      return null;
+    }
+    
+    // Check if the phone number object has a valid format
+    if (control.value && control.value.e164Number) {
+      const phoneNumber = control.value.e164Number;
+      // Check if it's a valid international number (at least 10 digits after country code)
+      if (phoneNumber.length >= 10) {
+        return null; // Valid
+      }
+    }
+    
+    return { invalidPhone: true };
+  }
+
+  // Helper method to extract country code from E164 number
+  private getCountryCodeFromE164(e164Number: string): string {
+    const countryCodeMap: { [key: string]: string } = {
+      '+355': 'al',
+      '+39': 'it',
+      '+49': 'de',
+      '+33': 'fr',
+      '+44': 'uk'
+    };
+    
+    for (const [code, country] of Object.entries(countryCodeMap)) {
+      if (e164Number.startsWith(code)) {
+        return country;
+      }
+    }
+    
+    return 'al'; // Default to Albania
+  }
+
+  // Helper method to extract number from E164 format
+  private getNumberFromE164(e164Number: string): string {
+    const countryCodeMap: { [key: string]: string } = {
+      '+355': 'al',
+      '+39': 'it',
+      '+49': 'de',
+      '+33': 'fr',
+      '+44': 'uk'
+    };
+    
+    for (const [code, country] of Object.entries(countryCodeMap)) {
+      if (e164Number.startsWith(code)) {
+        return e164Number.substring(code.length);
+      }
+    }
+    
+    return e164Number; // Return as-is if no match found
   }
 
 }

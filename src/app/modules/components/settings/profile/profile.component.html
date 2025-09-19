@@ -33,6 +33,15 @@
       <input matInput placeholder="Email" formControlName="email">
     </mat-form-field>
     <mat-form-field appearance="outline">
+      <app-phone-input
+        formControlName="phoneNumber"
+        placeholder="Numri i telefonit">
+      </app-phone-input>
+      <mat-error *ngIf="profileFormGroup.get('phoneNumber')?.hasError('invalidPhone')">
+        Numri i telefonit nuk është i vlefshëm
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Shkolla</mat-label>
       <input matInput placeholder="Shkolla" formControlName="school">
     </mat-form-field>

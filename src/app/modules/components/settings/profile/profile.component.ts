@@ -10,6 +10,7 @@ import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {Class} from "../../../../api-client";
 import {UserRole} from "../../../shared/constant/enums";
+import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +24,8 @@ import {UserRole} from "../../../shared/constant/enums";
     MatIconModule,
     MatButtonModule,
     MatOption,
-    MatSelect
+    MatSelect,
+    PhoneInputComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -43,5 +45,23 @@ export class ProfileComponent {
 
   showClassField(): boolean {
     return this.userRole !== UserRole.ADMIN;
+  }
+
+  // Custom validator for phone numbers
+  phoneValidator(control: any) {
+    if (!control.value) {
+      return null;
+    }
+    
+    // Check if the phone number object has a valid format
+    if (control.value && control.value.e164Number) {
+      const phoneNumber = control.value.e164Number;
+      // Check if it's a valid international number (at least 10 digits after country code)
+      if (phoneNumber.length >= 10) {
+        return null; // Valid
+      }
+    }
+    
+    return { invalidPhone: true };
   }
 }

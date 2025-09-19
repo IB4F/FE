@@ -123,10 +123,15 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Numri i telefonit</mat-label>
-            <input matInput formControlName="phoneNumber">
+            <app-phone-input
+              formControlName="phoneNumber"
+              placeholder="">
+            </app-phone-input>
             <mat-error *ngIf="registerFamilyForm.get('phoneNumber')?.hasError('required')">
               Fushë e detyrueshme
+            </mat-error>
+            <mat-error *ngIf="registerFamilyForm.get('phoneNumber')?.hasError('invalidPhone')">
+              Numri i telefonit nuk është i vlefshëm
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">

@@ -59,10 +59,15 @@
 
         <div class="field-container">
           <mat-form-field appearance="outline">
-            <mat-label>Telefoni i Personit të Kontaktit</mat-label>
-            <input matInput placeholder="Nr. Telefonit" formControlName="contactPersonPhone" required>
+            <app-phone-input
+              formControlName="contactPersonPhone"
+              placeholder="">
+            </app-phone-input>
             <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('required')">
               Fushë e detyrueshme
+            </mat-error>
+            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('invalidPhone')">
+              Numri i telefonit nuk është i vlefshëm
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">

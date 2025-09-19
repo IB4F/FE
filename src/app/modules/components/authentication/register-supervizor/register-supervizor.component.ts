@@ -14,6 +14,7 @@ import {NgToastService} from "ng-angular-popup";
 import {City, DetailsService, SupervisorApplicationDTO, SupervisorService} from "../../../../api-client";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
+import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
 
 @Component({
   selector: 'app-register-supervizor',
@@ -30,7 +31,8 @@ import {MatSelect} from "@angular/material/select";
     MatTooltipModule,
     RouterLink,
     MatOption,
-    MatSelect
+    MatSelect,
+    PhoneInputComponent
   ],
   templateUrl: './register-supervizor.component.html',
   styleUrl: './register-supervizor.component.scss'
@@ -59,11 +61,29 @@ export class RegisterSupervizorComponent implements OnInit {
       contactPersonFirstName: ['', Validators.required],
       contactPersonLastName: ['', Validators.required],
       contactPersonEmail: ['', [Validators.required, Validators.email]],
-      contactPersonPhone: ['', [Validators.required]],
+      contactPersonPhone: ['', [Validators.required, this.phoneValidator]],
       city: ['', Validators.required],
       address: ['', Validators.required],
       additionalInfo: ['']
     });
+  }
+
+  // Custom validator for phone numbers
+  phoneValidator(control: any) {
+    if (!control.value) {
+      return null;
+    }
+    
+    // Check if the phone number object has a valid format
+    if (control.value && control.value.e164Number) {
+      const phoneNumber = control.value.e164Number;
+      // Check if it's a valid international number (at least 10 digits after country code)
+      if (phoneNumber.length >= 10) {
+        return null; // Valid
+      }
+    }
+    
+    return { invalidPhone: true };
   }
 
   isRegisterFormValid(): boolean {
@@ -81,9 +101,17 @@ export class RegisterSupervizorComponent implements OnInit {
   }
 
   submitRequest() {
+    const formValue = this.registerSupervizorFormGroup.value;
+    
+    // Extract phone number in E164 format
+    const phoneValue = formValue.contactPersonPhone;
+    const phoneNumber = phoneValue?.e164Number || phoneValue;
+    
     const applicationData: SupervisorApplicationDTO = {
-      ...this.registerSupervizorFormGroup.value
+      ...formValue,
+      contactPersonPhone: phoneNumber
     };
+    
     this._supervisorService.apiSupervisorApplyPost(applicationData).subscribe({
       next: (resp) => {
         this.toast.success(resp?.message || 'Aplikimi u dërgua me sukses. Do të kontaktoheni së shpejti.', 'SUCCESS', 3000);

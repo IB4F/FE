@@ -24,6 +24,7 @@ import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
+import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
 
 @Component({
   selector: 'app-register-family',
@@ -38,7 +39,8 @@ import {SubscriptionErrorHandlerService} from "../../../../services/subscription
     MatProgressSpinnerModule,
     MatTooltip,
     MatOption,
-    MatSelect
+    MatSelect,
+    PhoneInputComponent
   ],
   templateUrl: './register-family.component.html',
   styleUrl: './register-family.component.scss'
@@ -85,7 +87,7 @@ export class RegisterFamilyComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, this.phoneValidator]],
       password: ['', [Validators.required, passwordValidator]],
       familyMembers: this._formBuilder.array([])
     });
@@ -132,6 +134,24 @@ export class RegisterFamilyComponent implements OnInit {
 
   proceedToPayment() {
     this.currentStep = 'payment';
+  }
+
+  // Custom validator for phone numbers
+  phoneValidator(control: any) {
+    if (!control.value) {
+      return null;
+    }
+    
+    // Check if the phone number object has a valid format
+    if (control.value && control.value.e164Number) {
+      const phoneNumber = control.value.e164Number;
+      // Check if it's a valid international number (at least 10 digits after country code)
+      if (phoneNumber.length >= 10) {
+        return null; // Valid
+      }
+    }
+    
+    return { invalidPhone: true };
   }
 
   goBackToMemberCountAndPackage() {
@@ -208,8 +228,13 @@ export class RegisterFamilyComponent implements OnInit {
       return;
     }
 
+    // Extract phone number in E164 format
+    const phoneValue = registerForm.phoneNumber;
+    const phoneNumber = phoneValue?.e164Number || phoneValue;
+
     const familyRegistrationDTO: FamilyRegistrationDTO = {
       ...registerForm,
+      phoneNumber: phoneNumber,
       subscriptionPackageId: this.selectedPackage?.id,
     }
 

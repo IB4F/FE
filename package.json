@@ -28,8 +28,11 @@
     "bootstrap": "^5.3.5",
     "canvas-confetti": "^1.9.3",
     "express": "^4.18.2",
+    "google-libphonenumber": "^3.2.43",
+    "intl-tel-input": "^19.5.7",
     "localstorage-polyfill": "^1.0.1",
     "ng-angular-popup": "^0.6.6",
+    "ngx-intl-tel-input": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
