@@ -7,14 +7,14 @@
       <div class="register-panel">
         <form [formGroup]="registerFormGroup">
           <div class="field-container">
-            <mat-form-field appearance="outline" style="width: 48%;">
+            <mat-form-field appearance="outline" class="field-half">
               <mat-label>Emri</mat-label>
               <input matInput placeholder="Emri" formControlName="firstName" required>
               <mat-error *ngIf="registerFormGroup.get('firstName')?.hasError('required')">
                 Fushë e detyrueshme
               </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline" style="width: 48%;">
+            <mat-form-field appearance="outline" class="field-half">
               <mat-label>Mbiemri</mat-label>
               <input matInput placeholder="Mbiemri" formControlName="lastName" required>
               <mat-error *ngIf="registerFormGroup.get('lastName')?.hasError('required')">
@@ -22,7 +22,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-form-field appearance="outline" class="field-full">
             <mat-label>Email</mat-label>
             <input matInput placeholder="Email" formControlName="email" required>
             <mat-error *ngIf="registerFormGroup.get('email')?.hasError('required')">
@@ -30,7 +30,7 @@
             </mat-error>
           </mat-form-field>
           <div class="field-container">
-            <mat-form-field appearance="outline" style="width: 48%;">
+            <mat-form-field appearance="outline" class="field-half">
               <mat-label>Ditëlindja</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
               <mat-hint>MM/DD/YYYY</mat-hint>
@@ -40,7 +40,7 @@
                 Fushë e detyrueshme
               </mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline" style="width: 48%;">
+            <mat-form-field appearance="outline" class="field-half">
               <mat-label>Shkolla</mat-label>
               <input matInput placeholder="Shkolla" formControlName="school" required>
               <mat-error *ngIf="registerFormGroup.get('school')?.hasError('required')">
@@ -48,7 +48,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-form-field appearance="outline" class="field-full">
             <mat-label>Klasa aktuale</mat-label>
             <mat-select placeholder="Klasa aktuale" formControlName="currentClass" required>
               <mat-option *ngFor="let class of classesList" [value]="class.id">
@@ -59,7 +59,7 @@
               Fushë e detyrueshme
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-form-field appearance="outline" class="field-full">
             <mat-label>Password</mat-label>
             <input matInput placeholder="Password" formControlName="password"
                    [type]="hidePass ? 'password' : 'text'" required>
