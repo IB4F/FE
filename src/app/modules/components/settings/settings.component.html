@@ -11,7 +11,8 @@
       <span>Ndrysho Passwordin</span>
     </button>
     <button class="nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
-            (click)="selectTab(ProfileTabs.SubscriptionDashboard)">
+            (click)="selectTab(ProfileTabs.SubscriptionDashboard)"
+            *ngIf="canAccessSubscriptionDashboard$ | async">
       <mat-icon>subscription</mat-icon>
       <span>Abonimi Im</span>
     </button>
@@ -34,7 +35,7 @@
       </app-change-password>
     </ng-container>
 
-    <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard">
+    <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard && (canAccessSubscriptionDashboard$ | async)">
       <app-subscription-dashboard></app-subscription-dashboard>
     </ng-container>
   </div>

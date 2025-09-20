@@ -10,10 +10,9 @@ import {ProfileTabs, UserRole} from "../../shared/constant/enums";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {SubscriptionDashboardComponent} from "./subscription-dashboard/subscription-dashboard.component";
-import {AuthService, Class, DetailsService, User} from "../../../api-client";
+import {AuthService, ChangePasswordDTO, Class, DetailsService, User} from "../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../services/token-storage.service";
-import {ChangePasswordDTO} from "../../../api-client/model/changePasswordDTO";
 
 @Component({
   selector: 'app-settings',
@@ -51,6 +50,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   classesList: Class[] = [];
   userRole: string | null = null;
+  canAccessSubscriptionDashboard$ = this.user$.pipe(
+    map(user => {
+      if (!user || !user.email) return false;
+      const userEmailDomain = user.email.split('@')[1];
+      // Allow subscription dashboard access for all domains except @bga.al
+      return userEmailDomain !== 'bga.al';
+    })
+  );
 
   constructor(
     private formBuilder: FormBuilder,
@@ -105,7 +112,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             e164Number: user.phoneNumber
           };
         }
-        
+
         this.profileFormGroup.patchValue({
           email: user.email,
           firstName: user.firstName,
@@ -129,7 +136,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   selectTab(tab: ProfileTabs) {
-    this.selectedTab = tab;
+    // Prevent access to subscription dashboard for @bga.al domain users
+    if (tab === ProfileTabs.SubscriptionDashboard) {
+      this.user$.pipe(take(1)).subscribe(user => {
+        if (!user || !user.email) return;
+        const userEmailDomain = user.email.split('@')[1];
+        if (userEmailDomain === 'bga.al') {
+          this.toast.info('Kjo funksionalitet nuk është i disponueshëm për llogaritë e brendshme.', 'INFO', 3000);
+          return;
+        }
+        this.selectedTab = tab;
+      });
+    } else {
+      this.selectedTab = tab;
+    }
   }
 
   onChangePassword(passwords: ChangePasswordDTO) {
@@ -157,19 +177,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
         if (!userId) {
           return;
         }
-        
+
         const formValue = this.profileFormGroup.value;
-        
+
         // Extract phone number in E164 format
         const phoneValue = formValue.phoneNumber;
         const phoneNumber = phoneValue?.e164Number || phoneValue;
-        
+
         const userDetail: User = {
           ...user,
           ...formValue,
           phoneNumber: phoneNumber
         };
-        
+
         this._authService.apiAuthIdPut(userId, userDetail).subscribe({
             next: () => {
               this.userService.loadUserData(true).subscribe();
@@ -187,7 +207,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (!control.value) {
       return null;
     }
-    
+
     // Check if the phone number object has a valid format
     if (control.value && control.value.e164Number) {
       const phoneNumber = control.value.e164Number;
@@ -196,7 +216,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         return null; // Valid
       }
     }
-    
+
     return { invalidPhone: true };
   }
 
@@ -209,13 +229,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
       '+33': 'fr',
       '+44': 'uk'
     };
-    
+
     for (const [code, country] of Object.entries(countryCodeMap)) {
       if (e164Number.startsWith(code)) {
         return country;
       }
     }
-    
+
     return 'al'; // Default to Albania
   }
 
@@ -228,13 +248,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
       '+33': 'fr',
       '+44': 'uk'
     };
-    
+
     for (const [code, country] of Object.entries(countryCodeMap)) {
       if (e164Number.startsWith(code)) {
         return e164Number.substring(code.length);
       }
     }
-    
+
     return e164Number; // Return as-is if no match found
   }
 

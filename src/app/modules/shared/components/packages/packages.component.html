@@ -1,10 +1,33 @@
 <div class="container">
-  <form [formGroup]="packegeForm">
-    <mat-radio-group formControlName="billingCycle" class="billing-switcher">
-      <mat-radio-button value="annual" class="radio-option">Vjetore</mat-radio-button>
-      <mat-radio-button value="monthly" class="radio-option">Mujore</mat-radio-button>
-    </mat-radio-group>
-  </form>
+  <div class="header-section">
+    <h1 class="main-title">Zgjidhni Paketën Tuaj</h1>
+    <p class="subtitle">Përzgjidhni paketën që u përshtatet më së miri nevojave tuaja mësimore</p>
+    
+    <form [formGroup]="packegeForm">
+      <div class="billing-switch-container">
+        <span class="switch-label" [class.active]="packegeForm.value.billingCycle === 'monthly'">
+          <mat-icon>calendar_view_month</mat-icon>
+          Mujore
+        </span>
+        <div class="switch-wrapper">
+          <input 
+            type="checkbox" 
+            id="billing-switch" 
+            class="switch-input"
+            [checked]="packegeForm.value.billingCycle === 'annual'"
+            (change)="onSwitchChange($event)"
+          />
+          <label for="billing-switch" class="switch-label-element">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <span class="switch-label" [class.active]="packegeForm.value.billingCycle === 'annual'">
+          <mat-icon>calendar_view_year</mat-icon>
+          Vjetore
+        </span>
+      </div>
+    </form>
+  </div>
 
   <div class="cards-container">
     <div class="card"
@@ -15,24 +38,45 @@
            'best-value': card.isBestValue
          }"
          (click)="selectCard(card)">
-      <div *ngIf="card.isBestValue" class="best-value-badge">Zgjedhja Më e Mirë</div>
-      <img src="assets/svgImages/price.svg" alt="Etiketë Çmimi">
-      <h2>{{ card.title }}</h2>
-      <p *ngIf="card.maxUsers && card.maxUsers > 1" class="max-users-text">
-        <mat-icon>people</mat-icon>
-        Për {{ card.maxUsers }} persona
-      </p>
-      <ul class="card-content">
-        <li *ngFor="let feature of card.features" [class.disabled]="!feature.available">
-          <mat-icon *ngIf="feature.available" class="check-icon">check_circle</mat-icon>
-          <mat-icon *ngIf="!feature.available" class="cancel-icon">cancel</mat-icon>
-          {{ feature.text }}
-        </li>
-      </ul>
-      <p class="price">{{ card.priceDisplay }}</p>
-      <button class="select-button" [class.selected-button]="selectedCard === card">
-        {{ selectedCard === card ? 'Përzgjedhur' : 'Përzgjidh' }}
-      </button>
+      
+      <div *ngIf="card.isBestValue" class="best-value-badge">
+        <mat-icon>star</mat-icon>
+        Zgjedhja Më e Mirë
+      </div>
+      
+      <div class="card-header">
+        <div class="card-icon" [ngClass]="{
+          'basic-icon': card.title === 'Bazë',
+          'standard-icon': card.title === 'Standarde',
+          'premium-icon': card.title === 'Premium'
+        }">
+          <mat-icon *ngIf="card.title === 'Bazë'">rocket_launch</mat-icon>
+          <mat-icon *ngIf="card.title === 'Standarde'">star</mat-icon>
+          <mat-icon *ngIf="card.title === 'Premium'">diamond</mat-icon>
+          <mat-icon *ngIf="card.title !== 'Bazë' && card.title !== 'Standarde' && card.title !== 'Premium'">school</mat-icon>
+        </div>
+        <h2 class="card-title">{{ card.title }}</h2>
+        <div *ngIf="card.maxUsers && card.maxUsers > 1" class="max-users-text">
+          <mat-icon>people</mat-icon>
+          <span>Për {{ card.maxUsers }} persona</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <p class="card-description">{{ card.description }}</p>
+      </div>
+
+      <div class="card-footer">
+        <div class="price-section">
+          <span class="price">{{ card.priceDisplay }}</span>
+        </div>
+        <button class="select-button" [class.selected-button]="selectedCard === card">
+          <span *ngIf="selectedCard === card" class="button-icon">
+            <mat-icon>check</mat-icon>
+          </span>
+          {{ selectedCard === card ? 'Përzgjedhur' : 'Përzgjidh' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -1,278 +1,592 @@
-// Variablat
-$primaryBlue: #259ccb;
-$darkBlue: #0a4670;
-$lightBlueBackground: #e0f2f7; // Light background for switcher/selected state
-$grayText: #555;
-$disabledGray: #999;
-$successGreen: #4CAF50;
-$errorRed: #F44336;
-$shadowLight: rgba(0, 0, 0, 0.08);
-$shadowMedium: rgba(0, 0, 0, 0.15);
-$gradientStart: #31bff3;
-$gradientEnd: #259ccb;
+// Modern Design System Variables - Sophisticated Teal Palette
+$primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+$secondary-gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+$accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+$success-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+$premium-gradient: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
 
-// Kontejneri kryesor
+$primary-color: #0ea5e9;
+$primary-dark: #0284c7;
+$primary-light: #38bdf8;
+
+$secondary-color: #10b981;
+$accent-color: #f59e0b;
+$premium-color: #8b5cf6;
+
+$text-primary: #2d3748;
+$text-secondary: #718096;
+$text-light: #a0aec0;
+
+$background-light: #f7fafc;
+$background-white: #ffffff;
+$background-card: #ffffff;
+
+$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+$border-radius-sm: 0.375rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+$border-radius-2xl: 1.5rem;
+
+$transition-fast: 0.15s ease-in-out;
+$transition-normal: 0.3s ease-in-out;
+$transition-slow: 0.5s ease-in-out;
+
+// Main Container
 .container {
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
+  min-height: auto;
   padding: 2rem 1rem;
-  font-family: 'Roboto', sans-serif; // Duke supozuar se Roboto është i disponueshëm
+  background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 50%, #fefce8 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-// Grida e kartave
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem; // Aumentato lo spazio tra le card
-  width: 100%;
-  max-width: 1200px;
-}
-
-// Stili bazë i kartës
-.card {
-  position: relative;
-  width: 280px; // Karta më të vogla në desktop
-  background: white;
-  border-radius: 1rem; // Qoshe më të rrumbullakosura
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 20px $shadowLight; // Hije më e butë, më e madhe
-  border: 2px solid transparent; // Kufi i tejdukshëm parazgjedhur
-  transition: all 0.4s ease-in-out;
-  cursor: pointer;
+// Header Section
+.header-section {
   text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+}
+
+.main-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  background: $primary-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: $text-secondary;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+// Beautiful Switch Toggle
+.billing-switch-container {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between; // Shpërndan përmbajtjen
   align-items: center;
-
-  // Përmbajtja e brendshme
-  img {
-    width: 50px; // Ikonë pak më e madhe
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.6rem; // Titull pak më i vogël
-    color: $darkBlue;
-    margin: 0.5rem 0 1rem;
-    font-weight: 700;
-  }
-
-  .max-users-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    color: $darkBlue;
-    font-weight: 600;
-    margin-top: -0.5rem;
-    margin-bottom: 1.5rem;
-
-    mat-icon {
-      margin-right: 0.5rem;
-      color: $primaryBlue;
-      font-size: 1.2rem;
-    }
-  }
-
-  .price {
-    font-size: 2rem; // Çmim pak më i vogël
-    font-weight: 800;
-    color: $primaryBlue;
-    margin: 1.5rem 0;
-    span {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: $grayText;
-    }
-  }
-}
-
-// Lista e veçorive
-.card-content {
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0;
-  text-align: left;
-  width: 100%; // Siguron që lista të zërë gjerësinë e plotë për rreshtim
-
-  li {
-    display: flex;
-    align-items: center;
-    font-size: 0.95rem; // Madhësia e shkronjave e veçorive pak më e vogël
-    margin-bottom: 0.8rem;
-    padding: 0.25rem 0;
-    color: $grayText; // Ngjyra parazgjedhur e veçorive
-  }
-
-  .disabled {
-    color: $disabledGray;
-    text-decoration: line-through; // Trego veçoritë e çaktivizuara
-    opacity: 0.7;
-  }
-}
-
-// Ikonat
-.check-icon {
-  color: $successGreen;
-  margin-right: 0.7rem;
-  font-size: 1.3rem; // Ikona pak më të mëdha
-}
-
-.cancel-icon {
-  color: $errorRed;
-  margin-right: 0.7rem;
-  font-size: 1.3rem;
-}
-
-// Gjendjet ndërvepruese
-.card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 12px 25px $shadowMedium;
-  border-color: $primaryBlue; // Kufiri në hover
-}
-
-.selected {
-  border: 3px solid $primaryBlue; // Kufi më i trashë për të përzgjedhurin
-  background: $lightBlueBackground; // Sfond i kaltër i lehtë për të përzgjedhurin
-  transform: scale(1.05); // Shkallë më e theksuar
-  box-shadow: 0 15px 30px $shadowMedium; // Hije më e fortë
-
-  .price {
-    color: $darkBlue; // Çmim më i errët për të përzgjedhurin
-  }
-}
-
-.non-selected {
-  opacity: 0.6; // Zbehje më delikate për jo-përzgjedhurin
-  transform: scale(0.97); // Shkallë pak më e vogël
-}
-
-// Badge "Zgjedhja Më e Mirë"
-.best-value {
-  border-color: #FFD700; // Kufi si ari
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3); // Hije si ari
-  transform: scale(1.07); // Edhe më e theksuar për vlerën më të mirë
-
-  .best-value-badge {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(45deg, #FFD700, #FFA500); // Gradient ari
-    color: white;
-    padding: 0.4rem 1.2rem;
-    border-radius: 2rem;
-    font-size: 0.9rem;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-  }
-}
-
-// Ndërrimi i ciklit të faturimit
-.billing-switcher {
-  display: flex;
   justify-content: center;
-  gap: 2.5rem; // Më shumë hapësirë midis opsioneve
-  margin: 2rem 0 4rem; // Aumentato il margine inferiore per più spazio
-  padding: 1rem 2rem;
-  background: $lightBlueBackground;
-  border-radius: 2rem; // Formë më e rrumbullakosur
-  box-shadow: 0 2px 10px $shadowLight;
-
-  .mat-radio-button {
-    .mat-radio-label-content {
-      padding-left: 0.7rem;
-      color: $darkBlue;
-      font-weight: 600; // Tekst më i theksuar
-      font-size: 1.1rem;
-    }
-
-    .mat-radio-outer-circle {
-      border-color: $primaryBlue;
-      border-width: 2px; // Kufi më i trashë
-    }
-
-    .mat-radio-checked .mat-radio-inner-circle {
-      background: $primaryBlue;
-    }
-
-    // Ngjyra e efektit të valëzimit
-    ::ng-deep .mat-radio-ripple .mat-ripple-element {
-      background-color: rgba($primaryBlue, 0.2);
-    }
-  }
-}
-
-// Butoni i zgjedhjes
-.select-button {
-  background: $primaryBlue;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 1.5rem;
-  width: 100%; // Buton me gjerësi të plotë
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: $border-radius-2xl;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all $transition-normal;
+  max-width: 400px;
+  margin: 0 auto;
 
   &:hover {
-    background: darken($primaryBlue, 10%);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
+  }
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: $text-secondary;
+  transition: all $transition-normal;
+  padding: 0.4rem 0.8rem;
+  border-radius: $border-radius-lg;
+  white-space: nowrap;
+  min-width: auto;
+
+  mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    transition: all $transition-normal;
+  }
+
+  &.active {
+    color: $primary-color;
+    background: rgba(14, 165, 233, 0.1);
+    
+    mat-icon {
+      color: $primary-color;
+    }
+  }
+}
+
+.switch-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.switch-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-label-element {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.switch-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #e2e8f0;
+  border-radius: 32px;
+  transition: all $transition-normal;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: all $transition-normal;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.switch-input:checked + .switch-label-element .switch-slider {
+  background: $primary-gradient;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+
+  &::before {
+    transform: translateX(28px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.switch-input:focus + .switch-label-element .switch-slider {
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+// Cards Container
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  align-items: start;
+}
+
+// Card Styles
+.card {
+  position: relative;
+  background: $background-card;
+  border-radius: $border-radius-2xl;
+  padding: 2rem;
+  box-shadow: $shadow-lg;
+  border: 2px solid transparent;
+  transition: all $transition-normal;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 420px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: $primary-gradient;
+    opacity: 0;
+    transition: opacity $transition-normal;
+  }
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: $shadow-xl;
+    border-color: rgba($primary-color, 0.2);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &.selected {
+    border-color: $primary-color;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &.non-selected {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+
+  &.best-value {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(251, 191, 36, 0.03) 100%);
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.25);
+
+    &::before {
+      background: $accent-gradient;
+      opacity: 1;
+    }
+  }
+}
+
+// Best Value Badge
+.best-value-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: $accent-gradient;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0 $border-radius-2xl 0 $border-radius-xl;
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+  z-index: 10;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Card Header
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  background: $primary-gradient;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-md;
+  transition: all $transition-normal;
+
+  mat-icon {
+    color: white;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &.basic-icon {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+  }
+
+  &.standard-icon {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+  }
+
+  &.premium-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+  }
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.max-users-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 165, 233, 0.1);
+  color: $primary-color;
+  padding: 0.5rem 1rem;
+  border-radius: $border-radius-lg;
+  font-size: 0.875rem;
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Card Body
+.card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $text-secondary;
+  margin: 0;
+  text-align: center;
+}
+
+// Card Footer
+.card-footer {
+  margin-top: auto;
+}
+
+.price-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: $primary-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+// Select Button
+.select-button {
+  width: 100%;
+  background: $primary-gradient;
+  color: white;
+  border: none;
+  border-radius: $border-radius-xl;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: $shadow-md;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left $transition-slow;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   &.selected-button {
-    background: $darkBlue; // Blu më e errët kur përzgjidhet
+    background: $success-gradient;
     cursor: default;
+
     &:hover {
-      background: $darkBlue; // Pa ndryshim në hover nëse është tashmë i përzgjedhur
       transform: none;
+      box-shadow: $shadow-md;
+
+      &::before {
+        left: -100%;
+      }
+    }
+  }
+
+  .button-icon {
+    display: flex;
+    align-items: center;
+    
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 }
 
-// Responsive
-@media (max-width: 992px) {
-  .card {
-    width: 45%; // Dy karta për rresht në tablet
-    max-width: 350px;
-  }
-}
-
+// Responsive Design
 @media (max-width: 768px) {
-  .cards-container {
-    gap: 1.5rem; // Hapësirë më e vogël midis kartave
+  .container {
+    padding: 1rem 0.5rem;
   }
-  .card {
-    width: 90%; // Një kartë për rresht në celular
-    max-width: 400px;
+
+  .header-section {
+    margin-bottom: 2rem;
   }
-  .billing-switcher {
+
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .billing-switch-container {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    text-align: center;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .card {
+    height: auto;
+    min-height: 380px;
+    padding: 1.5rem;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+
+    mat-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+
+  .price {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+
   .card {
-    padding: 1.5rem 1rem;
+    padding: 1.25rem;
+    height: auto;
+    min-height: 360px;
   }
-  h2 {
-    font-size: 1.5rem;
-  }
-  .price {
-    font-size: 1.8rem;
-  }
-  .card-content li {
+
+  .card-description {
     font-size: 0.9rem;
+  }
+
+  .select-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Animation for card entrance
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: slideInUp 0.6s ease-out;
+  animation-fill-mode: both;
+
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+}
+
+// Focus states for accessibility
+.select-button:focus,
+.billing-switcher .mat-radio-button:focus .mat-radio-label-content {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid $text-primary;
+  }
+
+  .card-description {
+    color: $text-primary;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .select-button,
+  .billing-switcher {
+    transition: none;
+  }
+
+  .card {
+    animation: none;
+  }
+
+  .select-button::before {
+    display: none;
   }
 }

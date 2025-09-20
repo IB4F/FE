@@ -7,17 +7,12 @@ import {MembershipStudentService} from "../../../../services/membership-student.
 import {SubscriptionPackageService, FamilyPricingResponseDTO} from "../../../../api-client";
 import {BillingInterval} from "../../constant/enums";
 
-interface Feature {
-  text: string;
-  available: boolean;
-}
-
 interface Card {
   id: string;
   title: string;
+  description: string;
   price: number;
   priceDisplay: string;
-  features: Feature[];
   isBestValue?: boolean;
   maxUsers?: number;
 }
@@ -91,6 +86,14 @@ export class PackagesComponent implements OnChanges {
     this.membershipStudentService.setSelectedPackage(card);
   }
 
+  onSwitchChange(event: any) {
+    const isAnnual = event.target.checked;
+    const billingCycle = isAnnual ? 'annual' : 'monthly';
+    this.packegeForm.patchValue({ billingCycle });
+    this.selectedCard = null;
+    this.membershipStudentService.setSelectedPackage(null);
+  }
+
   private loadInfo() {
     this.getPaymentInfo();
   }
@@ -106,56 +109,65 @@ export class PackagesComponent implements OnChanges {
     // Clear existing cards
     this.cards = {annual: [], monthly: []};
 
-    // Define feature templates for each package type in Albanian
-    const featureTemplates: Record<string, Feature[]> = {
-      "Bazë": [
-        {text: '3 mësime video HD', available: true},
-        {text: '1 provim zyrtar', available: true},
-        {text: 'Kuize praktike', available: false},
-        {text: 'Mbështetje me email', available: false}
-      ],
-      "Standarde": [
-        {text: '10 mësime video HD', available: true},
-        {text: '3 provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje me email prioritare', available: true}
-      ],
-      "Premium": [
-        {text: 'Mësime video HD të pakufizuara', available: true},
-        {text: '5 provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje prioritare 24/7', available: true},
-        {text: 'Sesione me tutor personal', available: true}
-      ]
+    // Define unique descriptions for each package type in Albanian
+    const descriptions: Record<string, string> = {
+      // Exact matches
+      "Bazë": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
+      "Standarde": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
+      "Premium": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
+      
+      // Common API variations
+      "Student Basic": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
+      "Student Standard": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
+      "Student Premium": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
+      "Student Basic Yearly": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
+      "Student Standard Yearly": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
+      "Student Premium Yearly": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
+      "Student Basic Monthly": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
+      "Student Standard Monthly": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
+      "Student Premium Monthly": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive."
     };
 
     // Map API data to cards
     this.paymentInfo.forEach(item => {
-      // Get features for this package, with fallback to default features
+      // Get description for this package, with fallback to default description
       const packageName = item.name || '';
-      const features = featureTemplates[packageName] || [
-        {text: 'Mësime video HD', available: true},
-        {text: 'Provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje me email', available: true}
-      ];
+      
+      // Try to match package name with different possible formats
+      let description = descriptions[packageName];
+      
+      // If exact match not found, try partial matching
+      if (!description) {
+        if (packageName.toLowerCase().includes('basic') || packageName.toLowerCase().includes('bazë')) {
+          description = descriptions["Bazë"];
+        } else if (packageName.toLowerCase().includes('standard') || packageName.toLowerCase().includes('standarde')) {
+          description = descriptions["Standarde"];
+        } else if (packageName.toLowerCase().includes('premium')) {
+          description = descriptions["Premium"];
+        }
+      }
+      
+      // Final fallback
+      if (!description) {
+        description = "Paketa mësimore me përmbajtje cilësore dhe mbështetje të dedikuar për studentët.";
+      }
 
       // Create cards for both monthly and yearly billing intervals
       const monthlyCard: Card = {
         id: item.id,
         title: item.name || '',
+        description: description,
         price: (item.monthlyPrice || 0) / 100,
         priceDisplay: this.getPriceDisplay((item.monthlyPrice || 0) / 100, 'monthly'),
-        features: [...features],
         maxUsers: item.maxUsers
       };
 
       const yearlyCard: Card = {
         id: item.id,
         title: item.name || '',
+        description: description,
         price: (item.yearlyPrice || 0) / 100,
         priceDisplay: this.getPriceDisplay((item.yearlyPrice || 0) / 100, 'yearly'),
-        features: [...features],
         maxUsers: item.maxUsers
       };
 
@@ -202,55 +214,58 @@ export class PackagesComponent implements OnChanges {
     // Clear existing cards
     this.cards = {annual: [], monthly: []};
 
-    // Define feature templates for each package type in Albanian
-    const featureTemplates: Record<string, Feature[]> = {
-      "Bazë": [
-        {text: '3 mësime video HD', available: true},
-        {text: '1 provim zyrtar', available: true},
-        {text: 'Kuize praktike', available: false},
-        {text: 'Mbështetje me email', available: false}
-      ],
-      "Standarde": [
-        {text: '10 mësime video HD', available: true},
-        {text: '3 provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje me email prioritare', available: true}
-      ],
-      "Premium": [
-        {text: 'Mësime video HD të pakufizuara', available: true},
-        {text: '5 provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje prioritare 24/7', available: true},
-        {text: 'Sesione me tutor personal', available: true}
-      ]
+    // Define unique descriptions for each family package type in Albanian
+    const descriptions: Record<string, string> = {
+      // Exact matches
+      "Bazë": "Paketa familjare bazë për fillestarët. Përfshin mësime themelore të drejtës rrugore për të gjithë anëtarët e familjes, provime praktike dhe materiale mësimore bazë.",
+      "Standarde": "Paketa familjare më e zgjedhur. Oferon mësime të detajuara për të gjithë anëtarët, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e pyetjeve.",
+      "Premium": "Paketa familjare më e plotë. Përfshin të gjitha mësimet HD për të gjithë anëtarët, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive familjare.",
+      
+      // Family package variations
+      "Family Basic": "Paketa familjare bazë për fillestarët. Përfshin mësime themelore të drejtës rrugore për të gjithë anëtarët e familjes, provime praktike dhe materiale mësimore bazë.",
+      "Family Standard": "Paketa familjare më e zgjedhur. Oferon mësime të detajuara për të gjithë anëtarët, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e pyetjeve.",
+      "Family Premium": "Paketa familjare më e plotë. Përfshin të gjitha mësimet HD për të gjithë anëtarët, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive familjare."
     };
 
     // Map family pricing data to cards
     this.familyPricingData.forEach(pricing => {
       const packageName = pricing.name || '';
-      const features = featureTemplates[packageName] || [
-        {text: 'Mësime video HD', available: true},
-        {text: 'Provime zyrtare', available: true},
-        {text: 'Kuize praktike', available: true},
-        {text: 'Mbështetje me email', available: true}
-      ];
+      
+      // Try to match package name with different possible formats
+      let description = descriptions[packageName];
+      
+      // If exact match not found, try partial matching
+      if (!description) {
+        if (packageName.toLowerCase().includes('basic') || packageName.toLowerCase().includes('bazë')) {
+          description = descriptions["Bazë"];
+        } else if (packageName.toLowerCase().includes('standard') || packageName.toLowerCase().includes('standarde')) {
+          description = descriptions["Standarde"];
+        } else if (packageName.toLowerCase().includes('premium')) {
+          description = descriptions["Premium"];
+        }
+      }
+      
+      // Final fallback
+      if (!description) {
+        description = "Paketa familjare me përmbajtje cilësore dhe mbështetje të dedikuar për të gjithë anëtarët.";
+      }
 
       // Create cards for both monthly and yearly billing intervals
       const monthlyCard: Card = {
         id: pricing.packageId || '',
         title: pricing.name || '',
+        description: description,
         price: (pricing.totalPrice || 0) / 100,
         priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €/muaj`,
-        features: [...features],
         maxUsers: pricing.maxMembers
       };
 
       const yearlyCard: Card = {
         id: pricing.packageId || '',
         title: pricing.name || '',
+        description: description,
         price: (pricing.totalPrice || 0) / 100,
         priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €/vit`,
-        features: [...features],
         maxUsers: pricing.maxMembers
       };
 
