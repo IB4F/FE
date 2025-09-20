@@ -1,4 +1,4 @@
-/* Stili globali o variabili se usi un file separato per le variabili */
+/* Stili globali o variabili se usi un file separato per le variabili - Updated for mobile layout fix */
 $primary-blue: #259ccb;
 $light-blue-bg: #e0f7fa; // Questo era il colore delle step-card, lo manterrò per il banner se preferisci o posso cambiarlo
 $dark-text-blue: #0a4670;
@@ -21,20 +21,31 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
     align-items: center;
     background: linear-gradient(to right, #6dd5ed, $primary-blue);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    position: relative;
+    min-height: 200px;
 
     h1 {
       flex: 1;
       text-align: center;
       color: $white-text;
       font-size: 2.5em;
-      line-height: 1.2;
+      line-height: 1.3;
       margin-right: 20px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      white-space: normal;
+      font-weight: 600;
     }
 
     img {
       width: 300px;
       max-width: 40%;
       height: auto;
+      flex-shrink: 0;
+      object-fit: contain;
     }
   }
 
@@ -49,13 +60,20 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
       text-align: center;
       font-size: 2em;
       margin-bottom: 20px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      line-height: 1.4;
     }
 
     p {
       text-align: center;
-      margin: 0 100px;
       opacity: 0.85;
       max-width: 800px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      line-height: 1.6;
     }
   }
 }
@@ -94,25 +112,36 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
 
 // Media queries per la responsività
 
-@media (max-width: 992px) {
+/* Force column layout for mobile devices - CACHE BUSTER */
+@media screen and (max-width: 992px) {
   .container {
     padding: 80px 20px;
   }
 
-  .banner {
-    flex-direction: column;
+  .container .banner {
+    flex-direction: column !important;
     padding: 30px 40px;
+    min-height: 250px;
+    text-align: center;
 
     h1 {
-      width: 100%;
+      width: 100% !important;
       font-size: 2em;
       margin-bottom: 30px;
-      margin-right: 0;
+      margin-right: 0 !important;
+      line-height: 1.4;
+      font-weight: 600;
+      order: 1 !important;
+      flex: none !important;
     }
 
     img {
       width: 250px;
       max-width: 60%;
+      order: 2 !important;
+      margin-top: 20px;
+      margin-bottom: 0;
+      flex-shrink: 1 !important;
     }
   }
 
@@ -129,34 +158,99 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
   }
 }
 
-@media (max-width: 576px) {
+@media screen and (max-width: 768px) {
   .container {
-    padding: 50px 15px;
+    padding: 60px 20px;
   }
 
-  .banner {
-    padding: 20px 20px;
+  .container .banner {
+    padding: 25px 20px;
+    margin: 0 10px;
+    min-height: 200px;
+    flex-direction: column !important;
 
     h1 {
       font-size: 1.5em;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      font-weight: 600;
+      order: 1 !important;
+      width: 100% !important;
+      margin-right: 0 !important;
+      flex: none !important;
     }
 
     img {
-      width: 180px;
-      max-width: 80%;
+      width: 160px;
+      max-width: 70%;
+      margin-top: 15px;
+      margin-bottom: 0;
+      order: 2 !important;
+      flex-shrink: 1 !important;
     }
   }
 
   .title {
-    margin: 40px 0 20px 0;
+    margin: 50px 0 25px 0;
 
     h1 {
-      font-size: 1.4em;
+      font-size: 1.6em;
+      line-height: 1.4;
     }
 
     p {
-      margin: 0 15px;
+      margin: 0 20px;
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 40px 15px;
+  }
+
+  .banner {
+    padding: 20px 15px;
+    margin: 0 5px;
+    min-height: 180px;
+    flex-direction: column !important;
+
+    h1 {
+      font-size: 1.2em;
+      line-height: 1.4;
+      margin-bottom: 15px;
+      font-weight: 600;
+      text-align: center;
+      order: 1 !important;
+      width: 100% !important;
+      margin-right: 0 !important;
+      flex: none !important;
+    }
+
+    img {
+      width: 120px;
+      max-width: 75%;
+      margin-top: 12px;
+      margin-bottom: 0;
+      order: 2 !important;
+      flex-shrink: 1 !important;
+    }
+  }
+
+  .title {
+    margin: 30px 0 20px 0;
+
+    h1 {
+      font-size: 1.3em;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 10px;
       font-size: 0.9em;
+      line-height: 1.5;
     }
   }
 
@@ -165,6 +259,55 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
     width: 80%;
     font-size: 1em;
     height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 30px 10px;
+  }
+
+  .banner {
+    padding: 15px 12px;
+    margin: 0;
+    min-height: 160px;
+    flex-direction: column !important;
+
+    h1 {
+      font-size: 1.1em;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-align: center;
+      order: 1 !important;
+      width: 100% !important;
+      margin-right: 0 !important;
+      flex: none !important;
+    }
+
+    img {
+      width: 100px;
+      max-width: 80%;
+      margin-top: 10px;
+      margin-bottom: 0;
+      order: 2 !important;
+      flex-shrink: 1 !important;
+    }
+  }
+
+  .title {
+    margin: 25px 0 15px 0;
+
+    h1 {
+      font-size: 1.1em;
+      line-height: 1.4;
+    }
+
+    p {
+      margin: 0 5px;
+      font-size: 0.85em;
+      line-height: 1.5;
+    }
   }
 }
 
@@ -283,6 +426,26 @@ $step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguer
       transform: rotate(90deg); // Ruota la freccia per la vista in colonna
       margin: 20px 0; // Spazio tra le card e le frecce
       font-size: 2.5em;
+    }
+  }
+}
+
+/* FORCE MOBILE LAYOUT OVERRIDE - MUST BE LAST */
+@media screen and (max-width: 992px) {
+  .container .banner {
+    display: flex !important;
+    flex-direction: column !important;
+    
+    h1 {
+      order: 1 !important;
+      width: 100% !important;
+      margin-right: 0 !important;
+      flex: none !important;
+    }
+    
+    img {
+      order: 2 !important;
+      flex-shrink: 1 !important;
     }
   }
 }
