@@ -19,6 +19,10 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
   padding: 40px 20px;
   background: linear-gradient(145deg, $background-start 0%, $background-end 100%);
   overflow: hidden;
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    padding: 30px 15px;
+  }
 }
 
 .logo {
@@ -27,6 +31,11 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
   margin-bottom: 70px;
   cursor: pointer;
   transition: transform 0.3s ease, filter 0.3s ease;
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    width: 150px;
+    margin-bottom: 40px;
+  }
 
   &:hover {
     transform: scale(1.08);
@@ -37,14 +46,19 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
 .cards-wrapper {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
+  gap: 2rem;
   width: 100%;
   max-width: 960px;
   padding: 0 15px;
   margin-bottom: 50px;
 
+  @media (min-width: 768px) and (max-width: 1023px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 720px;
+  }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 4rem;
   }
@@ -61,6 +75,10 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
     position: relative;
     overflow: hidden;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      padding: 2rem 1.5rem;
+    }
 
     &:hover {
       transform: translateY(-12px);
@@ -84,6 +102,11 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
       font-weight: 700;
       color: $text-dark;
       line-height: 1.2;
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+      }
     }
 
     .card-description {
@@ -93,6 +116,12 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
       line-height: 1.7;
       margin-left: auto;
       margin-right: auto;
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: 0.9rem;
+        margin-bottom: 1.8rem;
+        line-height: 1.6;
+      }
     }
 
     .btn {
@@ -106,6 +135,12 @@ $shadow-medium: rgba(0, 0, 0, 0.1); // Ombra leggermente più visibile
       font-size: 1rem;
       border: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+        max-width: 200px;
+      }
     }
 
     &.student-card {
