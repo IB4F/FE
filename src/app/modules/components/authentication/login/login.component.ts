@@ -109,10 +109,49 @@ export class LoginComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ForgetPasswordComponent, {
-      width: '1200px',
-      height: '640px'
-    });
+    // Check if it's mobile device
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+    
+    let dialogConfig: any = {
+      disableClose: false,
+      hasBackdrop: true,
+      backdropClass: 'custom-backdrop',
+      panelClass: 'forget-password-modal'
+    };
+    
+    if (isMobile) {
+      // Responsive modal on mobile (not full screen)
+      dialogConfig = {
+        ...dialogConfig,
+        width: '95vw',
+        height: '85vh',
+        maxWidth: '400px',
+        maxHeight: '600px',
+        panelClass: ['forget-password-modal', 'mobile-modal']
+      };
+    } else if (isTablet) {
+      // Responsive on tablet
+      dialogConfig = {
+        ...dialogConfig,
+        width: '90vw',
+        height: '85vh',
+        maxWidth: '900px',
+        maxHeight: '700px',
+        panelClass: ['forget-password-modal', 'tablet-modal']
+      };
+    } else {
+      // Fixed size on desktop
+      dialogConfig = {
+        ...dialogConfig,
+        width: '1200px',
+        height: '640px',
+        panelClass: ['forget-password-modal', 'desktop-modal']
+      };
+    }
+    
+    const dialogRef = this.dialog.open(ForgetPasswordComponent, dialogConfig);
+    
     dialogRef.afterClosed().subscribe(result => {
       console.log('Dialog closed:', result);
     });
