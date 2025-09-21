@@ -1,5 +1,12 @@
 $blueCustom: #259ccb;
 
+// Global overflow fix for mobile
+:host {
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -8,6 +15,9 @@ $blueCustom: #259ccb;
   justify-content: center; /* Center content vertically on smaller screens */
   padding: 15px; /* Add some padding for smaller screens */
   box-sizing: border-box; /* Include padding in element's total width and height */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  width: 100%;
+  min-width: 0; /* Allow flex items to shrink below their content size */
 
   >img {
     margin: 20px 0;
@@ -27,6 +37,9 @@ $blueCustom: #259ccb;
   font-family: Arial, sans-serif;
   position: relative;
   align-items: center; /* Align items in the center */
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  min-width: 0; /* Allow flex items to shrink */
 }
 
 .login-body {
@@ -41,6 +54,9 @@ $blueCustom: #259ccb;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  box-sizing: border-box;
+  min-width: 0; /* Allow shrinking */
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .login-body h2,
@@ -110,6 +126,9 @@ $blueCustom: #259ccb;
 .login-form {
   width: 100%;
   max-width: 680px; /* Keep this max-width for the form content itself */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 mat-icon {
@@ -150,79 +169,178 @@ mat-icon {
     flex-direction: column; /* Stack elements vertically */
     height: auto; /* Allow height to adjust */
     padding: 0 20px; /* Add some horizontal padding */
+    gap: 30px; /* Add gap between elements */
   }
 
   .login-body {
     width: 100%; /* Full width on tablets */
-    padding: 30px; /* Slightly less padding */
-    margin-bottom: 20px; /* Space between login form and image */
+    max-width: 500px; /* Limit max width */
+    padding: 35px; /* Slightly less padding */
+    margin: 0 auto; /* Center the login body */
   }
 
   .right {
-    width: 80%; /* Adjust image width for tablets */
-    margin: 20px auto; /* Center the image and add margin */
+    width: 100%; /* Full width container */
+    max-width: 450px; /* Limit image container */
+    margin: 0 auto; /* Center the image container */
     justify-content: center; /* Center the image horizontally */
   }
 
   .right > img {
-    max-width: 400px; /* Further limit image size on tablets */
+    max-width: 380px; /* Further limit image size on tablets */
+    width: 100%;
+  }
+}
+
+/* Specific adjustments for 768px screens */
+@media (min-width: 769px) and (max-width: 992px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .login-body {
+    padding: 40px 35px;
+  }
+  
+  .login-body h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
   }
 }
 
 /* For Mobile screens (e.g., max-width: 768px) */
 @media (max-width: 768px) {
   .container {
-    height: auto; /* Allow container to grow beyond 100vh if content is long */
-    padding: 10px;
+    height: 100vh; /* Maintain full viewport height */
+    padding: 10px; /* Reduce padding to prevent overflow */
+    justify-content: flex-start; /* Align content to top for better spacing */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    width: 100vw; /* Use viewport width */
+    max-width: 100%; /* Ensure it doesn't exceed viewport */
   }
 
   .container > img {
-    margin: 15px 0;
-    max-width: 120px;
+    margin: 15px 0 10px 0;
+    max-width: 120px; /* Smaller logo for mobile */
+  }
+
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    max-width: 100%;
+    gap: 15px; /* Reduce gap to save space */
+    padding: 0; /* Remove any padding that might cause overflow */
+    margin: 0; /* Remove any margin that might cause overflow */
   }
 
   .login-body {
-    padding: 20px; /* Reduce padding further for mobile */
-    border-radius: 15px; /* Slightly less rounded corners */
+    width: 100%;
+    max-width: calc(100% - 20px); /* Account for container padding */
+    padding: 20px 15px; /* Reduce padding to prevent overflow */
+    border-radius: 15px;
+    margin: 0 auto; /* Center the login body */
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .login-form {
+    width: 100%; /* Use full width of login-body */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .login-body h2 {
-    font-size: 24px; /* Adjust heading size */
+    font-size: 24px; /* Reduce heading size for mobile */
+    margin-bottom: 20px;
+    font-weight: 500;
   }
 
   .mat-mdc-form-field {
-    margin-bottom: 10px; /* Reduce spacing between form fields */
+    margin-bottom: 12px; /* Reduce spacing to save space */
+    width: 100% !important; /* Ensure full width */
+    box-sizing: border-box;
+  }
+
+  .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mat-mdc-form-field .mat-mdc-form-field-flex {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .login-form .btn-container {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .login-form .btn-container button {
+    width: 100%;
     padding: 12px;
     font-size: 15px;
+    font-weight: 500;
+    margin-top: 8px;
+    box-sizing: border-box;
   }
 
-  .forget-pass span,
+  .forget-pass {
+    padding: 8px 0 20px 0; /* Reduce spacing */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .forget-pass span {
+    font-size: 13px;
+  }
+
   .login-body p,
   .login-body a {
-    font-size: 13px; /* Adjust font sizes for mobile */
+    font-size: 13px;
+  }
+
+  .signup-text {
+    margin-top: 20px; /* Reduce space above signup text */
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
   }
 
   .right {
-    width: 90%; /* Increase image width for better visibility on mobile */
-    margin: 15px auto;
+    width: 100%;
+    max-width: 280px; /* Reduce image container width for mobile */
+    margin: 0 auto; /* Center the image */
+    justify-content: center;
+    box-sizing: border-box;
   }
 
   .right > img {
-    max-width: 300px; /* Limit image size for mobile */
+    max-width: 240px; /* Smaller image for mobile */
+    width: 100%;
+    height: auto;
   }
 }
 
 /* For very small mobile screens (e.g., max-width: 480px) */
 @media (max-width: 480px) {
+  .container {
+    padding: 8px; /* Even less padding for very small screens */
+  }
+
   .login-body {
-    padding: 15px;
+    padding: 15px 12px; /* Minimal padding */
+    max-width: calc(100% - 16px); /* Account for reduced container padding */
   }
 
   .login-body h2 {
     font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .mat-mdc-form-field {
+    margin-bottom: 10px; /* Reduce spacing further */
   }
 
   .login-form .btn-container button {
@@ -230,7 +348,19 @@ mat-icon {
     font-size: 14px;
   }
 
+  .forget-pass {
+    padding: 6px 0 18px 0;
+  }
+
+  .signup-text {
+    margin-top: 18px;
+  }
+
+  .right {
+    max-width: 220px; /* Even smaller image container */
+  }
+
   .right > img {
-    max-width: 250px;
+    max-width: 200px; /* Smaller image for very small screens */
   }
 }
