@@ -289,15 +289,183 @@
       .subscription-content {
         gap: 20px;
 
+        .subscription-overview-card {
+          .subscription-details {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            text-align: center;
+
+            .plan-info {
+              h3 {
+                font-size: 1.5rem;
+              }
+            }
+
+            .billing-info {
+              .billing-amount {
+                .amount {
+                  font-size: 1.8rem;
+                }
+
+                .interval {
+                  font-size: 1rem;
+                }
+              }
+            }
+          }
+        }
+
         .subscription-actions-card {
           .actions-grid {
             grid-template-columns: 1fr;
+            gap: 12px;
+
+            .action-button {
+              min-height: 44px;
+              font-size: 0.95rem;
+            }
           }
         }
 
         .subscription-details-card {
           .details-grid {
             grid-template-columns: 1fr;
+            gap: 16px;
+
+            .detail-item {
+              label {
+                font-size: 0.85rem;
+              }
+
+              span {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .subscription-dashboard {
+    padding: 12px;
+
+    .dashboard-header {
+      margin-bottom: 20px;
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    .dashboard-content {
+      .no-subscription {
+        .no-subscription-card {
+          .no-subscription-content {
+            padding: 30px 15px;
+
+            .no-subscription-icon {
+              font-size: 3rem;
+              width: 3rem;
+              height: 3rem;
+            }
+
+            h2 {
+              font-size: 1.5rem;
+            }
+
+            p {
+              font-size: 1rem;
+            }
+
+            button {
+              padding: 10px 24px;
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+
+      .subscription-content {
+        gap: 16px;
+
+        .subscription-overview-card {
+          .subscription-details {
+            gap: 16px;
+
+            .plan-info {
+              h3 {
+                font-size: 1.3rem;
+              }
+
+              .status-badge {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+              }
+            }
+
+            .billing-info {
+              .billing-amount {
+                margin-bottom: 16px;
+
+                .amount {
+                  font-size: 1.6rem;
+                }
+
+                .interval {
+                  font-size: 0.9rem;
+                }
+              }
+
+              .billing-dates {
+                p {
+                  font-size: 0.9rem;
+                  margin: 6px 0;
+                }
+              }
+            }
+          }
+        }
+
+        .subscription-actions-card {
+          .actions-grid {
+            gap: 10px;
+
+            .action-button {
+              min-height: 40px;
+              font-size: 0.9rem;
+              padding: 10px 16px;
+
+              mat-icon {
+                font-size: 1.1rem;
+              }
+            }
+          }
+        }
+
+        .subscription-details-card {
+          .details-grid {
+            gap: 12px;
+
+            .detail-item {
+              gap: 4px;
+
+              label {
+                font-size: 0.8rem;
+              }
+
+              span {
+                font-size: 0.85rem;
+                padding: 5px 8px;
+              }
+            }
           }
         }
       }

@@ -1,4 +1,49 @@
 <div class="profile-page-container">
+  <!-- Mobile Navigation Header -->
+  <div class="mobile-nav-header">
+    <h2 class="mobile-title">Cilësimet</h2>
+    <div class="menu-toggle-container">
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" 
+              mat-icon-button 
+              [attr.aria-label]="'Open navigation menu'"
+              title="Click to open navigation menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="menu-hint">Menu</span>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()">
+    <div class="mobile-nav-content" (click)="$event.stopPropagation()">
+      <div class="mobile-nav-header">
+        <h3>Cilësimet</h3>
+        <button class="mobile-close" (click)="closeMobileMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="mobile-nav-items">
+        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
+                (click)="selectTab(ProfileTabs.PersonalInfo); closeMobileMenu()">
+          <mat-icon>person</mat-icon>
+          <span>Profili</span>
+        </button>
+        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.ChangePassword"
+                (click)="selectTab(ProfileTabs.ChangePassword); closeMobileMenu()">
+          <mat-icon>lock</mat-icon>
+          <span>Ndrysho Passwordin</span>
+        </button>
+        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
+                (click)="selectTab(ProfileTabs.SubscriptionDashboard); closeMobileMenu()"
+                *ngIf="canAccessSubscriptionDashboard$ | async">
+          <mat-icon>subscription</mat-icon>
+          <span>Abonimi Im</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Sidebar -->
   <div class="sidebar-navigation">
     <button class="nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
             (click)="selectTab(ProfileTabs.PersonalInfo)">

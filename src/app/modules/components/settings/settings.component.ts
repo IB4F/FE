@@ -46,6 +46,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ProfileTabs = ProfileTabs;
   selectedTab: ProfileTabs = ProfileTabs.PersonalInfo;
+  mobileMenuOpen = false;
 
   private unsubscribe$ = new Subject<void>();
   classesList: Class[] = [];
@@ -150,6 +151,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     } else {
       this.selectedTab = tab;
     }
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
   }
 
   onChangePassword(passwords: ChangePasswordDTO) {
