@@ -37,6 +37,8 @@ export class ProfileComponent {
   @Input() fullName: string = '';
   @Input() userRole: string | null = null;
   @Input() classList: Class [] = [];
+  @Input() childrenCount: number | null = null;
+  @Input() studentsCount: number | null = null;
   @Output() saveChanges = new EventEmitter<void>();
 
   onSaveChanges() {
@@ -45,6 +47,28 @@ export class ProfileComponent {
 
   showClassField(): boolean {
     return this.userRole !== UserRole.ADMIN;
+  }
+
+  shouldShowCount(): boolean {
+    return this.userRole === UserRole.SUPERVISOR || this.userRole === UserRole.FAMILY;
+  }
+
+  getCountLabel(): string {
+    if (this.userRole === UserRole.SUPERVISOR) {
+      return 'Numri i studentëve';
+    } else if (this.userRole === UserRole.FAMILY) {
+      return 'Numri i fëmijëve';
+    }
+    return '';
+  }
+
+  getCountValue(): number | null {
+    if (this.userRole === UserRole.SUPERVISOR) {
+      return this.studentsCount;
+    } else if (this.userRole === UserRole.FAMILY) {
+      return this.childrenCount;
+    }
+    return null;
   }
 
   // Custom validator for phone numbers

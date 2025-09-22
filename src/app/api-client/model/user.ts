@@ -49,6 +49,8 @@ export interface User {
     subscriptionExpiresAt?: string | null;
     readonly hasActiveSubscription?: boolean;
     subscriptions?: Array<Subscription> | null;
+    childrenCount?: number;
+    studentsCount?: number;
 }
 export namespace User {
 }

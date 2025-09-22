@@ -45,6 +45,17 @@
       <mat-label>Shkolla</mat-label>
       <input matInput placeholder="Shkolla" formControlName="school">
     </mat-form-field>
+    
+    <!-- Display count information for supervisors and families -->
+    <div class="count-info" *ngIf="shouldShowCount()">
+      <div class="count-display">
+        <mat-icon>people</mat-icon>
+        <div class="count-content">
+          <span class="count-label">{{ getCountLabel() }}</span>
+          <span class="count-value">{{ getCountValue() || 0 }}</span>
+        </div>
+      </div>
+    </div>
     <!--    <mat-form-field appearance="outline">-->
     <!--      <mat-label>Ditëlindja</mat-label>-->
     <!--      <input matInput [matDatepicker]="picker" formControlName="birthday">-->

@@ -35,6 +35,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   changePasswordFormGroup!: FormGroup;
   fullName!: string;
   user$ = this.userService.user$;
+  childrenCount: number | null = null;
+  studentsCount: number | null = null;
   userInitials$ = this.user$.pipe(
     map(user => {
       if (!user) return '';
@@ -125,6 +127,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
           phoneNumber: phoneNumberValue
         });
         this.fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
+        this.childrenCount = user.childrenCount ?? null;
+        this.studentsCount = user.studentsCount ?? null;
       }
     });
   }
