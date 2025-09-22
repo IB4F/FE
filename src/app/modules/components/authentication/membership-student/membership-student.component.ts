@@ -10,6 +10,7 @@ import {MatButton} from "@angular/material/button";
 import {NgToastService} from "ng-angular-popup";
 import {PackagesComponent} from "../../../shared/components/packages/packages.component";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
+import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
 
 @Component({
   selector: 'app-membership-student',
@@ -19,7 +20,8 @@ import {SubscriptionErrorHandlerService} from "../../../../services/subscription
     RegisterComponent,
     CommonModule,
     MatProgressSpinnerModule,
-    MatButton
+    MatButton,
+    DynamicBannerComponent
   ],
   templateUrl: './membership-student.component.html',
   styleUrl: './membership-student.component.scss'

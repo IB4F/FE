@@ -25,6 +25,7 @@ import {MatSelect} from "@angular/material/select";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
+import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
 
 @Component({
   selector: 'app-register-family',
@@ -40,7 +41,8 @@ import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-
     MatTooltip,
     MatOption,
     MatSelect,
-    PhoneInputComponent
+    PhoneInputComponent,
+    DynamicBannerComponent
   ],
   templateUrl: './register-family.component.html',
   styleUrl: './register-family.component.scss'

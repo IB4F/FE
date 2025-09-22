@@ -17,42 +17,6 @@ $step-card-bg: #f5fafd;
   box-sizing: border-box;
   overflow-x: hidden;
 
-  .banner {
-    border-radius: 20px;
-    padding: 40px 90px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    background: linear-gradient(to right, #6dd5ed, #2193b0);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    min-height: 200px;
-
-    h1 {
-      width: 50%;
-      text-align: center;
-      margin-bottom: 20px;
-      color: white;
-      display: flex;
-      align-items: center;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      white-space: normal;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    img {
-      width: 300px;
-      max-width: 40%;
-      height: auto;
-      flex-shrink: 0;
-      object-fit: contain;
-    }
-  }
 
   .title {
     text-align: center;
