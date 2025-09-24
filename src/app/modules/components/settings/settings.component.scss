@@ -20,12 +20,14 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000; /* Increased z-index to stay above content */
   /* iOS Safari fixes */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   /* Support for iOS safe area */
   padding-top: calc(16px + env(safe-area-inset-top));
+  /* Ensure header stays above content when scrolling */
+  isolation: isolate;
 
   .mobile-title {
     font-size: 1.5rem;
@@ -347,10 +349,18 @@
     min-height: 100vh;
     /* iOS Safari safe area support */
     min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    /* Ensure proper stacking context for mobile */
+    position: relative;
+    z-index: 1;
   }
 
   .mobile-nav-header {
     display: flex;
+    /* Ensure header background covers content when scrolling */
+    background-color: #ffffff !important;
+    /* Add backdrop blur for better visual separation */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .sidebar-navigation {
@@ -360,6 +370,11 @@
   .content-area {
     padding: 20px 16px;
     flex-grow: 1;
+    /* Ensure content doesn't overlap with sticky header */
+    position: relative;
+    z-index: 1;
+    /* Add top margin to account for sticky header */
+    margin-top: 0;
   }
 
   .mobile-nav-overlay {
