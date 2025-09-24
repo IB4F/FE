@@ -51,6 +51,14 @@ body {
   font-family: 'Work-Sans-Regular', sans-serif; /* Assicurati che Work-Sans-Regular sia importato correttamente */
   color: var(--text-color-dark);
   background-color: #f6f8fb; /* Sfondo generale leggermente più chiaro e moderno */
+  /* Mobile browser fixes */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Prevent mobile browser zoom on input focus */
+  -webkit-tap-highlight-color: transparent;
+  /* Better mobile scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 p {

@@ -21,6 +21,11 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  /* iOS Safari fixes */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* Support for iOS safe area */
+  padding-top: calc(16px + env(safe-area-inset-top));
 
   .mobile-title {
     font-size: 1.5rem;
@@ -57,6 +62,18 @@
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
     animation: subtle-pulse 3s ease-in-out infinite;
+    /* Mobile touch improvements */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Better touch target */
+    min-width: 48px;
+    min-height: 48px;
+    /* Prevent mobile browser zoom */
+    touch-action: manipulation;
 
     &:hover {
       background-color: #007bff;
@@ -71,12 +88,18 @@
 
     &:active {
       transform: scale(0.95);
+      background-color: #0056b3;
     }
 
     mat-icon {
       font-size: 28px;
       color: #007bff;
       transition: color 0.3s ease;
+      /* Prevent icon selection on mobile */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
   }
 
@@ -102,10 +125,27 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  /* Mobile browser fixes for both Chrome and Safari */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: opacity, visibility;
+  /* Prevent touch scrolling on background */
+  touch-action: none;
+  /* Ensure proper mobile rendering */
+  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 
   &.active {
     opacity: 1;
     visibility: visible;
+    /* Prevent body scroll when menu is open */
+    body {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
   }
 
   .mobile-nav-content {
@@ -118,9 +158,26 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    /* Mobile browser fixes for both Chrome and Safari */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateX(-100%) translateZ(0);
+    will-change: transform;
+    /* Ensure proper mobile touch handling */
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    /* Prevent text selection on mobile */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Better mobile positioning */
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
 
     .mobile-nav-overlay.active & {
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
+      -webkit-transform: translateX(0) translateZ(0);
     }
 
     .mobile-nav-header {
@@ -176,6 +233,17 @@
       text-align: left;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
+      /* Mobile touch improvements */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      /* Better touch target size */
+      min-height: 48px;
+      /* Prevent mobile browser zoom on double tap */
+      touch-action: manipulation;
 
       mat-icon {
         margin-right: 15px;
@@ -183,11 +251,21 @@
         width: 20px;
         height: 20px;
         color: #9db2c9;
+        /* Prevent icon selection on mobile */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
 
       &:hover:not(.active) {
         background-color: #eef2f8;
         color: #4a5c71;
+      }
+
+      &:active {
+        background-color: #e0e6ed;
+        transform: scale(0.98);
       }
 
       &.active {
@@ -267,6 +345,8 @@
     border-radius: 0;
     box-shadow: none;
     min-height: 100vh;
+    /* iOS Safari safe area support */
+    min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 
   .mobile-nav-header {
@@ -284,11 +364,13 @@
 
   .mobile-nav-overlay {
     .mobile-nav-content {
-      transform: translateX(-100%);
+      transform: translateX(-100%) translateZ(0);
+      -webkit-transform: translateX(-100%) translateZ(0);
     }
 
     &.active .mobile-nav-content {
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
+      -webkit-transform: translateX(0) translateZ(0);
     }
   }
 }

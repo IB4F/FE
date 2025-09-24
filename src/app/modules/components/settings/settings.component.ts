@@ -81,6 +81,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    // Ensure body scroll is restored when component is destroyed
+    this.mobileMenuOpen = false;
+    this.handleBodyScroll();
   }
 
   initializeForms() {
@@ -159,10 +162,32 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+    this.handleBodyScroll();
   }
 
   closeMobileMenu() {
     this.mobileMenuOpen = false;
+    this.handleBodyScroll();
+  }
+
+  private handleBodyScroll() {
+    if (this.mobileMenuOpen) {
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      // Restore body scroll when menu is closed
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
   }
 
   onChangePassword(passwords: ChangePasswordDTO) {
