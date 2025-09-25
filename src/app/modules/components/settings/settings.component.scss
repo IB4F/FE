@@ -123,7 +123,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1001; /* Higher than header when menu is open */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -160,6 +160,8 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    /* Highest z-index when menu is open */
+    z-index: 1002;
     /* Mobile browser fixes for both Chrome and Safari */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -361,6 +363,8 @@
     /* Add backdrop blur for better visual separation */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    /* Lower z-index when menu is closed, but still above content */
+    z-index: 1000;
   }
 
   .sidebar-navigation {
