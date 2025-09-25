@@ -13,7 +13,9 @@ import {
   LearnHubCreateDTO,
   LearnHubsService,
   LinksService,
-  Subjects
+  Subjects,
+  SubscriptionPackageService,
+  PackageTier
 } from "../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -48,6 +50,7 @@ export class ManageLearnhubComponent implements OnInit {
   learnHubFormGroup!: FormGroup;
   classesList: Class[] = [];
   subjectList: Subjects[] = [];
+  tiersList: any[] = [];
 
   learHub: any;
   idLearnHub!: string;
@@ -60,7 +63,8 @@ export class ManageLearnhubComponent implements OnInit {
     private _detailsService: DetailsService,
     public router: Router,
     private location: Location,
-    private linksService: LinksService
+    private linksService: LinksService,
+    private subscriptionPackageService: SubscriptionPackageService
   ) {
   }
 
@@ -98,7 +102,19 @@ export class ManageLearnhubComponent implements OnInit {
       description: ['', Validators.required],
       difficulty: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
       isFree: ['', Validators.required],
+      tier: [''],
       links: this._formBuilder.array([], requiredRowsValidator())
+    });
+
+    // Add conditional validation for tier field
+    this.learnHubFormGroup.get('isFree')?.valueChanges.subscribe(isFree => {
+      const tierControl = this.learnHubFormGroup.get('tier');
+      if (isFree === false) {
+        tierControl?.setValidators([Validators.required]);
+      } else {
+        tierControl?.clearValidators();
+      }
+      tierControl?.updateValueAndValidity();
     });
   }
 
@@ -110,7 +126,8 @@ export class ManageLearnhubComponent implements OnInit {
         subject: this.learHub.subject,
         description: this.learHub.description,
         difficulty: this.learHub.difficulty,
-        isFree: this.learHub.isFree
+        isFree: this.learHub.isFree,
+        tier: this.learHub.requiredTier
       });
 
       if (this.learHub.typeClass) {
@@ -190,7 +207,8 @@ export class ManageLearnhubComponent implements OnInit {
     const formData = this.learnHubFormGroup.getRawValue();
     const formattedData: LearnHubCreateDTO = {
       ...formData,
-      isFree: formData.isFree
+      isFree: formData.isFree,
+      requiredTier: formData.isFree ? undefined : formData.tier
     };
     if (this.idLearnHub) {
       this.learnHubsService.apiLearnHubsUpdateLearnhubPut(this.idLearnHub, formattedData).subscribe({
@@ -218,6 +236,7 @@ export class ManageLearnhubComponent implements OnInit {
   private loadCombos() {
     this.getClassesList();
     this.getSubjectsList();
+    this.getTiersList();
   }
 
   private getClassesList() {
@@ -230,6 +249,17 @@ export class ManageLearnhubComponent implements OnInit {
     this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
       this.subjectList = res;
     })
+  }
+
+  private getTiersList() {
+    this.subscriptionPackageService.apiSubscriptionPackageGetTiersGet().subscribe({
+      next: (res) => {
+        this.tiersList = res;
+      },
+      error: (error) => {
+        this.toast.danger(error?.error?.message || 'Gabim gjatë ngarkimit të tier-ave', 'GABIM', 3000);
+      }
+    });
   }
 
   goToQuiz(link: AbstractControl) {

@@ -1,0 +1,4 @@
+<div *ngIf="tier" class="tier-badge" [class]="getTierClass(tier)">
+  <mat-icon class="tier-icon">{{ getTierIcon(tier) }}</mat-icon>
+  <span class="tier-text">{{ getTierText(tier) }}</span>
+</div>

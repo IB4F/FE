@@ -1,0 +1,56 @@
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: 1px solid;
+
+  .tier-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .tier-text {
+    font-size: 0.8em;
+    letter-spacing: 0.5px;
+  }
+
+  // Basic tier styling
+  &.tier-basic {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-color: #bbdefb;
+
+    .tier-icon {
+      color: #1976d2;
+    }
+  }
+
+  // Standard tier styling
+  &.tier-standard {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border-color: #e1bee7;
+
+    .tier-icon {
+      color: #7b1fa2;
+    }
+  }
+
+  // Premium tier styling
+  &.tier-premium {
+    background-color: #fff3e0;
+    color: #f57c00;
+    border-color: #ffcc02;
+
+    .tier-icon {
+      color: #f57c00;
+    }
+  }
+}

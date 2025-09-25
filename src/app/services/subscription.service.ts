@@ -134,11 +134,11 @@ export class SubscriptionManagementService {
   getBillingIntervalText(interval: number): string {
     const intervalMap: { [key: number]: string } = {
       0: 'Ditore',
-      1: 'Javore',
+      1: 'Javore', 
       2: 'Mujore',
       3: 'Vjetore'
     };
-    return intervalMap[interval] || 'E panjohur';
+    return intervalMap[interval] || 'Mujore'; // Default to monthly
   }
 
   /**

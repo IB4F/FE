@@ -5,13 +5,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { Subscription as SubscriptionModel, BillingInterval } from '../../../../api-client';
 import { SubscriptionManagementService } from '../../../../services/subscription.service';
 import { NgToastService } from 'ng-angular-popup';
 import { SubscriptionErrorHandlerService } from '../../../../services/subscription-error-handler.service';
+import { UnsubscribeConfirmationDialogComponent } from './unsubscribe-confirmation-dialog.component';
 
 @Component({
   selector: 'app-subscription-dashboard',
@@ -67,6 +68,11 @@ export class SubscriptionDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  getPlanName(): string {
+    if (!this.subscription) return 'Plan i panjohur';
+    return this.subscription.subscriptionPackage?.name || 'Plan i panjohur';
+  }
+
   getStatusText(): string {
     if (!this.subscription) return 'Nuk ka abonim';
     return this.subscriptionService.getSubscriptionStatusText(this.subscription.status || 0);
@@ -74,12 +80,49 @@ export class SubscriptionDashboardComponent implements OnInit, OnDestroy {
 
   getBillingIntervalText(): string {
     if (!this.subscription) return '';
-    return this.subscriptionService.getBillingIntervalText(this.subscription.interval || 0);
+    
+    // Handle both string and number intervals from API
+    const subscriptionInterval = this.subscription.interval as any;
+    let interval: number = 2; // Default to monthly
+    
+    // If interval is a string, convert to number
+    if (subscriptionInterval && typeof subscriptionInterval === 'string') {
+      switch (subscriptionInterval.toLowerCase()) {
+        case 'day':
+        case 'daily':
+          interval = 0;
+          break;
+        case 'week':
+        case 'weekly':
+          interval = 1;
+          break;
+        case 'month':
+        case 'monthly':
+          interval = 2;
+          break;
+        case 'year':
+        case 'yearly':
+        case 'annual':
+          interval = 3;
+          break;
+        default:
+          interval = 2; // Default to monthly
+      }
+    } else if (typeof subscriptionInterval === 'number') {
+      interval = subscriptionInterval;
+    }
+    
+    return this.subscriptionService.getBillingIntervalText(interval);
   }
 
   getFormattedAmount(): string {
     if (!this.subscription) return '';
-    return this.subscriptionService.formatCurrency(this.subscription.amount || 0, this.subscription.currency || 'EUR');
+    
+    // The amount from API is in cents (e.g., 10000 = 100.00 EUR)
+    const amount = this.subscription.amount || 0;
+    const currency = this.subscription.currency || 'EUR';
+    
+    return this.subscriptionService.formatCurrency(amount, currency);
   }
 
   getFormattedDate(dateString: string | null | undefined): string {
@@ -175,5 +218,42 @@ export class SubscriptionDashboardComponent implements OnInit, OnDestroy {
   onViewBillingHistory(): void {
     // TODO: Implement billing history view
     this.toast.info('Funksionaliteti për historinë e faturimit do të jetë i disponueshëm së shpejti.', 'INFO', 3000);
+  }
+
+  onUnsubscribe(): void {
+    if (!this.subscription) return;
+
+    const dialogRef = this.dialog.open(UnsubscribeConfirmationDialogComponent, {
+      width: '400px',
+      data: {
+        subscriptionName: this.subscription.subscriptionPackage?.name || 'Plan i panjohur',
+        subscriptionId: this.subscription.id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.performUnsubscribe();
+      }
+    });
+  }
+
+  private performUnsubscribe(): void {
+    if (!this.subscription) return;
+
+    this.subscriptionService.cancelSubscription(
+      this.subscription.id!,
+      'Përdoruesi kërkoi ç\'regjistrimin e abonimit',
+      true // immediately = true for unsubscribe
+    ).subscribe({
+      next: () => {
+        this.toast.success('Abonimi u ç\'regjistrua me sukses. Qasja u ndal menjëherë.', 'SUKSES', 5000);
+        this.loadSubscription(); // Reload subscription data
+      },
+      error: (error) => {
+        console.error('Failed to unsubscribe:', error);
+        this.errorHandler.handleSubscriptionError(error, 'unsubscribe');
+      }
+    });
   }
 }

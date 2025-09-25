@@ -2,13 +2,15 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
+import {TierIconComponent} from "../../../../../shared/components/tier-icon/tier-icon.component";
 
 @Component({
   selector: 'app-links-list',
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    TierIconComponent
   ],
   templateUrl: './links-list.component.html',
   styleUrl: './links-list.component.scss'

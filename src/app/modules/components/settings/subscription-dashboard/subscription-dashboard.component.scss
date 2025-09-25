@@ -179,6 +179,21 @@
               }
             }
 
+            &.unsubscribe-button {
+              background-color: #f44336;
+              color: white;
+              border: none;
+
+              &:hover {
+                background-color: #d32f2f;
+              }
+
+              mat-icon {
+                margin-right: 8px;
+                font-size: 1.2rem;
+              }
+            }
+
             mat-icon {
               font-size: 1.2rem;
             }

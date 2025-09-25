@@ -77,6 +77,20 @@
       </mat-form-field>
     </div>
 
+    <div class="field-container" *ngIf="learnHubFormGroup.get('isFree')?.value === false">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Niveli i Paketës</mat-label>
+        <mat-select formControlName="tier" required>
+          <mat-option *ngFor="let tier of tiersList" [value]="tier.value">
+            {{ tier.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="learnHubFormGroup.get('tier')?.hasError('required')">
+          Fushë e detyrueshme
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <div class="section-container">
       <p>Në këtë seksion mund të shtoni lidhjet për të aksesuar burimet</p>
       <button mat-raised-button color="primary" class="add-button" (click)="addRow()">

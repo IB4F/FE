@@ -3,8 +3,8 @@
   <div class="mobile-nav-header">
     <h2 class="mobile-title">Cilësimet</h2>
     <div class="menu-toggle-container">
-      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" 
-              mat-icon-button 
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()"
+              mat-icon-button
               [attr.aria-label]="'Open navigation menu'"
               title="Click to open navigation menu">
         <mat-icon>menu</mat-icon>
@@ -36,7 +36,7 @@
         <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
                 (click)="selectTab(ProfileTabs.SubscriptionDashboard); closeMobileMenu()"
                 *ngIf="canAccessSubscriptionDashboard$ | async">
-          <mat-icon>subscription</mat-icon>
+          <mat-icon>card_membership</mat-icon>
           <span>Abonimi Im</span>
         </button>
       </div>
@@ -58,7 +58,7 @@
     <button class="nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
             (click)="selectTab(ProfileTabs.SubscriptionDashboard)"
             *ngIf="canAccessSubscriptionDashboard$ | async">
-      <mat-icon>subscription</mat-icon>
+      <mat-icon>card_membership</mat-icon>
       <span>Abonimi Im</span>
     </button>
   </div>

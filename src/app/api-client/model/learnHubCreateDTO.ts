@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { CreateLinkDTO } from './createLinkDTO';
+import { PackageTier } from './packageTier';
 
 
 export interface LearnHubCreateDTO { 
@@ -16,7 +17,11 @@ export interface LearnHubCreateDTO {
     classType?: string | null;
     subject?: string | null;
     isFree?: boolean;
+    requiredTier?: PackageTier;
     difficulty?: number;
     links?: Array<CreateLinkDTO> | null;
 }
+export namespace LearnHubCreateDTO {
+}
+
 

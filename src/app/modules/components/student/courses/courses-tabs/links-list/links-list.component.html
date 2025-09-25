@@ -1,6 +1,9 @@
 <div class="course-card">
   <div class="card-header">
-    <h3 class="course-title">{{ course.title }}</h3>
+    <div class="header-left">
+      <h3 class="course-title">{{ course.title }}</h3>
+      <app-tier-icon [tier]="course.requiredTier"></app-tier-icon>
+    </div>
     <span class="course-subject">{{ course.subject }}</span>
   </div>
   <div class="card-body">
@@ -18,6 +21,7 @@
                class="link-title">
               {{ link.title }}
               <span class="quiz-count">({{ link.quizzesCount }})</span>
+
             </a>
             <span *ngIf="!hasQuizzes(link)" 
                   class="link-title disabled-link">
@@ -40,3 +44,4 @@
     </span>
   </div>
 </div>
+

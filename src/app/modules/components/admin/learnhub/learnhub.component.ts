@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
@@ -9,9 +9,10 @@ import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {Class, DetailsService, LearnHubsService, Subjects} from "../../../../api-client";
-import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject, takeUntil} from "rxjs";
 import {NgToastService} from "ng-angular-popup";
 import {Router} from "@angular/router";
+import {TokenStorageService} from "../../../../services/token-storage.service";
 
 @Component({
   selector: 'app-learnhub',
@@ -32,13 +33,19 @@ import {Router} from "@angular/router";
   templateUrl: './learnhub.component.html',
   styleUrl: './learnhub.component.scss'
 })
-export class LearnhubComponent implements OnInit {
+export class LearnhubComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['title', 'description', 'klasa', 'lenda', 'links', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   length: number = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
   pageSize: number = this.pageSizeOptions[0];
+
+  // Subject per gestire la cancellazione delle subscription
+  private destroy$ = new Subject<void>();
+
+  // Flag per controllare se il componente è ancora attivo
+  private isComponentActive = true;
 
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
@@ -54,6 +61,7 @@ export class LearnhubComponent implements OnInit {
     private toast: NgToastService,
     public router: Router,
     private _detailsService: DetailsService,
+    private tokenStorageService: TokenStorageService
   ) {
   }
 
@@ -61,6 +69,30 @@ export class LearnhubComponent implements OnInit {
     this.loadCombos();
     this.getLearnHublist();
     this.setupSearchDebounce();
+
+    // Ascolta i cambiamenti dello stato di autenticazione
+    this.tokenStorageService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isLoggedIn: boolean) => {
+        if (!isLoggedIn) {
+          this.handleLogout();
+        }
+      });
+
+    // Aggiungi listener per eventi di navigazione e chiusura pagina
+    window.addEventListener('beforeunload', this.handleLogout.bind(this));
+    window.addEventListener('unload', this.handleLogout.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    // Cancella tutte le subscription quando il componente viene distrutto
+    this.isComponentActive = false;
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    // Rimuovi i listener degli eventi
+    window.removeEventListener('beforeunload', this.handleLogout.bind(this));
+    window.removeEventListener('unload', this.handleLogout.bind(this));
   }
 
   private loadCombos() {
@@ -71,8 +103,10 @@ export class LearnhubComponent implements OnInit {
   private setupSearchDebounce() {
     this.searchSubject.pipe(
       debounceTime(500),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
+      if (!this.isComponentActive) return;
       this.currentSearchTerm = searchTerm;
       this.pageNumber = 0;
       this.getLearnHublist();
@@ -85,33 +119,52 @@ export class LearnhubComponent implements OnInit {
   }
 
   getLearnHublist() {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
     const paginationRequest = {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
       search: this.currentSearchTerm || null
     };
 
-    this._learnHubsService.apiLearnHubsGetPaginatedLearnhubsPost(paginationRequest).subscribe({
-      next: (resp) => {
-        this.dataSource.data = resp.items;
-        this.length = resp.totalCount ?? 0;
-      },
-      error: (error) => {
-        this.toast.danger(error?.error?.message, 'GABIM', 3000);
-      }
-    });
+    this._learnHubsService.apiLearnHubsGetPaginatedLearnhubsPost(paginationRequest)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (resp) => {
+          if (!this.isComponentActive) return;
+          this.dataSource.data = resp.items;
+          this.length = resp.totalCount ?? 0;
+        },
+        error: (error) => {
+          if (!this.isComponentActive) return;
+          this.toast.danger(error?.error?.message, 'GABIM', 3000);
+        }
+      });
   }
 
   private getClassesList() {
-    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
-      this.classesList = res;
-    })
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
+    this._detailsService.apiDetailsGetClassGet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!this.isComponentActive) return;
+        this.classesList = res;
+      })
   }
 
   private getSubjectsList() {
-    this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
-      this.subjectList = res;
-    })
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
+    this._detailsService.apiDetailsGetSubjectsGet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!this.isComponentActive) return;
+        this.subjectList = res;
+      })
   }
 
   getClassName(id: any): string {
@@ -146,17 +199,33 @@ export class LearnhubComponent implements OnInit {
   }
 
   onDelete(learnHub: any) {
-    this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id).subscribe(
-      {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
+    this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
         next: (resp) => {
+          if (!this.isComponentActive) return;
           this.toast.success(resp?.message, 'SUCCESS', 3000);
           this.getLearnHublist();
         },
         error: (error) => {
+          if (!this.isComponentActive) return;
           console.log(error)
           this.toast.danger(error?.error?.message, 'GABIM', 3000);
         }
-      }
-    )
+      })
+  }
+
+  // Metodo per fermare tutte le chiamate API
+  stopAllApiCalls(): void {
+    this.isComponentActive = false;
+    this.destroy$.next();
+  }
+
+  // Metodo per gestire il logout - può essere chiamato da eventi esterni
+  handleLogout(): void {
+    this.stopAllApiCalls();
   }
 }
