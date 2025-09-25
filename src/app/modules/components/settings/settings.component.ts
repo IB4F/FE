@@ -177,6 +177,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
       document.body.style.top = `-${window.scrollY}px`;
+      // Lower header z-index while menu is open to avoid stacking-context issues
+      document.body.classList.add('menu-open');
     } else {
       // Restore body scroll when menu is closed
       const scrollY = document.body.style.top;
@@ -184,6 +186,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.top = '';
+      document.body.classList.remove('menu-open');
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
       }

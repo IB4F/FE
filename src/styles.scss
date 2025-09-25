@@ -61,6 +61,11 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* When the mobile menu is open, reduce header z-index so overlay can sit above */
+body.menu-open .header {
+  z-index: 0 !important;
+}
+
 p {
   font-family: 'Work-Sans-Regular', sans-serif;
   font-size: 18px;
