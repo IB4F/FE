@@ -3,6 +3,7 @@ import {PortalLayoutComponent} from "./portal-layout.component";
 import {roleGuard} from "../../../guards/role.guard";
 import {userResolver} from "../../../helpers/resolvers/user.resolver";
 import {mustChangePasswordGuard} from "../../../guards/must-change-password.guard";
+import {smartSubscriptionGuard} from "../../../guards/subscription.guard";
 
 export const PortalLayoutsRoutes: Routes = [
   {
@@ -145,19 +146,19 @@ export const PortalLayoutsRoutes: Routes = [
           {
             path: 'dashboard',
             title: 'dashboard',
-            canActivate: [roleGuard('Student', 'Admin', 'Family')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family'), smartSubscriptionGuard],
             loadComponent: () => import('../student/dashboard/dashboard.component')
               .then(m => m.DashboardComponent)
           },
           {
             path: 'kurset',
-            // canActivate: [roleGuard('Student', 'Admin', 'Family')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family'), smartSubscriptionGuard],
             loadComponent: () => import('../student/courses/courses.component')
               .then(m => m.CoursesComponent)
           },
           {
             path: 'quiz-list/:id',
-            canActivate: [roleGuard('Student', 'Admin', 'Family')],
+            canActivate: [roleGuard('Student', 'Admin', 'Family'), smartSubscriptionGuard],
             loadComponent: () => import('../student/quiz-list/quiz-list.component')
               .then(m => m.QuizListComponent)
           },
