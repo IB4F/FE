@@ -224,7 +224,8 @@ export class ManageLearnhubComponent implements OnInit {
       this.learnHubsService.apiLearnHubsPostLearnhubPost(formattedData).subscribe({
         next: (resp) => {
           this.idLearnHub = resp;
-          this.getLearnHubInfo();
+          this.goBack();
+          // this.getLearnHubInfo();
           this.learnHubFormGroup.markAsPristine();
           this.toast.success('Learnhubi u krijua', 'SUCCESS', 3000);
         },
