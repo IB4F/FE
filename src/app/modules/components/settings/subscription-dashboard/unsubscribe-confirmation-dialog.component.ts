@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 export interface UnsubscribeDialogData {
   subscriptionName: string;
   subscriptionId: string;
+  endDate?: string;
 }
 
 @Component({
@@ -33,17 +34,18 @@ export interface UnsubscribeDialogData {
         <div class="warning-details">
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Qasja juaj do të ndalojë menjëherë</span>
+            <span>Do të ruani qasjen deri në <strong>{{ getFormattedEndDate() }}</strong></span>
           </div>
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Nuk do të mund të rifitoni qasjen pa regjistruar përsëri</span>
+            <span>Nuk do të paguani më për këtë abonim pas kësaj date</span>
           </div>
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Kjo veprim nuk mund të anulohet</span>
+            <span>Mund të regjistroheni përsëri në çdo kohë</span>
           </div>
         </div>
+        
       </div>
       
       <div class="dialog-actions">
@@ -161,6 +163,90 @@ export interface UnsubscribeDialogData {
         }
       }
     }
+
+    // Responsive Design
+    @media (max-width: 768px) {
+      .unsubscribe-dialog {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        margin: 10px !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .unsubscribe-dialog {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        max-height: 100vh !important;
+        
+        .dialog-header {
+          padding: 16px;
+          
+          h2 {
+            font-size: 1.3rem;
+          }
+        }
+        
+        .dialog-content {
+          padding: 16px;
+          
+          .warning-text {
+            font-size: 0.95rem;
+          }
+          
+          .warning-details {
+            .warning-item {
+              span {
+                font-size: 0.9rem;
+              }
+            }
+          }
+        }
+        
+        .dialog-actions {
+          padding: 16px;
+          flex-direction: column;
+          gap: 12px;
+          
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .unsubscribe-dialog {
+        .dialog-header {
+          padding: 12px;
+          
+          h2 {
+            font-size: 1.2rem;
+          }
+        }
+        
+        .dialog-content {
+          padding: 12px;
+          
+          .warning-text {
+            font-size: 0.9rem;
+          }
+          
+          .warning-details {
+            .warning-item {
+              span {
+                font-size: 0.85rem;
+              }
+            }
+          }
+        }
+        
+        .dialog-actions {
+          padding: 12px;
+        }
+      }
+    }
   `]
 })
 export class UnsubscribeConfirmationDialogComponent {
@@ -168,6 +254,23 @@ export class UnsubscribeConfirmationDialogComponent {
     public dialogRef: MatDialogRef<UnsubscribeConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UnsubscribeDialogData
   ) {}
+
+  getFormattedEndDate(): string {
+    if (!this.data.endDate) {
+      return 'fund të periudhës së faturimit';
+    }
+    
+    try {
+      const date = new Date(this.data.endDate);
+      return date.toLocaleDateString('sq-AL', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'fund të periudhës së faturimit';
+    }
+  }
 
   onCancel(): void {
     this.dialogRef.close('cancel');

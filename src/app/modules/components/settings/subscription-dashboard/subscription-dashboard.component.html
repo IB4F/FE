@@ -97,37 +97,7 @@
             </button>
 
             <button
-              *ngIf="canPause()"
-              mat-stroked-button
-              color="warn"
-              (click)="onPauseSubscription()"
-              class="action-button">
-              <mat-icon>pause</mat-icon>
-              Pauzo Abonimin
-            </button>
-
-            <button
-              *ngIf="canResume()"
-              mat-stroked-button
-              color="primary"
-              (click)="onResumeSubscription()"
-              class="action-button">
-              <mat-icon>play_arrow</mat-icon>
-              Rifillo Abonimin
-            </button>
-
-            <button
-              *ngIf="canCancel()"
-              mat-stroked-button
-              color="warn"
-              (click)="onCancelSubscription()"
-              class="action-button cancel-button">
-              <mat-icon>cancel</mat-icon>
-              Anulo Abonimin
-            </button>
-
-            <button
-              *ngIf="canCancel()"
+              *ngIf="canUnsubscribe()"
               mat-raised-button
               color="warn"
               (click)="onUnsubscribe()"

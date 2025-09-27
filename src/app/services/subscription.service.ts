@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { SubscriptionService, Subscription, CancelSubscriptionDTO, ChangePlanDTO, BillingInterval } from '../api-client';
+import { SubscriptionService, Subscription, CancelSubscriptionDTO, ChangePlanDTO, BillingInterval, SubscriptionStatus } from '../api-client';
 import { UserService } from './user.service';
 import { TokenStorageService } from './token-storage.service';
 
@@ -166,14 +166,14 @@ export class SubscriptionManagementService {
    * Check if subscription is active
    */
   isSubscriptionActive(subscription: Subscription): boolean {
-    return subscription.status === 0; // Assuming 0 is active status
+    return subscription.status === SubscriptionStatus.NUMBER_2; // Active status
   }
 
   /**
    * Check if subscription is in trial
    */
   isSubscriptionInTrial(subscription: Subscription): boolean {
-    return subscription.status === 4; // Assuming 4 is trial status
+    return subscription.status === SubscriptionStatus.NUMBER_1; // Trial status
   }
 
   /**

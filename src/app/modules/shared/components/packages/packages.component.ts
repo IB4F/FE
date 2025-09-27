@@ -34,6 +34,8 @@ type BillingCycle = 'annual' | 'monthly';
 export class PackagesComponent implements OnChanges {
   @Input() userType!: string;
   @Input() familyPricingData: FamilyPricingResponseDTO[] = [];
+  @Input() excludeCurrentPlan: boolean = false;
+  @Input() currentPlanId?: string;
 
   cards: Record<BillingCycle, Card[]> = {
     annual: [],
@@ -130,6 +132,11 @@ export class PackagesComponent implements OnChanges {
 
     // Map API data to cards
     this.paymentInfo.forEach(item => {
+      // Skip current plan if excludeCurrentPlan is true
+      if (this.excludeCurrentPlan && item.id === this.currentPlanId) {
+        return;
+      }
+
       // Get description for this package, with fallback to default description
       const packageName = item.name || '';
       

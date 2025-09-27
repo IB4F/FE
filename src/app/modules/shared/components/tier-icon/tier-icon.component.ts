@@ -17,7 +17,7 @@ export class TierIconComponent {
 
   getTierIcon(tier: string | null): string {
     if (!tier) return '';
-    
+
     switch (tier.toLowerCase()) {
       case 'basic':
         return 'star';
@@ -32,7 +32,7 @@ export class TierIconComponent {
 
   getTierClass(tier: string | null): string {
     if (!tier) return '';
-    
+
     switch (tier.toLowerCase()) {
       case 'basic':
         return 'tier-basic';
@@ -47,7 +47,7 @@ export class TierIconComponent {
 
   getTierText(tier: string | null): string {
     if (!tier) return '';
-    
+
     switch (tier.toLowerCase()) {
       case 'basic':
         return 'Basic';

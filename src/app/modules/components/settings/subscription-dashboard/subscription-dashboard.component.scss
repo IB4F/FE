@@ -487,3 +487,143 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .subscription-dashboard {
+    padding: 12px;
+
+    .dashboard-header {
+      margin-bottom: 25px;
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    .dashboard-content {
+      .subscription-content {
+        gap: 15px;
+
+        .subscription-overview-card {
+          .subscription-details {
+            .plan-info {
+              h3 {
+                font-size: 1.3rem;
+              }
+            }
+
+            .billing-info {
+              .billing-amount {
+                .amount {
+                  font-size: 1.6rem;
+                }
+
+                .interval {
+                  font-size: 0.9rem;
+                }
+              }
+
+              .billing-dates {
+                p {
+                  font-size: 0.85rem;
+                }
+              }
+            }
+          }
+        }
+
+        .subscription-actions-card {
+          .actions-grid {
+            gap: 10px;
+
+            .action-button {
+              padding: 10px 16px;
+              font-size: 0.9rem;
+
+              mat-icon {
+                margin-right: 6px;
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .subscription-dashboard {
+    padding: 8px;
+
+    .dashboard-header {
+      margin-bottom: 15px;
+
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+    }
+
+    .dashboard-content {
+      .subscription-content {
+        gap: 10px;
+
+        .subscription-overview-card {
+          .subscription-details {
+            .plan-info {
+              h3 {
+                font-size: 1.1rem;
+              }
+            }
+
+            .billing-info {
+              .billing-amount {
+                .amount {
+                  font-size: 1.2rem;
+                }
+
+                .interval {
+                  font-size: 0.8rem;
+                }
+              }
+
+              .billing-dates {
+                p {
+                  font-size: 0.75rem;
+                }
+              }
+            }
+          }
+        }
+
+        .subscription-actions-card {
+          .actions-grid {
+            gap: 6px;
+
+            .action-button {
+              padding: 6px 10px;
+              font-size: 0.8rem;
+
+              mat-icon {
+                margin-right: 3px;
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
