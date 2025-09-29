@@ -31,6 +31,7 @@
           [class.active]="selectedSubject === subject">
     <span>{{ subjectLabels[subject] }}</span>
     <ng-container [ngSwitch]="subject">
+      <albanian-svg *ngSwitchCase="Subject.AlbanianLanguage"></albanian-svg>
       <letersi-svg *ngSwitchCase="Subject.Literature"></letersi-svg>
       <matematik-svg *ngSwitchCase="Subject.Mathematics"></matematik-svg>
       <gjeografi-svg *ngSwitchCase="Subject.Geography"></gjeografi-svg>

@@ -20,6 +20,7 @@ export enum Subjects {
   History = 'Histori',
   Geography = 'Gjeografi',
   Science = 'Shkenca',
+  AlbanianLanguage = 'Gjuhë Shqipe',
 }
 
 export enum Difficulty {

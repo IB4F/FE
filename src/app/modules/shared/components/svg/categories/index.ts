@@ -5,3 +5,4 @@ export * from './mathematics.component';
 export * from './history.component';
 export * from './literature.component';
 export * from './science.component';
+export * from './albanianLanguage.component';

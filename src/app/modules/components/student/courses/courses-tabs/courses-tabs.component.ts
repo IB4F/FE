@@ -33,6 +33,7 @@ import {Subject} from "rxjs";
     Category.GjeografiSvgComponent,
     Category.HistoriSvgComponent,
     Category.LetersiSvgComponent,
+    Category.AlbanianSvgComponent,
     LinksListComponent
   ],
   templateUrl: './courses-tabs.component.html',
@@ -49,12 +50,13 @@ export class CoursesTabsComponent implements OnInit, OnDestroy {
   selectedSubject: Subjects = Subjects.Literature;
 
   subjectLabels: { [key in Subjects]: string } = {
+    [Subjects.AlbanianLanguage]: 'Gjuhë Shqipe',
     [Subjects.Literature]: 'Letërsia',
     [Subjects.Mathematics]: 'Matematikë',
     [Subjects.Geography]: 'Gjeografia',
     [Subjects.English]: 'Anglisht',
     [Subjects.History]: 'Histori',
-    [Subjects.Science]: 'Shkencë'
+    [Subjects.Science]: 'Shkencë',
   };
 
   courses: any[] = [];
