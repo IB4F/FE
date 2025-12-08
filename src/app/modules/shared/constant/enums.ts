@@ -14,13 +14,13 @@ export enum TypeClass {
 }
 
 export enum Subjects {
+  AlbanianLanguage = 'Gjuhë Shqipe',
   Literature = 'Letërsi',
-  Mathematics = 'Matematik',
+  Mathematics = 'Matematikë',
   English = 'Anglisht',
   History = 'Histori',
   Geography = 'Gjeografi',
-  Science = 'Shkenca',
-  AlbanianLanguage = 'Gjuhë Shqipe',
+  Science = 'Shkencë',
 }
 
 export enum Difficulty {

@@ -47,7 +47,7 @@ export class CoursesTabsComponent implements OnInit, OnDestroy {
   typeClasses = Object.values(TypeClass);
 
   selectedTab: TypeClass = TypeClass.First;
-  selectedSubject: Subjects = Subjects.Literature;
+  selectedSubject: Subjects = Subjects.AlbanianLanguage;
 
   subjectLabels: { [key in Subjects]: string } = {
     [Subjects.AlbanianLanguage]: 'Gjuhë Shqipe',
