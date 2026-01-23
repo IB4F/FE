@@ -39,6 +39,11 @@
           <mat-icon>card_membership</mat-icon>
           <span>Abonimi Im</span>
         </button>
+        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.Preferences"
+                (click)="selectTab(ProfileTabs.Preferences); closeMobileMenu()">
+          <mat-icon>settings</mat-icon>
+          <span>Preferencat</span>
+        </button>
       </div>
     </div>
   </div>
@@ -60,6 +65,11 @@
             *ngIf="canAccessSubscriptionDashboard$ | async">
       <mat-icon>card_membership</mat-icon>
       <span>Abonimi Im</span>
+    </button>
+    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.Preferences"
+            (click)="selectTab(ProfileTabs.Preferences)">
+      <mat-icon>settings</mat-icon>
+      <span>Preferencat</span>
     </button>
   </div>
 
@@ -84,6 +94,10 @@
 
     <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard && (canAccessSubscriptionDashboard$ | async)">
       <app-subscription-dashboard></app-subscription-dashboard>
+    </ng-container>
+
+    <ng-container *ngIf="selectedTab === ProfileTabs.Preferences">
+      <app-preferences></app-preferences>
     </ng-container>
   </div>
 </div>

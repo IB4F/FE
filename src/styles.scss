@@ -470,3 +470,185 @@ button {
 .mat-mdc-slider .mdc-slider__thumb .mdc-slider__value-indicator {
   display: none !important;
 }
+
+/* Dyslexic Font Styles - Applied when dyslexic-font-enabled class is on body */
+body.dyslexic-font-enabled {
+  font-family: 'OpenDyslexic', 'Work-Sans-Regular', sans-serif !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+  line-height: 1.8 !important;
+
+  /* CRITICAL: Exclude Material Icons from dyslexic font FIRST - must be very specific */
+  mat-icon,
+  .mat-icon,
+  [mat-icon],
+  [class*="mat-icon"],
+  [class*="material-icons"],
+  .material-icons,
+  .mat-icon:before,
+  mat-icon:before,
+  .material-icons:before,
+  span.material-icons,
+  i.material-icons {
+    font-family: 'Material Icons' !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-transform: none !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    direction: ltr !important;
+    -webkit-font-feature-settings: 'liga' !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+
+  /* CRITICAL: Exclude Font Awesome icons from dyslexic font */
+  i[class*="fa-"],
+  i[class*="fas"],
+  i[class*="fab"],
+  i[class*="far"],
+  i[class*="fal"],
+  i[class*="fad"],
+  .fa,
+  .fas,
+  .fab,
+  .far,
+  .fal,
+  .fad,
+  [class*="fa-"],
+  [class*="fas"],
+  [class*="fab"],
+  [class*="far"],
+  [class*="fal"],
+  [class*="fad"],
+  i.fa:before,
+  i.fas:before,
+  i.fab:before {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'Font Awesome 6 Pro', 'FontAwesome' !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-transform: none !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  /* Font Awesome brands (fab) */
+  i[class*="fab"],
+  .fab,
+  [class*="fab"] {
+    font-family: 'Font Awesome 6 Brands' !important;
+    font-weight: 400 !important;
+  }
+
+  /* Exclude icon buttons and their children */
+  [mat-icon-button] mat-icon,
+  [mat-icon-button] .mat-icon,
+  button[mat-icon-button] mat-icon,
+  button[mat-icon-button] .mat-icon,
+  .mat-icon-button mat-icon,
+  .mat-icon-button .mat-icon {
+    font-family: 'Material Icons' !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+  }
+
+  /* Apply dyslexic font to other elements, excluding icons */
+  *:not(mat-icon):not(.mat-icon):not([mat-icon]):not([class*="mat-icon"]):not([class*="material-icons"]):not(.material-icons):not([class*="fa-"]):not([class*="fas"]):not([class*="fab"]):not([class*="far"]):not([class*="fal"]):not([class*="fad"]):not(.fa):not(.fas):not(.fab):not(.far):not(.fal):not(.fad) {
+    font-family: 'OpenDyslexic', 'Work-Sans-Regular', sans-serif !important;
+  }
+
+  p {
+    font-family: 'OpenDyslexic', 'Work-Sans-Regular', sans-serif !important;
+    font-size: 18px !important;
+    line-height: 1.8 !important;
+    letter-spacing: 0.1em !important;
+    word-spacing: 0.14em !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'OpenDyslexic', 'Lufga-Regular', sans-serif !important;
+    letter-spacing: 0.1em !important;
+    word-spacing: 0.15em !important;
+    line-height: 1.7 !important;
+  }
+
+  button:not(.mat-icon-button):not([mat-icon-button]):not(mat-icon-button),
+  a:not([mat-icon-button]):not(.mat-icon-button),
+  input:not([mat-icon-button]):not(.mat-icon-button),
+  textarea:not([mat-icon-button]):not(.mat-icon-button),
+  select:not([mat-icon-button]):not(.mat-icon-button) {
+    font-family: 'OpenDyslexic', 'Work-Sans-Regular', sans-serif !important;
+    letter-spacing: 0.08em !important;
+    word-spacing: 0.12em !important;
+  }
+
+  /* Ensure icon elements inside text elements don't get dyslexic font */
+  p mat-icon,
+  p .mat-icon,
+  p i[class*="fa-"],
+  p .fa,
+  h1 mat-icon,
+  h1 .mat-icon,
+  h1 i[class*="fa-"],
+  h1 .fa,
+  h2 mat-icon,
+  h2 .mat-icon,
+  h2 i[class*="fa-"],
+  h2 .fa,
+  h3 mat-icon,
+  h3 .mat-icon,
+  h3 i[class*="fa-"],
+  h3 .fa,
+  h4 mat-icon,
+  h4 .mat-icon,
+  h4 i[class*="fa-"],
+  h4 .fa,
+  h5 mat-icon,
+  h5 .mat-icon,
+  h5 i[class*="fa-"],
+  h5 .fa,
+  h6 mat-icon,
+  h6 .mat-icon,
+  h6 i[class*="fa-"],
+  h6 .fa,
+  span mat-icon,
+  span .mat-icon,
+  span i[class*="fa-"],
+  span .fa,
+  div mat-icon,
+  div .mat-icon,
+  div i[class*="fa-"],
+  div .fa {
+    font-family: inherit !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+  }
+
+  /* Specific fixes for Material Icons inside text */
+  p mat-icon,
+  p .mat-icon,
+  h1 mat-icon,
+  h1 .mat-icon,
+  h2 mat-icon,
+  h2 .mat-icon,
+  h3 mat-icon,
+  h3 .mat-icon,
+  h4 mat-icon,
+  h4 .mat-icon,
+  h5 mat-icon,
+  h5 .mat-icon,
+  h6 mat-icon,
+  h6 .mat-icon,
+  span mat-icon,
+  span .mat-icon,
+  div mat-icon,
+  div .mat-icon {
+    font-family: 'Material Icons' !important;
+  }
+}

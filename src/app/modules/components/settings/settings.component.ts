@@ -10,6 +10,7 @@ import {ProfileTabs, UserRole} from "../../shared/constant/enums";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {SubscriptionDashboardComponent} from "./subscription-dashboard/subscription-dashboard.component";
+import {PreferencesComponent} from "./preferences/preferences.component";
 import {AuthService, ChangePasswordDTO, Class, DetailsService, User} from "../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../services/token-storage.service";
@@ -24,7 +25,8 @@ import {TokenStorageService} from "../../../services/token-storage.service";
     MatButtonModule,
     ChangePasswordComponent,
     ProfileComponent,
-    SubscriptionDashboardComponent
+    SubscriptionDashboardComponent,
+    PreferencesComponent
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'

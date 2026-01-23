@@ -40,6 +40,7 @@ export enum ProfileTabs {
   PersonalInfo = 1,
   ChangePassword = 2,
   SubscriptionDashboard = 3,
+  Preferences = 4,
 }
 
 export enum NavigationDirection {

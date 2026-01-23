@@ -1,0 +1,56 @@
+<div class="preferences-container" *ngIf="currentLanguage$ | async as currentLang">
+  <h2 class="section-title">{{ title }}</h2>
+  <p class="section-description">{{ description }}</p>
+
+  <div class="preference-section">
+    <!-- Language Selection -->
+    <div class="preference-item">
+      <div class="preference-info">
+        <div class="preference-header">
+          <mat-icon class="preference-icon">language</mat-icon>
+          <div class="preference-title-group">
+            <h3 class="preference-title">{{ languageLabel }}</h3>
+            <p class="preference-subtitle">{{ languageSubtitle }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="preference-action">
+        <mat-form-field appearance="outline" class="language-select">
+          <mat-select [value]="currentLang" (selectionChange)="onLanguageChange($event.value)">
+            <mat-option value="sq">Shqip</mat-option>
+            <mat-option value="en">English</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Dyslexic Font Toggle -->
+    <div class="preference-item">
+      <div class="preference-info">
+        <div class="preference-header">
+          <mat-icon class="preference-icon">text_fields</mat-icon>
+          <div class="preference-title-group">
+            <h3 class="preference-title">{{ dyslexicFontTitle }}</h3>
+            <p class="preference-subtitle">{{ dyslexicFontSubtitle }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="preference-action">
+        <mat-slide-toggle
+          [checked]="isDyslexicFontEnabled$ | async"
+          (change)="toggleDyslexicFont()"
+          color="primary">
+        </mat-slide-toggle>
+      </div>
+    </div>
+
+    <div class="preference-description-box">
+      <mat-icon class="info-icon">info</mat-icon>
+      <div class="info-content">
+        <p><strong>{{ dyslexicFontInfoTitle }}</strong></p>
+        <p>{{ dyslexicFontInfoDescription }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+

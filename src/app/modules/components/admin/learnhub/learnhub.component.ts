@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
@@ -33,7 +33,7 @@ import {TokenStorageService} from "../../../../services/token-storage.service";
   templateUrl: './learnhub.component.html',
   styleUrl: './learnhub.component.scss'
 })
-export class LearnhubComponent implements OnInit, OnDestroy {
+export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = ['title', 'description', 'klasa', 'lenda', 'links', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   length: number = 0;
@@ -61,7 +61,8 @@ export class LearnhubComponent implements OnInit, OnDestroy {
     private toast: NgToastService,
     public router: Router,
     private _detailsService: DetailsService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
@@ -82,6 +83,18 @@ export class LearnhubComponent implements OnInit, OnDestroy {
     // Aggiungi listener per eventi di navigazione e chiusura pagina
     window.addEventListener('beforeunload', this.handleLogout.bind(this));
     window.addEventListener('unload', this.handleLogout.bind(this));
+  }
+
+  ngAfterViewInit() {
+    // Il sort sarà connesso dopo che i dati vengono caricati
+    // perché la tabella è dentro un *ngIf
+  }
+  
+  private connectSort() {
+    // Metodo helper per connettere il sort quando la tabella è renderizzata
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
   }
 
   ngOnDestroy(): void {
@@ -135,6 +148,9 @@ export class LearnhubComponent implements OnInit, OnDestroy {
           if (!this.isComponentActive) return;
           this.dataSource.data = resp.items;
           this.length = resp.totalCount ?? 0;
+          // Forza il change detection e poi connetti il sort
+          this.cdr.detectChanges();
+          setTimeout(() => this.connectSort(), 0);
         },
         error: (error) => {
           if (!this.isComponentActive) return;
@@ -169,12 +185,12 @@ export class LearnhubComponent implements OnInit, OnDestroy {
 
   getClassName(id: any): string {
     const foundClass = this.classesList.find(c => c.id === id);
-    return foundClass ? foundClass.name : id;
+    return foundClass?.name ?? String(id);
   }
 
   getSubjectName(id: any): string {
     const foundSubject = this.subjectList.find(s => s.id === id);
-    return foundSubject ? foundSubject.name : id;
+    return foundSubject?.name ?? String(id);
   }
 
   onPageChange(event: PageEvent) {

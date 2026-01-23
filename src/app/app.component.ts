@@ -5,6 +5,7 @@ import {NgToastModule, ToasterPosition} from "ng-angular-popup";
 import {LoaderService} from "./modules/shared/components/loader/loader.service";
 import {CommonModule} from "@angular/common";
 import {LoaderComponent} from "./modules/shared/components/loader/loader.component";
+import {DyslexicFontService} from "./services/dyslexic-font.service";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,9 @@ export class AppComponent {
   protected readonly ToasterPosition = ToasterPosition;
 
   constructor(
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private dyslexicFontService: DyslexicFontService
   ) {
+    // Initialize dyslexic font service to apply saved preference on app load
   }
 }
