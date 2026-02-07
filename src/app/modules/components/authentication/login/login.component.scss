@@ -197,11 +197,11 @@ mat-icon {
   .container {
     padding: 20px;
   }
-  
+
   .login-body {
     padding: 40px 35px;
   }
-  
+
   .login-body h2 {
     font-size: 32px;
     margin-bottom: 30px;
@@ -320,6 +320,95 @@ mat-icon {
     max-width: 240px; /* Smaller image for mobile */
     width: 100%;
     height: auto;
+  }
+}
+
+/* Landscape: phone/tablet orizzontale (es. iPhone 14 Pro Max 932x430) - layout compatto senza overflow */
+@media (orientation: landscape) and (max-height: 520px) {
+  .container {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 12px;
+    justify-content: flex-start;
+  }
+
+  .container > img {
+    margin: 8px 0;
+    max-width: 100px;
+  }
+
+  .login-container {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .login-body {
+    flex: 0 0 auto;
+    width: 48%;
+    max-width: 360px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+
+  .login-body h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .login-form {
+    max-width: 100%;
+  }
+
+  .mat-mdc-form-field {
+    margin-bottom: 8px;
+  }
+
+  .forget-pass {
+    padding: 4px 0 10px 0;
+  }
+
+  .forget-pass span {
+    font-size: 12px;
+  }
+
+  .login-form .btn-container button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .signup-text {
+    margin-top: 10px;
+  }
+
+  .login-body p,
+  .login-body a {
+    font-size: 12px;
+  }
+
+  .right {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 48%;
+    max-width: 420px;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .right > img {
+    width: 100%;
+    max-width: 100%;
+    max-height: 260px;
+    height: auto;
+    object-fit: contain;
   }
 }
 
