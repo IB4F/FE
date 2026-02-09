@@ -15,7 +15,7 @@ export const roleGuard = (...expectedRoles: string[]): CanActivateFn => {
       map(isLoggedIn => {
         if (!isLoggedIn) {
           notificationService.warning('Duhet të logohesh për të aksesuar këtë faqe!', 'KUJDES', 3000);
-          router.navigate(['hyr']);
+          router.navigate(['/hyr']);
           return false;
         }
 

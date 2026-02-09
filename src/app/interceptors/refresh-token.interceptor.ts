@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
+import { SessionService } from '../services/session.service';
 import { inject } from '@angular/core';
 import {BehaviorSubject, catchError, filter, switchMap, take, throwError} from 'rxjs';
 import {AuthService} from "../api-client";
@@ -11,6 +12,7 @@ let refreshTokenInFlight: BehaviorSubject<string | null> | null = null;
 export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const tokenStorage = inject(TokenStorageService);
+  const sessionService = inject(SessionService);
   const router = inject(Router);
 
   return next(req).pipe(
@@ -23,6 +25,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         const refreshToken = tokenStorage.getRefreshToken();
         if (!refreshToken) {
           tokenStorage.clearTokens();
+          sessionService.clearInactivityTimer();
           router.navigate(['/hyr']);
           return throwError(() => error);
         }
@@ -40,6 +43,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
             },
             error: () => {
               tokenStorage.clearTokens();
+              sessionService.clearInactivityTimer();
               authService.apiAuthLogoutPost();
               refreshTokenInFlight?.error(error);
               refreshTokenInFlight = null;

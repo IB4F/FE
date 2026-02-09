@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initaliazeLoginForm();
+    this.initializeLoginForm();
     this.checkForRegistrationSuccess();
   }
 
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  initaliazeLoginForm() {
+  initializeLoginForm() {
     this.loginFormGroup = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, passwordValidator]]
@@ -159,9 +159,7 @@ export class LoginComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ForgetPasswordComponent, dialogConfig);
     
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed:', result);
-    });
+    dialogRef.afterClosed().subscribe();
   }
 
   navigateTo() {

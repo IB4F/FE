@@ -26,4 +26,12 @@ export class SessionService {
       this.router.navigate(['/hyr'], { queryParams: { sessionTimeout: true } });
     }, 30 * 60 * 1000); // 30 minutes
   }
+
+  /** Call on logout to stop the inactivity timer and avoid redirect after user has logged out. */
+  clearInactivityTimer(): void {
+    if (this.inactivityTimer != null) {
+      clearTimeout(this.inactivityTimer);
+      this.inactivityTimer = undefined;
+    }
+  }
 }

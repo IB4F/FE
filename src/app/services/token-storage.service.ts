@@ -5,8 +5,9 @@ import {isPlatformBrowser} from "@angular/common";
 @Injectable({providedIn: 'root'})
 export class TokenStorageService {
   private loggedInSubject = new BehaviorSubject<boolean>(false);
-    private userRoleSubject = new BehaviorSubject<string | null>(null);
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
   private mustChangePasswordSubject = new BehaviorSubject<boolean>(false);
+  private userIdSubject = new BehaviorSubject<string | null>(null);
 
   public isLoggedIn$ = this.loggedInSubject.asObservable();
   public mustChangePassword$ = this.mustChangePasswordSubject.asObservable();
@@ -26,12 +27,7 @@ export class TokenStorageService {
   getRefreshToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
   getRole = (): string | null => this.userRoleSubject.value;
   getMustChangePassword = (): boolean => this.mustChangePasswordSubject.value;
-  getUserId = (): string | null => {
-    const token = this.getAccessToken();
-    if (!token) return null;
-    const payload = this.parseJwt(token);
-    return payload?.sub || payload?.nameid || null;
-  };
+  getUserId = (): string | null => this.userIdSubject.value;
 
   // SETTERS (optimized for speed)
   saveTokens = (tokens: { accessToken: string; refreshToken: string; mustChangePassword?: boolean }): void => {
@@ -55,6 +51,7 @@ export class TokenStorageService {
     this.loggedInSubject.next(false);
     this.userRoleSubject.next(null);
     this.mustChangePasswordSubject.next(false);
+    this.userIdSubject.next(null);
   };
 
   setMustChangePassword = (value: boolean): void => {
@@ -76,12 +73,17 @@ export class TokenStorageService {
   private parseAndSetRole(token: string): void {
     try {
       const payload = this.parseJwt(token);
-      if (payload && payload.role) {
-        this.userRoleSubject.next(payload.role);
+      if (payload) {
+        if (payload.role) {
+          this.userRoleSubject.next(payload.role);
+        }
+        const userId = payload.sub ?? payload.nameid ?? null;
+        this.userIdSubject.next(userId);
       }
     } catch (e) {
       console.error('Error parsing JWT token', e);
       this.userRoleSubject.next(null);
+      this.userIdSubject.next(null);
     }
   }
 
