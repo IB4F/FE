@@ -6,7 +6,6 @@ import {BehaviorSubject, catchError, filter, switchMap, take, throwError} from '
 import {AuthService} from "../api-client";
 import {Router} from "@angular/router";
 
-const isRefreshingSubject = new BehaviorSubject<boolean>(false);
 let refreshTokenInFlight: BehaviorSubject<string | null> | null = null;
 
 export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
@@ -31,29 +30,27 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         }
 
         if (!refreshTokenInFlight) {
-          refreshTokenInFlight = new BehaviorSubject<string | null>(null);
-          isRefreshingSubject.next(true);
+          const subject = new BehaviorSubject<string | null>(null);
+          refreshTokenInFlight = subject;
           authService.apiAuthRefreshPost({ refreshToken }).subscribe({
             next: (newTokens) => {
               tokenStorage.saveTokens(newTokens);
-              refreshTokenInFlight?.next(newTokens.accessToken);
-              refreshTokenInFlight?.complete();
+              subject.next(newTokens.accessToken);
+              subject.complete();
               refreshTokenInFlight = null;
-              isRefreshingSubject.next(false);
             },
             error: () => {
               tokenStorage.clearTokens();
               sessionService.clearInactivityTimer();
-              authService.apiAuthLogoutPost();
-              refreshTokenInFlight?.error(error);
+              authService.apiAuthLogoutPost().subscribe();
+              subject.error(error);
               refreshTokenInFlight = null;
-              isRefreshingSubject.next(false);
               router.navigate(['/hyr']);
             }
           });
         }
 
-        return (refreshTokenInFlight as BehaviorSubject<string | null>).pipe(
+        return refreshTokenInFlight.pipe(
           filter((token): token is string => !!token),
           take(1),
           switchMap((newAccessToken: string) => {

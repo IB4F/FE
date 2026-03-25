@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CommonModule, Location} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -67,6 +68,8 @@ export class QuizzesComponent implements OnInit {
   childQuizzes: any[] = [];
   showChildQuizzesSection: boolean = false;
 
+  private destroyRef = inject(DestroyRef);
+
   // Image preview properties
   showImagePreview: boolean = false;
   previewImageUrl: string = '';
@@ -89,7 +92,7 @@ export class QuizzesComponent implements OnInit {
     // Inizializza il form con valori di default
     this.initializeQuizForm();
 
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
       this.linkId = params.get('linkId') as string;
       this.quizId = params.get('quizId');
       if (this.isEditMode) {
@@ -303,8 +306,9 @@ export class QuizzesComponent implements OnInit {
   }
 
   private getQuizTypeList() {
-    this._detailsService.apiDetailsGetQuizTypesGet().subscribe(res => {
-      this.quizTypes = res;
+    this._detailsService.apiDetailsGetQuizTypesGet().subscribe({
+      next: res => { this.quizTypes = res; },
+      error: () => { this.toast.danger('Gabim në ngarkimin e llojeve të kuizeve', 'GABIM', 3000); }
     })
   }
 

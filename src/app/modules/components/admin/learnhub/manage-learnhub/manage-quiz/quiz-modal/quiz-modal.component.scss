@@ -211,6 +211,88 @@ $border-color-subtle: #bdc3c7; // Bordo sottile
   }
 }
 
+@media (max-width: 768px) {
+  .quiz-modal-container {
+    padding: 20px;
+    max-width: 95vw;
+
+    .modal-header {
+      padding-bottom: 15px;
+      margin-bottom: 18px;
+
+      h3 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .quiz-form-content form {
+      gap: 18px;
+
+      .options-section {
+        padding: 16px;
+
+        .option-item {
+          flex-direction: column;
+          gap: 8px;
+
+          .option-label {
+            min-width: unset;
+            padding-top: 0;
+          }
+        }
+      }
+
+      .form-actions button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .quiz-modal-container {
+    padding: 16px;
+
+    .modal-header h3 {
+      font-size: 1.2rem;
+    }
+
+    .quiz-form-content form {
+      gap: 14px;
+
+      .options-section {
+        padding: 12px;
+
+        .section-title {
+          font-size: 1rem;
+          margin-bottom: 14px;
+        }
+
+        .option-item .option-input-group {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+      }
+
+      .points-section {
+        mat-slider {
+          width: 100%;
+        }
+      }
+
+      .form-actions {
+        padding-top: 16px;
+
+        button {
+          padding: 12px 20px;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
 // Stili globali Material per coerenza
 ::ng-deep {
   // Checkbox e Radio Button

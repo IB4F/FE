@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { StudentService } from '../../../../api-client';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -58,6 +59,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
   isExplanationAudioPlaying: boolean = false;
   explanationAudio: HTMLAudioElement | null = null;
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private studentService: StudentService,
     private route: ActivatedRoute,
@@ -68,7 +71,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
       this.linkId = params.get('id') as string;
       if (this.linkId) {
         this.loadQuizzesAndProgress();

@@ -48,7 +48,6 @@ export class QuizModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.exam)
     this.initializeQuizForm();
   }
 
@@ -98,8 +97,6 @@ export class QuizModalComponent implements OnInit {
         isCorrect: option.isCorrect
       }))
     };
-
-    console.log(formattedData)
 
     if (this.isEditMode) {
       if (this.data.exam.id !== undefined) {

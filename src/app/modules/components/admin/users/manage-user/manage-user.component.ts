@@ -90,8 +90,8 @@ export class ManageUserComponent implements OnInit {
     }
     this.adminUserService.apiAdminUsersIdPut(this.idUser, adminUserDetailsDTO).subscribe(
       {
-        next: (resp) => {
-          console.log(resp)
+        next: () => {
+          this.toast.success('Përdoruesi u përditësua me sukses', 'SUKSES', 3000);
         },
         error: (error) => this.toast.danger(error?.error?.message, 'GABIM', 3000)
       }

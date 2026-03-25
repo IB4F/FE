@@ -25,3 +25,42 @@
     justify-content: space-between;
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 24px 16px;
+
+    .title {
+      margin-bottom: 20px;
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .btn-container {
+      flex-direction: column;
+      gap: 12px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+
+    .title {
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

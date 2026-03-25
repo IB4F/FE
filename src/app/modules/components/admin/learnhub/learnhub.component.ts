@@ -46,6 +46,7 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Flag per controllare se il componente è ancora attivo
   private isComponentActive = true;
+  private boundHandleLogout = this.handleLogout.bind(this);
 
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
@@ -81,8 +82,8 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     // Aggiungi listener per eventi di navigazione e chiusura pagina
-    window.addEventListener('beforeunload', this.handleLogout.bind(this));
-    window.addEventListener('unload', this.handleLogout.bind(this));
+    window.addEventListener('beforeunload', this.boundHandleLogout);
+    window.addEventListener('unload', this.boundHandleLogout);
   }
 
   ngAfterViewInit() {
@@ -104,8 +105,8 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.complete();
 
     // Rimuovi i listener degli eventi
-    window.removeEventListener('beforeunload', this.handleLogout.bind(this));
-    window.removeEventListener('unload', this.handleLogout.bind(this));
+    window.removeEventListener('beforeunload', this.boundHandleLogout);
+    window.removeEventListener('unload', this.boundHandleLogout);
   }
 
   private loadCombos() {
@@ -228,7 +229,6 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         error: (error) => {
           if (!this.isComponentActive) return;
-          console.log(error)
           this.toast.danger(error?.error?.message, 'GABIM', 3000);
         }
       })

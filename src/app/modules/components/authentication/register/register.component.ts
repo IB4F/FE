@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CommonModule} from "@angular/common";
@@ -36,6 +37,7 @@ export class  RegisterComponent implements OnInit {
   registerFormGroup!: FormGroup;
   hidePass = true;
   classesList: Class[] = [];
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -60,7 +62,7 @@ export class  RegisterComponent implements OnInit {
       password: ['', [Validators.required, passwordValidator]]
     });
 
-    this.registerFormGroup.statusChanges.subscribe(status => {
+    this.registerFormGroup.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(status => {
       this.membershipStudentService.setRegisterFormValid(status === 'VALID');
     });
   }
@@ -70,8 +72,9 @@ export class  RegisterComponent implements OnInit {
   }
 
   private getClassesList() {
-    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
-      this.classesList = res;
+    this._detailsService.apiDetailsGetClassGet().subscribe({
+      next: res => { this.classesList = res; },
+      error: () => {}
     })
   }
 

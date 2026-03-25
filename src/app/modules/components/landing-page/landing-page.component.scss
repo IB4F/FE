@@ -188,3 +188,28 @@ $blue: #2962ff;
     }
   }
 }
+
+// Small phones (fino a 480px)
+@media (max-width: 480px) {
+  .container {
+    padding: 30px 10px 0 10px;
+
+    .left {
+      margin-bottom: 24px;
+
+      .lg-title {
+        font-size: 28px;
+        line-height: 38px;
+
+        > svg {
+          width: 40px;
+          top: -16px;
+        }
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+    }
+  }
+}

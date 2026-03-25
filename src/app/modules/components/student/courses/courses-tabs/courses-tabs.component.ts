@@ -78,7 +78,7 @@ export class CoursesTabsComponent implements OnInit, OnDestroy {
     this.loadClassesList();
     this.loadUserData();
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const tab = params['tab'];
       if (tab && Object.values(TypeClass).includes(tab)) {
         // Only allow tab selection if user can navigate all tabs or if it's their assigned class

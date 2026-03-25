@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
 import {AdminUserDetailsDTO, AdminUserService} from "../../../../api-client";
 import {CommonModule} from "@angular/common";
 import {NgToastService} from "ng-angular-popup";
@@ -11,6 +11,7 @@ import {MatIconButton} from "@angular/material/button";
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
@@ -43,6 +44,7 @@ export class UsersComponent implements OnInit {
 
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -63,7 +65,8 @@ export class UsersComponent implements OnInit {
   private setupSearchDebounce() {
     this.searchSubject.pipe(
       debounceTime(500),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(searchTerm => {
       this.currentSearchTerm = searchTerm;
       this.pageNumber = 0;

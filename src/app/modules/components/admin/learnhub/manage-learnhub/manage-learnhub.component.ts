@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule, Location} from "@angular/common";
 import {MatInputModule} from "@angular/material/input";
@@ -53,6 +54,7 @@ export class ManageLearnhubComponent implements OnInit {
   tiersList: any[] = [];
 
   learHub: any;
+  private destroyRef = inject(DestroyRef);
   idLearnHub!: string;
 
   constructor(
@@ -107,7 +109,7 @@ export class ManageLearnhubComponent implements OnInit {
     });
 
     // Add conditional validation for tier field
-    this.learnHubFormGroup.get('isFree')?.valueChanges.subscribe(isFree => {
+    this.learnHubFormGroup.get('isFree')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(isFree => {
       const tierControl = this.learnHubFormGroup.get('tier');
       if (isFree === false) {
         tierControl?.setValidators([Validators.required]);
@@ -225,7 +227,6 @@ export class ManageLearnhubComponent implements OnInit {
         next: (resp) => {
           this.idLearnHub = resp;
           this.goBack();
-          // this.getLearnHubInfo();
           this.learnHubFormGroup.markAsPristine();
           this.toast.success('Learnhubi u krijua', 'SUCCESS', 3000);
         },
@@ -241,14 +242,16 @@ export class ManageLearnhubComponent implements OnInit {
   }
 
   private getClassesList() {
-    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
-      this.classesList = res;
+    this._detailsService.apiDetailsGetClassGet().subscribe({
+      next: res => { this.classesList = res; },
+      error: () => { this.toast.danger('Gabim në ngarkimin e klasave', 'GABIM', 3000); }
     })
   }
 
   private getSubjectsList() {
-    this._detailsService.apiDetailsGetSubjectsGet().subscribe(res => {
-      this.subjectList = res;
+    this._detailsService.apiDetailsGetSubjectsGet().subscribe({
+      next: res => { this.subjectList = res; },
+      error: () => { this.toast.danger('Gabim në ngarkimin e lëndëve', 'GABIM', 3000); }
     })
   }
 

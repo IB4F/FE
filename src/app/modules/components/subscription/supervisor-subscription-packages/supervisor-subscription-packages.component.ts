@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -57,6 +58,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
   packageForm!: FormGroup;
   paymentInfo: any[] = [];
   loading = false;
+  private destroyRef = inject(DestroyRef);
   private stripePromise: Promise<Stripe | null> = loadStripe(environment.stripePublishableKey);
 
   constructor(
@@ -89,7 +91,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
   }
 
   setupFormListeners() {
-    this.packageForm.valueChanges.subscribe(() => {
+    this.packageForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.selectedCard = null;
     });
   }
@@ -109,8 +111,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
         this.paymentInfo = res;
         this.mapApiDataToCards();
       },
-      error: (error) => {
-        console.error('Error loading packages:', error);
+      error: () => {
         this.toast.danger('Gabim në ngarkimin e paketave', 'GABIM', 3000);
       }
     });
@@ -241,14 +242,12 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
             this.toast.danger('Gabim në inicializimin e pagesës', 'GABIM', 3000);
             this.loading = false;
           }
-        } catch (error) {
-          console.error('Stripe error:', error);
+        } catch {
           this.toast.danger('Gabim në procesin e pagesës', 'GABIM', 3000);
           this.loading = false;
         }
       },
-      error: (error) => {
-        console.error('Subscription creation error:', error);
+      error: () => {
         this.toast.danger('Gabim në krijimin e subskriptionit', 'GABIM', 3000);
         this.loading = false;
       }

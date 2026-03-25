@@ -157,9 +157,7 @@ export class LoginComponent implements OnInit {
       };
     }
 
-    const dialogRef = this.dialog.open(ForgetPasswordComponent, dialogConfig);
-    
-    dialogRef.afterClosed().subscribe();
+    this.dialog.open(ForgetPasswordComponent, dialogConfig);
   }
 
   navigateTo() {

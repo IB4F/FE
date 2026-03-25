@@ -1,4 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule, MatIconButton} from "@angular/material/button";
 import {
   MatTableDataSource,
@@ -56,6 +57,7 @@ export class ManageQuizComponent implements OnInit {
 
   linkId!: string;
   quizTypes: QuizType[] = [];
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private quizzesService: QuizzesService,
@@ -69,7 +71,7 @@ export class ManageQuizComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
       this.linkId = params.get('id') as string;
     });
     this.loadCombos();
@@ -99,7 +101,8 @@ export class ManageQuizComponent implements OnInit {
   private setupSearchDebounce() {
     this.searchSubject.pipe(
       debounceTime(500),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(searchTerm => {
       this.currentSearchTerm = searchTerm;
       this.pageNumber = 0;
@@ -149,8 +152,9 @@ export class ManageQuizComponent implements OnInit {
 
   addExam(): void {
     const dialogRef = this.dialog.open(QuizModalComponent, {
-      width: '900px',
-      height: '640px',
+      width: '95vw',
+      maxWidth: '900px',
+      maxHeight: '90vh',
       data: {
         linkId: this.linkId
       }
@@ -164,8 +168,9 @@ export class ManageQuizComponent implements OnInit {
 
   editExam(exam: any): void {
     const dialogRef = this.dialog.open(QuizModalComponent, {
-      width: '900px',
-      height: '640px',
+      width: '95vw',
+      maxWidth: '900px',
+      maxHeight: '90vh',
       data: {
         exam: exam,
         linkId: this.linkId
@@ -197,8 +202,9 @@ export class ManageQuizComponent implements OnInit {
   }
 
   private getQuizTypeList() {
-    this._detailsService.apiDetailsGetQuizTypesGet().subscribe(res => {
-      this.quizTypes = res;
+    this._detailsService.apiDetailsGetQuizTypesGet().subscribe({
+      next: res => { this.quizTypes = res; },
+      error: () => { this.toast.danger('Gabim në ngarkimin e llojeve të kuizeve', 'GABIM', 3000); }
     })
   }
 

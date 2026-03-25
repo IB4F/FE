@@ -97,6 +97,8 @@ export class PanelComponent implements OnInit, OnDestroy {
   isLoadingRegistrationStats = true;
   isLoadingSystemHealth = true;
 
+  private boundHandleLogout = this.handleLogout.bind(this);
+
   constructor(
     private adminDashboardService: AdminDashboardService,
     private supervisorService: SupervisorService,
@@ -118,8 +120,8 @@ export class PanelComponent implements OnInit, OnDestroy {
       });
 
     // Aggiungi listener per eventi di navigazione e chiusura pagina
-    window.addEventListener('beforeunload', this.handleLogout.bind(this));
-    window.addEventListener('unload', this.handleLogout.bind(this));
+    window.addEventListener('beforeunload', this.boundHandleLogout);
+    window.addEventListener('unload', this.boundHandleLogout);
   }
 
   ngOnDestroy(): void {
@@ -129,8 +131,8 @@ export class PanelComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
 
     // Rimuovi i listener degli eventi
-    window.removeEventListener('beforeunload', this.handleLogout.bind(this));
-    window.removeEventListener('unload', this.handleLogout.bind(this));
+    window.removeEventListener('beforeunload', this.boundHandleLogout);
+    window.removeEventListener('unload', this.boundHandleLogout);
   }
 
   loadDashboardData(): void {
@@ -648,8 +650,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   approveSupervisorApplication(application: any): void {
-    // Assuming the backend returns applications with an ID field
-    const applicationId = application.supervisorId || application.supervisorId;
+    const applicationId = application.supervisorId;
 
     const approvalData: SupervisorApprovalDTO = {
       supervisorId: applicationId,
@@ -671,8 +672,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   rejectSupervisorApplication(application: any, rejectionReason: string = 'Refuzuar nga administratori'): void {
-    // Assuming the backend returns applications with an ID field
-    const applicationId = application.supervisorId || application.supervisorId;
+    const applicationId = application.supervisorId;
 
     const approvalData: SupervisorApprovalDTO = {
       supervisorId: applicationId,

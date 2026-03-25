@@ -272,30 +272,21 @@ export class SubscriptionErrorHandlerService {
   /**
    * Show success message
    */
-  showSuccessMessage(message: string, action?: string): void {
+  showSuccessMessage(message: string): void {
     this.toast.success(message, 'SUKSES', 4000);
-    if (action) {
-      console.log('Success Action:', action);
-    }
   }
 
   /**
    * Show warning message
    */
-  showWarningMessage(message: string, action?: string): void {
+  showWarningMessage(message: string): void {
     this.toast.warning(message, 'KUJDES', 4000);
-    if (action) {
-      console.log('Warning Action:', action);
-    }
   }
 
   /**
    * Show info message
    */
-  showInfoMessage(message: string, action?: string): void {
+  showInfoMessage(message: string): void {
     this.toast.info(message, 'INFO', 4000);
-    if (action) {
-      console.log('Info Action:', action);
-    }
   }
 }

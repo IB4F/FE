@@ -139,9 +139,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private getClassesList() {
-    this._detailsService.apiDetailsGetClassGet().subscribe(res => {
-      this.classesList = res;
-      this.loadUserData();
+    this._detailsService.apiDetailsGetClassGet().subscribe({
+      next: res => {
+        this.classesList = res;
+        this.loadUserData();
+      },
+      error: () => {
+        this.toast.danger('Gabim në ngarkimin e klasave', 'GABIM', 3000);
+        this.loadUserData();
+      }
     })
   }
 
@@ -200,16 +206,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
       this._authService.apiAuthChangePasswordPost(passwords).subscribe(
         {
-          next: (response) => {
-            console.log(response);
+          next: () => {
             this.changePasswordFormGroup.reset();
+            this.toast.success('Fjalëkalimi u ndryshua me sukses!', 'SUKSES', 3000);
           },
           error: (err) => {
-            console.log(err);
+            this.toast.danger(err?.error?.message || 'Gabim gjatë ndryshimit të fjalëkalimit', 'GABIM', 3000);
           }
         }
       );
-    } else {
     }
   }
 
@@ -263,42 +268,30 @@ export class SettingsComponent implements OnInit, OnDestroy {
     return { invalidPhone: true };
   }
 
-  // Helper method to extract country code from E164 number
-  private getCountryCodeFromE164(e164Number: string): string {
-    const countryCodeMap: { [key: string]: string } = {
-      '+355': 'al',
-      '+39': 'it',
-      '+49': 'de',
-      '+33': 'fr',
-      '+44': 'uk'
-    };
+  private static readonly COUNTRY_CODE_MAP: { [key: string]: string } = {
+    '+355': 'al',
+    '+39': 'it',
+    '+49': 'de',
+    '+33': 'fr',
+    '+44': 'uk'
+  };
 
-    for (const [code, country] of Object.entries(countryCodeMap)) {
+  private getCountryCodeFromE164(e164Number: string): string {
+    for (const [code, country] of Object.entries(SettingsComponent.COUNTRY_CODE_MAP)) {
       if (e164Number.startsWith(code)) {
         return country;
       }
     }
-
-    return 'al'; // Default to Albania
+    return 'al';
   }
 
-  // Helper method to extract number from E164 format
   private getNumberFromE164(e164Number: string): string {
-    const countryCodeMap: { [key: string]: string } = {
-      '+355': 'al',
-      '+39': 'it',
-      '+49': 'de',
-      '+33': 'fr',
-      '+44': 'uk'
-    };
-
-    for (const [code, country] of Object.entries(countryCodeMap)) {
+    for (const [code] of Object.entries(SettingsComponent.COUNTRY_CODE_MAP)) {
       if (e164Number.startsWith(code)) {
         return e164Number.substring(code.length);
       }
     }
-
-    return e164Number; // Return as-is if no match found
+    return e164Number;
   }
 
 }
