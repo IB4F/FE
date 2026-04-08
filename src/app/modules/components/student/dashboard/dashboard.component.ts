@@ -4,6 +4,7 @@ import {RouterLink} from "@angular/router";
 import {Subject, takeUntil} from "rxjs";
 import {UserService} from "../../../../services/user.service";
 import {DashboardDTO, DashboardService} from "../../../../api-client";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,8 @@ import {DashboardDTO, DashboardService} from "../../../../api-client";
   imports: [
     CommonModule,
     RouterLink
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

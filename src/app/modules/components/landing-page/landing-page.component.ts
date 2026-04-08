@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {CardsComponent} from "./cards/cards.component";
+import {TranslatePipe} from "../../../pipes/translate.pipe";
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
   imports: [
-    CardsComponent
+    CardsComponent,
+    TranslatePipe
   ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'

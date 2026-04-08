@@ -1,24 +1,18 @@
 <div class="container">
   <app-dynamic-banner bannerType="membership"></app-dynamic-banner>
   <div class="title">
-    <h1>Ne krijojmë një paketë çmimesh mujore për të gjithë studentët standardë</h1>
-    <p>
-      Në thelb ne e krijojmë këtë paketë për ata që janë vërtet të interesuar dhe përfitojnë nga kurset apo librat
-      tanë. Ne duam të bëjmë një paketë me kosto të ulët per ta. Në mënyrë që ata të blejnë çdo kurs me paketën që
-      blejnë nga ne. Gjithashtu do të merrni libra falas nga çdo paketë.
-    </p>
+    <h1>{{ 'membershipStudent.subtitle' | translate }}</h1>
   </div>
 
   <div class="registration-flow">
-    <h2 class="flow-title">Si të Regjistroheni: Një Proces i Thjeshtë</h2>
+    <h2 class="flow-title">{{ 'membershipStudent.howToRegister' | translate }}</h2>
     <div class="flow-steps">
       <div class="step-card">
         <div class="number-wrapper">
           1
         </div>
-        <h3>Zgjidhni Paketën Tuaj</h3>
-        <p>Fillimisht, zgjidhni paketën e çmimeve që i përshtatet më së miri nevojave tuaja nga opsionet e
-          disponueshme.</p>
+        <h3>{{ 'membershipStudent.step1.title' | translate }}</h3>
+        <p>{{ 'membershipStudent.step1.description' | translate }}</p>
       </div>
       <div class="arrow-icon">
         &#10140;
@@ -27,8 +21,8 @@
         <div class="number-wrapper">
           2
         </div>
-        <h3>Plotësoni Formularin</h3>
-        <p>Pas zgjedhjes së paketës, plotësoni me kujdes të gjitha fushat e kërkuara nel formularin e regjistrimit.</p>
+        <h3>{{ 'membershipStudent.step2.title' | translate }}</h3>
+        <p>{{ 'membershipStudent.step2.description' | translate }}</p>
       </div>
       <div class="arrow-icon">
         &#10140;
@@ -37,9 +31,8 @@
         <div class="number-wrapper">
           3
         </div>
-        <h3>Finalizoni Regjistrimin</h3>
-        <p>Pasi të keni plotësuar formularin dhe zgjedhur paketën, klikoni "Regjistrohu dhe Pago" për të krijuar
-          llogarinë tuaj dhe të vazhdoni me pagesën.</p>
+        <h3>{{ 'membershipStudent.step3.title' | translate }}</h3>
+        <p>{{ 'membershipStudent.step3.description' | translate }}</p>
       </div>
     </div>
   </div>
@@ -47,15 +40,7 @@
                      [userType]="'student'">
   </app-packages>
   <div class="title">
-    <h1>Bëhuni pjesë e komunitetit tonë të studentëve</h1>
-    <p>
-      Regjistrohuni tani për të përfituar nga të gjitha avantazhet e anëtarësimit tonë. Me një regjistrim të thjeshtë,
-      do të keni qasje në të gjitha kurset tona, materiale ekskluzive. Çdo student i regjistruar
-      merr mundësinë të mësojë in ritmin e tij dhe të përfitojë nga çmime të veçanta.
-    </p>
-    <p>
-      Mos humbisni këtë mundësi - regjistrohuni sot dhe hapni derën per një eksperiencë të re mësimore!
-    </p>
+    <h1>{{ 'membershipStudent.community.title' | translate }}</h1>
   </div>
   <app-register #registerComponent></app-register>
   <div class="button-container">
@@ -66,10 +51,10 @@
       [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
       (click)="handlePayment()"
     >
-      <span *ngIf="!loading">Regjistrohu dhe Pago</span>
+      <span *ngIf="!loading">{{ 'membershipStudent.submit' | translate }}</span>
       <span *ngIf="loading">
         <mat-spinner diameter="20"></mat-spinner>
-        Processing...
+        {{ 'membershipStudent.processing' | translate }}
       </span>
     </button>
   </div>

@@ -3,23 +3,23 @@
 
   <div class="cards-wrapper">
     <div class="card student-card">
-      <h2 class="card-title">Nxënës</h2>
-      <p class="card-description">Bashkohu komunitetit tonë të nxënësve për të pasur qasje në burime dhe mbështetje.</p>
-      <button class="btn primary-btn" routerLink="/student/membership">Regjistrohu</button>
+      <h2 class="card-title">{{ 'membership.student.title' | translate }}</h2>
+      <p class="card-description">{{ 'membership.student.description' | translate }}</p>
+      <button class="btn primary-btn" routerLink="/student/membership">{{ 'membership.student.register' | translate }}</button>
     </div>
 
     <div class="card supervisor-card">
-      <h2 class="card-title">Supervizor</h2>
-      <p class="card-description">Je ekspert? Apliko për t'u bërë supervizor dhe ndaj njohuritë e tua.</p>
-      <button class="btn primary-btn" routerLink="/supervizor/apliko">Apliko</button>
+      <h2 class="card-title">{{ 'membership.supervisor.title' | translate }}</h2>
+      <p class="card-description">{{ 'membership.supervisor.description' | translate }}</p>
+      <button class="btn primary-btn" routerLink="/supervizor/apliko">{{ 'membership.supervisor.apply' | translate }}</button>
     </div>
 
     <div class="card family-card">
-      <h2 class="card-title">Familje</h2>
-      <p class="card-description">Për prindërit dhe anëtarët e familjes që dëshirojnë të mbështesin nxënësit.</p>
-      <button class="btn primary-btn" routerLink="/family/membership">Regjistrohu</button>
+      <h2 class="card-title">{{ 'membership.family.title' | translate }}</h2>
+      <p class="card-description">{{ 'membership.family.description' | translate }}</p>
+      <button class="btn primary-btn" routerLink="/family/membership">{{ 'membership.family.register' | translate }}</button>
     </div>
   </div>
 
-  <button class="btn secondary-btn" routerLink="/hyr">Hyr</button>
+  <button class="btn secondary-btn" routerLink="/hyr">{{ 'membership.login' | translate }}</button>
 </div>

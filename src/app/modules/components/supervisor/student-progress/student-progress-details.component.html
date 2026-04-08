@@ -1,23 +1,22 @@
 <div class="student-progress-details">
   <div class="page-header">
     <div class="header-left">
-      <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
-              color="warn">
+      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
         <mat-icon>arrow_back</mat-icon>
-        Kthehu Mbrapa
+        {{ 'common.backLabel' | translate }}
       </button>
-      <h1>Detajet e Progresit të Studentit</h1>
+      <h1>{{ 'supervisor.progress.title' | translate }}</h1>
     </div>
     <button mat-raised-button color="primary" (click)="refreshData()" [disabled]="isLoading">
       <mat-icon>refresh</mat-icon>
-      Rifresko
+      {{ 'common.refresh' | translate }}
     </button>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner></mat-spinner>
-    <p>Duke ngarkuar detajet e progresit...</p>
+    <p>{{ 'supervisor.progress.loading' | translate }}</p>
   </div>
 
   <!-- Error State -->
@@ -25,34 +24,34 @@
     <mat-icon color="warn">error</mat-icon>
     <p>{{ error }}</p>
     <button mat-raised-button color="primary" (click)="refreshData()">
-      Provo Përsëri
+      {{ 'common.retry' | translate }}
     </button>
   </div>
 
   <!-- Content -->
   <div *ngIf="progressDetails && !isLoading" class="content">
-    
+
     <!-- Student Basic Info -->
     <mat-card class="student-info-card">
       <mat-card-header>
-        <mat-card-title>Informacionet e Studentit</mat-card-title>
+        <mat-card-title>{{ 'supervisor.progress.studentInfo' | translate }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="info-grid">
           <div class="info-item">
-            <label>Emri:</label>
+            <label>{{ 'supervisor.progress.name' | translate }}</label>
             <span>{{ progressDetails.studentName }}</span>
           </div>
           <div class="info-item">
-            <label>Progresi i Përgjithshëm:</label>
+            <label>{{ 'supervisor.progress.overall' | translate }}</label>
             <span class="progress-percentage">{{ progressDetails.overallProgress }}%</span>
           </div>
           <div class="info-item">
-            <label>Pikët e Fituara:</label>
+            <label>{{ 'supervisor.progress.points' | translate }}</label>
             <span class="points-earned">{{ progressDetails.totalPointsEarned }} / {{ progressDetails.totalPossiblePoints }}</span>
           </div>
           <div class="info-item">
-            <label>Koha e Kaluar:</label>
+            <label>{{ 'supervisor.progress.timeSpent' | translate }}</label>
             <span class="time-spent">{{ formatTime(progressDetails.totalTimeSpentMinutes) }}</span>
           </div>
         </div>
@@ -62,20 +61,18 @@
     <!-- Generated Password Section -->
     <mat-card class="password-card" *ngIf="progressDetails">
       <mat-card-header>
-        <mat-card-title>Fjalëkalimi i Gjeneruar</mat-card-title>
+        <mat-card-title>{{ 'supervisor.progress.password.title' | translate }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="password-info">
           <div *ngIf="progressDetails.generatedPassword" class="password-available">
             <mat-icon color="primary">lock</mat-icon>
             <div class="password-content">
-              <label>Fjalëkalimi i gjeneruar për studentin:</label>
+              <label>{{ 'supervisor.progress.password.label' | translate }}</label>
               <div class="password-display">
                 <span class="password-text">{{ progressDetails.generatedPassword }}</span>
-                <button mat-icon-button 
-                        (click)="copyPassword(progressDetails.generatedPassword!)" 
-                        matTooltip="Kopjo fjalëkalimin"
-                        matTooltipPosition="above">
+                <button mat-icon-button
+                        (click)="copyPassword(progressDetails.generatedPassword!)">
                   <mat-icon>content_copy</mat-icon>
                 </button>
               </div>
@@ -84,8 +81,8 @@
           <div *ngIf="!progressDetails.generatedPassword" class="password-used">
             <mat-icon color="warn">lock_open</mat-icon>
             <div class="password-content">
-              <label>Statusi i fjalëkalimit:</label>
-              <span class="password-status">Fjalëkalimi është përdorur tashmë</span>
+              <label>{{ 'supervisor.progress.password.status' | translate }}</label>
+              <span class="password-status">{{ 'supervisor.progress.password.used' | translate }}</span>
             </div>
           </div>
         </div>
@@ -95,41 +92,41 @@
     <!-- Progress Overview -->
     <mat-card class="progress-overview-card">
       <mat-card-header>
-        <mat-card-title>Përmbledhje e Progresit</mat-card-title>
+        <mat-card-title>{{ 'supervisor.progress.overview.title' | translate }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="progress-overview">
           <div class="progress-item">
-            <label>Progresi i Përgjithshëm:</label>
+            <label>{{ 'supervisor.progress.overall' | translate }}</label>
             <div class="progress-container">
-              <mat-progress-bar 
-                mode="determinate" 
+              <mat-progress-bar
+                mode="determinate"
                 [value]="getProgressPercentage()"
                 [color]="getProgressColor(getProgressPercentage())">
               </mat-progress-bar>
               <span class="progress-text">{{ getProgressPercentage().toFixed(1) }}%</span>
             </div>
           </div>
-          
+
           <div class="stats-grid">
             <div class="stat-item">
-              <label>Lidhjet:</label>
+              <label>{{ 'supervisor.progress.stats.links' | translate }}</label>
               <span>{{ progressDetails.completedLinks }} / {{ progressDetails.totalLinks }}</span>
             </div>
             <div class="stat-item">
-              <label>Kuizet:</label>
+              <label>{{ 'supervisor.progress.stats.quizzes' | translate }}</label>
               <span>{{ progressDetails.completedQuizzes }} / {{ progressDetails.totalQuizzes }}</span>
             </div>
             <div class="stat-item">
-              <label>Pikët Mesatare:</label>
+              <label>{{ 'supervisor.progress.stats.avgScore' | translate }}</label>
               <span>{{ progressDetails.averageScore.toFixed(1) }}</span>
             </div>
             <div class="stat-item">
-              <label>Aktiviteti i Parë:</label>
+              <label>{{ 'supervisor.progress.stats.firstActivity' | translate }}</label>
               <span>{{ formatDate(progressDetails.firstActivityAt) }}</span>
             </div>
             <div class="stat-item">
-              <label>Aktiviteti i Fundit:</label>
+              <label>{{ 'supervisor.progress.stats.lastActivity' | translate }}</label>
               <span>{{ formatDate(progressDetails.lastActivityAt) }}</span>
             </div>
           </div>
@@ -140,7 +137,7 @@
     <!-- Detailed Progress by Link -->
     <mat-card class="detailed-progress-card" *ngIf="progressDetails.linkProgress && progressDetails.linkProgress.length > 0">
       <mat-card-header>
-        <mat-card-title>Progresi për Çdo Lidhje</mat-card-title>
+        <mat-card-title>{{ 'supervisor.progress.linkProgress.title' | translate }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="link-progress-list">
@@ -148,23 +145,23 @@
             <div class="link-header">
               <h4>{{ link.linkTitle }}</h4>
               <mat-chip [color]="link.isCompleted ? 'primary' : 'accent'" selected>
-                {{ link.isCompleted ? 'Përfunduar' : 'Në Progres' }}
+                {{ link.isCompleted ? ('supervisor.progress.link.completed' | translate) : ('supervisor.progress.link.inProgress' | translate) }}
               </mat-chip>
             </div>
             <div class="link-details">
               <div class="link-info">
-                <p><strong>Learn Hub:</strong> {{ link.learnHubTitle }}</p>
-                <p><strong>Progresi:</strong> {{ link.progressPercentage }}%</p>
-                <p><strong>Kuizet:</strong> {{ link.completedQuizzes }} / {{ link.totalQuizzes }}</p>
-                <p><strong>Pikët:</strong> {{ link.pointsEarned }} / {{ link.possiblePoints }}</p>
-                <p><strong>Pikët Mesatare:</strong> {{ link.averageScore.toFixed(1) }}</p>
-                <p><strong>Koha e Kaluar:</strong> {{ formatTime(link.timeSpentMinutes) }}</p>
-                <p><strong>Përpjekja e Parë:</strong> {{ formatDate(link.firstAttemptAt) }}</p>
-                <p><strong>Përpjekja e Fundit:</strong> {{ formatDate(link.lastAttemptAt) }}</p>
+                <p><strong>{{ 'supervisor.progress.link.learnHub' | translate }}</strong> {{ link.learnHubTitle }}</p>
+                <p><strong>{{ 'supervisor.progress.link.progress' | translate }}</strong> {{ link.progressPercentage }}%</p>
+                <p><strong>{{ 'supervisor.progress.link.quizzes' | translate }}</strong> {{ link.completedQuizzes }} / {{ link.totalQuizzes }}</p>
+                <p><strong>{{ 'supervisor.progress.link.points' | translate }}</strong> {{ link.pointsEarned }} / {{ link.possiblePoints }}</p>
+                <p><strong>{{ 'supervisor.progress.link.avgScore' | translate }}</strong> {{ link.averageScore.toFixed(1) }}</p>
+                <p><strong>{{ 'supervisor.progress.link.timeSpent' | translate }}</strong> {{ formatTime(link.timeSpentMinutes) }}</p>
+                <p><strong>{{ 'supervisor.progress.link.firstAttempt' | translate }}</strong> {{ formatDate(link.firstAttemptAt) }}</p>
+                <p><strong>{{ 'supervisor.progress.link.lastAttempt' | translate }}</strong> {{ formatDate(link.lastAttemptAt) }}</p>
               </div>
               <div class="link-progress-bar">
-                <mat-progress-bar 
-                  mode="determinate" 
+                <mat-progress-bar
+                  mode="determinate"
                   [value]="link.progressPercentage"
                   [color]="getProgressColor(link.progressPercentage)">
                 </mat-progress-bar>
@@ -180,7 +177,7 @@
       <mat-card-content>
         <div class="no-data-message">
           <mat-icon>info</mat-icon>
-          <p>Nuk ka të dhëna për progresin e lidhjeve për këtë student.</p>
+          <p>{{ 'supervisor.progress.noLinks' | translate }}</p>
         </div>
       </mat-card-content>
     </mat-card>

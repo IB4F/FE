@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, HostListener, inject, OnInit} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 import {HeaderComponent} from "./components/header/header.component";
 import {FooterComponent} from "./components/footer/footer.component";
@@ -26,10 +26,30 @@ import {MatTooltipModule} from "@angular/material/tooltip";
   templateUrl: './portal-layout.component.html',
   styleUrl: './portal-layout.component.scss'
 })
-export class PortalLayoutComponent {
+export class PortalLayoutComponent implements OnInit {
   private tokenStorageService = inject(TokenStorageService);
   isSideNavOpen = true;
   isHovered = false;
+  sidenavMode: 'side' | 'over' = 'side';
+
+  ngOnInit(): void {
+    this.updateSidenavState(window.innerWidth);
+  }
+
+  @HostListener('window:resize', ['$event.target.innerWidth'])
+  onResize(width: number): void {
+    this.updateSidenavState(width);
+  }
+
+  private updateSidenavState(width: number): void {
+    if (width < 768) {
+      this.sidenavMode = 'over';
+      this.isSideNavOpen = false;
+    } else {
+      this.sidenavMode = 'side';
+      this.isSideNavOpen = true;
+    }
+  }
 
   showSideNav(): boolean {
     return this.tokenStorageService.getRole() === UserRole.ADMIN;

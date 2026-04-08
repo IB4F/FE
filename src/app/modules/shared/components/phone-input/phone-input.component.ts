@@ -1,13 +1,20 @@
-import { Component, Input, forwardRef, OnInit, ViewChild, ElementRef, Optional, Self } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NgControl } from '@angular/forms';
+import { Component, Input, OnInit, OnDestroy, ElementRef, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+
+interface Country {
+  iso2: string;
+  name: string;
+  dialCode: string;
+  flag: string;
+}
 
 interface PhoneNumber {
   countryCode: string;
@@ -15,10 +22,52 @@ interface PhoneNumber {
   e164Number: string;
 }
 
+const COUNTRIES: Country[] = [
+  { iso2: 'al', name: 'Shqipëri', dialCode: '+355', flag: '🇦🇱' },
+  { iso2: 'xk', name: 'Kosovë', dialCode: '+383', flag: '🇽🇰' },
+  { iso2: 'mk', name: 'Maqedoni e Veriut', dialCode: '+389', flag: '🇲🇰' },
+  { iso2: 'me', name: 'Mali i Zi', dialCode: '+382', flag: '🇲🇪' },
+  { iso2: 'rs', name: 'Serbi', dialCode: '+381', flag: '🇷🇸' },
+  { iso2: 'it', name: 'Itali', dialCode: '+39', flag: '🇮🇹' },
+  { iso2: 'de', name: 'Gjermani', dialCode: '+49', flag: '🇩🇪' },
+  { iso2: 'fr', name: 'Francë', dialCode: '+33', flag: '🇫🇷' },
+  { iso2: 'gb', name: 'Mbretëria e Bashkuar', dialCode: '+44', flag: '🇬🇧' },
+  { iso2: 'us', name: 'Shtetet e Bashkuara', dialCode: '+1', flag: '🇺🇸' },
+  { iso2: 'at', name: 'Austri', dialCode: '+43', flag: '🇦🇹' },
+  { iso2: 'be', name: 'Belgjikë', dialCode: '+32', flag: '🇧🇪' },
+  { iso2: 'bg', name: 'Bullgari', dialCode: '+359', flag: '🇧🇬' },
+  { iso2: 'hr', name: 'Kroaci', dialCode: '+385', flag: '🇭🇷' },
+  { iso2: 'cy', name: 'Qipro', dialCode: '+357', flag: '🇨🇾' },
+  { iso2: 'cz', name: 'Çeki', dialCode: '+420', flag: '🇨🇿' },
+  { iso2: 'dk', name: 'Danimarkë', dialCode: '+45', flag: '🇩🇰' },
+  { iso2: 'ee', name: 'Estoni', dialCode: '+372', flag: '🇪🇪' },
+  { iso2: 'fi', name: 'Finlandë', dialCode: '+358', flag: '🇫🇮' },
+  { iso2: 'gr', name: 'Greqi', dialCode: '+30', flag: '🇬🇷' },
+  { iso2: 'hu', name: 'Hungari', dialCode: '+36', flag: '🇭🇺' },
+  { iso2: 'ie', name: 'Irlandë', dialCode: '+353', flag: '🇮🇪' },
+  { iso2: 'lv', name: 'Letoni', dialCode: '+371', flag: '🇱🇻' },
+  { iso2: 'lt', name: 'Lituani', dialCode: '+370', flag: '🇱🇹' },
+  { iso2: 'lu', name: 'Luksemburg', dialCode: '+352', flag: '🇱🇺' },
+  { iso2: 'mt', name: 'Maltë', dialCode: '+356', flag: '🇲🇹' },
+  { iso2: 'nl', name: 'Holandë', dialCode: '+31', flag: '🇳🇱' },
+  { iso2: 'no', name: 'Norvegji', dialCode: '+47', flag: '🇳🇴' },
+  { iso2: 'pl', name: 'Poloni', dialCode: '+48', flag: '🇵🇱' },
+  { iso2: 'pt', name: 'Portugali', dialCode: '+351', flag: '🇵🇹' },
+  { iso2: 'ro', name: 'Rumani', dialCode: '+40', flag: '🇷🇴' },
+  { iso2: 'sk', name: 'Sllovaki', dialCode: '+421', flag: '🇸🇰' },
+  { iso2: 'si', name: 'Slloveni', dialCode: '+386', flag: '🇸🇮' },
+  { iso2: 'es', name: 'Spanjë', dialCode: '+34', flag: '🇪🇸' },
+  { iso2: 'se', name: 'Suedi', dialCode: '+46', flag: '🇸🇪' },
+  { iso2: 'ch', name: 'Zvicër', dialCode: '+41', flag: '🇨🇭' },
+  { iso2: 'tr', name: 'Turqi', dialCode: '+90', flag: '🇹🇷' },
+  { iso2: 'ca', name: 'Kanada', dialCode: '+1', flag: '🇨🇦' },
+  { iso2: 'au', name: 'Australi', dialCode: '+61', flag: '🇦🇺' },
+];
+
 @Component({
   selector: 'app-phone-input',
   standalone: true,
-  imports: [CommonModule, MatInputModule, MatSelectModule, MatOptionModule],
+  imports: [CommonModule, ReactiveFormsModule, MatSelectModule, MatOptionModule, MatInputModule],
   template: `
     <div class="phone-input-container" [class.phone-input-focused]="focused" [class.phone-input-disabled]="disabled">
       <mat-select
@@ -26,26 +75,25 @@ interface PhoneNumber {
         [value]="selectedCountry"
         (selectionChange)="onCountryChange($event.value)"
         [disabled]="disabled"
-        panelClass="phone-country-panel">
-        <mat-option value="al">
-          <span class="flag-icon">🇦🇱</span>
-          <span class="country-code">+355</span>
-        </mat-option>
-        <mat-option value="it">
-          <span class="flag-icon">🇮🇹</span>
-          <span class="country-code">+39</span>
-        </mat-option>
-        <mat-option value="de">
-          <span class="flag-icon">🇩🇪</span>
-          <span class="country-code">+49</span>
-        </mat-option>
-        <mat-option value="fr">
-          <span class="flag-icon">🇫🇷</span>
-          <span class="country-code">+33</span>
-        </mat-option>
-        <mat-option value="uk">
-          <span class="flag-icon">🇬🇧</span>
-          <span class="country-code">+44</span>
+        panelClass="phone-country-panel"
+        (openedChange)="onSelectOpenedChange($event)">
+        <mat-select-trigger>
+          <span class="flag-icon">{{ getCountry(selectedCountry)?.flag }}</span>
+          <span class="dial-code">{{ getCountry(selectedCountry)?.dialCode }}</span>
+        </mat-select-trigger>
+        <div class="country-search-wrapper" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <input
+            #searchInput
+            class="country-search-input"
+            type="text"
+            placeholder="Kërko shtetin..."
+            [formControl]="searchControl"
+            autocomplete="off">
+        </div>
+        <mat-option *ngFor="let country of filteredCountries" [value]="country.iso2">
+          <span class="flag-icon">{{ country.flag }}</span>
+          <span class="country-name">{{ country.name }}</span>
+          <span class="dial-code-option">{{ country.dialCode }}</span>
         </mat-option>
       </mat-select>
 
@@ -56,7 +104,7 @@ interface PhoneNumber {
         [placeholder]="placeholder || 'Nr. Telefonit'"
         [value]="phoneNumber"
         (input)="onPhoneNumberChange($event)"
-        (focus)="onFocusIn($event)"
+        (focus)="onFocusIn()"
         (blur)="onFocusOut($event)"
         [disabled]="disabled"
         [attr.aria-describedby]="describedBy"
@@ -66,22 +114,16 @@ interface PhoneNumber {
   `,
   styleUrls: ['./phone-input.component.scss'],
   providers: [
-    {
-      provide: MatFormFieldControl,
-      useExisting: PhoneInputComponent,
-    },
+    { provide: MatFormFieldControl, useExisting: PhoneInputComponent }
   ],
   host: {
     '[class.phone-input-floating]': 'shouldLabelFloat',
     '[id]': 'id',
   },
 })
-export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldControl<PhoneNumber>, OnInit {
+export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldControl<PhoneNumber>, OnInit, OnDestroy {
   static nextId = 0;
 
-  @ViewChild('phoneInput') phoneInputRef!: ElementRef<HTMLInputElement>;
-
-  // MatFormFieldControl implementation
   stateChanges = new Subject<void>();
   id = `phone-input-${PhoneInputComponent.nextId++}`;
   describedBy = '';
@@ -93,20 +135,12 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
   private _disabled = false;
   private _value: PhoneNumber | null = null;
 
-  // Country codes mapping
-  private countryCodeMap: { [key: string]: string } = {
-    'al': '+355',
-    'it': '+39',
-    'de': '+49',
-    'fr': '+33',
-    'uk': '+44'
-  };
-
-  selectedCountry = 'al'; // Default to Albania
+  selectedCountry = 'al';
   phoneNumber = '';
+  searchControl = new FormControl('');
+  filteredCountries: Country[] = [...COUNTRIES];
 
-  // ControlValueAccessor
-  private onChange = (value: PhoneNumber | null) => {};
+  private onChange = (_: PhoneNumber | null) => {};
   private onTouched = () => {};
 
   constructor(
@@ -127,8 +161,14 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   ngOnInit() {
-    // Set default value for Albania
-    this.updateValue();
+    this.searchControl.valueChanges.subscribe(query => {
+      const q = (query || '').toLowerCase();
+      this.filteredCountries = COUNTRIES.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.dialCode.includes(q) ||
+        c.iso2.includes(q)
+      );
+    });
   }
 
   ngOnDestroy() {
@@ -136,70 +176,35 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
     this.focusMonitor.stopMonitoring(this.elementRef);
   }
 
-  // MatFormFieldControl implementation
   @Input()
-  get placeholder(): string {
-    return this._placeholder;
-  }
+  get placeholder(): string { return this._placeholder; }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
   }
 
   @Input()
-  get required(): boolean {
-    return this._required;
-  }
+  get required(): boolean { return this._required; }
   set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
 
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
+  get disabled(): boolean { return this._disabled; }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
 
-  get value(): PhoneNumber | null {
-    return this._value;
-  }
-  set value(phoneNumber: PhoneNumber | null) {
-    this._value = phoneNumber;
-    if (phoneNumber) {
-      // Extract country and number from e164Number if available
-      if (phoneNumber.e164Number) {
-        for (const [country, code] of Object.entries(this.countryCodeMap)) {
-          if (phoneNumber.e164Number.startsWith(code)) {
-            this.selectedCountry = country;
-            this.phoneNumber = phoneNumber.e164Number.substring(code.length);
-            break;
-          }
-        }
-      } else {
-        this.phoneNumber = phoneNumber.number || '';
-        this.selectedCountry = phoneNumber.countryCode || 'al';
-      }
-    } else {
-      this.phoneNumber = '';
-      this.selectedCountry = 'al';
-    }
-    this.stateChanges.next();
-  }
+  get value(): PhoneNumber | null { return this._value; }
 
-  get empty(): boolean {
-    return !this.phoneNumber || this.phoneNumber.trim() === '';
-  }
+  get empty(): boolean { return !this.phoneNumber || this.phoneNumber.trim() === ''; }
 
-  get shouldLabelFloat(): boolean {
-    return this.focused || !this.empty;
-  }
+  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
 
   get errorState(): boolean {
-    return !!(this.ngControl && this.ngControl.invalid && (this.ngControl.dirty || this.ngControl.touched));
+    return !!(this.ngControl?.invalid && (this.ngControl.dirty || this.ngControl.touched));
   }
 
   setDescribedByIds(ids: string[]): void {
@@ -207,14 +212,25 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   onContainerClick(): void {
-    if (this.phoneInputRef) {
-      this.phoneInputRef.nativeElement.focus();
-    }
+    this.elementRef.nativeElement.querySelector<HTMLInputElement>('.phone-number-input')?.focus();
   }
 
-  // ControlValueAccessor implementation
   writeValue(value: PhoneNumber | null): void {
-    this.value = value;
+    this._value = value;
+    if (value?.e164Number) {
+      const country = COUNTRIES.find(c => value.e164Number.startsWith(c.dialCode));
+      if (country) {
+        this.selectedCountry = country.iso2;
+        this.phoneNumber = value.e164Number.substring(country.dialCode.length);
+      }
+    } else if (value?.number) {
+      this.phoneNumber = value.number;
+      this.selectedCountry = value.countryCode || 'al';
+    } else {
+      this.phoneNumber = '';
+      this.selectedCountry = 'al';
+    }
+    this.stateChanges.next();
   }
 
   registerOnChange(fn: (value: PhoneNumber | null) => void): void {
@@ -229,19 +245,17 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
     this.disabled = isDisabled;
   }
 
-  // Event handlers
-  onCountryChange(country: string): void {
-    this.selectedCountry = country;
+  onCountryChange(iso2: string): void {
+    this.selectedCountry = iso2;
     this.updateValue();
   }
 
   onPhoneNumberChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.phoneNumber = target.value;
+    this.phoneNumber = (event.target as HTMLInputElement).value;
     this.updateValue();
   }
 
-  onFocusIn(event: FocusEvent): void {
+  onFocusIn(): void {
     if (!this.focused) {
       this.focused = true;
       this.stateChanges.next();
@@ -256,15 +270,24 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
-  private updateValue(): void {
-    const countryCode = this.countryCodeMap[this.selectedCountry];
-    const cleanNumber = this.phoneNumber.replace(/\D/g, '');
+  onSelectOpenedChange(opened: boolean): void {
+    if (!opened) {
+      this.searchControl.setValue('');
+    }
+  }
 
-    if (cleanNumber) {
+  getCountry(iso2: string): Country | undefined {
+    return COUNTRIES.find(c => c.iso2 === iso2);
+  }
+
+  private updateValue(): void {
+    const country = this.getCountry(this.selectedCountry);
+    const cleanNumber = this.phoneNumber.replace(/\D/g, '');
+    if (cleanNumber && country) {
       const phoneValue: PhoneNumber = {
         countryCode: this.selectedCountry,
         number: cleanNumber,
-        e164Number: `${countryCode}${cleanNumber}`
+        e164Number: `${country.dialCode}${cleanNumber}`
       };
       this._value = phoneValue;
       this.onChange(phoneValue);

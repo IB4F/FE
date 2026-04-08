@@ -32,7 +32,8 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         if (!refreshTokenInFlight) {
           const subject = new BehaviorSubject<string | null>(null);
           refreshTokenInFlight = subject;
-          authService.apiAuthRefreshPost({ refreshToken }).subscribe({
+          const accessToken = tokenStorage.getAccessToken();
+          authService.apiAuthRefreshPost({ accessToken, refreshToken }).subscribe({
             next: (newTokens) => {
               tokenStorage.saveTokens(newTokens);
               subject.next(newTokens.accessToken);

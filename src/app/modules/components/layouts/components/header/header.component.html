@@ -5,7 +5,7 @@
               *ngIf="showPanel()"
               class="sidenav-toggle-btn"
               (click)="onToggleSidenavClick()"
-              [matTooltip]="isSideNavOpen ? 'Mbyll menu' : 'Hap menu'">
+              [matTooltip]="isSideNavOpen ? labelCloseMenu : labelOpenMenu">
         <mat-icon>{{ isSideNavOpen ? 'chevron_left' : 'menu' }}</mat-icon>
       </button>
 
@@ -16,8 +16,8 @@
       </div>
     </div>
     <div class="h-right" *ngIf="isLogged; else notLoggedIn">
-      <button *ngIf="showDashboard()" mat-button routerLink="/student/dashboard">Dashboardi im</button>
-      <button *ngIf="showPanel()" mat-button routerLink="/admin/panel">Panel</button>
+      <button *ngIf="showDashboard()" mat-button routerLink="/student/dashboard">{{ labelDashboard }}</button>
+      <button *ngIf="showPanel()" mat-button routerLink="/admin/panel">{{ labelPanel }}</button>
       <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu"
            [matTooltip]="(user$ | async)?.firstName + ' ' + (user$ | async)?.lastName">
         {{ initials$ | async }}
@@ -25,18 +25,18 @@
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item routerLink="settings">
           <mat-icon>person</mat-icon>
-          Profili
+          {{ labelProfile }}
         </button>
         <button mat-menu-item (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
-          Dil
+          {{ labelLogout }}
         </button>
       </mat-menu>
     </div>
     <ng-template #notLoggedIn>
       <div class="h-right">
-        <button mat-button routerLink="/hyr">Hyr</button>
-        <button mat-button routerLink="/membership">Regjistrohu</button>
+        <button mat-button routerLink="/hyr">{{ labelLogin }}</button>
+        <button mat-button routerLink="/membership">{{ labelRegister }}</button>
       </div>
     </ng-template>
   </div>

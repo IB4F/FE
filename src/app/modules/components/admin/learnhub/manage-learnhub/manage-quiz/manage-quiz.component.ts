@@ -20,6 +20,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {QuizModalComponent} from "./quiz-modal/quiz-modal.component";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {TranslatePipe} from '../../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-manage-quiz',
@@ -37,7 +38,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatInputModule,
     MatButtonModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './manage-quiz.component.html',
   styleUrl: './manage-quiz.component.scss'
 })

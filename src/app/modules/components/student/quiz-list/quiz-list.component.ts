@@ -6,6 +6,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import {QuizComponent} from "./quiz/quiz.component";
 import confetti from 'canvas-confetti';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface QuizProgress {
   totalQuizzes: number;
@@ -37,7 +38,8 @@ interface QuizData {
 @Component({
   selector: 'app-quiz-list',
   standalone: true,
-  imports: [CommonModule, QuizComponent], // Aggiungi QuizComponent qui
+  imports: [CommonModule, QuizComponent,
+    TranslatePipe], // Aggiungi QuizComponent qui
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss'],
 })

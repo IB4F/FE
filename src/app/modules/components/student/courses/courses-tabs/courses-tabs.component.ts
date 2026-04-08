@@ -9,6 +9,7 @@ import {LinksListComponent} from "./links-list/links-list.component";
 import {UserService} from "../../../../../services/user.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-courses-tabs',
@@ -35,7 +36,8 @@ import {Subject} from "rxjs";
     Category.LetersiSvgComponent,
     Category.AlbanianSvgComponent,
     LinksListComponent
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './courses-tabs.component.html',
   styleUrl: './courses-tabs.component.scss'
 })

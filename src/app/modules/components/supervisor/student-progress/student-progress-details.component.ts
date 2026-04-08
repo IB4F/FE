@@ -13,6 +13,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {SupervisorService} from "../../../../api-client";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface StudentProgressResponse {
   studentId: string;
@@ -61,7 +62,8 @@ interface LinkProgress {
     MatProgressSpinnerModule,
     MatChipsModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './student-progress-details.component.html',
   styleUrl: './student-progress-details.component.scss'
 })

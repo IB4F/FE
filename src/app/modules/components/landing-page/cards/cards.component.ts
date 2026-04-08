@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {TypeClass} from '../../../shared/constant/enums';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss'
 })

@@ -1,48 +1,48 @@
 <div class="quiz-modal-container">
   <div class="modal-header">
-    <h3>{{ isEditMode ? 'Ndrysho Pyetjen e Kuizit' : 'Shto Pyetje të Re Kuizi' }}</h3>
+    <h3>{{ isEditMode ? ('admin.quizModal.title.edit' | translate) : ('admin.quizModal.title.add' | translate) }}</h3>
     <mat-icon class="close-icon" [mat-dialog-close]="true">close</mat-icon>
   </div>
   <div class="quiz-form-content">
     <form [formGroup]="quizFormGroup">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Teksti i Pyetjes</mat-label>
+        <mat-label>{{ 'admin.quizModal.questionField' | translate }}</mat-label>
         <textarea matInput formControlName="question" rows="3" required></textarea>
         <mat-error *ngIf="quizFormGroup.get('question')?.hasError('required')">
-          Teksti i pyetjes është i detyrueshëm.
+          {{ 'admin.quizModal.questionRequired' | translate }}
         </mat-error>
       </mat-form-field>
 
       <div formArrayName="options" class="options-section">
-        <p class="section-title">Opsionet e Përgjigjes</p>
+        <p class="section-title">{{ 'admin.quizModal.options.title' | translate }}</p>
         <div *ngFor="let option of options.controls; let i = index" [formGroupName]="i" class="option-item">
-          <p class="option-label">Opsioni {{ i + 1 }}</p>
+          <p class="option-label">{{ 'admin.quizModal.option.label' | translate }} {{ i + 1 }}</p>
           <div class="option-input-group">
             <mat-form-field appearance="outline" class="flex-grow">
-              <mat-label>Teksti i Opsionit</mat-label>
+              <mat-label>{{ 'admin.quizModal.option.text' | translate }}</mat-label>
               <textarea matInput formControlName="optionText" rows="3"></textarea>
               <mat-error *ngIf="option.get('optionText')?.hasError('required')">
-                Ky fushë nuk mund të jetë bosh.
+                {{ 'admin.quizModal.option.empty' | translate }}
               </mat-error>
             </mat-form-field>
-            <mat-checkbox formControlName="isCorrect" class="option-checkbox">E Saktë</mat-checkbox>
+            <mat-checkbox formControlName="isCorrect" class="option-checkbox">{{ 'admin.quizModal.option.correct' | translate }}</mat-checkbox>
           </div>
         </div>
         <mat-error *ngIf="quizFormGroup.get('options')?.hasError('atLeastOneCorrectOption')" class="options-error">
-          Duhet të zgjidhni të paktën një opsion të saktë.
+          {{ 'admin.quizModal.option.oneRequired' | translate }}
         </mat-error>
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Shpjegimi i Përgjigjes (Opsionale)</mat-label>
+        <mat-label>{{ 'admin.quizModal.explanation' | translate }}</mat-label>
         <textarea matInput formControlName="explanation" rows="10"></textarea>
         <mat-error *ngIf="quizFormGroup.get('explanation')?.hasError('required')">
-          Shpjegimi është i detyrueshëm.
+          {{ 'admin.quizModal.explanationRequired' | translate }}
         </mat-error>
       </mat-form-field>
 
       <div class="points-section">
-        <mat-label>Pikët e Pyetjes: {{ quizFormGroup.get('points')?.value }}</mat-label>
+        <mat-label>{{ 'admin.quizModal.points' | translate }}: {{ quizFormGroup.get('points')?.value }}</mat-label>
         <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="false">
           <input matSliderThumb formControlName="points">
         </mat-slider>
@@ -51,7 +51,7 @@
       <div class="form-actions">
         <button mat-flat-button color="primary" [disabled]="!isFormValid()"
         (click)="handleButtonClick()">
-          {{ isEditMode ? 'Ruaj Ndryshimet' : 'Shto Pyetje' }}
+          {{ isEditMode ? ('admin.quizModal.save.edit' | translate) : ('admin.quizModal.save.add' | translate) }}
         </button>
       </div>
     </form>

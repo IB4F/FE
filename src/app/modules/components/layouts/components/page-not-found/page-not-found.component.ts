@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-page-not-found',
@@ -9,7 +10,8 @@ import {MatButtonModule} from "@angular/material/button";
   imports: [
     CommonModule,
     MatButtonModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './page-not-found.component.html',
   styleUrl: './page-not-found.component.scss'
 })

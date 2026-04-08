@@ -13,6 +13,7 @@ import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../../services/token-storage.service";
 import {AuthService} from "../../../../api-client";
 import {switchMap} from "rxjs";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-change-password-first-time',
@@ -26,7 +27,8 @@ import {switchMap} from "rxjs";
     MatButtonModule,
     CommonModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './change-password-first-time.component.html',
   styleUrl: './change-password-first-time.component.scss'
 })

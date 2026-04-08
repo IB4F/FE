@@ -5,47 +5,47 @@
     </div>
     <div class="profile-info-modern">
       <h2>{{ fullName }}</h2>
-      <p>Menaxhoni informacionin personal dhe llogarinë tuaj.</p>
+      <p>{{ 'settings.profile.subtitle' | translate }}</p>
     </div>
   </div>
 
   <form [formGroup]="profileFormGroup" class="modern-form">
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Emri</mat-label>
+        <mat-label>{{ 'common.firstName' | translate }}</mat-label>
         <input matInput formControlName="firstName">
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Mbiemri</mat-label>
+        <mat-label>{{ 'common.lastName' | translate }}</mat-label>
         <input matInput formControlName="lastName">
       </mat-form-field>
     </div>
     <mat-form-field appearance="outline" *ngIf="showClassField()">
-      <mat-label>Klasa aktuale</mat-label>
-      <mat-select placeholder="Klasa aktuale" formControlName="currentClass">
+      <mat-label>{{ 'common.currentClass' | translate }}</mat-label>
+      <mat-select [placeholder]="'common.currentClass' | translate" formControlName="currentClass">
         <mat-option *ngFor="let class of classList" [value]="class.id">
           {{ class.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="Email" formControlName="email">
+      <mat-label>{{ 'common.email' | translate }}</mat-label>
+      <input matInput [placeholder]="'common.email' | translate" formControlName="email">
     </mat-form-field>
     <mat-form-field appearance="outline">
       <app-phone-input
         formControlName="phoneNumber"
-        placeholder="Numri i telefonit">
+        placeholder="">
       </app-phone-input>
       <mat-error *ngIf="profileFormGroup.get('phoneNumber')?.hasError('invalidPhone')">
-        Numri i telefonit nuk është i vlefshëm
+        {{ 'common.phoneInvalid' | translate }}
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Shkolla</mat-label>
-      <input matInput placeholder="Shkolla" formControlName="school">
+      <mat-label>{{ 'common.school' | translate }}</mat-label>
+      <input matInput [placeholder]="'common.school' | translate" formControlName="school">
     </mat-form-field>
-    
+
     <!-- Display count information for supervisors and families -->
     <div class="count-info" *ngIf="shouldShowCount()">
       <div class="count-display">
@@ -56,20 +56,10 @@
         </div>
       </div>
     </div>
-    <!--    <mat-form-field appearance="outline">-->
-    <!--      <mat-label>Ditëlindja</mat-label>-->
-    <!--      <input matInput [matDatepicker]="picker" formControlName="birthday">-->
-    <!--      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>-->
-    <!--      <mat-datepicker #picker></mat-datepicker>-->
-    <!--    </mat-form-field>-->
-    <!--    <mat-form-field appearance="outline">-->
-    <!--      <mat-label>Emër përdoruesi</mat-label>-->
-    <!--      <input matInput formControlName="userName">-->
-    <!--    </mat-form-field>-->
     <div class="form-actions">
       <button mat-flat-button color="primary"
               (click)="onSaveChanges()"
-      >Ruaj Ndryshimet
+      >{{ 'settings.profile.save' | translate }}
       </button>
     </div>
   </form>

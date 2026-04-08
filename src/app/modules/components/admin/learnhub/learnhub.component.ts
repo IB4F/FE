@@ -13,6 +13,7 @@ import {debounceTime, distinctUntilChanged, Subject, takeUntil} from "rxjs";
 import {NgToastService} from "ng-angular-popup";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../../../services/token-storage.service";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-learnhub',
@@ -29,7 +30,8 @@ import {TokenStorageService} from "../../../../services/token-storage.service";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './learnhub.component.html',
   styleUrl: './learnhub.component.scss'
 })

@@ -12,6 +12,7 @@ import { map } from 'rxjs';
 import {AuthService} from "../../../../../api-client";
 import {MatButtonModule} from "@angular/material/button";
 import {SessionService} from "../../../../../services/session.service";
+import {TranslationService} from "../../../../../services/translation.service";
 
 @Component({
   selector: 'app-header',
@@ -51,6 +52,7 @@ export class HeaderComponent implements OnInit {
     private _authService: AuthService,
     private router: Router,
     private userService: UserService,
+    public translationService: TranslationService,
   ) {
   }
 
@@ -65,7 +67,20 @@ export class HeaderComponent implements OnInit {
           this.userRole = null;
         }
       });
+
+    this.translationService.currentLanguage$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
+
+  get labelDashboard(): string { return this.translationService.translate('header.dashboard'); }
+  get labelPanel(): string { return this.translationService.translate('header.panel'); }
+  get labelProfile(): string { return this.translationService.translate('header.profile'); }
+  get labelLogout(): string { return this.translationService.translate('header.logout'); }
+  get labelLogin(): string { return this.translationService.translate('header.login'); }
+  get labelRegister(): string { return this.translationService.translate('header.register'); }
+  get labelCloseMenu(): string { return this.translationService.translate('header.closeMenu'); }
+  get labelOpenMenu(): string { return this.translationService.translate('header.openMenu'); }
 
   onToggleSidenavClick(): void {
     this.toggleSidenav.emit();

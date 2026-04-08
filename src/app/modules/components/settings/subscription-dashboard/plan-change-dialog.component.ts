@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { SubscriptionErrorHandlerService } from '../../../../services/subscription-error-handler.service';
 import { PackagesComponent } from '../../../shared/components/packages/packages.component';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
 export interface PlanChangeDialogData {
   currentSubscription: SubscriptionModel;
@@ -37,15 +38,16 @@ interface PlanOption {
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    PackagesComponent
+    PackagesComponent,
+    TranslatePipe
   ],
   template: `
     <div class="plan-change-dialog">
       <div class="dialog-header">
         <mat-icon class="change-icon">swap_horiz</mat-icon>
-        <h2>Ndrysho Planin</h2>
+        <h2>{{ 'planChange.title' | translate }}</h2>
       </div>
-      
+
       <div class="dialog-content">
         <!-- Current Plan Info -->
         <mat-card class="current-plan-card">
@@ -53,7 +55,7 @@ interface PlanOption {
             <div class="current-plan-info">
               <mat-icon class="current-icon">check_circle</mat-icon>
               <div class="plan-details">
-                <h3>Plani Aktual</h3>
+                <h3>{{ 'planChange.currentPlan' | translate }}</h3>
                 <p class="plan-name">{{ data.currentSubscription.subscriptionPackage?.name }}</p>
                 <p class="plan-price">{{ getCurrentPlanPrice() }}</p>
                 <p class="plan-interval">{{ getCurrentBillingInterval() }}</p>
@@ -64,8 +66,8 @@ interface PlanOption {
 
         <!-- Package Selection using existing component -->
         <div class="package-selection">
-          <h3>Zgjidhni Planin e Ri</h3>
-          <app-packages 
+          <h3>{{ 'planChange.selectNew' | translate }}</h3>
+          <app-packages
             #packagesComponent
             [userType]="getUserType()"
             [excludeCurrentPlan]="true"
@@ -77,31 +79,28 @@ interface PlanOption {
         <div class="pro-ration-info" *ngIf="hasSelectedPlan() && !isSamePlan()">
           <mat-icon>info</mat-icon>
           <div class="pro-ration-content">
-            <h4>Informacion për Faturimin</h4>
-            <p>
-              Do të paguani një shumë pro-rata për ndryshimin e planit. 
-              Krediti për periudhën e mbetur të planit aktual do të aplikohet automatikisht.
-            </p>
+            <h4>{{ 'planChange.proRation.title' | translate }}</h4>
+            <p>{{ 'planChange.proRation.text' | translate }}</p>
           </div>
         </div>
       </div>
-      
+
       <div class="dialog-actions">
-        <button 
-          mat-stroked-button 
+        <button
+          mat-stroked-button
           (click)="onCancel()"
           class="cancel-button">
-          Anulo
+          {{ 'planChange.cancel' | translate }}
         </button>
-        <button 
-          mat-raised-button 
-          color="primary" 
+        <button
+          mat-raised-button
+          color="primary"
           (click)="onConfirm()"
           [disabled]="!hasSelectedPlan() || isSamePlan() || processing"
           class="confirm-button">
           <mat-spinner *ngIf="processing" diameter="20" class="button-spinner"></mat-spinner>
           <mat-icon *ngIf="!processing">swap_horiz</mat-icon>
-          {{ processing ? 'Duke ndryshuar...' : 'Ndrysho Planin' }}
+          {{ processing ? ('planChange.processing' | translate) : ('planChange.confirm' | translate) }}
         </button>
       </div>
     </div>
@@ -510,7 +509,7 @@ interface PlanOption {
     }
   `]
 })
-export class PlanChangeDialogComponent implements OnInit {
+export class PlanChangeDialogComponent implements OnInit, OnDestroy {
   @ViewChild('packagesComponent') packagesComponent!: PackagesComponent;
   processing = false;
   private subscription: Subscription = new Subscription();
@@ -553,7 +552,7 @@ export class PlanChangeDialogComponent implements OnInit {
   }
 
   hasSelectedPlan(): boolean {
-    return this.packagesComponent && !!this.packagesComponent.selectedCard;
+    return !!this.packagesComponent?.selectedCard;
   }
 
   getSelectedPlan(): any {

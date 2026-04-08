@@ -2,13 +2,13 @@
   <div class="footer-content">
     <div class="footer-links">
       <div class="footer-section">
-        <h3>Kontaktet</h3>
-        <p><i class="fas fa-map-marker-alt"></i> Rruga e Durrësit, 10 - 1001 Tiranë AL</p>
-        <p><i class="fas fa-phone"></i> +355 4 2223344</p>
-        <p><i class="fas fa-envelope"></i> info&#64;braingain.al</p>
+        <h3>{{ 'footer.contact.title' | translate }}</h3>
+        <p><i class="fas fa-map-marker-alt"></i> {{ 'footer.contact.address' | translate }}</p>
+        <p><i class="fas fa-phone"></i> {{ 'footer.contact.phone' | translate }}</p>
+        <p><i class="fas fa-envelope"></i> {{ 'footer.contact.email' | translate }}</p>
       </div>
       <div class="footer-section">
-        <h3>Na Ndiqni</h3>
+        <h3>{{ 'footer.follow.title' | translate }}</h3>
         <ul class="social-icon">
           <li class="social-icon__item">
             <a class="social-icon__link" href="#" aria-label="Facebook">
@@ -33,12 +33,12 @@
         </ul>
       </div>
       <div class="footer-section">
-        <h3>Preferencat</h3>
+        <h3>{{ 'footer.preferences.title' | translate }}</h3>
         <button class="preferences-link" (click)="openPreferences()" aria-label="Open preferences">
           <i class="fas fa-cog"></i> {{ preferencesText }}
         </button>
       </div>
     </div>
-    <p class="footer-text">&copy; 2024 Brain Gain | Të gjitha të drejtat të rezervuara</p>
+    <p class="footer-text">&copy; {{ 'footer.copyright' | translate }}</p>
   </div>
 </footer>

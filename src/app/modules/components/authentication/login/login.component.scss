@@ -10,36 +10,37 @@ $blueCustom: #259ccb;
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   align-items: center;
-  justify-content: center; /* Center content vertically on smaller screens */
-  padding: 15px; /* Add some padding for smaller screens */
-  box-sizing: border-box; /* Include padding in element's total width and height */
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  justify-content: center;
+  padding: 15px;
+  box-sizing: border-box;
+  overflow-x: hidden;
   width: 100%;
-  min-width: 0; /* Allow flex items to shrink below their content size */
+  min-width: 0;
 
   >img {
     margin: 20px 0;
     cursor: pointer;
     width: fit-content;
-    max-width: 150px; /* Limit logo size on smaller screens */
+    max-width: 150px;
   }
 }
 
 .login-container {
   display: flex;
-  flex-direction: row; /* Default for larger screens */
-  width: 100%; /* Ensure it takes full width initially */
-  max-width: 1200px; /* Max width for the entire container on larger screens */
-  height: 100%;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
   justify-content: space-between;
   font-family: Arial, sans-serif;
   position: relative;
-  align-items: center; /* Align items in the center */
+  align-items: center;
   box-sizing: border-box;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-  min-width: 0; /* Allow flex items to shrink */
+  overflow-x: hidden;
+  min-width: 0;
+  flex: 1;
 }
 
 .login-body {
@@ -163,60 +164,63 @@ mat-icon {
 
 /* --- Media Queries --- */
 
-/* For Tablet and smaller screens (e.g., max-width: 992px) */
+/* For Tablet and smaller screens (max-width: 992px) */
 @media (max-width: 992px) {
+  .container {
+    min-height: 100vh;
+    height: auto;
+    padding: 20px 15px;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+
   .login-container {
-    flex-direction: column; /* Stack elements vertically */
-    height: auto; /* Allow height to adjust */
-    padding: 0 20px; /* Add some horizontal padding */
-    gap: 30px; /* Add gap between elements */
-  }
-
-  .login-body {
-    width: 100%; /* Full width on tablets */
-    max-width: 500px; /* Limit max width */
-    padding: 35px; /* Slightly less padding */
-    margin: 0 auto; /* Center the login body */
-  }
-
-  .right {
-    width: 100%; /* Full width container */
-    max-width: 450px; /* Limit image container */
-    margin: 0 auto; /* Center the image container */
-    justify-content: center; /* Center the image horizontally */
-  }
-
-  .right > img {
-    max-width: 380px; /* Further limit image size on tablets */
+    flex-direction: column;
+    height: auto;
+    padding: 0;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    flex: unset;
     width: 100%;
   }
-}
-
-/* Specific adjustments for 768px screens */
-@media (min-width: 769px) and (max-width: 992px) {
-  .container {
-    padding: 20px;
-  }
 
   .login-body {
-    padding: 40px 35px;
+    width: 100%;
+    max-width: 520px;
+    padding: 36px 32px;
+    margin: 0 auto;
   }
 
   .login-body h2 {
-    font-size: 32px;
-    margin-bottom: 30px;
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .right {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .right > img {
+    max-width: 300px;
+    width: 100%;
   }
 }
 
 /* For Mobile screens (e.g., max-width: 768px) */
 @media (max-width: 768px) {
   .container {
-    height: 100vh; /* Maintain full viewport height */
-    padding: 10px; /* Reduce padding to prevent overflow */
-    justify-content: flex-start; /* Align content to top for better spacing */
-    overflow-x: hidden; /* Prevent horizontal overflow */
-    width: 100vw; /* Use viewport width */
-    max-width: 100%; /* Ensure it doesn't exceed viewport */
+    min-height: 100vh;
+    height: auto;
+    padding: 10px;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
   }
 
   .container > img {

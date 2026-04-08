@@ -1,31 +1,25 @@
 <div class="app-container">
   <div class="section-title">
-    <h1>Administrimi - Menaxhimi i Quiz-eve</h1>
-    <p>
-      Ky seksion është i rezervuar për administratorin e sistemit. Nga këtu mund të menaxhoni të gjitha quiz-et e
-      LearnHub,
-      të shtoni quiz-e të reja, të modifikoni përmbajtjen ekzistuese ose t'i fshini ato.
-      Përdorni me kujdes funksionet e modifikimit dhe fshirjes për të mbajtur platformën e përditësuar.
-    </p>
+    <h1>{{ 'admin.manageQuiz.title' | translate }}</h1>
   </div>
   <div class="action-button-row">
-    <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
+    <button mat-raised-button (click)="goBack()" matTooltipPosition="above"
             class="back-button" color="warn">
       <mat-icon>arrow_back</mat-icon>
-      Menaxho Learnhub
+      {{ 'admin.manageQuiz.back' | translate }}
     </button>
     <button mat-raised-button color="primary" class="add-button" (click)="goToAddQuiz()">
       <mat-icon>add</mat-icon>
-      Shto Quiz
+      {{ 'admin.manageQuiz.add' | translate }}
     </button>
   </div>
   <ng-container *ngIf="this.dataSource.data.length > 0">
     <div class="search-bar-container">
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Kërko Quicet</mat-label>
+        <mat-label>{{ 'admin.manageQuiz.search.label' | translate }}</mat-label>
         <input
           matInput
-          placeholder="Shkruaj titull, pershkrim, klasa, lend..."
+          [placeholder]="'admin.manageQuiz.search.placeholder' | translate"
           (keyup)="applyFilter($event)"
         >
         <mat-icon matSuffix>search</mat-icon>
@@ -35,30 +29,30 @@
       <table mat-table [dataSource]="dataSource" matSort>
 
         <ng-container matColumnDef="question">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Pytja</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.manageQuiz.col.question' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ element.question }}</td>
         </ng-container>
 
         <ng-container matColumnDef="explanation">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipi Kuic-it</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.manageQuiz.col.type' | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ getQuizTypeName(element.quizType) }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Veprimet</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'admin.manageQuiz.col.actions' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button [matMenuTriggerFor]="menu">
-              <span>Veprimet</span>
+              <span>{{ 'common.actions' | translate }}</span>
               <mat-icon>expand_more</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="onEditQuiz(element)">
                 <mat-icon>edit</mat-icon>
-                <span>Modifiko</span>
+                <span>{{ 'admin.manageQuiz.action.edit' | translate }}</span>
               </button>
               <button mat-menu-item (click)="onDelete(element)" class="delete-item">
                 <mat-icon>delete</mat-icon>
-                <span>Elimino</span>
+                <span>{{ 'admin.manageQuiz.action.delete' | translate }}</span>
               </button>
             </mat-menu>
           </td>
@@ -79,6 +73,6 @@
     </mat-paginator>
   </ng-container>
   <div *ngIf="dataSource.data.length === 0" class="no-data-message">
-    <p>Nuk ka Quiz-e të disponueshme. Mund të shtoni të reja duke përdorë butonin "Shto Quiz".</p>
+    <p>{{ 'admin.manageQuiz.noData' | translate }}</p>
   </div>
 </div>

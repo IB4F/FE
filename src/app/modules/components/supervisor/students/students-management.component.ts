@@ -22,6 +22,7 @@ import {DetailsService} from "../../../../api-client/api/details.service";
 import {Class} from "../../../../api-client/model/class";
 import {UserService} from "../../../../services/user.service";
 import {User} from "../../../../api-client";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface SupervisorStudent {
   studentId: string;
@@ -52,7 +53,8 @@ interface SupervisorStudent {
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSelectModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './students-management.component.html',
   styleUrl: './students-management.component.scss'
 })

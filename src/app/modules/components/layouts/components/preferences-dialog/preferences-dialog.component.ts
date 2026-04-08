@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,8 +29,10 @@ import { TranslationService, Language } from '../../../../../services/translatio
 })
 export class PreferencesDialogComponent {
   isDyslexicFontEnabled$ = this.dyslexicFontService.isEnabled$;
-  currentLanguage$ = this.translationService.currentLanguage$;
-  
+  selectedLanguage: Language = this.translationService.getCurrentLanguage();
+
+  private destroyRef = inject(DestroyRef);
+
   // Translations
   get title(): string {
     return this.translationService.translate('preferences.title');
@@ -56,30 +59,40 @@ export class PreferencesDialogComponent {
   }
 
   get languageLabel(): string {
-    const lang = this.translationService.getCurrentLanguage();
-    return lang === 'sq' ? 'Gjuha / Language' : 'Language / Gjuha';
+    return this.translationService.translate('preferences.language.label');
   }
 
   get languageSubtitle(): string {
-    const lang = this.translationService.getCurrentLanguage();
-    return lang === 'sq' ? 'Zgjidh gjuhën e preferuar' : 'Select your preferred language';
+    return this.translationService.translate('preferences.language.subtitle');
   }
 
   get closeButton(): string {
-    return this.translationService.getCurrentLanguage() === 'sq' ? 'Mbyll' : 'Close';
+    return this.translationService.translate('preferences.close');
   }
-  
+
+  get availableLanguages() {
+    return this.translationService.availableLanguages;
+  }
+
   constructor(
     private dyslexicFontService: DyslexicFontService,
     private translationService: TranslationService,
     private dialogRef: MatDialogRef<PreferencesDialogComponent>
-  ) {}
+  ) {
+    this.translationService.currentLanguage$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(lang => {
+        console.log('[PreferencesDialog] currentLanguage$ emitted:', lang);
+        this.selectedLanguage = lang;
+      });
+  }
 
   toggleDyslexicFont(): void {
     this.dyslexicFontService.toggle();
   }
 
   onLanguageChange(language: Language): void {
+    console.log('[PreferencesDialog] onLanguageChange called:', language);
     this.translationService.setLanguage(language);
   }
 

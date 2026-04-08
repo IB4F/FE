@@ -14,8 +14,8 @@ import {
 } from '../../../../api-client';
 import { BillingInterval } from '../../../shared/constant/enums';
 import { NgToastService } from 'ng-angular-popup';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { environment } from '@env';
+import { StripeService } from '../../../../services/stripe.service';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface Feature {
   text: string;
@@ -44,7 +44,8 @@ type BillingCycle = 'annual' | 'monthly';
     MatButtonModule,
     MatProgressSpinnerModule,
     ReactiveFormsModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './supervisor-subscription-packages.component.html',
   styleUrl: './supervisor-subscription-packages.component.scss'
 })
@@ -59,7 +60,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
   paymentInfo: any[] = [];
   loading = false;
   private destroyRef = inject(DestroyRef);
-  private stripePromise: Promise<Stripe | null> = loadStripe(environment.stripePublishableKey);
+  private stripeService = inject(StripeService);
 
   constructor(
     private route: ActivatedRoute,
@@ -233,15 +234,12 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
         try {
           this.toast.success('Subskriptioni u krijua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
 
-          const stripe = await this.stripePromise;
-          if (stripe && response.sessionId) {
-            await stripe.redirectToCheckout({
-              sessionId: response.sessionId
-            });
-          } else {
+          if (!response.sessionId) {
             this.toast.danger('Gabim në inicializimin e pagesës', 'GABIM', 3000);
             this.loading = false;
+            return;
           }
+          await this.stripeService.redirectToCheckout(response.sessionId);
         } catch {
           this.toast.danger('Gabim në procesin e pagesës', 'GABIM', 3000);
           this.loading = false;

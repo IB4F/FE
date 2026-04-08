@@ -3,6 +3,7 @@ import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
 import {TierIconComponent} from "../../../../../shared/components/tier-icon/tier-icon.component";
+import {TranslatePipe} from '../../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-links-list',
@@ -11,7 +12,8 @@ import {TierIconComponent} from "../../../../../shared/components/tier-icon/tier
     CommonModule,
     MatIconModule,
     TierIconComponent
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './links-list.component.html',
   styleUrl: './links-list.component.scss'
 })

@@ -13,13 +13,21 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
+      // 403 = authenticated but accessing someone else's resource
+      if (error.status === 403) {
+        notificationService.danger('Nuk keni leje për të kryer këtë veprim.', 'GABIM', 4000);
+        return throwError(() => error);
+      }
+
       if (error.status === 0) {
         notificationService.warning('Network error. Check your connection.', 'WARNING', 3000);
+      } else if (error.status === 429) {
+        notificationService.warning('Shumë kërkesa. Ju lutemi prisni pak sekonda.', 'KUJDES', 4000);
       } else if (error.status >= 500) {
         notificationService.danger('Server error. Please try again later.', 'ERROR', 3000);
       } else if (error.error && (error.error.message || error.error.error)) {
         const message = error.error.message || error.error.error;
-        notificationService.warning(message, 'WARNING', 3000);
+        notificationService.warning(message, 'KUJDES', 3000);
       }
       return throwError(() => error);
     })

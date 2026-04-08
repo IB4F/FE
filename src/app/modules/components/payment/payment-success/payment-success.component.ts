@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-payment-success',
@@ -8,7 +9,8 @@ import { Router, RouterLink, ActivatedRoute } from "@angular/router";
   imports: [
     CommonModule,
     RouterLink
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './payment-success.component.html',
   styleUrl: './payment-success.component.scss'
 })

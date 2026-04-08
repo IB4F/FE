@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 interface QuizOption {
   id: string;
@@ -10,7 +11,8 @@ interface QuizOption {
 @Component({
   selector: 'app-quiz',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,
+    TranslatePipe],
   templateUrl: './quiz.component.html',
   styleUrl: './quiz.component.scss',
 })

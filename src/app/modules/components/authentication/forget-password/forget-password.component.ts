@@ -9,6 +9,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatDialogRef} from "@angular/material/dialog";
 import {NgToastService} from "ng-angular-popup";
 import {AuthService, ForgotPasswordDTO} from "../../../../api-client";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-forget-password',
@@ -22,7 +23,8 @@ import {AuthService, ForgotPasswordDTO} from "../../../../api-client";
     MatButtonModule,
     CommonModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './forget-password.component.html',
   styleUrl: './forget-password.component.scss'
 })

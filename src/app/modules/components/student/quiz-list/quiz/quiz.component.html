@@ -5,8 +5,8 @@
         <div class="icon">?</div>
         <div class="text">{{ question }}</div>
         <div class="audio-control" *ngIf="hasQuestionAudio()">
-          <button 
-            class="audio-button" 
+          <button
+            class="audio-button"
             (click)="toggleAudio()"
             [class.playing]="isPlaying"
             type="button"
@@ -20,7 +20,7 @@
       <!-- Multiple answer instruction -->
       <div class="multiple-answer-instruction" *ngIf="multipleAnswer">
         <div class="instruction-icon">ℹ️</div>
-        <div class="instruction-text">Mund të zgjidhni më shumë se një përgjigje të saktë</div>
+        <div class="instruction-text">{{ 'quiz.multipleAnswer' | translate }}</div>
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@
           <div class="icon">{{ getOptionLetter(i) }}</div>
           <div class="text">{{ option.optionText }}</div>
         </div>
-        
+
         <div class="option-image" *ngIf="hasImage(option)">
           <img [src]="option.optionImageUrl!" [alt]="option.optionText" />
         </div>
@@ -50,6 +50,6 @@
     (click)="submitAnswer()"
     [disabled]="multipleAnswer ? selectedOptionIds.length === 0 : !selectedOptionId"
   >
-    Dërgo Përgjigjen
+    {{ 'quiz.submit' | translate }}
   </button>
 </div>

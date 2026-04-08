@@ -13,6 +13,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatSliderModule} from "@angular/material/slider";
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-manage-user',
@@ -29,7 +30,8 @@ import {MatSliderModule} from "@angular/material/slider";
     MatSliderModule,
     MatTooltipModule,
     MatButton
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './manage-user.component.html',
   styleUrl: './manage-user.component.scss'
 })

@@ -1,39 +1,38 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ApplicationRef, Injectable, NgZone } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
-export type Language = 'sq' | 'en';
+export type Language = string;
+
+export interface LanguageOption {
+  code: Language;
+  label: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationService {
   private readonly STORAGE_KEY = 'preferredLanguage';
+  private readonly DEFAULT_LANGUAGE: Language = 'sq';
+
   private currentLanguageSubject = new BehaviorSubject<Language>(this.loadFromStorage());
   public currentLanguage$: Observable<Language> = this.currentLanguageSubject.asObservable();
 
-  private translations: { [key: string]: { sq: string; en: string } } = {
-    'settings.title': { sq: 'Cilësimet', en: 'Settings' },
-    'settings.preferences': { sq: 'Preferencat', en: 'Preferences' },
-    'settings.profile': { sq: 'Profili', en: 'Profile' },
-    'settings.changePassword': { sq: 'Ndrysho Passwordin', en: 'Change Password' },
-    'settings.subscription': { sq: 'Abonimi Im', en: 'My Subscription' },
-    'preferences.title': { sq: 'Preferencat', en: 'Preferences' },
-    'preferences.description': { sq: 'Përshtat cilësimet e aplikacionit sipas preferencave të tua.', en: 'Customize application settings according to your preferences.' },
-    'preferences.dyslexicFont.title': { sq: 'Fonti për Disleksikë', en: 'Dyslexic Font' },
-    'preferences.dyslexicFont.subtitle': { sq: 'Aktivizo fontin e specializuar për lexim më të lehtë për personat me disleksi', en: 'Enable specialized font for easier reading for people with dyslexia' },
-    'preferences.dyslexicFont.info.title': { sq: 'Çfarë është fonti për disleksikë?', en: 'What is dyslexic font?' },
-    'preferences.dyslexicFont.info.description': { sq: 'Fonti i specializuar për disleksikë përdor karaktere të projektuar posaçërisht për të reduktuar konfuzionin midis shkronjave dhe për të lehtësuar leximin. Aktivizimi i kësaj mundësie do të ndryshojë fontin në të gjithë aplikacionin.', en: 'The specialized font for dyslexia uses specially designed characters to reduce confusion between letters and facilitate reading. Enabling this option will change the font throughout the application.' },
-    'header.dashboard': { sq: 'Dashboardi im', en: 'My Dashboard' },
-    'header.panel': { sq: 'Panel', en: 'Panel' },
-    'header.profile': { sq: 'Profili', en: 'Profile' },
-    'header.logout': { sq: 'Dil', en: 'Logout' },
-    'header.login': { sq: 'Hyr', en: 'Login' },
-    'header.register': { sq: 'Regjistrohu', en: 'Register' }
-  };
+  private translations: { [key: string]: string } = {};
+  private cache: { [lang: string]: { [key: string]: string } } = {};
 
-  constructor() {
-    // Apply language on initialization
-    this.applyLanguage();
+  readonly availableLanguages: LanguageOption[] = [
+    { code: 'sq', label: 'Shqip' },
+    { code: 'en', label: 'English' },
+  ];
+
+  constructor(private http: HttpClient, private ngZone: NgZone, private appRef: ApplicationRef) {
+    this.loadLanguage(this.currentLanguageSubject.value).subscribe();
+    this.ngZone.onMicrotaskEmpty.subscribe(() => {
+      console.log('[Zone] onMicrotaskEmpty fired - tick will run, currentLang:', this.currentLanguageSubject.value);
+    });
   }
 
   getCurrentLanguage(): Language {
@@ -41,17 +40,28 @@ export class TranslationService {
   }
 
   setLanguage(language: Language): void {
-    this.currentLanguageSubject.next(language);
-    this.saveToStorage(language);
-    this.applyLanguage();
+    console.log('[TranslationService] setLanguage called:', language);
+    this.loadLanguage(language).subscribe(() => {
+      console.log('[TranslationService] loadLanguage completed, cache hit:', !!this.cache[language]);
+      this.ngZone.run(() => {
+        console.log('[TranslationService] inside ngZone.run');
+        Promise.resolve().then(() => {
+          console.log('[TranslationService] Promise.then - calling next:', language);
+          this.currentLanguageSubject.next(language);
+          console.log('[TranslationService] next() called, currentValue:', this.currentLanguageSubject.value);
+          this.saveToStorage(language);
+          this.applyLanguage();
+        });
+      });
+    });
   }
 
   translate(key: string): string {
-    const translation = this.translations[key];
-    if (!translation) {
-      return key;
+    const val = this.translations[key] ?? key;
+    if (key === 'header.login' || key === 'preferences.title') {
+      console.log(`[translate] key="${key}" → "${val}" (lang: ${this.currentLanguageSubject.value})`);
     }
-    return translation[this.currentLanguageSubject.value] || translation.sq;
+    return val;
   }
 
   translateAsync(key: string): Observable<string> {
@@ -63,12 +73,31 @@ export class TranslationService {
     });
   }
 
+  private loadLanguage(lang: Language): Observable<{ [key: string]: string }> {
+    if (this.cache[lang]) {
+      this.translations = this.cache[lang];
+      return of(this.cache[lang]);
+    }
+
+    return this.http.get<{ [key: string]: string }>(`/assets/i18n/${lang}.json`).pipe(
+      tap(data => {
+        this.cache[lang] = data;
+        this.translations = data;
+      }),
+      catchError(() => {
+        console.warn(`Translation file for '${lang}' not found, falling back to '${this.DEFAULT_LANGUAGE}'.`);
+        const fallback = this.cache[this.DEFAULT_LANGUAGE] ?? {};
+        this.translations = fallback;
+        return of(fallback);
+      })
+    );
+  }
+
   private loadFromStorage(): Language {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      return (stored === 'en' || stored === 'sq') ? stored : 'sq';
+      return localStorage.getItem(this.STORAGE_KEY) ?? this.DEFAULT_LANGUAGE;
     }
-    return 'sq';
+    return this.DEFAULT_LANGUAGE;
   }
 
   private saveToStorage(language: Language): void {
@@ -79,10 +108,7 @@ export class TranslationService {
 
   private applyLanguage(): void {
     if (typeof document !== 'undefined') {
-      const html = document.documentElement;
-      html.setAttribute('lang', this.currentLanguageSubject.value);
+      document.documentElement.setAttribute('lang', this.currentLanguageSubject.value);
     }
   }
 }
-
-

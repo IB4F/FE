@@ -11,6 +11,7 @@ import {NgToastService} from "ng-angular-popup";
 import {ConfirmPasswordValidator} from "../../../../helpers/customValidators/confirm-password.validator";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {AuthService, ResetPasswordDTO} from "../../../../api-client";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-reset-password',
@@ -24,7 +25,8 @@ import {AuthService, ResetPasswordDTO} from "../../../../api-client";
     MatButtonModule,
     CommonModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })

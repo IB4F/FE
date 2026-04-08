@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
 export interface UnsubscribeDialogData {
   subscriptionName: string;
@@ -17,51 +18,52 @@ export interface UnsubscribeDialogData {
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    TranslatePipe
   ],
   template: `
     <div class="unsubscribe-dialog">
       <div class="dialog-header">
         <mat-icon class="warning-icon">warning</mat-icon>
-        <h2>Konfirmo Ç'regjistrimin</h2>
+        <h2>{{ 'unsubscribe.title' | translate }}</h2>
       </div>
-      
+
       <div class="dialog-content">
         <p class="warning-text">
-          A jeni të sigurt që dëshironi të ç'regjistroheni nga <strong>{{ data.subscriptionName }}</strong>?
+          {{ 'unsubscribe.warning' | translate }} <strong>{{ data.subscriptionName }}</strong>?
         </p>
-        
+
         <div class="warning-details">
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Do të ruani qasjen deri në <strong>{{ getFormattedEndDate() }}</strong></span>
+            <span>{{ 'unsubscribe.keepAccess' | translate }} <strong>{{ getFormattedEndDate() }}</strong></span>
           </div>
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Nuk do të paguani më për këtë abonim pas kësaj date</span>
+            <span>{{ 'unsubscribe.noMoreCharges' | translate }}</span>
           </div>
           <div class="warning-item">
             <mat-icon>info</mat-icon>
-            <span>Mund të regjistroheni përsëri në çdo kohë</span>
+            <span>{{ 'unsubscribe.resubscribe' | translate }}</span>
           </div>
         </div>
-        
+
       </div>
-      
+
       <div class="dialog-actions">
-        <button 
-          mat-stroked-button 
+        <button
+          mat-stroked-button
           (click)="onCancel()"
           class="cancel-button">
-          Anulo
+          {{ 'unsubscribe.cancel' | translate }}
         </button>
-        <button 
-          mat-raised-button 
-          color="warn" 
+        <button
+          mat-raised-button
+          color="warn"
           (click)="onConfirm()"
           class="confirm-button">
           <mat-icon>exit_to_app</mat-icon>
-          Ç'regjistrohu
+          {{ 'unsubscribe.confirm' | translate }}
         </button>
       </div>
     </div>

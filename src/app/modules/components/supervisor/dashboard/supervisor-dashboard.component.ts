@@ -19,6 +19,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SupervisorService } from '../../../../api-client/api/supervisor.service';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface SupervisorDashboardData {
   totalStudents: number;
@@ -59,7 +60,8 @@ interface SupervisorStudent {
     MatSortModule,
     MatFormFieldModule,
     MatInputModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './supervisor-dashboard.component.html',
   styleUrl: './supervisor-dashboard.component.scss'
 })

@@ -14,6 +14,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatButtonModule} from "@angular/material/button";
 import {QuizzesService} from "../../../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
+import {TranslatePipe} from '../../../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-quiz-modal',
@@ -31,7 +32,8 @@ import {NgToastService} from "ng-angular-popup";
     MatFormFieldModule,
     MatSliderModule,
     MatButtonModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './quiz-modal.component.html',
   styleUrl: './quiz-modal.component.scss'
 })

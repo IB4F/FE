@@ -1,18 +1,18 @@
 <div class="container">
   <div class="header-section">
-    <h1 class="main-title">Zgjidhni Paketën Tuaj</h1>
-    <p class="subtitle">Përzgjidhni paketën që u përshtatet më së miri nevojave tuaja mësimore</p>
-    
+    <h1 class="main-title">{{ 'packages.title' | translate }}</h1>
+    <p class="subtitle">{{ 'packages.subtitle' | translate }}</p>
+
     <form [formGroup]="packegeForm">
       <div class="billing-switch-container">
         <span class="switch-label" [class.active]="packegeForm.value.billingCycle === 'monthly'">
           <mat-icon>calendar_view_month</mat-icon>
-          Mujore
+          {{ 'common.monthly' | translate }}
         </span>
         <div class="switch-wrapper">
-          <input 
-            type="checkbox" 
-            id="billing-switch" 
+          <input
+            type="checkbox"
+            id="billing-switch"
             class="switch-input"
             [checked]="packegeForm.value.billingCycle === 'annual'"
             (change)="onSwitchChange($event)"
@@ -23,7 +23,7 @@
         </div>
         <span class="switch-label" [class.active]="packegeForm.value.billingCycle === 'annual'">
           <mat-icon>calendar_view_year</mat-icon>
-          Vjetore
+          {{ 'common.annual' | translate }}
         </span>
       </div>
     </form>
@@ -38,12 +38,12 @@
            'best-value': card.isBestValue
          }"
          (click)="selectCard(card)">
-      
+
       <div *ngIf="card.isBestValue" class="best-value-badge">
         <mat-icon>star</mat-icon>
-        Zgjedhja Më e Mirë
+        {{ 'packages.bestValue' | translate }}
       </div>
-      
+
       <div class="card-header">
         <div class="card-icon" [ngClass]="{
           'basic-icon': card.title === 'Bazë',
@@ -58,7 +58,7 @@
         <h2 class="card-title">{{ card.title }}</h2>
         <div *ngIf="card.maxUsers && card.maxUsers > 1" class="max-users-text">
           <mat-icon>people</mat-icon>
-          <span>Për {{ card.maxUsers }} persona</span>
+          <span>{{ 'packages.maxUsers' | translate }} {{ card.maxUsers }} {{ 'packages.maxUsersSuffix' | translate }}</span>
         </div>
       </div>
 
@@ -74,7 +74,7 @@
           <span *ngIf="selectedCard === card" class="button-icon">
             <mat-icon>check</mat-icon>
           </span>
-          {{ selectedCard === card ? 'Përzgjedhur' : 'Përzgjidh' }}
+          {{ selectedCard === card ? ('packages.selected' | translate) : ('packages.select' | translate) }}
         </button>
       </div>
     </div>

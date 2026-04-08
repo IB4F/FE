@@ -54,13 +54,15 @@ export class PreferencesComponent {
   }
 
   get languageLabel(): string {
-    const lang = this.translationService.getCurrentLanguage();
-    return lang === 'sq' ? 'Gjuha / Language' : 'Language / Gjuha';
+    return this.translationService.translate('preferences.language.label');
   }
 
   get languageSubtitle(): string {
-    const lang = this.translationService.getCurrentLanguage();
-    return lang === 'sq' ? 'Zgjidh gjuhën e preferuar' : 'Select your preferred language';
+    return this.translationService.translate('preferences.language.subtitle');
+  }
+
+  get availableLanguages() {
+    return this.translationService.availableLanguages;
   }
   
   constructor(

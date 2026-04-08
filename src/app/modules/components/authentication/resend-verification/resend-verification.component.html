@@ -1,0 +1,24 @@
+<div class="resend-container">
+  <ng-container *ngIf="!sent">
+    <h2>{{ 'auth.resend.title' | translate }}</h2>
+    <p>{{ 'auth.resend.description' | translate }}</p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'common.email' | translate }}</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="email@example.com" />
+        <mat-error *ngIf="form.get('email')?.hasError('required')">{{ 'auth.resend.emailRequired' | translate }}</mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">{{ 'auth.resend.emailInvalid' | translate }}</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
+        {{ isLoading ? ('auth.resend.sending' | translate) : ('auth.resend.submit' | translate) }}
+      </button>
+    </form>
+    <button mat-button (click)="router.navigate(['/hyr'])">{{ 'auth.resend.backToLogin' | translate }}</button>
+  </ng-container>
+
+  <ng-container *ngIf="sent">
+    <h2>{{ 'auth.resend.sent.title' | translate }}</h2>
+    <p>{{ 'auth.resend.sent.message' | translate }}</p>
+    <button mat-raised-button color="primary" (click)="router.navigate(['/hyr'])">{{ 'auth.resend.goToLogin' | translate }}</button>
+  </ng-container>
+</div>

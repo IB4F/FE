@@ -8,71 +8,68 @@
         <form [formGroup]="registerFormGroup">
           <div class="field-container">
             <mat-form-field appearance="outline" class="field-half">
-              <mat-label>Emri</mat-label>
-              <input matInput placeholder="Emri" formControlName="firstName" required>
+              <mat-label>{{ 'common.firstName' | translate }}</mat-label>
+              <input matInput [placeholder]="'common.firstName' | translate" formControlName="firstName" required>
               <mat-error *ngIf="registerFormGroup.get('firstName')?.hasError('required')">
-                Fushë e detyrueshme
+                {{ 'common.required' | translate }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" class="field-half">
-              <mat-label>Mbiemri</mat-label>
-              <input matInput placeholder="Mbiemri" formControlName="lastName" required>
+              <mat-label>{{ 'common.lastName' | translate }}</mat-label>
+              <input matInput [placeholder]="'common.lastName' | translate" formControlName="lastName" required>
               <mat-error *ngIf="registerFormGroup.get('lastName')?.hasError('required')">
-                Fushë e detyrueshme
+                {{ 'common.required' | translate }}
               </mat-error>
             </mat-form-field>
           </div>
           <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Email</mat-label>
-            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-label>{{ 'common.email' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.email' | translate" formControlName="email" required>
             <mat-error *ngIf="registerFormGroup.get('email')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
           <div class="field-container">
             <mat-form-field appearance="outline" class="field-half">
-              <mat-label>Ditëlindja</mat-label>
+              <mat-label>{{ 'auth.register.birthday' | translate }}</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error *ngIf="registerFormGroup.get('dateOfBirth')?.hasError('required')">
-                Fushë e detyrueshme
+                {{ 'common.required' | translate }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" class="field-half">
-              <mat-label>Shkolla</mat-label>
-              <input matInput placeholder="Shkolla" formControlName="school" required>
+              <mat-label>{{ 'common.school' | translate }}</mat-label>
+              <input matInput [placeholder]="'common.school' | translate" formControlName="school" required>
               <mat-error *ngIf="registerFormGroup.get('school')?.hasError('required')">
-                Fushë e detyrueshme
+                {{ 'common.required' | translate }}
               </mat-error>
             </mat-form-field>
           </div>
           <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Klasa aktuale</mat-label>
-            <mat-select placeholder="Klasa aktuale" formControlName="currentClass" required>
+            <mat-label>{{ 'common.currentClass' | translate }}</mat-label>
+            <mat-select [placeholder]="'common.currentClass' | translate" formControlName="currentClass" required>
               <mat-option *ngFor="let class of classesList" [value]="class.id">
                 {{ class.name }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="registerFormGroup.get('currentClass')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Password</mat-label>
-            <input matInput placeholder="Password" formControlName="password"
+            <mat-label>{{ 'common.password' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.password' | translate" formControlName="password"
                    [type]="hidePass ? 'password' : 'text'" required>
-            <mat-icon matSuffix
-                      matTooltip="1. Të paktën 8 karaktere 2. Të paktën një karakter special 3. Të paktën një shkronjë të madhe 4. Të paktën një numër">
-              info
-            </mat-icon>
+            <mat-icon matSuffix [matTooltip]="'common.passwordTooltip' | translate">info</mat-icon>
             <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
                     [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
               <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
             <mat-error *ngIf="registerFormGroup.get('password')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
         </form>

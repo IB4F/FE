@@ -2,13 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../../api-client";
 import {CommonModule} from "@angular/common";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-email-verification',
   standalone: true,
   imports: [
     CommonModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './email-verification.component.html',
   styleUrl: './email-verification.component.scss'
 })

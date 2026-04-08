@@ -1,14 +1,14 @@
 <div class="supervisor-subscription-container">
   <div class="header-section">
-    <h1>Zgjidh Paketën e Subscriptionit</h1>
-    <p class="subtitle">Urime! Aplikimi juaj për të u bërë supervizor është pranuar. Tani mund të zgjidhni paketën e subscriptionit tuaj dhe të filloni të menaxhoni nxënësit tuaj.</p>
+    <h1>{{ 'supervisorSubscription.title' | translate }}</h1>
+    <p class="subtitle">{{ 'supervisorSubscription.subtitle' | translate }}</p>
   </div>
 
   <div class="packages-section">
     <form [formGroup]="packageForm">
       <mat-radio-group formControlName="billingCycle" class="billing-switcher">
-        <mat-radio-button value="annual" class="radio-option">Vjetore</mat-radio-button>
-        <mat-radio-button value="monthly" class="radio-option">Mujore</mat-radio-button>
+        <mat-radio-button value="annual" class="radio-option">{{ 'common.annual' | translate }}</mat-radio-button>
+        <mat-radio-button value="monthly" class="radio-option">{{ 'common.monthly' | translate }}</mat-radio-button>
       </mat-radio-group>
     </form>
 
@@ -21,12 +21,12 @@
              'best-value': card.isBestValue
            }"
            (click)="selectCard(card)">
-        <div *ngIf="card.isBestValue" class="best-value-badge">Zgjedhja Më e Mirë</div>
+        <div *ngIf="card.isBestValue" class="best-value-badge">{{ 'supervisorSubscription.bestValue' | translate }}</div>
         <img src="assets/svgImages/price.svg" alt="Etiketë Çmimi">
         <h2>{{ card.title }}</h2>
         <p *ngIf="card.maxUsers && card.maxUsers > 1" class="max-users-text">
           <mat-icon>people</mat-icon>
-          Për deri {{ card.maxUsers }} nxënës
+          {{ 'supervisorSubscription.forUpTo' | translate }} {{ card.maxUsers }} {{ 'supervisorSubscription.students' | translate }}
         </p>
         <ul class="card-content">
           <li *ngFor="let feature of card.features" [class.disabled]="!feature.available">
@@ -37,21 +37,21 @@
         </ul>
         <p class="price">{{ card.priceDisplay }}</p>
         <button class="select-button" [class.selected-button]="selectedCard === card">
-          {{ selectedCard === card ? 'Përzgjedhur' : 'Përzgjidh' }}
+          {{ selectedCard === card ? ('supervisorSubscription.selected' | translate) : ('supervisorSubscription.select' | translate) }}
         </button>
       </div>
     </div>
 
     <div class="continue-section">
-      <button 
-        mat-raised-button 
-        color="primary" 
+      <button
+        mat-raised-button
+        color="primary"
         class="continue-button"
         [disabled]="isContinueDisabled()"
         (click)="continueWithPayment()">
         <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
-        <span *ngIf="!loading">Vazhdo me Pagesën</span>
-        <span *ngIf="loading">Duke përgatitur pagesën...</span>
+        <span *ngIf="!loading">{{ 'supervisorSubscription.continue' | translate }}</span>
+        <span *ngIf="loading">{{ 'supervisorSubscription.preparing' | translate }}</span>
       </button>
     </div>
   </div>

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../../services/token-storage.service';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 import {
   AdminAnalyticsDTO, AdminDashboardService, AdminStatsDTO, GeographicStatsDTO,
   LearnHubPerformanceDTO, LearnHubStatsDTO,
@@ -19,7 +20,8 @@ import {
 @Component({
   selector: 'app-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,
+    TranslatePipe],
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.scss'
 })

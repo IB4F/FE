@@ -10,20 +10,20 @@
     <p class="course-description">{{ course.description }}</p>
 
     <div *ngIf="course.links && course.links.length > 0" class="course-links">
-      <h4>Burimet e ndërlidhura:</h4>
+      <h4>{{ 'courses.relatedResources' | translate }}</h4>
       <ol>
         <li *ngFor="let link of course.links" class="link-item">
           <div class="link-content">
-            <a *ngIf="hasQuizzes(link)" 
-               (click)="goToQuizList(link.id)" 
-               target="_blank" 
-               rel="noopener noreferrer" 
+            <a *ngIf="hasQuizzes(link)"
+               (click)="goToQuizList(link.id)"
+               target="_blank"
+               rel="noopener noreferrer"
                class="link-title">
               {{ link.title }}
               <span class="quiz-count">({{ link.quizzesCount }})</span>
 
             </a>
-            <span *ngIf="!hasQuizzes(link)" 
+            <span *ngIf="!hasQuizzes(link)"
                   class="link-title disabled-link">
               {{ link.title }}
               <span class="quiz-count">({{ link.quizzesCount }})</span>
@@ -40,8 +40,7 @@
   <div class="card-footer">
     <span class="course-class-type">{{ course.classType }}</span>
     <span [class]="difficultyColorClass">
-      Vështirësi: {{ course.difficulty }}
+      {{ 'courses.difficulty' | translate }} {{ course.difficulty }}
     </span>
   </div>
 </div>
-

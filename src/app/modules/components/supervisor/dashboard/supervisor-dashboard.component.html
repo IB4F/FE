@@ -1,16 +1,16 @@
 <div class="supervisor-dashboard">
   <div class="dashboard-header">
-    <h1>Dashboard Supervisor</h1>
+    <h1>{{ 'supervisor.dashboard.title' | translate }}</h1>
     <button mat-raised-button color="primary" (click)="refreshDashboard()" [disabled]="isLoading">
       <mat-icon>refresh</mat-icon>
-      Rifresko
+      {{ 'common.refresh' | translate }}
     </button>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner></mat-spinner>
-    <p>Duke ngarkuar dashboard-in...</p>
+    <p>{{ 'supervisor.dashboard.loading' | translate }}</p>
   </div>
 
   <!-- Error State -->
@@ -18,13 +18,13 @@
     <mat-icon color="warn">error</mat-icon>
     <p>{{ error }}</p>
     <button mat-raised-button color="primary" (click)="loadDashboardData()">
-      Provo Përsëri
+      {{ 'common.retry' | translate }}
     </button>
   </div>
 
   <!-- Dashboard Content -->
   <div *ngIf="dashboardData && !isLoading" class="dashboard-content">
-    
+
     <!-- Statistics Cards -->
     <div class="stats-grid">
       <mat-card class="stat-card">
@@ -34,7 +34,7 @@
           </div>
           <div class="stat-info">
             <h3>{{ dashboardData.totalStudents }}</h3>
-            <p>Total Studentë</p>
+            <p>{{ 'supervisor.dashboard.stats.totalStudents' | translate }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -46,7 +46,7 @@
           </div>
           <div class="stat-info">
             <h3>{{ dashboardData.activeStudents }}</h3>
-            <p>Studentë Aktivë</p>
+            <p>{{ 'supervisor.dashboard.stats.activeStudents' | translate }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -58,7 +58,7 @@
           </div>
           <div class="stat-info">
             <h3>{{ dashboardData.averageProgress.toFixed(1) }}%</h3>
-            <p>Progres Mesatar</p>
+            <p>{{ 'supervisor.dashboard.stats.avgProgress' | translate }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -70,7 +70,7 @@
           </div>
           <div class="stat-info">
             <h3>{{ dashboardData.pendingPasswordResetRequests }}</h3>
-            <p>Kërkesa për Reset Password</p>
+            <p>{{ 'supervisor.dashboard.stats.pendingReset' | translate }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -80,12 +80,12 @@
     <div class="action-buttons">
       <button mat-raised-button color="primary" (click)="navigateToAddStudent()">
         <mat-icon>person_add</mat-icon>
-        Shto Student të Ri
+        {{ 'supervisor.dashboard.actions.addStudent' | translate }}
       </button>
-      <button mat-raised-button color="accent" (click)="navigateToPasswordReset()" 
+      <button mat-raised-button color="accent" (click)="navigateToPasswordReset()"
               [disabled]="dashboardData.pendingPasswordResetRequests === 0">
         <mat-icon>security</mat-icon>
-        Menaxho Reset Password
+        {{ 'supervisor.dashboard.actions.manageReset' | translate }}
         <span *ngIf="dashboardData.pendingPasswordResetRequests > 0" class="badge">
           {{ dashboardData.pendingPasswordResetRequests }}
         </span>
@@ -95,17 +95,17 @@
     <!-- Students Table -->
     <mat-card class="students-card">
       <mat-card-header>
-        <mat-card-title>Lista e Studentëve</mat-card-title>
-        <mat-card-subtitle>Studentët nën menaxhimin tuaj</mat-card-subtitle>
+        <mat-card-title>{{ 'supervisor.dashboard.students.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'supervisor.dashboard.students.subtitle' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <!-- Search Field -->
         <div class="search-bar-container">
           <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Kërko studentë</mat-label>
+            <mat-label>{{ 'supervisor.dashboard.students.search.label' | translate }}</mat-label>
             <input
               matInput
-              placeholder="Shkruaj emër, mbiemër, email, klasa, shkolla..."
+              [placeholder]="'supervisor.dashboard.students.search.placeholder' | translate"
               (keyup)="applyFilter($event)"
             >
             <mat-icon matSuffix>search</mat-icon>
@@ -115,10 +115,10 @@
         <!-- Table Container -->
         <div *ngIf="dataSource.data.length > 0" class="table-container">
           <table mat-table [dataSource]="dataSource" matSort class="students-table">
-            
+
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Emri</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.name' | translate }}</th>
               <td mat-cell *matCellDef="let student">
                 {{ student.firstName }} {{ student.lastName }}
               </td>
@@ -126,7 +126,7 @@
 
             <!-- Email Column -->
             <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'common.email' | translate }}</th>
               <td mat-cell *matCellDef="let student">
                 <span class="email-text">{{ student.email }}</span>
               </td>
@@ -134,7 +134,7 @@
 
             <!-- Class Column -->
             <ng-container matColumnDef="class">
-              <th mat-header-cell *matHeaderCellDef>Klasa</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'common.currentClass' | translate }}</th>
               <td mat-cell *matCellDef="let student">
                 {{ student.currentClass }}
               </td>
@@ -142,11 +142,11 @@
 
             <!-- Progress Column -->
             <ng-container matColumnDef="progress">
-              <th mat-header-cell *matHeaderCellDef>Progresi</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.progress' | translate }}</th>
               <td mat-cell *matCellDef="let student">
                 <div class="progress-container">
-                  <mat-progress-bar 
-                    mode="determinate" 
+                  <mat-progress-bar
+                    mode="determinate"
                     [value]="student.progressPercentage || 0"
                     [color]="getProgressColor(student.progressPercentage || 0)">
                   </mat-progress-bar>
@@ -157,7 +157,7 @@
 
             <!-- Status Column -->
             <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef>Statusi</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.status' | translate }}</th>
               <td mat-cell *matCellDef="let student">
                 <mat-chip [color]="getStatusColor(student.isActive)" selected>
                   {{ getStatusText(student.isActive) }}
@@ -167,15 +167,13 @@
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Aksionet</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.actions' | translate }}</th>
               <td mat-cell *matCellDef="let student">
-                <button mat-icon-button 
-                        matTooltip="Shiko detajet e progresit"
+                <button mat-icon-button
                         (click)="viewStudentProgressDetails(student)">
                   <mat-icon>visibility</mat-icon>
                 </button>
-                <button mat-icon-button 
-                        matTooltip="Fshi studentin"
+                <button mat-icon-button
                         (click)="deleteStudent(student)"
                         color="warn">
                   <mat-icon>delete</mat-icon>
@@ -203,14 +201,13 @@
         <!-- Empty State -->
         <div *ngIf="dataSource.data.length === 0" class="empty-state">
           <mat-icon>people_outline</mat-icon>
-          <h3>Nuk ka studentë të regjistruar</h3>
+          <h3>{{ 'supervisor.dashboard.empty.title' | translate }}</h3>
           <p>{{ getNoDataMessage() }}</p>
           <button mat-raised-button color="primary" (click)="navigateToAddStudent()">
-            Shto Student të Ri
+            {{ 'supervisor.dashboard.actions.addStudent' | translate }}
           </button>
         </div>
       </mat-card-content>
     </mat-card>
   </div>
 </div>
-

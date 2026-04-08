@@ -1,16 +1,16 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {RegisterComponent} from "../register/register.component";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
 import {CommonModule} from "@angular/common";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AuthService, StudentRegistrationDTO} from "../../../../api-client";
-import {loadStripe, Stripe} from "@stripe/stripe-js";
-import {environment} from "@env";
+import {StripeService} from "../../../../services/stripe.service";
 import {MatButton} from "@angular/material/button";
 import {NgToastService} from "ng-angular-popup";
 import {PackagesComponent} from "../../../shared/components/packages/packages.component";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-membership-student',
@@ -22,14 +22,15 @@ import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/
     MatProgressSpinnerModule,
     MatButton,
     DynamicBannerComponent
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './membership-student.component.html',
   styleUrl: './membership-student.component.scss'
 })
 export class MembershipStudentComponent {
   @ViewChild(RegisterComponent) registerComponent!: RegisterComponent;
   @ViewChild(PackagesComponent) packageComponent!: PackagesComponent;
-  private stripePromise: Promise<Stripe | null> = loadStripe(environment.stripePublishableKey);
+  private stripeService = inject(StripeService);
 
   loading = false;
 
@@ -64,14 +65,8 @@ export class MembershipStudentComponent {
           // Show success message for registration initiation
           this.toast.success('Regjistrimi u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
 
-          const stripe = await this.stripePromise;
-          if (stripe && response.sessionId) {
-            await stripe.redirectToCheckout({
-              sessionId: response.sessionId
-            });
-          } else {
-            throw new Error('Stripe session not available');
-          }
+          if (!response.sessionId) throw new Error('Stripe session not available');
+          await this.stripeService.redirectToCheckout(response.sessionId);
         } catch (error) {
           console.error('Stripe redirect failed:', error);
           this.toast.danger('Gabim në ridrejtimin e pagesës. Ju lutemi provoni përsëri.', 'GABIM', 3000);

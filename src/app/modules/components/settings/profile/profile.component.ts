@@ -11,6 +11,7 @@ import {MatSelect} from "@angular/material/select";
 import {Class} from "../../../../api-client";
 import {UserRole} from "../../../shared/constant/enums";
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +27,8 @@ import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-
     MatOption,
     MatSelect,
     PhoneInputComponent
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
   providers: [provideNativeDateAdapter()]

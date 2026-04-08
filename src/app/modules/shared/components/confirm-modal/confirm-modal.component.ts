@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 export interface ConfirmModalData {
   title: string;
@@ -16,7 +17,8 @@ export interface ConfirmModalData {
     MatDialogModule,
     MatButtonModule,
     MatIconModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './confirm-modal.component.html',
   styleUrl: './confirm-modal.component.scss'
 })

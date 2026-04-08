@@ -15,6 +15,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-users',
@@ -30,7 +31,7 @@ import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/co
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
-  ],
+    TranslatePipe],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })

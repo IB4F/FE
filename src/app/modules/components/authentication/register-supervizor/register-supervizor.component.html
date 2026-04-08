@@ -2,55 +2,46 @@
   <app-dynamic-banner bannerType="supervisor"></app-dynamic-banner>
 
   <div class="title">
-    <h1>Bëhuni pjesë e platformës sonë për administrimin e studentëve</h1>
-    <p>
-      Regjistrohuni tani si supervizor për të përfituar nga të gjitha mjetet e menaxhimit të studentëve. Me një
-      regjistrim të thjeshtë,
-      do të keni qasje në sistemin tonë të plotë për gjurmimin e performancës, komunikimin me studentët dhe
-      administrimin e klasave.
-    </p>
-    <p>
-      Mos humbisni këtë mundësi - regjistrohuni sot dhe transformoni mënyrën si administroni studentët në shkollën tuaj!
-    </p>
+    <h1>{{ 'registerSupervisor.title' | translate }}</h1>
   </div>
 
   <div class="form-container">
     <div class="register-panel">
       <form [formGroup]="registerSupervizorFormGroup">
-        <h2>Plotëso Formularin</h2>
+        <h2>{{ 'registerSupervisor.formTitle' | translate }}</h2>
         <mat-form-field appearance="outline">
-          <mat-label>Emri i Shkollës</mat-label>
-          <input matInput placeholder="Emri i Shkollës" formControlName="schoolName" required>
+          <mat-label>{{ 'registerSupervisor.schoolName' | translate }}</mat-label>
+          <input matInput [placeholder]="'registerSupervisor.schoolName' | translate" formControlName="schoolName" required>
           <mat-error *ngIf="registerSupervizorFormGroup.get('schoolName')?.hasError('required')">
-            Fushë e detyrueshme
+            {{ 'common.required' | translate }}
           </mat-error>
         </mat-form-field>
 
         <div class="field-container">
           <mat-form-field appearance="outline">
-            <mat-label>Emri i Personit të Kontaktit</mat-label>
-            <input matInput placeholder="Emri" formControlName="contactPersonFirstName" required>
+            <mat-label>{{ 'registerSupervisor.contactFirstName' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.firstName' | translate" formControlName="contactPersonFirstName" required>
             <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonFirstName')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Mbiemri i Personit të Kontaktit</mat-label>
-            <input matInput placeholder="Mbiemri" formControlName="contactPersonLastName" required>
+            <mat-label>{{ 'registerSupervisor.contactLastName' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.lastName' | translate" formControlName="contactPersonLastName" required>
             <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonLastName')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Email i Personit të Kontaktit</mat-label>
-          <input matInput placeholder="Email" formControlName="contactPersonEmail" required>
+          <mat-label>{{ 'registerSupervisor.contactEmail' | translate }}</mat-label>
+          <input matInput [placeholder]="'common.email' | translate" formControlName="contactPersonEmail" required>
           <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('required')">
-            Fushë e detyrueshme
+            {{ 'common.required' | translate }}
           </mat-error>
           <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('email')">
-            Email i pavlefshëm
+            {{ 'registerSupervisor.invalidEmail' | translate }}
           </mat-error>
         </mat-form-field>
 
@@ -61,40 +52,40 @@
               placeholder="">
             </app-phone-input>
             <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
             <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('invalidPhone')">
-              Numri i telefonit nuk është i vlefshëm
+              {{ 'common.phoneInvalid' | translate }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Qyteti</mat-label>
-            <mat-select placeholder="Qyteti" formControlName="city" required>
+            <mat-label>{{ 'registerSupervisor.cityField' | translate }}</mat-label>
+            <mat-select [placeholder]="'registerSupervisor.cityField' | translate" formControlName="city" required>
               <mat-option *ngFor="let cities of citiesList" [value]="cities.name">
                 {{ cities.name }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="registerSupervizorFormGroup.get('city')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Adresa</mat-label>
-          <textarea matInput placeholder="Adresa e plotë" formControlName="address" rows="3" required></textarea>
+          <mat-label>{{ 'registerSupervisor.address' | translate }}</mat-label>
+          <textarea matInput [placeholder]="'registerSupervisor.addressPlaceholder' | translate" formControlName="address" rows="3" required></textarea>
           <mat-error *ngIf="registerSupervizorFormGroup.get('address')?.hasError('required')">
-            Fushë e detyrueshme
+            {{ 'common.required' | translate }}
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Informacione Shtesë (Opsionale)</mat-label>
-          <textarea matInput placeholder="Informacione shtesë" formControlName="additionalInfo" rows="3"></textarea>
+          <mat-label>{{ 'registerSupervisor.additionalInfo' | translate }}</mat-label>
+          <textarea matInput [placeholder]="'registerSupervisor.additionalInfo' | translate" formControlName="additionalInfo" rows="3"></textarea>
         </mat-form-field>
 
         <div class="btn-container">
-          <button mat-button [disabled]="!isRegisterFormValid()" (click)="submitRequest()">Apliko</button>
+          <button mat-button [disabled]="!isRegisterFormValid()" (click)="submitRequest()">{{ 'registerSupervisor.apply' | translate }}</button>
         </div>
       </form>
     </div>

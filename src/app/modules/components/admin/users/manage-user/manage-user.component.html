@@ -1,53 +1,46 @@
 <div class="container">
   <div class="title">
-    <h1>Menaxhimi i Përdoruesve - LearnHub</h1>
-    <p>
-      Ky seksion ju lejon të menaxhoni të gjithë përdoruesit e platformës LearnHub.
-      Nga këtu mund të shtoni, modifikoni ose fshini përdorues, si dhe të ndryshoni rolet e tyre.
-      Ju lutemi përdorni me kujdes këto funksione pasi ndryshimet mund të kenë ndikim direkt në përdorimin e platformës.
-    </p>
+    <h1>{{ 'admin.manageUser.title' | translate }}</h1>
   </div>
 
   <form [formGroup]="userForm" class="form-container">
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Emer</mat-label>
+      <mat-label>{{ 'common.firstName' | translate }}</mat-label>
       <input matInput formControlName="firstName">
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Mbiemer</mat-label>
+      <mat-label>{{ 'common.lastName' | translate }}</mat-label>
       <input matInput formControlName="lastName">
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Email</mat-label>
+      <mat-label>{{ 'common.email' | translate }}</mat-label>
       <input matInput formControlName="email">
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Roli</mat-label>
+      <mat-label>{{ 'common.role' | translate }}</mat-label>
       <input matInput formControlName="role">
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Shkolla</mat-label>
+      <mat-label>{{ 'common.school' | translate }}</mat-label>
       <input matInput formControlName="school">
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Qyteti</mat-label>
+      <mat-label>{{ 'common.city' | translate }}</mat-label>
       <input matInput formControlName="city">
     </mat-form-field>
 
-
     <div class="btn-container">
-      <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
-              color="warn">
+      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
         <mat-icon>arrow_back</mat-icon>
-        Lista e Userave
+        {{ 'admin.manageUser.back' | translate }}
       </button>
       <button mat-raised-button color="primary" (click)="onUpdate()">
-        Përditëso
+        {{ 'admin.manageUser.update' | translate }}
       </button>
     </div>
   </form>

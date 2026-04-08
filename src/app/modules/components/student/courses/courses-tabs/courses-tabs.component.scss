@@ -279,6 +279,12 @@ $button-padding: 0.5rem 1rem; // Questo non sarà usato direttamente sui bottoni
 
 // For very small screens (below 480px)
 @media (max-width: 480px) {
+  .courses-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 12px;
+  }
+
   .tabs {
     grid-template-columns: repeat(3, 1fr); // 3 elementi per riga, su 4 righe
     gap: 3px;

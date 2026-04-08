@@ -12,48 +12,33 @@
 
   .content-container {
     flex: 1;
-    margin-top: 80px; // Spazio per l'header
-    padding-bottom: 60px; // Spazio per il footer
-    height: calc(100vh - 140px); // Altezza fissa per gestire lo scroll interno se necessario
+    margin-top: 80px;
+    height: calc(100vh - 80px);
 
     .admin-sidenav {
       width: 250px;
-      background: #259ccb4f;
-      color: white;
-      padding-top: 20px;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      margin-top: 80px; // Allineato con l'inizio del contenuto sotto l'header
-      height: calc(100vh - 80px);
-      position: fixed; // Anche la sidenav è fissa
-      transition: width 0.3s ease;
-
-      &.mat-drawer-collapsed {
-        width: 0;
-        overflow: hidden;
-      }
+      background: #F8F9FA;
+      color: #333333;
+      padding-top: 12px;
+      box-shadow: 1px 0 0 #E0E0E0;
     }
 
     mat-sidenav-content {
-      margin-left: 250px; // Spazio per la sidenav aperta
       padding: 20px;
-      transition: margin-left 0.3s ease;
-      position: relative;
-
-      // Il CSS per .toggle-btn è stato rimosso da qui.
+      overflow-y: auto;
 
       &.sidenav-closed {
-        margin-left: 0; // Sposta il contenuto a sinistra quando la sidenav è chiusa
+        margin-left: 0;
       }
 
       .content-admin {
-        flex: 1;
-        padding-bottom: 60px;
-        min-height: calc(100vh - 140px - 40px);
+        min-height: 100%;
+        padding-bottom: 80px;
       }
     }
   }
 
-  .content { // Questo è per il layout senza sidenav, assicurati che abbia un'altezza minima per lo scroll
+  .content {
     flex: 1;
     margin-top: 80px;
     padding: 20px;
@@ -66,5 +51,36 @@
     margin-top: auto;
     position: relative;
     z-index: 5;
+  }
+}
+
+// Tablet (768px - 1024px): sidebar più stretta
+@media (max-width: 1024px) and (min-width: 768px) {
+  .container {
+    .content-container {
+      .admin-sidenav {
+        width: 200px;
+      }
+    }
+  }
+}
+
+// Mobile (<768px): sidebar overlay, chiusa di default
+@media (max-width: 767px) {
+  .container {
+    .content-container {
+      height: calc(100vh - 80px);
+
+      .admin-sidenav {
+        width: 240px;
+        z-index: 999;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
+      }
+
+      mat-sidenav-content {
+        padding: 12px;
+        margin-left: 0 !important;
+      }
+    }
   }
 }

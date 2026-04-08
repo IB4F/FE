@@ -3,36 +3,33 @@
   <div class="login-container">
     <div class="login-body">
       <div class="login-form">
-        <h2>Hyr</h2>
+        <h2>{{ 'auth.login.title' | translate }}</h2>
         <form [formGroup]="loginFormGroup">
           <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-label>Email</mat-label>
-            <input matInput placeholder="Email" formControlName="email" required>
+            <mat-label>{{ 'common.email' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.email' | translate" formControlName="email" required>
             <mat-error *ngIf="loginFormGroup.get('email')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-label>Password</mat-label>
-            <input matInput placeholder="Password" formControlName="password"
+            <mat-label>{{ 'common.password' | translate }}</mat-label>
+            <input matInput [placeholder]="'common.password' | translate" formControlName="password"
                    [type]="hidePass ? 'password' : 'text'" required>
-            <mat-icon matSuffix
-                      matTooltip="1. Të paktën 8 karaktere 2. Të paktën një karakter special 3. Të paktën një shkronjë të madhe 4. Të paktën një numër">
-              info
-            </mat-icon>
+            <mat-icon matSuffix [matTooltip]="'common.passwordTooltip' | translate">info</mat-icon>
             <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
                     [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
               <mat-icon>{{hidePass ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
             <mat-error *ngIf="loginFormGroup.get('password')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
-          <div class="forget-pass"><span (click)="openDialog()">Harruat fjalëkalimin?</span></div>
+          <div class="forget-pass"><span (click)="openDialog()">{{ 'auth.login.forgotPassword' | translate }}</span></div>
           <div class="btn-container">
-            <button mat-button (click)="onLogin()" [disabled]="!isLoginFormValid()">Identifikohu</button>
+            <button mat-button (click)="onLogin()" [disabled]="!isLoginFormValid()">{{ 'auth.login.submit' | translate }}</button>
           </div>
-          <p class="signup-text">Nuk ke një llogari?<a routerLink="/membership">Regjistrohu</a></p>
+          <p class="signup-text">{{ 'auth.login.noAccount' | translate }}<a routerLink="/membership">{{ 'auth.login.register' | translate }}</a></p>
         </form>
       </div>
     </div>

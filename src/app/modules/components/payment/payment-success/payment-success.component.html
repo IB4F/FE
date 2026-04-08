@@ -6,8 +6,8 @@
     </svg>
   </div>
 
-  <h2 class="main-title">Pagesa u krye me sukses!</h2>
-  <p class="subtitle">Faleminderit për blerjen tuaj!</p>
+  <h2 class="main-title">{{ 'payment.success.title' | translate }}</h2>
+  <p class="subtitle">{{ 'payment.success.subtitle' | translate }}</p>
 
   <hr class="divider">
 
@@ -19,21 +19,21 @@
       </svg>
     </div>
     <div class="email-text-content">
-      <p class="email-message">Abonimi juaj u aktivizua me sukses! Një email për verifikimin e llogarisë tuaj është dërguar.</p>
-      <p class="email-tip">Ju lutemi kontrolloni <b>kutinë tuaj hyrëse</b> dhe <b>spamin</b> për të verifikuar llogarinë tuaj.</p>
+      <p class="email-message">{{ 'payment.success.activation' | translate }}</p>
+      <p class="email-tip" [innerHTML]="'payment.success.checkEmail' | translate"></p>
     </div>
   </div>
 
   <div class="countdown-section">
-    <p class="countdown-text">Ridrejtohet automatikisht në <span class="countdown-number">{{ redirectCountdown }}</span> sekonda...</p>
+    <p class="countdown-text">{{ 'payment.success.redirect' | translate }} <span class="countdown-number">{{ redirectCountdown }}</span> {{ 'payment.success.redirectSuffix' | translate }}</p>
   </div>
 
   <div class="action-buttons">
     <button class="primary-button" (click)="goToLogin()">
-      Vazhdo te Hyrja
+      {{ 'payment.success.goToLogin' | translate }}
     </button>
     <button class="secondary-button" routerLink="/">
-      Kthehu te Faqja Kryesore
+      {{ 'payment.success.backHome' | translate }}
     </button>
   </div>
 </div>

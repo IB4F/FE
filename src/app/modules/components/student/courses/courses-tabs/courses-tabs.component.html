@@ -1,6 +1,6 @@
 <!-- Class restriction message -->
 <div *ngIf="!canNavigateAllTabs && userTypeClass" class="class-restriction-message">
-  <p>Ju jeni të regjistruar për {{ userTypeClass }}. Mund të shikoni vetëm kurset për këtë klasë.</p>
+  <p>{{ 'courses.restriction' | translate }}</p>
 </div>
 
 <div class="tabs">
@@ -47,6 +47,6 @@
     <app-links-list *ngFor="let course of courses" [course]="course"></app-links-list>
   </ng-container>
   <ng-template #noCourses>
-    <p class="no-courses-message">Nuk u gjet asnjë kurs për përzgjedhjen aktuale.</p>
+    <p class="no-courses-message">{{ 'courses.empty' | translate }}</p>
   </ng-template>
 </div>

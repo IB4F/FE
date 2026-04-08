@@ -11,9 +11,10 @@ import {ChangePasswordComponent} from "./change-password/change-password.compone
 import {ProfileComponent} from "./profile/profile.component";
 import {SubscriptionDashboardComponent} from "./subscription-dashboard/subscription-dashboard.component";
 import {PreferencesComponent} from "./preferences/preferences.component";
-import {AuthService, ChangePasswordDTO, Class, DetailsService, User} from "../../../api-client";
+import {AuthService, ChangePasswordDTO, Class, DetailsService} from "../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {TranslationService} from "../../../services/translation.service";
 
 @Component({
   selector: 'app-settings',
@@ -59,8 +60,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     map(user => {
       if (!user || !user.email) return false;
       const userEmailDomain = user.email.split('@')[1];
-      // Allow subscription dashboard access for all domains except @bga.al
-      return userEmailDomain !== 'bga.al';
+      const role = this._tokenStorageService.getRole();
+      // Hide subscription dashboard for admins (by role or by @bga.al domain)
+      return role !== UserRole.ADMIN && userEmailDomain !== 'bga.al';
     })
   );
 
@@ -70,7 +72,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private _authService: AuthService,
     private toast: NgToastService,
     private _detailsService: DetailsService,
-    private _tokenStorageService: TokenStorageService
+    private _tokenStorageService: TokenStorageService,
+    public translationService: TranslationService,
   ) {
     this.initializeForms();
   }
@@ -78,7 +81,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userRole = this._tokenStorageService.getRole();
     this.getClassesList();
+    this.translationService.currentLanguage$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe();
   }
+
+  get settingsTitle(): string { return this.translationService.translate('settings.title'); }
+  get settingsProfile(): string { return this.translationService.translate('settings.profile'); }
+  get settingsChangePassword(): string { return this.translationService.translate('settings.changePassword'); }
+  get settingsSubscription(): string { return this.translationService.translate('settings.subscription'); }
+  get settingsPreferences(): string { return this.translationService.translate('settings.preferences'); }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
@@ -157,7 +169,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.user$.pipe(take(1)).subscribe(user => {
         if (!user || !user.email) return;
         const userEmailDomain = user.email.split('@')[1];
-        if (userEmailDomain === 'bga.al') {
+        const role = this._tokenStorageService.getRole();
+        if (role === UserRole.ADMIN || userEmailDomain === 'bga.al') {
           this.toast.info('Kjo funksionalitet nuk është i disponueshëm për llogaritë e brendshme.', 'INFO', 3000);
           return;
         }
@@ -232,10 +245,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
         const phoneValue = formValue.phoneNumber;
         const phoneNumber = phoneValue?.e164Number || phoneValue;
 
-        const userDetail: User = {
-          ...user,
-          ...formValue,
-          phoneNumber: phoneNumber
+        const userDetail = {
+          firstName: formValue.firstName,
+          lastName: formValue.lastName,
+          phoneNumber: phoneNumber,
+          school: formValue.school,
+          city: formValue.city,
+          postalCode: formValue.postalCode,
+          profession: formValue.profession,
+          currentClass: formValue.currentClass,
+          dateOfBirth: formValue.dateOfBirth,
         };
 
         this._authService.apiAuthIdPut(userId, userDetail).subscribe({

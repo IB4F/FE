@@ -6,8 +6,8 @@
     </svg>
   </div>
 
-  <h2 class="main-title">Pagesa u anulua</h2>
-  <p class="subtitle">Nuk u bë asnjë tarifim. Mund të provoni përsëri.</p>
+  <h2 class="main-title">{{ 'payment.cancel.title' | translate }}</h2>
+  <p class="subtitle">{{ 'payment.cancel.subtitle' | translate }}</p>
 
   <hr class="divider">
 
@@ -18,21 +18,21 @@
       </svg>
     </div>
     <div class="cancel-text-content">
-      <p class="cancel-message">Pagesa u anulua me sukses. Nuk u bë asnjë tarifim në llogarinë tuaj.</p>
-      <p class="cancel-tip">Mund të vazhdoni me regjistrimin tuaj duke klikuar butonin më poshtë.</p>
+      <p class="cancel-message">{{ 'payment.cancel.message' | translate }}</p>
+      <p class="cancel-tip">{{ 'payment.cancel.tip' | translate }}</p>
     </div>
   </div>
 
   <div class="countdown-section">
-    <p class="countdown-text">Ridrejtohet automatikisht në <span class="countdown-number">{{ redirectCountdown }}</span> sekonda...</p>
+    <p class="countdown-text">{{ 'payment.success.redirect' | translate }} <span class="countdown-number">{{ redirectCountdown }}</span> {{ 'payment.success.redirectSuffix' | translate }}</p>
   </div>
 
   <div class="action-buttons">
     <button class="primary-button" (click)="goToRegistration()">
-      Provo Përsëri Regjistrimin
+      {{ 'payment.cancel.retry' | translate }}
     </button>
     <button class="secondary-button" routerLink="/">
-      Kthehu te Faqja Kryesore
+      {{ 'payment.cancel.backHome' | translate }}
     </button>
   </div>
 </div>

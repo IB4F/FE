@@ -6,15 +6,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { Subscription as SubscriptionModel } from '../../../../api-client';
 import { SubscriptionManagementService } from '../../../../services/subscription.service';
+import { TokenStorageService } from '../../../../services/token-storage.service';
 import { NgToastService } from 'ng-angular-popup';
 import { SubscriptionErrorHandlerService } from '../../../../services/subscription-error-handler.service';
 import { UnsubscribeConfirmationDialogComponent } from './unsubscribe-confirmation-dialog.component';
 import { PlanChangeDialogComponent } from './plan-change-dialog.component';
 import { BillingHistoryDialogComponent } from './billing-history-dialog.component';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-subscription-dashboard',
@@ -27,7 +28,8 @@ import { BillingHistoryDialogComponent } from './billing-history-dialog.componen
     MatIconModule,
     MatProgressSpinnerModule,
     MatDialogModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './subscription-dashboard.component.html',
   styleUrl: './subscription-dashboard.component.scss'
 })
@@ -38,9 +40,9 @@ export class SubscriptionDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private subscriptionService: SubscriptionManagementService,
+    private tokenStorage: TokenStorageService,
     private toast: NgToastService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private errorHandler: SubscriptionErrorHandlerService
   ) {}
 
@@ -173,7 +175,7 @@ export class SubscriptionDashboardComponent implements OnInit, OnDestroy {
       maxHeight: '80vh',
       data: {
         subscriptionId: this.subscription.id,
-        userId: this.subscription.userId
+        userId: this.subscription.userId || this.tokenStorage.getUserId()
       }
     });
 

@@ -11,6 +11,7 @@ import {errorInterceptor} from "./interceptors/error.interceptor";
 import {appInitializer} from "./services/app-initializer.service";
 import {ApiModule, Configuration} from "./api-client";
 import {loaderInterceptor} from "./interceptors/loader.interceptor";
+import {QuillModule} from "ngx-quill";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +26,8 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     importProvidersFrom(
-      ApiModule.forRoot(() => new Configuration())
+      ApiModule.forRoot(() => new Configuration()),
+      QuillModule.forRoot()
     ),
     {
       provide: ENVIRONMENT_INITIALIZER,

@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SupervisorService } from '../../../../api-client/api/supervisor.service';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface PasswordResetRequest {
   studentId: string;
@@ -29,7 +30,8 @@ interface PasswordResetRequest {
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './password-reset-management.component.html',
   styleUrl: './password-reset-management.component.scss'
 })

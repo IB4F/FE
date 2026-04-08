@@ -16,6 +16,7 @@ import {AuthService} from "../../../../api-client";
 import {ROUTES, UserRole} from "../../../shared/constant/enums";
 import {switchMap} from "rxjs";
 import {UserService} from "../../../../services/user.service";
+import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ import {UserService} from "../../../../services/user.service";
     MatButtonModule,
     CommonModule,
     MatTooltipModule,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

@@ -6,6 +6,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
 import {SubscriptionPackageService, FamilyPricingResponseDTO} from "../../../../api-client";
 import {BillingInterval} from "../../constant/enums";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 interface Card {
   id: string;
@@ -27,7 +28,8 @@ type BillingCycle = 'annual' | 'monthly';
     MatIconModule,
     ReactiveFormsModule,
     MatRadioModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.scss'
 })

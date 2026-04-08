@@ -1,8 +1,144 @@
-mat-icon {
-  margin-right: 8px;
+// Palette dell'app (da styles.scss)
+$brand-blue: #259ccb;
+$text-dark: #333333;
+$text-light: #555555;
+$bg-light: #F8F9FA;
+$hover-bg: #EFEFEF;
+$border: #E0E0E0;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 0;
+}
+
+mat-nav-list {
+  padding: 0 !important;
 }
 
 a[mat-list-item] {
-  display: flex;
+  display: flex !important;
   align-items: center;
+  height: 48px !important;
+  margin: 2px 12px;
+  border-radius: 10px;
+  padding: 0 14px !important;
+  color: $text-light;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+
+  mat-icon {
+    margin-right: 10px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $text-light;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 13.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    font-family: 'Work-Sans-Regular', sans-serif;
+    letter-spacing: 0.1px;
+  }
+
+  &:hover {
+    background: $hover-bg;
+    color: $text-dark;
+
+    mat-icon {
+      color: $text-dark;
+    }
+  }
+
+  &.active {
+    background: rgba(37, 156, 203, 0.1);
+    color: $brand-blue;
+
+    mat-icon {
+      color: $brand-blue;
+    }
+
+    span {
+      font-weight: 600;
+      color: $brand-blue;
+    }
+  }
+}
+
+// Tablet (768px - 1024px): item leggermente più compatti
+@media (max-width: 1024px) and (min-width: 768px) {
+  a[mat-list-item] {
+    height: 44px !important;
+    margin: 2px 8px;
+    padding: 0 10px !important;
+
+    mat-icon {
+      margin-right: 8px;
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+    }
+
+    span {
+      font-size: 13px;
+    }
+  }
+}
+
+// Mobile (<768px): item più comodi da toccare
+@media (max-width: 767px) {
+  a[mat-list-item] {
+    height: 52px !important;
+    margin: 3px 10px;
+    padding: 0 16px !important;
+
+    mat-icon {
+      margin-right: 14px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      font-size: 15px;
+    }
+  }
+}
+
+// Rimuove focus/ripple default di Angular Material
+::ng-deep mat-nav-list {
+  --mat-list-active-indicator-color: transparent;
+  --mat-list-list-item-focus-state-layer-color: transparent;
+  --mat-list-list-item-hover-state-layer-color: transparent;
+  --mat-list-list-item-ripple-color: transparent;
+
+  .mat-mdc-list-item-interactive:focus::before,
+  .mat-mdc-list-item-interactive:focus-visible::before {
+    opacity: 0 !important;
+  }
+
+  .mat-mdc-list-item .mat-ripple-element {
+    background-color: transparent !important;
+  }
+
+  .mdc-list-item--activated,
+  .mdc-list-item:focus {
+    background-color: transparent !important;
+
+    &::before {
+      opacity: 0 !important;
+    }
+  }
 }

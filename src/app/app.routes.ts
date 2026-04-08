@@ -20,6 +20,12 @@ export const routes: Routes = [
       .then(m => m.RegisterComponent)
   },
   {
+    path: 'resend-verification',
+    title: 'Dërgo Sërish Emailin e Verifikimit',
+    loadComponent: () => import('./modules/components/authentication/resend-verification/resend-verification.component')
+      .then(m => m.ResendVerificationComponent),
+  },
+  {
     path: 'verify-email',
     title: 'Verifikim Email',
     loadComponent: () => import('./modules/components/authentication/email-verification/email-verification.component')

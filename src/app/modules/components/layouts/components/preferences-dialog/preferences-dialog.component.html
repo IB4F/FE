@@ -1,4 +1,4 @@
-<div class="preferences-dialog-container" *ngIf="currentLanguage$ | async as currentLang">
+<div class="preferences-dialog-container">
   <div class="dialog-header">
     <h2 class="dialog-title">{{ title }}</h2>
     <button mat-icon-button (click)="close()" class="close-button" aria-label="Close">
@@ -23,9 +23,10 @@
         </div>
         <div class="preference-action">
           <mat-form-field appearance="outline" class="language-select">
-            <mat-select [value]="currentLang" (selectionChange)="onLanguageChange($event.value)">
-              <mat-option value="sq">Shqip</mat-option>
-              <mat-option value="en">English</mat-option>
+            <mat-select [value]="selectedLanguage" (selectionChange)="onLanguageChange($event.value)">
+              <mat-option *ngFor="let lang of availableLanguages" [value]="lang.code">
+                {{ lang.label }}
+              </mat-option>
             </mat-select>
           </mat-form-field>
         </div>

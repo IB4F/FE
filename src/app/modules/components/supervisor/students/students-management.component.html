@@ -1,12 +1,11 @@
 <div class="students-management">
   <div class="page-header">
     <div class="header-left">
-      <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
-              color="warn">
+      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
         <mat-icon>arrow_back</mat-icon>
-        Kthehu Mbrapa
+        {{ 'supervisor.students.back' | translate }}
       </button>
-      <h1>Shto Student të Ri</h1>
+      <h1>{{ 'supervisor.students.title' | translate }}</h1>
     </div>
   </div>
 
@@ -15,45 +14,43 @@
     <mat-card-content>
       <div class="success-header">
         <mat-icon color="primary">check_circle</mat-icon>
-        <h3>Studenti u krijua me sukses!</h3>
+        <h3>{{ 'supervisor.students.created.title' | translate }}</h3>
       </div>
-      
+
       <div class="student-credentials">
         <div class="credential-item">
-          <label>Emri:</label>
+          <label>{{ 'supervisor.students.created.name' | translate }}</label>
           <span>{{ createdStudent.firstName }} {{ createdStudent.lastName }}</span>
         </div>
         <div class="credential-item">
-          <label>Email:</label>
+          <label>{{ 'supervisor.students.created.email' | translate }}</label>
           <span class="email-text">{{ createdStudent.generatedEmail }}</span>
-          <button mat-icon-button 
-                  matTooltip="Kopjo email"
+          <button mat-icon-button
                   (click)="copyToClipboard(createdStudent!.generatedEmail, 'Email')">
             <mat-icon>content_copy</mat-icon>
           </button>
         </div>
         <div class="credential-item">
-          <label>Password:</label>
+          <label>{{ 'supervisor.students.created.password' | translate }}</label>
           <span class="password-text">{{ createdStudent.generatedPassword }}</span>
-          <button mat-icon-button 
-                  matTooltip="Kopjo password"
+          <button mat-icon-button
                   (click)="copyToClipboard(createdStudent!.generatedPassword, 'Password')">
             <mat-icon>content_copy</mat-icon>
           </button>
         </div>
         <div class="credential-item">
-          <label>Klasa:</label>
+          <label>{{ 'supervisor.students.created.class' | translate }}</label>
           <span>{{ getClassName(createdStudent.currentClass) }}</span>
         </div>
         <div class="credential-item">
-          <label>Shkolla:</label>
+          <label>{{ 'supervisor.students.created.school' | translate }}</label>
           <span>{{ createdStudent.school }}</span>
         </div>
       </div>
-      
+
       <div class="success-actions">
         <button mat-raised-button color="primary" (click)="clearCreatedStudent()">
-          Krijo Student tjetër
+          {{ 'supervisor.students.created.createAnother' | translate }}
         </button>
       </div>
     </mat-card-content>
@@ -62,87 +59,84 @@
   <!-- Create Student Form -->
   <mat-card *ngIf="!createdStudent" class="create-form-card">
     <mat-card-header>
-      <mat-card-title>Krijo Student të Ri</mat-card-title>
-      <mat-card-subtitle>Plotësoni të dhënat e studentit për të krijuar një llogari të re</mat-card-subtitle>
+      <mat-card-title>{{ 'supervisor.students.form.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'supervisor.students.form.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
-    
+
     <mat-card-content>
       <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()">
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Emri</mat-label>
-            <input matInput formControlName="firstName" placeholder="Emri i studentit">
+            <mat-label>{{ 'common.firstName' | translate }}</mat-label>
+            <input matInput formControlName="firstName" [placeholder]="'common.firstName' | translate">
             <mat-error *ngIf="createStudentForm.get('firstName')?.hasError('required')">
-              Emri është i detyrueshëm
+              {{ 'supervisor.students.form.firstNameRequired' | translate }}
             </mat-error>
             <mat-error *ngIf="createStudentForm.get('firstName')?.hasError('minlength')">
-              Emri duhet të ketë të paktën 2 karaktere
+              {{ 'supervisor.students.form.firstNameMinLength' | translate }}
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Mbiemri</mat-label>
-            <input matInput formControlName="lastName" placeholder="Mbiemri i studentit">
+            <mat-label>{{ 'common.lastName' | translate }}</mat-label>
+            <input matInput formControlName="lastName" [placeholder]="'common.lastName' | translate">
             <mat-error *ngIf="createStudentForm.get('lastName')?.hasError('required')">
-              Mbiemri është i detyrueshëm
+              {{ 'supervisor.students.form.lastNameRequired' | translate }}
             </mat-error>
             <mat-error *ngIf="createStudentForm.get('lastName')?.hasError('minlength')">
-              Mbiemri duhet të ketë të paktën 2 karaktere
+              {{ 'supervisor.students.form.lastNameMinLength' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>Klasa Aktuale</mat-label>
-            <mat-select formControlName="currentClass" placeholder="Zgjidhni klasën">
+            <mat-label>{{ 'supervisor.students.form.classLabel' | translate }}</mat-label>
+            <mat-select formControlName="currentClass" [placeholder]="'supervisor.students.form.classPlaceholder' | translate">
               <mat-option *ngFor="let class of classesList" [value]="class.id">
                 {{ class.name }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="createStudentForm.get('currentClass')?.hasError('required')">
-              Klasa është e detyrueshme
+              {{ 'supervisor.students.form.classRequired' | translate }}
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Shkolla</mat-label>
-            <input matInput 
-                   formControlName="school" 
-                   placeholder="Emri i shkollës"
-                   readonly
-                   matTooltip="Shkolla përcaktohet automatikisht nga llogaria juaj e supervizorit"
-                   matTooltipPosition="above">
+            <mat-label>{{ 'common.school' | translate }}</mat-label>
+            <input matInput
+                   formControlName="school"
+                   [placeholder]="'supervisor.students.form.schoolPlaceholder' | translate"
+                   readonly>
             <mat-error *ngIf="createStudentForm.get('school')?.hasError('required')">
-              Shkolla është e detyrueshme
+              {{ 'supervisor.students.form.schoolRequired' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Data e Lindjes</mat-label>
+          <mat-label>{{ 'supervisor.students.form.dob' | translate }}</mat-label>
           <input matInput type="date" formControlName="dateOfBirth">
           <mat-error *ngIf="createStudentForm.get('dateOfBirth')?.hasError('required')">
-            Data e lindjes është e detyrueshme
+            {{ 'supervisor.students.form.dobRequired' | translate }}
           </mat-error>
         </mat-form-field>
 
         <div class="form-actions">
-          <button mat-raised-button 
-                  type="submit" 
-                  color="primary" 
+          <button mat-raised-button
+                  type="submit"
+                  color="primary"
                   [disabled]="createStudentForm.invalid || isCreatingStudent">
             <mat-icon *ngIf="isCreatingStudent">hourglass_empty</mat-icon>
             <mat-icon *ngIf="!isCreatingStudent">person_add</mat-icon>
-            {{ isCreatingStudent ? 'Duke krijuar...' : 'Krijo Student' }}
+            {{ isCreatingStudent ? ('supervisor.students.form.creating' | translate) : ('supervisor.students.form.submit' | translate) }}
           </button>
-          
+
           <button mat-button type="button" (click)="createStudentForm.reset()">
-            Anulo
+            {{ 'common.cancel' | translate }}
           </button>
         </div>
       </form>
     </mat-card-content>
   </mat-card>
 </div>
-

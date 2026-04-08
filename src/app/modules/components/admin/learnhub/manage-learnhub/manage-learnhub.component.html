@@ -1,114 +1,108 @@
 <div class="container">
   <div class="title">
-    <h1>Administrimi - Menaxhimi i LearnHub</h1>
-    <p>
-      Ky seksion është i rezervuar për administratorin e sistemit. Nga këtu mund të menaxhoni të gjitha burimet e
-      LearnHub,
-      të shtoni materiale të reja, të modifikoni përmbajtjet ekzistuese ose t'i fshini ato.
-      Përdorni me kujdes funksionet e modifikimit dhe fshirjes për të mbajtur platformën e përditësuar.
-    </p>
+    <h1>{{ 'admin.learnhub.title' | translate }}</h1>
   </div>
 
   <form [formGroup]="learnHubFormGroup" class="form-container">
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Titulli</mat-label>
+      <mat-label>{{ 'admin.manageLearnhub.titleField' | translate }}</mat-label>
       <input matInput formControlName="title" required>
       <mat-error *ngIf="learnHubFormGroup.get('title')?.hasError('required')">
-        Fushë e detyrueshme
+        {{ 'common.required' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>Përmbajtja</mat-label>
+      <mat-label>{{ 'admin.manageLearnhub.descriptionField' | translate }}</mat-label>
       <textarea matInput formControlName="description" rows="9" required></textarea>
       <mat-error *ngIf="learnHubFormGroup.get('description')?.hasError('required')">
-        Fushë e detyrueshme
+        {{ 'common.required' | translate }}
       </mat-error>
     </mat-form-field>
 
     <div class="field-container">
       <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>Klasa</mat-label>
+        <mat-label>{{ 'admin.manageLearnhub.classField' | translate }}</mat-label>
         <mat-select formControlName="classType" required>
           <mat-option *ngFor="let class of classesList" [value]="class.id">
             {{ class.name }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="learnHubFormGroup.get('classType')?.hasError('required')">
-          Fushë e detyrueshme
+          {{ 'common.required' | translate }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>Lënda</mat-label>
+        <mat-label>{{ 'admin.manageLearnhub.subjectField' | translate }}</mat-label>
         <mat-select formControlName="subject" required>
           <mat-option *ngFor="let subject of subjectList" [value]="subject.id">
             {{ subject.name }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="learnHubFormGroup.get('subject')?.hasError('required')">
-          Fushë e detyrueshme
+          {{ 'common.required' | translate }}
         </mat-error>
       </mat-form-field>
     </div>
 
     <div class="field-container">
       <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>Veshtersia</mat-label>
+        <mat-label>{{ 'admin.manageLearnhub.difficultyField' | translate }}</mat-label>
         <input matInput formControlName="difficulty" type="number" required>
         <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('required')">
-          Fushë e detyrueshme
+          {{ 'common.required' | translate }}
         </mat-error>
         <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('min')">
-          Vlera duhet të jetë së paku 0
+          {{ 'admin.manageLearnhub.difficultyMin' | translate }}
         </mat-error>
         <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('max')">
-          Vlera duhet të jetë më së shumti 10
+          {{ 'admin.manageLearnhub.difficultyMax' | translate }}
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>Është falas?</mat-label>
+        <mat-label>{{ 'admin.manageLearnhub.isFreeField' | translate }}</mat-label>
         <mat-select formControlName="isFree" required>
-          <mat-option [value]="true">Po</mat-option>
-          <mat-option [value]="false">Jo</mat-option>
+          <mat-option [value]="true">{{ 'common.yes' | translate }}</mat-option>
+          <mat-option [value]="false">{{ 'common.no' | translate }}</mat-option>
         </mat-select>
         <mat-error *ngIf="learnHubFormGroup.get('isFree')?.hasError('required')">
-          Fushë e detyrueshme
+          {{ 'common.required' | translate }}
         </mat-error>
       </mat-form-field>
     </div>
 
     <div class="field-container" *ngIf="learnHubFormGroup.get('isFree')?.value === false">
       <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>Niveli i Paketës</mat-label>
+        <mat-label>{{ 'admin.manageLearnhub.tierField' | translate }}</mat-label>
         <mat-select formControlName="tier" required>
           <mat-option *ngFor="let tier of tiersList" [value]="tier.value">
             {{ tier.name }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="learnHubFormGroup.get('tier')?.hasError('required')">
-          Fushë e detyrueshme
+          {{ 'common.required' | translate }}
         </mat-error>
       </mat-form-field>
     </div>
 
     <div class="section-container">
-      <p>Në këtë seksion mund të shtoni lidhjet për të aksesuar burimet</p>
+      <p>{{ 'admin.manageLearnhub.linksSection' | translate }}</p>
       <button mat-raised-button color="primary" class="add-button" (click)="addRow()">
-        <mat-icon matTooltip="Shto Lidhje" matTooltipPosition="right">add_circle_outline</mat-icon>
-        Shto
+        <mat-icon>add_circle_outline</mat-icon>
+        {{ 'admin.manageLearnhub.addLink' | translate }}
       </button>
     </div>
     <div formArrayName="links" class="numbered-rows">
       <div *ngIf="links.invalid && links.length == 0" class="error-message">
-        Duhet të shtoni të paktën një lidhje.
+        {{ 'admin.manageLearnhub.linkRequired' | translate }}
       </div>
       <div *ngFor="let row of links.controls; let i = index" [formGroupName]="i" class="row-container">
         <div class="row-content">
           <mat-form-field appearance="outline" style="width: 90%;">
-            <mat-label>Lidhja {{ i + 1 }}</mat-label>
+            <mat-label>{{ 'admin.manageLearnhub.linkLabel' | translate }} {{ i + 1 }}</mat-label>
             <input matInput formControlName="title" required>
             <mat-error *ngIf="row.get('title')?.hasError('required')">
-              Fushë e detyrueshme
+              {{ 'common.required' | translate }}
             </mat-error>
           </mat-form-field>
           <mat-icon
@@ -129,13 +123,12 @@
       </div>
     </div>
     <div class="btn-container">
-      <button mat-raised-button (click)="goBack()" matTooltip="Kthehu Mbrapa" matTooltipPosition="above"
-              color="warn">
+      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
         <mat-icon>arrow_back</mat-icon>
-        Learnhub
+        {{ 'admin.manageLearnhub.back' | translate }}
       </button>
       <button mat-raised-button color="primary" (click)="handleButtonClick()" [disabled]="!isFormValid() || learnHubFormGroup.pristine">
-        {{ isEditMode ? 'Përditëso' : 'Krijo' }}
+        {{ isEditMode ? ('admin.manageLearnhub.update' | translate) : ('admin.manageLearnhub.create' | translate) }}
       </button>
     </div>
   </form>

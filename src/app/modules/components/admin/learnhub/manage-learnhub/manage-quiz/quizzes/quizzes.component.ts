@@ -1,4 +1,5 @@
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser} from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CommonModule, Location} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
@@ -22,6 +23,8 @@ import {switchMap} from "rxjs/operators";
 import {ViewChild, ElementRef} from "@angular/core";
 import {environment} from "@env";
 import {ConfirmModalComponent} from "../../../../../../shared/components/confirm-modal/confirm-modal.component";
+import {QuillModule} from "ngx-quill";
+import {TranslatePipe} from '../../../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-quizzes',
@@ -39,8 +42,10 @@ import {ConfirmModalComponent} from "../../../../../../shared/components/confirm
     MatFormFieldModule,
     MatSliderModule,
     MatButtonModule,
-    MatTooltipModule
-  ],
+    MatTooltipModule,
+    QuillModule
+  ,
+    TranslatePipe],
   templateUrl: './quizzes.component.html',
   styleUrl: './quizzes.component.scss'
 })
@@ -56,6 +61,10 @@ export class QuizzesComponent implements OnInit {
   selectedQuestionAudio: File | null = null;
   selectedExplanationAudio: File | null = null;
   selectedOptionImages: (File | null)[] = [null, null, null, null];
+
+  // Explanation image
+  selectedExplanationImage: File | null = null;
+  existingExplanationImage: { id: string; url: string } | null = null;
 
   // Existing audio data
   existingQuestionAudio: { id: string; url: string } | null = null;
@@ -75,6 +84,21 @@ export class QuizzesComponent implements OnInit {
   previewImageUrl: string = '';
   previewImageTitle: string = '';
 
+  isBrowser: boolean;
+
+  // Quill editor configuration
+  quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{'header': [1, 2, 3, false]}],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      [{'color': []}, {'background': []}],
+      [{'align': []}],
+      ['link'],
+      ['clean']
+    ]
+  };
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -85,18 +109,17 @@ export class QuizzesComponent implements OnInit {
     private _detailsService: DetailsService,
     private dialog: MatDialog,
   ) {
+    this.isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   }
 
   ngOnInit(): void {
     this.loadCombos();
-    // Inizializza il form con valori di default
     this.initializeQuizForm();
 
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
       this.linkId = params.get('linkId') as string;
       this.quizId = params.get('quizId');
       if (this.isEditMode) {
-        // Se è in modalità modifica, carica i dati del quiz
         this.loadQuizData(this.quizId as string);
       }
     });
@@ -105,10 +128,8 @@ export class QuizzesComponent implements OnInit {
   loadQuizData(id: string): void {
     this.quizzesService.apiQuizzesGetSingleQuizGet(id).subscribe({
       next: (resp) => {
-        // Applica la patch ai valori del form solo dopo aver ricevuto i dati
         this.patchFormValues(resp);
         this.childQuizzes = resp.childQuizzes || [];
-        // Show child quizzes section after parent quiz is loaded
         this.showChildQuizzesSection = true;
       },
       error: (error) => {
@@ -118,7 +139,6 @@ export class QuizzesComponent implements OnInit {
     });
   }
 
-  // Load child quizzes for the current parent quiz
   loadChildQuizzes(): void {
     if (this.quizId) {
       this.quizzesService.apiQuizzesGetChildQuizzesGet(this.quizId).subscribe({
@@ -132,12 +152,10 @@ export class QuizzesComponent implements OnInit {
     }
   }
 
-  // Check if child quizzes can be added (parent must have an ID and not exceed max limit)
   canAddChildQuizzes(): boolean {
     return this.isEditMode && this.childQuizzes.length < 3;
   }
 
-  // Get the reason why child quizzes cannot be added
   getChildQuizzesDisabledReason(): string {
     if (!this.isEditMode) {
       return 'Ju duhet të ruani kuizin kryesor para se të shtoni nën-kuize';
@@ -148,14 +166,12 @@ export class QuizzesComponent implements OnInit {
     return '';
   }
 
-  // Open modal to add child quiz
   openAddChildQuizModal(): void {
     if (!this.canAddChildQuizzes()) {
       this.toast.warning(this.getChildQuizzesDisabledReason(), 'KUJDES', 3000);
       return;
     }
 
-    // Import the modal component dynamically
     import('./child-quiz-modal/child-quiz-modal.component').then(({ChildQuizModalComponent}) => {
       const dialogRef = this.dialog.open(ChildQuizModalComponent, {
         width: '90%',
@@ -176,9 +192,7 @@ export class QuizzesComponent implements OnInit {
     });
   }
 
-  // Edit child quiz
   editChildQuiz(childQuiz: any): void {
-    // Import the modal component dynamically
     import('./child-quiz-modal/child-quiz-modal.component').then(({ChildQuizModalComponent}) => {
       const dialogRef = this.dialog.open(ChildQuizModalComponent, {
         width: '90%',
@@ -201,9 +215,7 @@ export class QuizzesComponent implements OnInit {
     });
   }
 
-  // Delete child quiz
   deleteChildQuiz(childQuiz: any): void {
-
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
         title: 'Fshi Nën-Kuizin',
@@ -235,8 +247,6 @@ export class QuizzesComponent implements OnInit {
         [
           this.createOption(),
           this.createOption(),
-          this.createOption(),
-          this.createOption()
         ],
         atLeastOneCorrectOptionValidator()
       ),
@@ -245,11 +255,14 @@ export class QuizzesComponent implements OnInit {
   }
 
   patchFormValues(data: any) {
-
     const optionsArray = this.quizFormGroup.get('options') as FormArray;
     while (optionsArray.length !== 0) {
       optionsArray.removeAt(0);
     }
+
+    // Reset images arrays
+    this.selectedOptionImages = [null, null, null, null];
+    this.existingOptionImages = [null, null, null, null];
 
     data.options.forEach((option: any) => {
       optionsArray.push(this.createOption(option));
@@ -262,7 +275,6 @@ export class QuizzesComponent implements OnInit {
       points: data.points
     });
 
-    // Set existing audio data with full backend URL
     if (data.questionAudioId && data.questionAudioUrl) {
       this.existingQuestionAudio = {
         id: data.questionAudioId,
@@ -277,7 +289,13 @@ export class QuizzesComponent implements OnInit {
       };
     }
 
-    // Set existing option images data
+    if (data.explanationImageId && data.explanationImageUrl) {
+      this.existingExplanationImage = {
+        id: data.explanationImageId,
+        url: data.explanationImageUrl
+      };
+    }
+
     if (data.options && Array.isArray(data.options)) {
       data.options.forEach((option: any, index: number) => {
         if (option.optionImageId && option.optionImageUrl && index < 4) {
@@ -301,6 +319,20 @@ export class QuizzesComponent implements OnInit {
     });
   }
 
+  addOption(): void {
+    if (this.options.length < 4) {
+      this.options.push(this.createOption());
+    }
+  }
+
+  removeOption(index: number): void {
+    if (this.options.length > 2) {
+      this.options.removeAt(index);
+      this.selectedOptionImages.splice(index, 1);
+      this.existingOptionImages.splice(index, 1);
+    }
+  }
+
   private loadCombos() {
     this.getQuizTypeList();
   }
@@ -322,12 +354,10 @@ export class QuizzesComponent implements OnInit {
     return !!this.quizId;
   }
 
-  // File handling methods
   onQuestionAudioSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.selectedQuestionAudio = file;
-      // Clear existing audio when new file is selected
       this.existingQuestionAudio = null;
     }
   }
@@ -336,8 +366,15 @@ export class QuizzesComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedExplanationAudio = file;
-      // Clear existing audio when new file is selected
       this.existingExplanationAudio = null;
+    }
+  }
+
+  onExplanationImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedExplanationImage = file;
+      this.existingExplanationImage = null;
     }
   }
 
@@ -348,7 +385,6 @@ export class QuizzesComponent implements OnInit {
     }
   }
 
-  // Remove existing audio methods
   removeQuestionAudio(): void {
     this.existingQuestionAudio = null;
     this.selectedQuestionAudio = null;
@@ -359,7 +395,11 @@ export class QuizzesComponent implements OnInit {
     this.selectedExplanationAudio = null;
   }
 
-  // Remove existing option image method
+  removeExplanationImage(): void {
+    this.existingExplanationImage = null;
+    this.selectedExplanationImage = null;
+  }
+
   removeOptionImage(index: number): void {
     this.existingOptionImages[index] = null;
     this.selectedOptionImages[index] = null;
@@ -381,104 +421,88 @@ export class QuizzesComponent implements OnInit {
     return quizTypeName.toLowerCase().includes('imazhe');
   }
 
-  // Add method to check if images are required for the selected quiz type
   areImagesRequired(): boolean {
     const quizTypeName = this.getSelectedQuizTypeName();
     return quizTypeName.toLowerCase().includes('imazhe');
   }
 
-  // Add method to validate that all image options are provided when required
   validateImageOptions(): boolean {
     if (!this.areImagesRequired()) {
-      return true; // Images not required, validation passes
+      return true;
     }
-
-    // Check if all options have either a selected image or existing image
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.options.length; i++) {
       const hasSelectedImage = this.selectedOptionImages[i] !== null;
       const hasExistingImage = this.existingOptionImages[i] !== null;
-      
       if (!hasSelectedImage && !hasExistingImage) {
-        return false; // Missing image for this option
+        return false;
       }
     }
-    
-    return true; // All options have images
+    return true;
   }
 
-  // Get validation error message for missing images
   getImageValidationError(): string {
     if (!this.areImagesRequired()) {
       return '';
     }
-    
     const missingOptions: number[] = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.options.length; i++) {
       const hasSelectedImage = this.selectedOptionImages[i] !== null;
       const hasExistingImage = this.existingOptionImages[i] !== null;
-      
       if (!hasSelectedImage && !hasExistingImage) {
         missingOptions.push(i + 1);
       }
     }
-    
     if (missingOptions.length > 0) {
       return `Opsionet ${missingOptions.join(', ')} duhet të kenë imazhe.`;
     }
-    
     return '';
   }
 
-  // Check if a specific option is missing an image
   isOptionMissingImage(index: number): boolean {
     if (!this.areImagesRequired()) {
       return false;
     }
-    
     const hasSelectedImage = this.selectedOptionImages[index] !== null;
     const hasExistingImage = this.existingOptionImages[index] !== null;
-    
     return !hasSelectedImage && !hasExistingImage;
   }
 
-
-
-  // File upload methods
   private uploadFiles(): Observable<any> {
     const uploadObservables: Observable<any>[] = [];
 
-    // Upload question audio if selected
+    // [0] Question audio
     if (this.selectedQuestionAudio) {
-      uploadObservables.push(
-        this.fileService.apiFileUploadAudioPost(this.selectedQuestionAudio)
-      );
+      uploadObservables.push(this.fileService.apiFileUploadAudioPost(this.selectedQuestionAudio));
     } else {
       uploadObservables.push(of(null));
     }
 
-    // Upload explanation audio if selected
+    // [1] Explanation audio
     if (this.selectedExplanationAudio) {
-      uploadObservables.push(
-        this.fileService.apiFileUploadAudioPost(this.selectedExplanationAudio)
-      );
+      uploadObservables.push(this.fileService.apiFileUploadAudioPost(this.selectedExplanationAudio));
     } else {
       uploadObservables.push(of(null));
     }
 
-    // Upload option images if selected and quiz type supports images
+    // [2] Explanation image
+    if (this.selectedExplanationImage) {
+      uploadObservables.push(this.fileService.apiFileUploadImagePost(this.selectedExplanationImage));
+    } else {
+      uploadObservables.push(of(null));
+    }
+
+    // [3..3+options.length] Option images
     if (this.shouldShowImageFields()) {
-      this.selectedOptionImages.forEach((image, index) => {
+      for (let i = 0; i < this.options.length; i++) {
+        const image = this.selectedOptionImages[i];
         if (image) {
-          uploadObservables.push(
-            this.fileService.apiFileUploadImagePost(image)
-          );
+          uploadObservables.push(this.fileService.apiFileUploadImagePost(image));
         } else {
           uploadObservables.push(of(null));
         }
-      });
+      }
     } else {
-      // Add null observables for options when images are not needed
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         uploadObservables.push(of(null));
       }
     }
@@ -489,24 +513,23 @@ export class QuizzesComponent implements OnInit {
   handleButtonClick(): void {
     if (!this.isFormValid()) return;
 
-    // First upload all files
     this.uploadFiles().pipe(
       switchMap((uploadResults) => {
         const formValue = this.quizFormGroup.value;
 
-        // Extract file IDs from upload results or use existing IDs
         const questionAudioId = uploadResults[0]?.fileId || this.existingQuestionAudio?.id || null;
         const explanationAudioId = uploadResults[1]?.fileId || this.existingExplanationAudio?.id || null;
+        const explanationImageId = uploadResults[2]?.fileId || this.existingExplanationImage?.id || null;
 
-        // Extract option image IDs
-        const optionImageIds = uploadResults.slice(2, 6).map((result: any, index: number) =>
+        const optionImageIds = uploadResults.slice(3, 3 + this.options.length).map((result: any, index: number) =>
           result?.fileId || this.existingOptionImages[index]?.id || null
         );
 
         const formattedData: any = {
           ...formValue,
-          questionAudioId: questionAudioId,
-          explanationAudioId: explanationAudioId,
+          questionAudioId,
+          explanationAudioId,
+          explanationImageId,
           options: formValue.options.map((option: any, index: number) => ({
             optionText: option.optionText,
             isCorrect: option.isCorrect,
@@ -521,7 +544,7 @@ export class QuizzesComponent implements OnInit {
         }
       })
     ).subscribe({
-      next: (resp) => {
+      next: () => {
         const message = this.isEditMode ? 'Kuici u perditesua me sukses' : 'Kuici u krijua me sukses';
         this.toast.success(message, 'SUKSES', 3000);
         this.goBack();
@@ -534,7 +557,6 @@ export class QuizzesComponent implements OnInit {
     this.location.back();
   }
 
-  // Image preview methods
   previewImage(imageUrl: string, title: string): void {
     if (imageUrl) {
       this.previewImageUrl = imageUrl;
@@ -555,5 +577,4 @@ export class QuizzesComponent implements OnInit {
     this.previewImageUrl = '';
     this.previewImageTitle = '';
   }
-
 }

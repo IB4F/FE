@@ -8,6 +8,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {ChangePasswordDTO} from "../../../../api-client/model/changePasswordDTO";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-change-password',
@@ -20,7 +21,8 @@ import {ChangePasswordDTO} from "../../../../api-client/model/changePasswordDTO"
     MatIconModule,
     MatButtonModule,
     MatTooltipModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss'
 })

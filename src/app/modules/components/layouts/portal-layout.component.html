@@ -4,7 +4,7 @@
   @if (showSideNav()) {
     <mat-sidenav-container class="content-container">
       <mat-sidenav #sidenav
-                   mode="side"
+                   [mode]="sidenavMode"
                    [(opened)]="isSideNavOpen"
                    class="admin-sidenav"
                    (mouseenter)="onSidenavHover()"

@@ -2,9 +2,9 @@
 
   <section class="welcome-banner">
     <div class="welcome-content">
-      <h2>Mirësevjen, {{ name }}!</h2>
-      <p class="motivation-quote">"Çdo ushtrim është një hap drejt zotërimit."</p>
-      <button class="cta-button" routerLink="/student/kurset">Eksploro kurse të reja</button>
+      <h2>{{ 'dashboard.welcome' | translate }} {{ name }}!</h2>
+      <p class="motivation-quote">{{ 'dashboard.quote' | translate }}</p>
+      <button class="cta-button" routerLink="/student/kurset">{{ 'dashboard.explore' | translate }}</button>
     </div>
     <img src="assets/svgImages/banner/exam-submit.svg"
          alt="Illustrazione di benvenuto."
@@ -13,13 +13,13 @@
 
   <!-- Loading state -->
   <div *ngIf="loading" class="loading-container">
-    <p>Duke ngarkuar të dhënat e dashboard...</p>
+    <p>{{ 'dashboard.loading' | translate }}</p>
   </div>
 
   <!-- Error state -->
   <div *ngIf="error" class="error-container">
     <p>{{ error }}</p>
-    <button (click)="loadDashboardData()" class="retry-button">Provo përsëri</button>
+    <button (click)="loadDashboardData()" class="retry-button">{{ 'common.retry' | translate }}</button>
   </div>
 
   <section class="metrics-summary" *ngIf="dashboardData && !loading && !error">
@@ -32,7 +32,7 @@
         </svg>
       </div>
       <div class="metric-value">{{ dashboardData.stats?.totalProgress || 0 }}%</div>
-      <div class="metric-label">Progres Total</div>
+      <div class="metric-label">{{ 'dashboard.stats.totalProgress' | translate }}</div>
       <div class="progress-bar-overall" [style.width.%]="dashboardData.stats?.totalProgress || 0"></div>
     </div>
 
@@ -46,7 +46,7 @@
         </svg>
       </div>
       <div class="metric-value">{{ dashboardData.stats?.pointsCollected || 0 }}</div>
-      <div class="metric-label">Pikë të Grumbulluara</div>
+      <div class="metric-label">{{ 'dashboard.stats.points' | translate }}</div>
     </div>
 
     <div class="metric-card">
@@ -59,20 +59,20 @@
         </svg>
       </div>
       <div class="metric-value">{{ dashboardData.stats?.completedLearnHubs || 0 }}/{{ dashboardData.stats?.totalLearnHubs || 0 }}</div>
-      <div class="metric-label">LearnHubs të Përfunduara</div>
+      <div class="metric-label">{{ 'dashboard.stats.learnHubs' | translate }}</div>
     </div>
   </section>
 
   <section class="recent-learnhubs" *ngIf="dashboardData && !loading && !error">
-    <h3>LearnHub-et e Tua të Fundit</h3>
+    <h3>{{ 'dashboard.recent.title' | translate }}</h3>
     <div class="learnhub-cards-container">
       <div *ngIf="!dashboardData.latestLearnHubs || dashboardData.latestLearnHubs.length === 0" class="no-learnhubs">
-        <p>Nuk ka LearnHub-e të fundit për të shfaqur.</p>
+        <p>{{ 'dashboard.recent.empty' | translate }}</p>
       </div>
 
       <div *ngFor="let learnHub of dashboardData.latestLearnHubs" class="learnhub-dashboard-card">
         <div class="card-header">
-          <h4>{{ learnHub.title || 'LearnHub pa titull' }}</h4>
+          <h4>{{ learnHub.title || ('dashboard.recent.noTitle' | translate) }}</h4>
           <span class="hub-progress-percent">{{ learnHub.progressPercentage || 0 }}%</span>
         </div>
         <div class="card-body">
@@ -80,15 +80,15 @@
             <div class="progress-fill" [style.width.%]="learnHub.progressPercentage || 0"></div>
           </div>
           <p class="last-activity" *ngIf="learnHub.lastExercise">
-            Ushtrimi i fundit: {{ learnHub.lastExercise }}
+            {{ 'dashboard.recent.lastExercise' | translate }} {{ learnHub.lastExercise }}
           </p>
           <p class="last-activity" *ngIf="learnHub.lastActivityAt">
-            Aktiviteti i fundit: {{ learnHub.lastActivityAt | date:'dd/MM/yyyy HH:mm' }}
+            {{ 'dashboard.recent.lastActivity' | translate }} {{ learnHub.lastActivityAt | date:'dd/MM/yyyy HH:mm' }}
           </p>
           <div class="points-info">
-            <span class="points-earned">{{ learnHub.pointsEarned || 0 }}/{{ learnHub.totalPossiblePoints || 0 }} pikë</span>
+            <span class="points-earned">{{ learnHub.pointsEarned || 0 }}/{{ learnHub.totalPossiblePoints || 0 }} {{ 'common.points' | translate }}</span>
           </div>
-          <button class="continue-hub-button" [routerLink]="['/student/quiz-list', learnHub.lastExerciseLinkId]">Vazhdo</button>
+          <button class="continue-hub-button" [routerLink]="['/student/quiz-list', learnHub.lastExerciseLinkId]">{{ 'dashboard.recent.continue' | translate }}</button>
         </div>
       </div>
     </div>

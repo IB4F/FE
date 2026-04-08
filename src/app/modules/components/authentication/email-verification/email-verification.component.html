@@ -1,7 +1,7 @@
 <div class="verification-container">
   <div *ngIf="isLoading" class="loading-state">
     <div class="spinner"></div>
-    <p class="loading-text">Duke verifikuar adresën tuaj të emailit...</p>
+    <p class="loading-text">{{ 'auth.verification.loading' | translate }}</p>
   </div>
 
   <div *ngIf="!isLoading" class="content-state">
@@ -12,8 +12,8 @@
           <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
         </svg>
       </div>
-      <h2 class="alert-title">Verifikimi U Krye Me Sukses!</h2>
-      <p class="alert-message">{{ message }} Duke u ridrejtuar te hyrja...</p>
+      <h2 class="alert-title">{{ 'auth.verification.success' | translate }}</h2>
+      <p class="alert-message">{{ message }} {{ 'auth.verification.redirecting' | translate }}</p>
     </div>
 
     <div *ngIf="!isSuccess" class="alert error-alert">
@@ -24,10 +24,10 @@
           <path class="cross__path cross__path--left" fill="none" d="M16,36 l20,-20"/>
         </svg>
       </div>
-      <h2 class="alert-title">Verifikimi Dështoi</h2>
+      <h2 class="alert-title">{{ 'auth.verification.failed' | translate }}</h2>
       <p class="alert-message">{{ message }}</p>
       <button (click)="router.navigate(['/resend-verification'])" class="resend-button">
-        Dërgo Link Të Ri Verifikimi
+        {{ 'auth.verification.resend' | translate }}
       </button>
     </div>
   </div>

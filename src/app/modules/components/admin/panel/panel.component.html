@@ -1,67 +1,67 @@
 <div class="admin-main-content-panel">
 
   <div class="panel-header">
-    <h1>Paneli i Administratorit</h1>
+    <h1>{{ 'admin.panel.title' | translate }}</h1>
     <button class="button-primary" (click)="refreshData()" [disabled]="isLoadingStats || isLoadingActivities">
       <i class="fas fa-sync-alt" [class.spinning]="isLoadingStats || isLoadingActivities"></i>
-      Rifresko
+      {{ 'common.refresh' | translate }}
     </button>
   </div>
 
   <section id="dashboard-section" class="dashboard-grid">
     <div class="card">
       <div class="card-icon"><i class="fas fa-book-reader"></i></div>
-      <div class="card-title">LearnHubs Aktivë</div>
+      <div class="card-title">{{ 'admin.panel.learnhubs.active' | translate }}</div>
       <div class="card-value">
         <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
         <span *ngIf="!isLoadingStats">{{ stats.activeLearnHubs | number }}</span>
       </div>
-      <div class="card-description">Gjithsej LearnHubs të publikuar</div>
+      <div class="card-description">{{ 'admin.panel.learnhubs.description' | translate }}</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
-      <div class="card-title">Përdorues të Regjistruar</div>
+      <div class="card-title">{{ 'admin.panel.users.registered' | translate }}</div>
       <div class="card-value">
         <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
         <span *ngIf="!isLoadingStats">{{ stats.totalRegisteredUsers | number }}</span>
       </div>
-      <div class="card-description">Gjithsej përdorues në platformë</div>
+      <div class="card-description">{{ 'admin.panel.users.description' | translate }}</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-check-circle"></i></div>
-      <div class="card-title">Kuize të Përfunduara</div>
+      <div class="card-title">{{ 'admin.panel.quizzes.completed' | translate }}</div>
       <div class="card-value">
         <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
         <span *ngIf="!isLoadingStats">{{ stats.completedQuizzes | number }}</span>
       </div>
-      <div class="card-description">Kuize të kaluara me sukses nga përdoruesit</div>
+      <div class="card-description">{{ 'admin.panel.quizzes.description' | translate }}</div>
     </div>
     <div class="card">
       <div class="card-icon"><i class="fas fa-users-cog"></i></div>
-      <div class="card-title">Administratorë Aktivë</div>
+      <div class="card-title">{{ 'admin.panel.admins.active' | translate }}</div>
       <div class="card-value">
         <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
         <span *ngIf="!isLoadingStats">{{ stats.activeAdministrators | number }}</span>
       </div>
-      <div class="card-description">Anëtarë të ekipit me qasje administratori</div>
+      <div class="card-description">{{ 'admin.panel.admins.description' | translate }}</div>
     </div>
   </section>
 
   <section id="recent-activity-section" class="section-block">
-    <h2>Aktivitetet e Fundit</h2>
-    
+    <h2>{{ 'admin.panel.activities.title' | translate }}</h2>
+
     <!-- Loading state -->
     <div *ngIf="isLoadingActivities" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar aktivitetet...</p>
+      <p>{{ 'admin.panel.activities.loading' | translate }}</p>
     </div>
-    
+
     <!-- Empty state -->
     <div *ngIf="!isLoadingActivities && recentActivities.length === 0" class="empty-state">
       <i class="fas fa-inbox"></i>
-      <p>Nuk ka aktivitete të fundit</p>
+      <p>{{ 'admin.panel.activities.empty' | translate }}</p>
     </div>
-    
+
     <!-- Activities list -->
     <div *ngIf="!isLoadingActivities && recentActivities.length > 0">
       <div *ngFor="let activity of recentActivities" class="activity-item">
@@ -77,57 +77,55 @@
     </div>
   </section>
 
-  <!-- Sezione Të Ardhurat Mujore -->
   <section id="revenue-section" class="section-block">
-    <h2>Të Ardhurat Mujore</h2>
-    
+    <h2>{{ 'admin.panel.revenue.title' | translate }}</h2>
+
     <div *ngIf="isLoadingRevenue" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar të dhënat e të ardhurave...</p>
+      <p>{{ 'admin.panel.revenue.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingRevenue && monthlyRevenue.length === 0" class="empty-state">
       <i class="fas fa-chart-line"></i>
-      <p>Nuk ka të dhëna të ardhurash</p>
+      <p>{{ 'admin.panel.revenue.empty' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingRevenue && monthlyRevenue.length > 0" class="revenue-grid">
       <div *ngFor="let revenue of monthlyRevenue" class="revenue-card">
         <div class="revenue-month">{{ getMonthName(revenue.month) }} {{ revenue.year }}</div>
         <div class="revenue-amount">{{ formatCurrency(revenue.revenue) }}</div>
         <div class="revenue-details">
-          <span class="new-subscriptions">+{{ revenue.newSubscriptions || 0 }} abonime të reja</span>
-          <span class="cancellations">-{{ revenue.cancellations || 0 }} anulime</span>
+          <span class="new-subscriptions">+{{ revenue.newSubscriptions || 0 }}</span>
+          <span class="cancellations">-{{ revenue.cancellations || 0 }}</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Sezione Shpërndarja Gjeografike -->
   <section id="geographic-section" class="section-block">
-    <h2>Shpërndarja Gjeografike</h2>
-    
+    <h2>{{ 'admin.panel.geographic.title' | translate }}</h2>
+
     <div *ngIf="isLoadingGeographic" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar të dhënat gjeografike...</p>
+      <p>{{ 'admin.panel.geographic.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingGeographic && geographicStats.length === 0" class="empty-state">
       <i class="fas fa-map-marker-alt"></i>
-      <p>Nuk ka të dhëna gjeografike</p>
+      <p>{{ 'admin.panel.geographic.empty' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingGeographic && geographicStats.length > 0" class="geographic-grid">
       <div *ngFor="let geo of geographicStats" class="geographic-card">
-        <div class="city-name">{{ geo.city || 'Qyteti i panjohur' }}</div>
+        <div class="city-name">{{ geo.city || ('admin.panel.geographic.unknown' | translate) }}</div>
         <div class="geo-stats">
           <div class="stat-item">
             <i class="fas fa-users"></i>
-            <span>{{ geo.userCount || 0 }} përdorues</span>
+            <span>{{ geo.userCount || 0 }}</span>
           </div>
           <div class="stat-item">
             <i class="fas fa-school"></i>
-            <span>{{ geo.schoolCount || 0 }} shkolla</span>
+            <span>{{ geo.schoolCount || 0 }}</span>
           </div>
           <div class="stat-item">
             <i class="fas fa-euro-sign"></i>
@@ -138,37 +136,36 @@
     </div>
   </section>
 
-  <!-- Sezione LearnHubs Më të Suksesshëm -->
   <section id="top-learnhubs-section" class="section-block">
-    <h2>LearnHubs Më të Suksesshëm</h2>
-    
+    <h2>{{ 'admin.panel.learnhubs.top.title' | translate }}</h2>
+
     <div *ngIf="isLoadingTopLearnHubs" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar LearnHubs më të suksesshëm...</p>
+      <p>{{ 'admin.panel.learnhubs.top.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length === 0" class="empty-state">
       <i class="fas fa-trophy"></i>
-      <p>Nuk ka LearnHubs më të suksesshëm</p>
+      <p>{{ 'admin.panel.learnhubs.top.empty' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length > 0" class="performance-list">
       <div *ngFor="let learnhub of topPerformingLearnHubs; let i = index" class="performance-item">
         <div class="rank">#{{ i + 1 }}</div>
         <div class="content">
-          <div class="title">{{ learnhub.title || 'Titull i panjohur' }}</div>
+          <div class="title">{{ learnhub.title || ('admin.panel.learnhubs.top.unknown' | translate) }}</div>
           <div class="stats">
             <span class="stat">
               <i class="fas fa-users"></i>
-              {{ learnhub.totalStudents || 0 }} studentë
+              {{ learnhub.totalStudents || 0 }}
             </span>
             <span class="stat">
               <i class="fas fa-chart-line"></i>
-              {{ formatPercentage(learnhub.completionRate) }} përfundim
+              {{ formatPercentage(learnhub.completionRate) }}
             </span>
             <span class="stat">
               <i class="fas fa-star"></i>
-              {{ Math.round((learnhub.averageScore || 0) * 100) }}% mesatare
+              {{ Math.round((learnhub.averageScore || 0) * 100) }}%
             </span>
           </div>
         </div>
@@ -176,24 +173,23 @@
     </div>
   </section>
 
-  <!-- Sezione Kuize Më të Vështirë -->
   <section id="challenging-quizzes-section" class="section-block">
-    <h2>Kuize Më të Vështirë</h2>
-    
+    <h2>{{ 'admin.panel.quizzes.hard.title' | translate }}</h2>
+
     <div *ngIf="isLoadingChallengingQuizzes" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar kuize më të vështirë...</p>
+      <p>{{ 'admin.panel.quizzes.hard.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length === 0" class="empty-state">
       <i class="fas fa-question-circle"></i>
-      <p>Nuk ka kuize të vështirë</p>
+      <p>{{ 'admin.panel.quizzes.hard.empty' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length > 0" class="quiz-list">
       <div *ngFor="let quiz of challengingQuizzes" class="quiz-item">
         <div class="quiz-header">
-          <div class="quiz-title">{{ quiz.question || 'Pyetje e panjohur' }}</div>
+          <div class="quiz-title">{{ quiz.question || ('admin.panel.quizzes.hard.unknown' | translate) }}</div>
           <div class="difficulty-badge" [style.background-color]="getDifficultyColor(quiz.difficulty)">
             {{ getDifficultyText(quiz.difficulty) }}
           </div>
@@ -201,15 +197,15 @@
         <div class="quiz-details">
           <span class="detail">
             <i class="fas fa-chart-bar"></i>
-            {{ formatPercentage(quiz.successRate) }} sukses
+            {{ formatPercentage(quiz.successRate) }}
           </span>
           <span class="detail">
             <i class="fas fa-play"></i>
-            {{ quiz.totalAttempts || 0 }} tentime
+            {{ quiz.totalAttempts || 0 }}
           </span>
           <span class="detail">
             <i class="fas fa-clock"></i>
-            {{ Math.round(quiz.averageTimeSpent || 0) }}s mesatare
+            {{ Math.round(quiz.averageTimeSpent || 0) }}s
           </span>
         </div>
         <div class="learnhub-context" *ngIf="quiz.learnHubTitle">
@@ -220,15 +216,14 @@
     </div>
   </section>
 
-  <!-- Sezione Shëndeti i Sistemit -->
   <section id="system-health-section" class="section-block">
-    <h2>Shëndeti i Sistemit</h2>
-    
+    <h2>{{ 'admin.panel.health.title' | translate }}</h2>
+
     <div *ngIf="isLoadingSystemHealth" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke kontrolluar shëndetin e sistemit...</p>
+      <p>{{ 'admin.panel.health.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingSystemHealth" class="system-health-grid">
       <div *ngFor="let key of getSystemHealthKeys()" class="health-item">
         <div class="health-label">{{ key }}</div>
@@ -239,62 +234,61 @@
     </div>
   </section>
 
-  <!-- Sezione Aplikimet e Supervisorit -->
   <section id="supervisor-applications-section" class="section-block">
-    <h2>Aplikimet e Supervisorit</h2>
-    
+    <h2>{{ 'admin.panel.supervisor.apps.title' | translate }}</h2>
+
     <div *ngIf="isLoadingSupervisorApplications" class="loading-container">
       <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar aplikimet e supervisorit...</p>
+      <p>{{ 'admin.panel.supervisor.apps.loading' | translate }}</p>
     </div>
-    
+
     <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length > 0" class="supervisor-applications-grid">
       <div *ngFor="let application of supervisorApplications" class="application-card">
         <div class="application-header">
           <h3>{{ application.schoolName }}</h3>
-          <div class="application-status pending">Në Pritje</div>
+          <div class="application-status pending">{{ 'admin.panel.supervisor.apps.pending' | translate }}</div>
         </div>
-        
+
         <div class="application-details">
           <div class="detail-row">
-            <span class="label">Personi i Kontaktit:</span>
+            <span class="label">{{ 'admin.panel.supervisor.apps.contact' | translate }}</span>
             <span class="value">{{ application.contactPersonFirstName }} {{ application.contactPersonLastName }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Email:</span>
+            <span class="label">{{ 'common.email' | translate }}:</span>
             <span class="value">{{ application.contactPersonEmail }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Telefoni:</span>
+            <span class="label">{{ 'admin.panel.supervisor.apps.phone' | translate }}</span>
             <span class="value">{{ application.contactPersonPhone }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">Qyteti:</span>
+            <span class="label">{{ 'admin.panel.supervisor.apps.city' | translate }}</span>
             <span class="value">{{ application.city }}</span>
           </div>
           <div class="detail-row" *ngIf="application.additionalInfo">
-            <span class="label">Informacione Shtesë:</span>
+            <span class="label">{{ 'admin.panel.supervisor.apps.additional' | translate }}</span>
             <span class="value">{{ application.additionalInfo }}</span>
           </div>
         </div>
-        
+
         <div class="application-actions">
           <button class="btn-approve" (click)="approveSupervisorApplication(application)">
             <i class="fas fa-check"></i>
-            Pranoj
+            {{ 'common.approve' | translate }}
           </button>
           <button class="btn-reject" (click)="rejectSupervisorApplication(application)">
             <i class="fas fa-times"></i>
-            Refuzoj
+            {{ 'common.reject' | translate }}
           </button>
         </div>
       </div>
     </div>
-    
+
     <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length === 0" class="empty-state">
       <div class="empty-icon">📋</div>
-      <h3>Nuk ka aplikime të reja</h3>
-      <p>Të gjitha aplikimet e supervisorit janë të trajtuara ose nuk ka aplikime të reja.</p>
+      <h3>{{ 'admin.panel.supervisor.apps.empty.title' | translate }}</h3>
+      <p>{{ 'admin.panel.supervisor.apps.empty.description' | translate }}</p>
     </div>
   </section>
 

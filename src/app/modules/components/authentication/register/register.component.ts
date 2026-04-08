@@ -13,6 +13,7 @@ import {passwordValidator} from "../../../../helpers/customValidators/check-pass
 import {MembershipStudentService} from "../../../../services/membership-student.service";
 import {MatSelectModule} from "@angular/material/select";
 import {Class, DetailsService} from "../../../../api-client";
+import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
 @Component({
   selector: 'app-register',
@@ -27,7 +28,8 @@ import {Class, DetailsService} from "../../../../api-client";
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+    TranslatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

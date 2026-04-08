@@ -17,8 +17,9 @@
       <div class="preference-action">
         <mat-form-field appearance="outline" class="language-select">
           <mat-select [value]="currentLang" (selectionChange)="onLanguageChange($event.value)">
-            <mat-option value="sq">Shqip</mat-option>
-            <mat-option value="en">English</mat-option>
+            <mat-option *ngFor="let lang of availableLanguages" [value]="lang.code">
+              {{ lang.label }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>

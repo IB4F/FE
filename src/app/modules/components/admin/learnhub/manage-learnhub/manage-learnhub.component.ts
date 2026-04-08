@@ -24,6 +24,7 @@ import {requiredRowsValidator} from "../../../../../helpers/customValidators/lin
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatButton, MatButtonModule} from "@angular/material/button";
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-manage-learnhub',
@@ -41,7 +42,8 @@ import {MatButton, MatButtonModule} from "@angular/material/button";
     MatTooltipModule,
     MatButton,
     MatButtonModule
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './manage-learnhub.component.html',
   styleUrl: './manage-learnhub.component.scss'
 })

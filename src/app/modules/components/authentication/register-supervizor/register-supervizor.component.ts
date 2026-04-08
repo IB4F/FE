@@ -16,6 +16,7 @@ import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
 import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-register-supervizor',
@@ -35,7 +36,8 @@ import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/
     MatSelect,
     PhoneInputComponent,
     DynamicBannerComponent
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './register-supervizor.component.html',
   styleUrl: './register-supervizor.component.scss'
 })

@@ -33,12 +33,14 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "src/fonts.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/quill/dist/quill.snow.css",
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
+              "index": "src/index.prod.html",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -71,7 +73,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -108,7 +110,8 @@
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/quill/dist/quill.snow.css",
             ],
             "scripts": []
           }

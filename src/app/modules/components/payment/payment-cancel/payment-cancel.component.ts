@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink } from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
+import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-payment-cancel',
@@ -9,7 +10,8 @@ import { ActivatedRoute } from '@angular/router';
   imports: [
     CommonModule,
     RouterLink
-  ],
+  ,
+    TranslatePipe],
   templateUrl: './payment-cancel.component.html',
   styleUrl: './payment-cancel.component.scss'
 })

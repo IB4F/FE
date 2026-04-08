@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { PreferencesDialogComponent } from '../preferences-dialog/preferences-dialog.component';
 import { TranslationService } from '../../../../../services/translation.service';
+import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule,
+    TranslatePipe],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
@@ -24,6 +26,7 @@ export class FooterComponent {
   ) {}
 
   openPreferences(): void {
+    (document.activeElement as HTMLElement)?.blur();
     this.dialog.open(PreferencesDialogComponent, {
       width: '90%',
       maxWidth: '700px',
