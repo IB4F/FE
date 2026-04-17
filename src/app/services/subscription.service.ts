@@ -166,14 +166,14 @@ export class SubscriptionManagementService {
    * Check if subscription is active
    */
   isSubscriptionActive(subscription: Subscription): boolean {
-    return subscription.status === SubscriptionStatus.NUMBER_2; // Active status
+    return subscription.status === SubscriptionStatus.NUMBER_3 || (subscription.status as any) === 'Active';
   }
 
   /**
    * Check if subscription is in trial
    */
   isSubscriptionInTrial(subscription: Subscription): boolean {
-    return subscription.status === SubscriptionStatus.NUMBER_1; // Trial status
+    return subscription.status === SubscriptionStatus.NUMBER_2 || (subscription.status as any) === 'Trialing';
   }
 
   /**
@@ -194,6 +194,6 @@ export class SubscriptionManagementService {
    * Check if subscription can be resumed
    */
   canResumeSubscription(subscription: Subscription): boolean {
-    return subscription.status === 1; // Assuming 1 is paused status
+    return subscription.status === SubscriptionStatus.NUMBER_1; // IncompleteExpired/Paused = 1
   }
 }

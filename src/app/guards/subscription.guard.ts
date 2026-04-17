@@ -35,10 +35,13 @@ export const smartSubscriptionGuard: CanActivateFn = (route, state) => {
 
       // Regular students need their own subscription
       return subscriptionService.getActiveSubscription().pipe(
-        map(subscription => {
-          const hasValidSubscription = subscription && 
-            (subscriptionService.isSubscriptionActive(subscription) || subscriptionService.isSubscriptionInTrial(subscription));
-          
+        map((response: any) => {
+          const hasValidSubscription = response?.isActive === true ||
+            (response?.subscription && (
+              subscriptionService.isSubscriptionActive(response.subscription) ||
+              subscriptionService.isSubscriptionInTrial(response.subscription)
+            ));
+
           if (!hasValidSubscription) {
             notificationService.warning('Duhet të kesh një subscription aktiv ose në provë për të aksesuar këtë faqe!', 'KUJDES', 3000);
             router.navigate(['/membership']);

@@ -1,6 +1,6 @@
 <!-- Class restriction message -->
 <div *ngIf="!canNavigateAllTabs && userTypeClass" class="class-restriction-message">
-  <p>{{ 'courses.restriction' | translate }}</p>
+  <p>{{ ('courses.restriction' | translate).replace('{{class}}', userTypeClass ?? '') }}</p>
 </div>
 
 <div class="tabs">
