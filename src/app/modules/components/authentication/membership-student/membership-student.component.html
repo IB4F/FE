@@ -1,61 +1,101 @@
-<div class="container">
-  <app-dynamic-banner bannerType="membership"></app-dynamic-banner>
-  <div class="title">
-    <h1>{{ 'membershipStudent.subtitle' | translate }}</h1>
-  </div>
+<app-manual-payment-instructions
+  *ngIf="manualPaymentDetails"
+  [details]="manualPaymentDetails"
+  [provider]="manualPaymentProvider">
+</app-manual-payment-instructions>
 
-  <div class="registration-flow">
-    <h2 class="flow-title">{{ 'membershipStudent.howToRegister' | translate }}</h2>
-    <div class="flow-steps">
-      <div class="step-card">
-        <div class="number-wrapper">
-          1
-        </div>
-        <h3>{{ 'membershipStudent.step1.title' | translate }}</h3>
-        <p>{{ 'membershipStudent.step1.description' | translate }}</p>
-      </div>
-      <div class="arrow-icon">
-        &#10140;
-      </div>
-      <div class="step-card">
-        <div class="number-wrapper">
-          2
-        </div>
-        <h3>{{ 'membershipStudent.step2.title' | translate }}</h3>
-        <p>{{ 'membershipStudent.step2.description' | translate }}</p>
-      </div>
-      <div class="arrow-icon">
-        &#10140;
-      </div>
-      <div class="step-card">
-        <div class="number-wrapper">
-          3
-        </div>
-        <h3>{{ 'membershipStudent.step3.title' | translate }}</h3>
-        <p>{{ 'membershipStudent.step3.description' | translate }}</p>
+<ng-container *ngIf="!manualPaymentDetails">
+
+  <!-- Hero Banner -->
+  <div class="bg-hero-wrap bg-fade-up">
+    <div class="bg-hero">
+      <h1 class="bg-hero-title">{{ 'membershipStudent.subtitle' | translate }}</h1>
+      <div class="bg-hero-illu">
+        <img src="assets/svgImages/membership.svg" alt="">
       </div>
     </div>
   </div>
-  <app-packages #packageComponent
-                     [userType]="'student'">
-  </app-packages>
-  <div class="title">
-    <h1>{{ 'membershipStudent.community.title' | translate }}</h1>
-  </div>
-  <app-register #registerComponent></app-register>
-  <div class="button-container">
+
+  <!-- Steps Carousel -->
+  <section class="bg-section" id="steps">
+    <h2 class="bg-section-title">{{ 'membershipStudent.howToRegister' | translate }}</h2>
+    <p class="bg-section-sub">Tre hapa të thjeshtë për të nisur udhëtimin tuaj të të mësuarit</p>
+    <div class="bg-carousel-wrap"
+         (mouseenter)="pauseCarousel()"
+         (mouseleave)="resumeCarousel()">
+      <div class="bg-carousel-track">
+        <div class="bg-step-card" [class.is-active]="activeStep === 0">
+          <div class="bg-step-num">1</div>
+          <h3 class="bg-step-title">{{ 'membershipStudent.step1.title' | translate }}</h3>
+          <p class="bg-step-desc">{{ 'membershipStudent.step1.description' | translate }}</p>
+          <span class="bg-step-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="bg-step-card" [class.is-active]="activeStep === 1">
+          <div class="bg-step-num">2</div>
+          <h3 class="bg-step-title">{{ 'membershipStudent.step2.title' | translate }}</h3>
+          <p class="bg-step-desc">{{ 'membershipStudent.step2.description' | translate }}</p>
+          <span class="bg-step-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="bg-step-card" [class.is-active]="activeStep === 2">
+          <div class="bg-step-num">3</div>
+          <h3 class="bg-step-title">{{ 'membershipStudent.step3.title' | translate }}</h3>
+          <p class="bg-step-desc">{{ 'membershipStudent.step3.description' | translate }}</p>
+        </div>
+      </div>
+      <div class="bg-carousel-dots">
+        <button class="bg-dot" [class.is-active]="activeStep === 0" (click)="setStep(0)" aria-label="Step 1"></button>
+        <button class="bg-dot" [class.is-active]="activeStep === 1" (click)="setStep(1)" aria-label="Step 2"></button>
+        <button class="bg-dot" [class.is-active]="activeStep === 2" (click)="setStep(2)" aria-label="Step 3"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Registration Form -->
+  <section class="bg-section" id="register">
+    <h2 class="bg-section-title">{{ 'membershipStudent.community.title' | translate }}</h2>
+    <p class="bg-section-sub">Krijoni llogarinë tuaj në më pak se një minutë</p>
+    <app-register #registerComponent></app-register>
+  </section>
+
+  <!-- Pricing Packages -->
+  <section class="bg-section" id="pricing">
+    <app-packages #packageComponent [userType]="'student'"></app-packages>
+  </section>
+
+  <!-- Payment Provider -->
+  <section class="bg-section">
+    <app-payment-provider-selector
+      [selectedProvider]="selectedProvider"
+      (providerChange)="selectedProvider = $event">
+    </app-payment-provider-selector>
+  </section>
+
+  <!-- Submit -->
+  <div class="bg-submit-wrap">
     <button
-      mat-raised-button
-      color="primary"
-      class="payment-button"
+      class="bg-submit-btn"
       [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
       (click)="handlePayment()"
     >
-      <span *ngIf="!loading">{{ 'membershipStudent.submit' | translate }}</span>
-      <span *ngIf="loading">
-        <mat-spinner diameter="20"></mat-spinner>
+      <ng-container *ngIf="!loading">
+        {{ 'membershipStudent.submit' | translate }}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </ng-container>
+      <ng-container *ngIf="loading">
+        <mat-spinner diameter="22"></mat-spinner>
         {{ 'membershipStudent.processing' | translate }}
-      </span>
+      </ng-container>
     </button>
   </div>
-</div>
+
+</ng-container>

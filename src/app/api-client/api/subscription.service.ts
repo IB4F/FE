@@ -753,4 +753,65 @@ export class SubscriptionService extends BaseService {
         );
     }
 
+    public apiSubscriptionManualPendingGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        let localVarHeaders = this.defaultHeaders;
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('get', `${basePath}/api/Subscription/manual/pending`,
+            {
+                context: localVarHttpContext,
+                responseType: 'json',
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public apiSubscriptionManualConfirmPost(paymentReference: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (!paymentReference) throw new Error('Required parameter paymentReference was null or undefined.');
+        let localVarHeaders = this.defaultHeaders;
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+        const encodedRef = encodeURIComponent(paymentReference);
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}/api/Subscription/manual/confirm/${encodedRef}`,
+            {
+                context: localVarHttpContext,
+                responseType: 'json',
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public apiSubscriptionManualRemindPost(paymentReference: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (!paymentReference) throw new Error('Required parameter paymentReference was null or undefined.');
+        let localVarHeaders = this.defaultHeaders;
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+        const encodedRef = encodeURIComponent(paymentReference);
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}/api/Subscription/manual/remind/${encodedRef}`,
+            {
+                context: localVarHttpContext,
+                responseType: 'json',
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
 }

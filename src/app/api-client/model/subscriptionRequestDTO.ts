@@ -10,7 +10,7 @@
 import { BillingInterval } from './billingInterval';
 
 
-export interface SubscriptionRequestDTO { 
+export interface SubscriptionRequestDTO {
     email: string;
     registrationType: string;
     subscriptionPackageId: string;
@@ -18,6 +18,7 @@ export interface SubscriptionRequestDTO {
     billingInterval: BillingInterval;
     familyMemberCount?: number | null;
     couponCode?: string | null;
+    provider?: string | null;
 }
 export namespace SubscriptionRequestDTO {
 }

@@ -1,17 +1,11 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatFormFieldModule} from "@angular/material/form-field";
 import {CommonModule} from "@angular/common";
-import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatInputModule} from "@angular/material/input";
-import {provideNativeDateAdapter} from "@angular/material/core";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
-import {MatSelectModule} from "@angular/material/select";
 import {Class, DetailsService} from "../../../../api-client";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
@@ -21,21 +15,15 @@ import {TranslatePipe} from "../../../../pipes/translate.pipe";
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
     CommonModule,
-    MatDatepickerModule,
     MatIconModule,
-    MatButtonModule,
     MatTooltipModule,
-    MatSelectModule,
     TranslatePipe
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
-  providers: [provideNativeDateAdapter()]
+  styleUrl: './register.component.scss'
 })
-export class  RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   registerFormGroup!: FormGroup;
   hidePass = true;
   classesList: Class[] = [];
@@ -45,8 +33,7 @@ export class  RegisterComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private membershipStudentService: MembershipStudentService,
     private _detailsService: DetailsService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.registerFormInitialize();
@@ -64,9 +51,11 @@ export class  RegisterComponent implements OnInit {
       password: ['', [Validators.required, passwordValidator]]
     });
 
-    this.registerFormGroup.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(status => {
-      this.membershipStudentService.setRegisterFormValid(status === 'VALID');
-    });
+    this.registerFormGroup.statusChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(status => {
+        this.membershipStudentService.setRegisterFormValid(status === 'VALID');
+      });
   }
 
   private loadCombos() {
@@ -77,7 +66,6 @@ export class  RegisterComponent implements OnInit {
     this._detailsService.apiDetailsGetClassGet().subscribe({
       next: res => { this.classesList = res; },
       error: () => {}
-    })
+    });
   }
-
 }

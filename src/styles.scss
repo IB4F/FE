@@ -1,6 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
+/* Brain Gain design tokens — Registration page */
+:root {
+  --primary:        #1B9CD8;
+  --primary-dark:   #1A6FB8;
+  --primary-light:  #2BB5E0;
+  --primary-soft:   #E8F4FB;
+  --primary-softer: #F5FAFD;
+  --navy:           #0E2A47;
+  --navy-soft:      #2A4A6B;
+  --gray-text:      #5B7A99;
+  --gray-line:      #D6E2EF;
+  --bg:             #F5F7FB;
+  --shadow-sm:      0 2px 8px rgba(14, 42, 71, 0.06);
+  --shadow-md:      0 8px 28px rgba(14, 42, 71, 0.08);
+  --shadow-lg:      0 20px 50px rgba(14, 42, 71, 0.12);
+  --shadow-glow:    0 12px 40px rgba(27, 156, 216, 0.28);
+  --radius-sm:      10px;
+  --radius-md:      16px;
+  --radius-lg:      24px;
+  --radius-pill:    999px;
+
+  /* Role colors — membership selection page */
+  --role-student:        #7C5CFF;
+  --role-student-dark:   #5B3CD9;
+  --role-supervisor:     #1B9CD8;
+  --role-supervisor-dark:#1A6FB8;
+  --role-family:         #2EB872;
+  --role-family-dark:    #1F9D5C;
+}
+
 /* Variabili di colore per un tema e-learning moderno */
 // Definisci i colori come variabili Sass
 $primary-color-sass: #4CAF50; // Verde vibrante (LearnHub Green)

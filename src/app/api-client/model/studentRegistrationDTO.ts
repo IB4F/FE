@@ -9,7 +9,7 @@
  */
 
 
-export interface StudentRegistrationDTO { 
+export interface StudentRegistrationDTO {
     FirstName: string;
     LastName: string;
     Email: string;
@@ -18,5 +18,6 @@ export interface StudentRegistrationDTO {
     CurrentClass: string;
     Password: string;
     subscriptionPackageId?: string;
+    provider?: number | null;
 }
 

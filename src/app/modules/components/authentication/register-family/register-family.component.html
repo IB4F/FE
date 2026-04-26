@@ -198,6 +198,15 @@
 
         <!-- Step 4: Payment -->
         <div *ngIf="currentStep === 'payment'" class="form-section payment-section">
+
+          <!-- Manual payment instructions (BKT / Raiffeisen) -->
+          <app-manual-payment-instructions
+            *ngIf="manualPaymentDetails"
+            [details]="manualPaymentDetails"
+            [provider]="manualPaymentProvider">
+          </app-manual-payment-instructions>
+
+          <ng-container *ngIf="!manualPaymentDetails">
           <div class="summary-item">
             <span class="label">{{ 'registerFamily.payment.childrenCount' | translate }}</span>
             <span class="value">{{ numberOfChildren }}</span>
@@ -211,6 +220,11 @@
             <span class="value">{{ selectedPackage?.priceDisplay }}</span>
           </div>
 
+          <app-payment-provider-selector
+            [selectedProvider]="selectedProvider"
+            (providerChange)="selectedProvider = $event">
+          </app-payment-provider-selector>
+
           <div class="button-group">
             <button mat-button (click)="goBackToChildrenInfo()" class="back-button">
               <mat-icon>arrow_back</mat-icon>
@@ -223,6 +237,7 @@
               <span *ngIf="loading">{{ 'registerFamily.finalizing' | translate }}</span>
             </button>
           </div>
+          </ng-container>
         </div>
       </form>
     </div>

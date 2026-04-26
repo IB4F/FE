@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SubscriptionService, Subscription, CancelSubscriptionDTO, ChangePlanDTO, BillingInterval, SubscriptionStatus } from '../api-client';
 import { UserService } from './user.service';
 import { TokenStorageService } from './token-storage.service';
@@ -26,7 +27,16 @@ export class SubscriptionManagementService {
       throw new Error('User not authenticated');
     }
 
-    return this.subscriptionService.apiSubscriptionUserUserIdActiveGet(userId);
+    return this.subscriptionService.apiSubscriptionUserUserIdActiveGet(userId).pipe(
+      map((response: any) => {
+        const sub = response?.subscription ?? response;
+        if (sub?.planName && !sub?.subscriptionPackage) {
+          sub.subscriptionPackage = { id: sub.planId, name: sub.planName };
+          sub.subscriptionPackageId = sub.planId;
+        }
+        return sub as Subscription;
+      })
+    );
   }
 
   /**
@@ -114,7 +124,21 @@ export class SubscriptionManagementService {
   /**
    * Get subscription status text
    */
-  getSubscriptionStatusText(status: number): string {
+  getSubscriptionStatusText(status: number | string): string {
+    if (typeof status === 'string') {
+      const stringMap: { [key: string]: string } = {
+        'Active':     'Aktiv',
+        'Paused':     'Pauzuar',
+        'Canceled':   'Anuluar',
+        'Cancelled':  'Anuluar',
+        'Expired':    'Skaduar',
+        'Trialing':   'Në provë',
+        'Processing': 'Përpunim',
+        'Error':      'Gabim',
+        'Unpaid':     'I papaguar'
+      };
+      return stringMap[status] || status;
+    }
     const statusMap: { [key: number]: string } = {
       0: 'Aktiv',
       1: 'Pauzuar',

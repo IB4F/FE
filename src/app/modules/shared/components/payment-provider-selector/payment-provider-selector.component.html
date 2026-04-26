@@ -1,0 +1,49 @@
+<div class="pay-wrap">
+
+  <h2 class="bg-section-title">Metoda të sigurta pagese</h2>
+  <p class="bg-section-sub">Të gjitha transaksionet janë të enkriptuara dhe të sigurta</p>
+
+  <!-- Credit / debit card providers -->
+  <p class="pay-group-label">
+    <mat-icon>credit_card</mat-icon>
+    Kartë krediti / debiti
+  </p>
+  <div class="bg-payment-grid">
+    <div class="bg-payment-card"
+         *ngFor="let p of cardProviders"
+         [class.is-selected]="selectedProvider === p.value"
+         (click)="select(p.value)">
+      <div class="bg-payment-icon">
+        <mat-icon>{{ p.icon }}</mat-icon>
+      </div>
+      <span class="bg-payment-name">{{ p.shortLabel }}</span>
+      <span class="bg-payment-label">{{ p.sublabel }}</span>
+      <span *ngIf="p.recommended" class="pay-badge">I Rekomanduar</span>
+    </div>
+  </div>
+
+  <!-- Bank transfer providers -->
+  <p class="pay-group-label" style="margin-top: 28px;">
+    <mat-icon>account_balance</mat-icon>
+    Transfertë bankare
+  </p>
+  <div class="bg-payment-grid">
+    <div class="bg-payment-card"
+         *ngFor="let p of bankProviders"
+         [class.is-selected]="selectedProvider === p.value"
+         (click)="select(p.value)">
+      <div class="bg-payment-icon">
+        <mat-icon>{{ p.icon }}</mat-icon>
+      </div>
+      <span class="bg-payment-name">{{ p.shortLabel }}</span>
+      <span class="bg-payment-label">{{ p.sublabel }}</span>
+    </div>
+  </div>
+
+  <!-- Security note -->
+  <p class="pay-security">
+    <mat-icon>lock</mat-icon>
+    Pagesa e sigurt — enkriptim SSL 256-bit
+  </p>
+
+</div>

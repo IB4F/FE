@@ -14,8 +14,11 @@ import {
 } from '../../../../api-client';
 import { BillingInterval } from '../../../shared/constant/enums';
 import { NgToastService } from 'ng-angular-popup';
+import { TranslatePipe } from '../../../../pipes/translate.pipe';
 import { StripeService } from '../../../../services/stripe.service';
-import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import { PaddleService } from '../../../../services/paddle.service';
+import { PaymentProviderSelectorComponent } from '../../../shared/components/payment-provider-selector/payment-provider-selector.component';
+import { ManualPaymentInstructionsComponent, ManualPaymentDetails } from '../../../shared/components/manual-payment-instructions/manual-payment-instructions.component';
 
 interface Feature {
   text: string;
@@ -43,9 +46,11 @@ type BillingCycle = 'annual' | 'monthly';
     MatRadioModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    ReactiveFormsModule
-  ,
-    TranslatePipe],
+    ReactiveFormsModule,
+    TranslatePipe,
+    PaymentProviderSelectorComponent,
+    ManualPaymentInstructionsComponent
+  ],
   templateUrl: './supervisor-subscription-packages.component.html',
   styleUrl: './supervisor-subscription-packages.component.scss'
 })
@@ -59,8 +64,12 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
   packageForm!: FormGroup;
   paymentInfo: any[] = [];
   loading = false;
+  selectedProvider = 'Novalnet';
+  manualPaymentDetails: ManualPaymentDetails | null = null;
+  manualPaymentProvider = '';
   private destroyRef = inject(DestroyRef);
   private stripeService = inject(StripeService);
+  private paddleService = inject(PaddleService);
 
   constructor(
     private route: ActivatedRoute,
@@ -226,23 +235,34 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
     const request: SupervisorSubscriptionRequestDTO = {
       supervisorApplicationId: this.supervisorApplicationId,
       subscriptionPackageId: this.selectedCard.id,
-      billingInterval: billingInterval
+      billingInterval: billingInterval,
+      provider: this.selectedProvider
     };
 
     this.subscriptionService.apiSubscriptionCreateSupervisorPost(request).subscribe({
       next: async (response) => {
-        try {
-          this.toast.success('Subskriptioni u krijua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
-
-          if (!response.sessionId) {
-            this.toast.danger('Gabim në inicializimin e pagesës', 'GABIM', 3000);
-            this.loading = false;
-            return;
+        this.loading = false;
+        if (response.isManual) {
+          this.manualPaymentDetails = response.manualDetails;
+          this.manualPaymentProvider = response.provider;
+          this.toast.success('Subskriptioni u krijua. Shihni instruksionet e transfertës.', 'SUKSES', 3000);
+        } else if (response.sessionId) {
+          const isPaddle = this.selectedProvider === 'Paddle';
+          if (isPaddle) {
+            this.toast.success('Subskriptioni u krijua me sukses. Hapet pagesa...', 'SUKSES', 2000);
+            try { await this.paddleService.openCheckout(response.sessionId); } catch {
+              this.toast.danger('Gabim në procesin e pagesës', 'GABIM', 3000);
+              this.loading = false;
+            }
+          } else {
+            this.toast.success('Subskriptioni u krijua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
+            try { await this.stripeService.redirectToCheckout(response.sessionId); } catch {
+              this.toast.danger('Gabim në procesin e pagesës', 'GABIM', 3000);
+              this.loading = false;
+            }
           }
-          await this.stripeService.redirectToCheckout(response.sessionId);
-        } catch {
-          this.toast.danger('Gabim në procesin e pagesës', 'GABIM', 3000);
-          this.loading = false;
+        } else {
+          this.toast.danger('Gabim në inicializimin e pagesës', 'GABIM', 3000);
         }
       },
       error: () => {

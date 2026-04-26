@@ -1,6 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {MatIconModule} from "@angular/material/icon";
-import {MatRadioModule} from "@angular/material/radio";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
@@ -12,6 +11,7 @@ interface Card {
   id: string;
   title: string;
   description: string;
+  features: string[];
   price: number;
   priceDisplay: string;
   isBestValue?: boolean;
@@ -20,6 +20,36 @@ interface Card {
 
 type BillingCycle = 'annual' | 'monthly';
 
+const FEATURES_MAP: Record<'basic' | 'standard' | 'premium', string[]> = {
+  basic: [
+    'Mësime themelore të drejtës rrugore',
+    'Provime praktike bazë',
+    'Materiale mësimore',
+    'Akses në komunitet'
+  ],
+  standard: [
+    'Të gjitha nga paketa Bazë',
+    'Provime simulative të avancuara',
+    'Materiale shtesë HD',
+    'Mbështetje me email',
+    'Bazë e të dhënave të pyetjeve'
+  ],
+  premium: [
+    'Të gjitha nga paketa Standarde',
+    'Mësime HD të pakufizuara',
+    'Mbështetje 24/7',
+    'Sesione me tutor personal',
+    'Materiale ekskluzive'
+  ]
+};
+
+function resolveFeatures(name: string): string[] {
+  const n = name.toLowerCase();
+  if (n.includes('premium')) return FEATURES_MAP.premium;
+  if (n.includes('standard') || n.includes('standarde')) return FEATURES_MAP.standard;
+  return FEATURES_MAP.basic;
+}
+
 @Component({
   selector: 'app-packages',
   standalone: true,
@@ -27,9 +57,8 @@ type BillingCycle = 'annual' | 'monthly';
     CommonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatRadioModule
-  ,
-    TranslatePipe],
+    TranslatePipe
+  ],
   templateUrl: './packages.component.html',
   styleUrl: './packages.component.scss'
 })
@@ -39,11 +68,7 @@ export class PackagesComponent implements OnChanges {
   @Input() excludeCurrentPlan: boolean = false;
   @Input() currentPlanId?: string;
 
-  cards: Record<BillingCycle, Card[]> = {
-    annual: [],
-    monthly: []
-  };
-
+  cards: Record<BillingCycle, Card[]> = { annual: [], monthly: [] };
   selectedCard: Card | null = null;
   packegeForm!: FormGroup;
   paymentInfo: any[] = [];
@@ -52,8 +77,7 @@ export class PackagesComponent implements OnChanges {
     private fb: FormBuilder,
     private membershipStudentService: MembershipStudentService,
     private subscriptionPackageService: SubscriptionPackageService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -81,8 +105,11 @@ export class PackagesComponent implements OnChanges {
   }
 
   get currentCards(): Card[] {
-    const billingCycle = this.packegeForm.value.billingCycle as BillingCycle;
-    return this.cards[billingCycle];
+    return this.cards[this.packegeForm.value.billingCycle as BillingCycle];
+  }
+
+  get isAnnual(): boolean {
+    return this.packegeForm.value.billingCycle === 'annual';
   }
 
   selectCard(card: Card) {
@@ -90,10 +117,8 @@ export class PackagesComponent implements OnChanges {
     this.membershipStudentService.setSelectedPackage(card);
   }
 
-  onSwitchChange(event: any) {
-    const isAnnual = event.target.checked;
-    const billingCycle = isAnnual ? 'annual' : 'monthly';
-    this.packegeForm.patchValue({ billingCycle });
+  setBillingCycle(cycle: BillingCycle) {
+    this.packegeForm.patchValue({ billingCycle: cycle });
     this.selectedCard = null;
     this.membershipStudentService.setSelectedPackage(null);
   }
@@ -110,201 +135,117 @@ export class PackagesComponent implements OnChanges {
   }
 
   private mapApiDataToCards() {
-    // Clear existing cards
-    this.cards = {annual: [], monthly: []};
+    this.cards = { annual: [], monthly: [] };
 
-    // Define unique descriptions for each package type in Albanian
     const descriptions: Record<string, string> = {
-      // Exact matches
       "Bazë": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
       "Standarde": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
       "Premium": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
-      
-      // Common API variations
       "Student Basic": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
       "Student Standard": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
       "Student Premium": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
-      "Student Basic Yearly": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
-      "Student Standard Yearly": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
-      "Student Premium Yearly": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive.",
-      "Student Basic Monthly": "Paketa ideale për fillestarët. Përfshin mësime themelore të drejtës rrugore, provime praktike dhe materiale mësimore bazë për të kaluar provimin me sukses.",
-      "Student Standard Monthly": "Paketa më e zgjedhur nga studentët. Oferon mësime të detajuara, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e të dhënave të pyetjeve.",
-      "Student Premium Monthly": "Paketa më e plotë për studentët ambiciozë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive."
     };
 
-    // Map API data to cards
     this.paymentInfo.forEach(item => {
-      // Skip current plan if excludeCurrentPlan is true
-      if (this.excludeCurrentPlan && item.id === this.currentPlanId) {
-        return;
-      }
+      if (this.excludeCurrentPlan && item.id === this.currentPlanId) return;
 
-      // Get description for this package, with fallback to default description
       const packageName = item.name || '';
-      
-      // Try to match package name with different possible formats
       let description = descriptions[packageName];
-      
-      // If exact match not found, try partial matching
       if (!description) {
-        if (packageName.toLowerCase().includes('basic') || packageName.toLowerCase().includes('bazë')) {
-          description = descriptions["Bazë"];
-        } else if (packageName.toLowerCase().includes('standard') || packageName.toLowerCase().includes('standarde')) {
-          description = descriptions["Standarde"];
-        } else if (packageName.toLowerCase().includes('premium')) {
-          description = descriptions["Premium"];
-        }
-      }
-      
-      // Final fallback
-      if (!description) {
-        description = "Paketa mësimore me përmbajtje cilësore dhe mbështetje të dedikuar për studentët.";
+        const n = packageName.toLowerCase();
+        if (n.includes('basic') || n.includes('bazë')) description = descriptions["Bazë"];
+        else if (n.includes('standard') || n.includes('standarde')) description = descriptions["Standarde"];
+        else if (n.includes('premium')) description = descriptions["Premium"];
+        else description = "Paketa mësimore me përmbajtje cilësore dhe mbështetje të dedikuar.";
       }
 
-      // Create cards for both monthly and yearly billing intervals
+      const features = resolveFeatures(packageName);
+      if (item.maxUsers && item.maxUsers > 1) {
+        features.push(`Deri në ${item.maxUsers} anëtarë`);
+      }
+
       const monthlyCard: Card = {
-        id: item.id,
-        title: item.name || '',
-        description: description,
+        id: item.id, title: item.name || '', description, features,
         price: (item.monthlyPrice || 0) / 100,
         priceDisplay: this.getPriceDisplay((item.monthlyPrice || 0) / 100, 'monthly'),
         maxUsers: item.maxUsers
       };
-
       const yearlyCard: Card = {
-        id: item.id,
-        title: item.name || '',
-        description: description,
+        id: item.id, title: item.name || '', description, features,
         price: (item.yearlyPrice || 0) / 100,
         priceDisplay: this.getPriceDisplay((item.yearlyPrice || 0) / 100, 'yearly'),
         maxUsers: item.maxUsers
       };
 
-      // Mark "Standarde" as the best value
-      if (item.name.includes('Standard')) {
+      if (item.name?.includes('Standard')) {
         monthlyCard.isBestValue = true;
         yearlyCard.isBestValue = true;
       }
 
-      // Add cards based on billing interval
-      // Handle both string and numeric billing intervals
-      const billingInterval = item.billingInterval;
-      if (billingInterval === BillingInterval.Month || billingInterval === 'MONTHLY' || billingInterval === 3) {
+      const bi = item.billingInterval;
+      if (bi === BillingInterval.Month || bi === 'MONTHLY' || bi === 3) {
         this.cards.monthly.push(monthlyCard);
-      } else if (billingInterval === BillingInterval.Year || billingInterval === 'YEARLY' || billingInterval === 4) {
+      } else if (bi === BillingInterval.Year || bi === 'YEARLY' || bi === 4) {
         this.cards.annual.push(yearlyCard);
       } else {
-        // If billing interval is not specified, add both
         this.cards.monthly.push(monthlyCard);
         this.cards.annual.push(yearlyCard);
       }
     });
 
-    // Sort cards to ensure "Standarde" (best value) is in the middle if applicable,
-    // assuming there are always three packages: Bazë, Standarde, Premium.
-    // This sorting ensures the "best-value" class is applied to the middle card.
-    this.cards.annual.sort((a, b) => {
-      const order = ["Bazë", "Standarde", "Premium"];
-      return order.indexOf(a.title) - order.indexOf(b.title);
-    });
-    this.cards.monthly.sort((a, b) => {
-      const order = ["Bazë", "Standarde", "Premium"];
-      return order.indexOf(a.title) - order.indexOf(b.title);
-    });
+    const order = ["Bazë", "Standarde", "Premium"];
+    const sortFn = (a: Card, b: Card) => order.indexOf(a.title) - order.indexOf(b.title);
+    this.cards.annual.sort(sortFn);
+    this.cards.monthly.sort(sortFn);
   }
 
   private getPriceDisplay(price: number, type: string): string {
-    return type === 'yearly'
-      ? `${price} €/vit`
-      : `${price} €/muaj`;
+    return type === 'yearly' ? `${price} €/vit` : `${price} €/muaj`;
   }
 
   private mapFamilyPricingToCards() {
-    // Clear existing cards
-    this.cards = {annual: [], monthly: []};
+    this.cards = { annual: [], monthly: [] };
 
-    // Define unique descriptions for each family package type in Albanian
     const descriptions: Record<string, string> = {
-      // Exact matches
-      "Bazë": "Paketa familjare bazë për fillestarët. Përfshin mësime themelore të drejtës rrugore për të gjithë anëtarët e familjes, provime praktike dhe materiale mësimore bazë.",
-      "Standarde": "Paketa familjare më e zgjedhur. Oferon mësime të detajuara për të gjithë anëtarët, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e pyetjeve.",
-      "Premium": "Paketa familjare më e plotë. Përfshin të gjitha mësimet HD për të gjithë anëtarët, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive familjare.",
-      
-      // Family package variations
-      "Family Basic": "Paketa familjare bazë për fillestarët. Përfshin mësime themelore të drejtës rrugore për të gjithë anëtarët e familjes, provime praktike dhe materiale mësimore bazë.",
-      "Family Standard": "Paketa familjare më e zgjedhur. Oferon mësime të detajuara për të gjithë anëtarët, provime simulative, materiale shtesë, mbështetje me email dhe akses në bazën e pyetjeve.",
-      "Family Premium": "Paketa familjare më e plotë. Përfshin të gjitha mësimet HD për të gjithë anëtarët, provime të pakufizuara, mbështetje 24/7, sesione me tutorë personal dhe materiale ekskluzive familjare."
+      "Bazë": "Paketa familjare bazë. Përfshin mësime themelore të drejtës rrugore për të gjithë anëtarët e familjes, provime praktike dhe materiale mësimore bazë.",
+      "Standarde": "Paketa familjare më e zgjedhur. Oferon mësime të detajuara për të gjithë anëtarët, provime simulative dhe mbështetje me email.",
+      "Premium": "Paketa familjare më e plotë. Përfshin të gjitha mësimet HD, provime të pakufizuara, mbështetje 24/7 dhe sesione me tutorë personal.",
     };
 
-    // Map family pricing data to cards
     this.familyPricingData.forEach(pricing => {
       const packageName = pricing.name || '';
-      
-      // Try to match package name with different possible formats
       let description = descriptions[packageName];
-      
-      // If exact match not found, try partial matching
       if (!description) {
-        if (packageName.toLowerCase().includes('basic') || packageName.toLowerCase().includes('bazë')) {
-          description = descriptions["Bazë"];
-        } else if (packageName.toLowerCase().includes('standard') || packageName.toLowerCase().includes('standarde')) {
-          description = descriptions["Standarde"];
-        } else if (packageName.toLowerCase().includes('premium')) {
-          description = descriptions["Premium"];
-        }
-      }
-      
-      // Final fallback
-      if (!description) {
-        description = "Paketa familjare me përmbajtje cilësore dhe mbështetje të dedikuar për të gjithë anëtarët.";
+        const n = packageName.toLowerCase();
+        if (n.includes('basic') || n.includes('bazë')) description = descriptions["Bazë"];
+        else if (n.includes('standard') || n.includes('standarde')) description = descriptions["Standarde"];
+        else if (n.includes('premium')) description = descriptions["Premium"];
+        else description = "Paketa familjare me përmbajtje cilësore.";
       }
 
-      // Create cards for both monthly and yearly billing intervals
-      const monthlyCard: Card = {
-        id: pricing.packageId || '',
-        title: pricing.name || '',
-        description: description,
+      const features = resolveFeatures(packageName);
+      if (pricing.maxMembers && pricing.maxMembers > 1) {
+        features.push(`Deri në ${pricing.maxMembers} anëtarë`);
+      }
+
+      const card: Card = {
+        id: pricing.packageId || '', title: packageName, description, features,
         price: (pricing.totalPrice || 0) / 100,
-        priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €/muaj`,
+        priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €`,
         maxUsers: pricing.maxMembers
       };
 
-      const yearlyCard: Card = {
-        id: pricing.packageId || '',
-        title: pricing.name || '',
-        description: description,
-        price: (pricing.totalPrice || 0) / 100,
-        priceDisplay: pricing.totalPriceFormatted || `${(pricing.totalPrice || 0) / 100} €/vit`,
-        maxUsers: pricing.maxMembers
-      };
+      if (pricing.name?.includes('Standard')) card.isBestValue = true;
 
-      // Mark "Standarde" as the best value
-      if (pricing.name?.includes('Standard')) {
-        monthlyCard.isBestValue = true;
-        yearlyCard.isBestValue = true;
-      }
-
-      // Add cards based on billing interval
-      const billingInterval = pricing.billingInterval;
-      if (billingInterval === BillingInterval.Month) {
-        this.cards.monthly.push(monthlyCard);
-      } else if (billingInterval === BillingInterval.Year) {
-        this.cards.annual.push(yearlyCard);
-      } else {
-        // If billing interval is not specified, add both
-        this.cards.monthly.push(monthlyCard);
-        this.cards.annual.push(yearlyCard);
-      }
+      const bi = pricing.billingInterval;
+      if (bi === BillingInterval.Month) this.cards.monthly.push(card);
+      else if (bi === BillingInterval.Year) this.cards.annual.push(card);
+      else { this.cards.monthly.push(card); this.cards.annual.push({...card}); }
     });
 
-    // Sort cards to ensure "Standarde" (best value) is in the middle if applicable
-    this.cards.annual.sort((a, b) => {
-      const order = ["Bazë", "Standarde", "Premium"];
-      return order.indexOf(a.title) - order.indexOf(b.title);
-    });
-    this.cards.monthly.sort((a, b) => {
-      const order = ["Bazë", "Standarde", "Premium"];
-      return order.indexOf(a.title) - order.indexOf(b.title);
-    });
+    const order = ["Bazë", "Standarde", "Premium"];
+    const sortFn = (a: Card, b: Card) => order.indexOf(a.title) - order.indexOf(b.title);
+    this.cards.annual.sort(sortFn);
+    this.cards.monthly.sort(sortFn);
   }
 }

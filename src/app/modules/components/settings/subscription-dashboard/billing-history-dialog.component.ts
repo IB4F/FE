@@ -790,7 +790,11 @@ export class BillingHistoryDialogComponent implements OnInit, OnDestroy {
     );
   }
 
-  private formatInterval(interval: string | null | undefined): string {
+  private formatInterval(interval: string | number | null | undefined): string {
+    if (typeof interval === 'number') {
+      const numericMap: { [key: number]: string } = { 1: 'Ditore', 2: 'Javore', 3: 'Mujore', 4: 'Vjetore' };
+      return numericMap[interval] || 'N/A';
+    }
     switch (interval?.toLowerCase()) {
       case 'day':   return 'Ditore';
       case 'week':  return 'Javore';
@@ -808,7 +812,7 @@ export class BillingHistoryDialogComponent implements OnInit, OnDestroy {
       subscriptionId: payment.subscriptionId,
       amount: payment.amount,
       currency: payment.currency,
-      status: payment.status,
+      status: this.getPaymentStatusLabel(payment.status),
       paidAt: payment.paidAt,
       periodStart: payment.periodStart,
       periodEnd: payment.periodEnd,
@@ -826,7 +830,31 @@ export class BillingHistoryDialogComponent implements OnInit, OnDestroy {
     };
   }
 
-  private getStatusInfo(status: string): { color: string; icon: string } {
+  private getPaymentStatusLabel(status: string | number): string {
+    if (typeof status === 'number') {
+      const labels: { [key: number]: string } = {
+        0: 'Në pritje',
+        1: 'Paguar',
+        2: 'Dështuar',
+        3: 'Rimbursuar',
+        4: 'Anuluar'
+      };
+      return labels[status] ?? 'E panjohur';
+    }
+    return status;
+  }
+
+  private getStatusInfo(status: string | number): { color: string; icon: string } {
+    if (typeof status === 'number') {
+      switch (status) {
+        case 0: return { color: '#ff9800', icon: 'pending' };
+        case 1: return { color: '#4caf50', icon: 'check_circle' };
+        case 2: return { color: '#f44336', icon: 'error' };
+        case 3: return { color: '#9c27b0', icon: 'undo' };
+        case 4: return { color: '#f44336', icon: 'cancel' };
+        default: return { color: '#666', icon: 'help' };
+      }
+    }
     switch (status?.toLowerCase()) {
       case 'succeeded':
       case 'paid':

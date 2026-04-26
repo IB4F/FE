@@ -292,5 +292,69 @@
     </div>
   </section>
 
+  <!-- Pending Manual Payments Section -->
+  <section id="manual-payments-section" class="section-block">
+    <div class="section-header-row">
+      <h2>Pagesa Manuale në Pritje</h2>
+      <button class="button-secondary small" (click)="loadPendingManualPayments()" [disabled]="isLoadingPendingPayments">
+        <i class="fas fa-sync-alt" [class.spinning]="isLoadingPendingPayments"></i>
+        Rifresho
+      </button>
+    </div>
+
+    <div *ngIf="isLoadingPendingPayments" class="loading-container">
+      <div class="loading-spinner">⏳</div>
+      <p>Duke ngarkuar pagesat...</p>
+    </div>
+
+    <div *ngIf="!isLoadingPendingPayments && pendingManualPayments.length === 0" class="empty-state">
+      <i class="fas fa-check-circle" style="color: #10b981; font-size: 2rem;"></i>
+      <p>Nuk ka pagesa manuale në pritje.</p>
+    </div>
+
+    <div *ngIf="!isLoadingPendingPayments && pendingManualPayments.length > 0" class="manual-payments-table-wrapper">
+      <table class="manual-payments-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Referenca</th>
+            <th>Provider</th>
+            <th>Data</th>
+            <th>Shuma</th>
+            <th>Veprime</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of pendingManualPayments">
+            <td>{{ payment.userEmail || payment.email || '—' }}</td>
+            <td class="reference-cell">{{ payment.externalSessionId || payment.reference || '—' }}</td>
+            <td>
+              <span class="provider-badge" [ngClass]="'provider-' + (payment.provider || '').toLowerCase()">
+                {{ payment.provider || '—' }}
+              </span>
+            </td>
+            <td>{{ formatDate(payment.createdAt || payment.date) }}</td>
+            <td>{{ formatAmountCents(payment.amount || payment.amountCents, payment.currency || 'ALL') }}</td>
+            <td class="actions-cell">
+              <button
+                class="btn-confirm"
+                (click)="confirmManualPayment(payment.externalSessionId || payment.reference)"
+                title="Konfirmo pagesën">
+                <i class="fas fa-check"></i>
+                Konfirmo
+              </button>
+              <button
+                class="btn-remind"
+                (click)="remindManualPayment(payment.externalSessionId || payment.reference)"
+                title="Dërgo kujtesë">
+                <i class="fas fa-bell"></i>
+                Kujtesë
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
 </div>

@@ -23,19 +23,26 @@ export class TokenStorageService {
   }
 
   // GETTERS (optimized for speed)
-  getAccessToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('accessToken') : null;
-  getRefreshToken = (): string | null => isPlatformBrowser(this.platformId) ? localStorage.getItem('refreshToken') : null;
+  getAccessToken = (): string | null => {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    return localStorage.getItem('accessToken') ?? sessionStorage.getItem('accessToken');
+  };
+  getRefreshToken = (): string | null => {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    return localStorage.getItem('refreshToken') ?? sessionStorage.getItem('refreshToken');
+  };
   getRole = (): string | null => this.userRoleSubject.value;
   getMustChangePassword = (): boolean => this.mustChangePasswordSubject.value;
   getUserId = (): string | null => this.userIdSubject.value;
 
   // SETTERS (optimized for speed)
-  saveTokens = (tokens: { accessToken: string; refreshToken: string; mustChangePassword?: boolean }): void => {
+  saveTokens = (tokens: { accessToken: string; refreshToken: string; mustChangePassword?: boolean }, rememberMe = false): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.setItem('accessToken', tokens.accessToken);
-    localStorage.setItem('refreshToken', tokens.refreshToken);
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('accessToken', tokens.accessToken);
+    storage.setItem('refreshToken', tokens.refreshToken);
     if (tokens.mustChangePassword !== undefined) {
-      localStorage.setItem('mustChangePassword', tokens.mustChangePassword.toString());
+      storage.setItem('mustChangePassword', tokens.mustChangePassword.toString());
       this.mustChangePasswordSubject.next(tokens.mustChangePassword);
     }
     this.parseAndSetRole(tokens.accessToken);
@@ -45,9 +52,10 @@ export class TokenStorageService {
   // UTILITIES (optimized for speed)
   clearTokens = (): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('mustChangePassword');
+    ['accessToken', 'refreshToken', 'mustChangePassword'].forEach(key => {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    });
     this.loggedInSubject.next(false);
     this.userRoleSubject.next(null);
     this.mustChangePasswordSubject.next(false);
@@ -56,7 +64,8 @@ export class TokenStorageService {
 
   setMustChangePassword = (value: boolean): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.setItem('mustChangePassword', value.toString());
+    const storage = localStorage.getItem('accessToken') ? localStorage : sessionStorage;
+    storage.setItem('mustChangePassword', value.toString());
     this.mustChangePasswordSubject.next(value);
   };
 
@@ -64,9 +73,10 @@ export class TokenStorageService {
     if (!isPlatformBrowser(this.platformId)) return;
     const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
-    const mustChangePassword = localStorage.getItem('mustChangePassword') === 'true';
+    const rememberMe = !!localStorage.getItem('accessToken');
+    const mustChangePassword = (rememberMe ? localStorage : sessionStorage).getItem('mustChangePassword') === 'true';
     if (accessToken && refreshToken) {
-      this.saveTokens({accessToken, refreshToken, mustChangePassword});
+      this.saveTokens({ accessToken, refreshToken, mustChangePassword }, rememberMe);
     }
   };
 

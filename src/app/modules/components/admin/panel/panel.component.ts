@@ -14,7 +14,8 @@ import {
   SubscriptionStatsDTO,
   SupervisorApplicationDTO, SupervisorApprovalDTO, SupervisorService,
   UserGrowthDTO,
-  UserRegistrationStatsDTO
+  UserRegistrationStatsDTO,
+  SubscriptionService
 } from 'src/app/api-client';
 
 @Component({
@@ -84,6 +85,10 @@ export class PanelComponent implements OnInit, OnDestroy {
   supervisorApplications: SupervisorApplicationDTO[] = [];
   isLoadingSupervisorApplications = true;
 
+  // Pagesa manuale në pritje
+  pendingManualPayments: any[] = [];
+  isLoadingPendingPayments = false;
+
   // Gjendjet e ngarkimit
   isLoadingStats = true;
   isLoadingActivities = true;
@@ -104,6 +109,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   constructor(
     private adminDashboardService: AdminDashboardService,
     private supervisorService: SupervisorService,
+    private subscriptionService: SubscriptionService,
     private toast: NgToastService,
     private router: Router,
     private tokenStorageService: TokenStorageService
@@ -162,6 +168,7 @@ export class PanelComponent implements OnInit, OnDestroy {
     this.loadRegistrationStats();
     this.loadSystemHealth();
     this.loadSupervisorApplications();
+    this.loadPendingManualPayments();
   }
 
   // Metodo per fermare tutte le chiamate API
@@ -694,5 +701,58 @@ export class PanelComponent implements OnInit, OnDestroy {
           this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë refuzimit të aplikimit', 'Gabim', 3000);
         }
       });
+  }
+
+  loadPendingManualPayments(): void {
+    if (!this.isComponentActive) return;
+    if (!this.tokenStorageService.getAccessToken()) return;
+
+    this.isLoadingPendingPayments = true;
+    this.subscriptionService.apiSubscriptionManualPendingGet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any[]) => {
+          if (!this.isComponentActive) return;
+          this.pendingManualPayments = response || [];
+          this.isLoadingPendingPayments = false;
+        },
+        error: () => {
+          if (!this.isComponentActive) return;
+          this.pendingManualPayments = [];
+          this.isLoadingPendingPayments = false;
+        }
+      });
+  }
+
+  confirmManualPayment(paymentReference: string): void {
+    this.subscriptionService.apiSubscriptionManualConfirmPost(paymentReference)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.toast.success('Pagesa u konfirmua. Abonimi u aktivizua.', 'SUKSES', 3000);
+          this.loadPendingManualPayments();
+        },
+        error: (error) => {
+          this.toast.danger(error?.error?.message || 'Gabim në konfirmimin e pagesës', 'GABIM', 3000);
+        }
+      });
+  }
+
+  remindManualPayment(paymentReference: string): void {
+    this.subscriptionService.apiSubscriptionManualRemindPost(paymentReference)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.toast.success('Email-i i kujtesës u dërgua me sukses.', 'SUKSES', 3000);
+        },
+        error: (error) => {
+          this.toast.danger(error?.error?.message || 'Gabim në dërgimin e kujtesës', 'GABIM', 3000);
+        }
+      });
+  }
+
+  formatAmountCents(amountCents: number | undefined, currency: string = 'ALL'): string {
+    if (!amountCents) return '0 ' + currency;
+    return `${(amountCents / 100).toFixed(2)} ${currency}`;
   }
 }

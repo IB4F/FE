@@ -1151,3 +1151,107 @@ body {
     }
   }
 }
+
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h2 { margin: 0; }
+
+  .button-secondary.small {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #475569;
+
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+    &:hover:not(:disabled) { background: #e2e8f0; }
+  }
+}
+
+.manual-payments-table-wrapper {
+  overflow-x: auto;
+}
+
+.manual-payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  th {
+    background: #f8fafc;
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .reference-cell {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #dc2626;
+    font-weight: 600;
+  }
+}
+
+.provider-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e2e8f0;
+  color: #475569;
+
+  &.provider-bkt { background: #dbeafe; color: #1d4ed8; }
+  &.provider-raiffeisen { background: #fee2e2; color: #dc2626; }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+
+  .btn-confirm, .btn-remind {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .btn-confirm {
+    background: #10b981;
+    color: #fff;
+    &:hover { background: #059669; }
+  }
+
+  .btn-remind {
+    background: #f59e0b;
+    color: #fff;
+    &:hover { background: #d97706; }
+  }
+}

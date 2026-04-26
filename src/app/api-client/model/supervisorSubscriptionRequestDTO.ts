@@ -10,10 +10,11 @@
 import { BillingInterval } from './billingInterval';
 
 
-export interface SupervisorSubscriptionRequestDTO { 
+export interface SupervisorSubscriptionRequestDTO {
     supervisorApplicationId?: string;
     subscriptionPackageId?: string;
     billingInterval?: BillingInterval;
+    provider?: string | null;
 }
 export namespace SupervisorSubscriptionRequestDTO {
 }

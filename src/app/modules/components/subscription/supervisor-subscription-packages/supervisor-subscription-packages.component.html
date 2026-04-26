@@ -1,4 +1,13 @@
 <div class="supervisor-subscription-container">
+
+  <!-- Manual payment instructions shown after BKT/Raiffeisen -->
+  <app-manual-payment-instructions
+    *ngIf="manualPaymentDetails"
+    [details]="manualPaymentDetails"
+    [provider]="manualPaymentProvider">
+  </app-manual-payment-instructions>
+
+  <ng-container *ngIf="!manualPaymentDetails">
   <div class="header-section">
     <h1>{{ 'supervisorSubscription.title' | translate }}</h1>
     <p class="subtitle">{{ 'supervisorSubscription.subtitle' | translate }}</p>
@@ -42,6 +51,11 @@
       </div>
     </div>
 
+    <app-payment-provider-selector
+      [selectedProvider]="selectedProvider"
+      (providerChange)="selectedProvider = $event">
+    </app-payment-provider-selector>
+
     <div class="continue-section">
       <button
         mat-raised-button
@@ -55,4 +69,5 @@
       </button>
     </div>
   </div>
+  </ng-container>
 </div>

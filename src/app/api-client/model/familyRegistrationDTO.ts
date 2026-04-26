@@ -10,7 +10,7 @@
 import { FamilyMemberInput } from './familyMemberInput';
 
 
-export interface FamilyRegistrationDTO { 
+export interface FamilyRegistrationDTO {
     email: string;
     password: string;
     firstName: string;
@@ -18,5 +18,6 @@ export interface FamilyRegistrationDTO {
     subscriptionPackageId: string;
     familyMembers: Array<FamilyMemberInput>;
     phoneNumber?: string | null;
+    provider?: number | null;
 }
 

@@ -1,290 +1,276 @@
-/* Stili globali o variabili se usi un file separato per le variabili - Updated for mobile layout fix */
-$primary-blue: #259ccb;
-$light-blue-bg: #e0f7fa; // Questo era il colore delle step-card, lo manterrò per il banner se preferisci o posso cambiarlo
-$dark-text-blue: #0a4670;
-$white-text: #ffffff;
+:host {
+  display: block;
+  background: var(--bg);
+  font-family: 'Poppins', sans-serif;
+}
 
-// Nuovo colore per lo sfondo delle step-card, un azzurro più chiaro o un colore pastello
-$step-card-bg: #f5fafd; // Un azzurro molto chiaro, quasi bianco, per distinguersi ma rimanere armonioso
+/* ===== Hero ===== */
+.bg-hero-wrap {
+  max-width: 1200px;
+  margin: 32px auto 0;
+  padding: 0 32px;
+}
 
-.container {
-  padding: 100px 30px;
+.bg-hero {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(115deg, #5BC8E8 0%, #2BB5E0 40%, #1A8FCC 100%);
+  padding: 56px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 200px;
+  box-shadow: var(--shadow-md);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.18) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+.bg-hero-title {
+  font-size: 38px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.18;
+  max-width: 520px;
+  position: relative;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.bg-hero-illu {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+/* ===== Sections ===== */
+.bg-section {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 80px 32px 0;
+}
 
+.bg-section-title {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--navy);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
 
-  .title {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin: 100px 0 40px 0;
+.bg-section-sub {
+  text-align: center;
+  color: var(--gray-text);
+  font-size: 16px;
+  margin: 0 0 48px;
+}
 
-    h1 {
-      text-align: center;
-      font-size: 2em;
-      margin-bottom: 20px;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      line-height: 1.4;
-    }
+/* ===== Steps Carousel ===== */
+.bg-carousel-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
 
-    p {
-      text-align: center;
-      opacity: 0.85;
-      max-width: 800px;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      line-height: 1.6;
+.bg-carousel-track {
+  display: flex;
+  gap: 24px;
+}
+
+.bg-step-card {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--gray-line);
+  border-radius: var(--radius-md);
+  padding: 36px 28px 32px;
+  text-align: center;
+  position: relative;
+  transition: all 0.5s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: var(--shadow-sm);
+
+  &.is-active {
+    border-color: var(--primary);
+    box-shadow: 0 16px 40px rgba(27, 156, 216, 0.2);
+    transform: translateY(-6px);
+
+    .bg-step-num {
+      transform: scale(1.05);
+      box-shadow: 0 12px 28px rgba(27, 156, 216, 0.45);
+
+      &::after { opacity: 0.4; }
     }
   }
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-  margin-bottom: 100px;
+.bg-step-num {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-size: 32px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px rgba(27, 156, 216, 0.3);
+  transition: all 0.5s cubic-bezier(.4, 0, .2, 1);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-light);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
 }
 
-.payment-button {
-  min-width: 200px;
-  height: 45px;
-  font-size: 1.1em;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+.bg-step-title {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 0 0 14px;
+}
+
+.bg-step-desc {
+  font-size: 14px;
+  color: var(--gray-text);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.bg-step-arrow {
+  position: absolute;
+  right: -24px;
+  top: 56px;
+  color: var(--primary);
+  opacity: 0.5;
+  z-index: 1;
+  display: flex;
+}
+
+.bg-step-card:last-child .bg-step-arrow { display: none; }
+
+.bg-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.bg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gray-line);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s;
+
+  &.is-active {
+    width: 32px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-dark));
+  }
+}
+
+/* ===== Submit ===== */
+.bg-submit-wrap {
+  max-width: 480px;
+  margin: 48px auto 80px;
+  padding: 0 32px;
+}
+
+.bg-submit-btn {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: 'Poppins', inherit;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+  color: white;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   &:hover:not([disabled]) {
-    background-color: darken($primary-blue, 10%) !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 56px rgba(27, 156, 216, 0.45);
   }
 
   &[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: lighten($primary-blue, 20%) !important;
-  }
-
-  .mat-spinner {
-    margin-right: 8px;
   }
 }
 
-// Media queries per la responsività
-
-/* Force column layout for mobile devices - CACHE BUSTER */
-@media screen and (max-width: 992px) {
-  .container {
-    padding: 80px 20px;
-  }
-
-
-  .title {
-    margin: 60px 0 30px 0;
-
-    h1 {
-      font-size: 1.8em;
-    }
-
-    p {
-      margin: 0 30px;
-    }
-  }
+/* ===== Animation ===== */
+.bg-fade-up {
+  animation: fadeUp 0.7s cubic-bezier(.4,0,.2,1) both;
 }
 
-@media screen and (max-width: 768px) {
-  .container {
-    padding: 60px 20px;
-  }
-
-
-  .title {
-    margin: 50px 0 25px 0;
-
-    h1 {
-      font-size: 1.6em;
-      line-height: 1.4;
-    }
-
-    p {
-      margin: 0 20px;
-      font-size: 0.95em;
-      line-height: 1.5;
-    }
-  }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 576px) {
-  .container {
-    padding: 40px 15px;
-  }
-
-
-  .title {
-    margin: 30px 0 20px 0;
-
-    h1 {
-      font-size: 1.3em;
-      line-height: 1.4;
-    }
-
-    p {
-      margin: 0 10px;
-      font-size: 0.9em;
-      line-height: 1.5;
-    }
-  }
-
-  .payment-button {
-    min-width: unset;
-    width: 80%;
-    font-size: 1em;
-    height: 40px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 30px 10px;
-  }
-
-
-  .title {
-    margin: 25px 0 15px 0;
-
-    h1 {
-      font-size: 1.1em;
-      line-height: 1.4;
-    }
-
-    p {
-      margin: 0 5px;
-      font-size: 0.85em;
-      line-height: 1.5;
-    }
-  }
-}
-
-/* Nuove regole per la sezione "registration-flow" */
-.registration-flow {
-  margin: 100px 0;
-  text-align: center;
-  padding: 0 20px;
-
-  .flow-title {
-    font-size: 2.2em;
-    color: $dark-text-blue;
-    margin-bottom: 60px;
-    font-weight: bold;
-
-    @media (max-width: 768px) {
-      font-size: 1.8em;
-      margin-bottom: 40px;
-    }
-
-    @media (max-width: 576px) {
-      font-size: 1.5em;
-      margin-bottom: 30px;
-    }
-  }
-
-  .flow-steps {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; // Allinea gli elementi in alto
-    gap: 30px; // Spazio tra le card
-
-    @media (max-width: 992px) {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
-  .step-card {
-    background-color: $step-card-bg; // Nuovo colore di sfondo per le card
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    flex: 1;
-    max-width: 350px;
-    min-height: 250px; // Assicura altezza uniforme
-    display: flex;
+/* ===== Responsive ===== */
+@media (max-width: 980px) {
+  .bg-hero {
     flex-direction: column;
-    justify-content: flex-start; // Allinea contenuto in alto
+    padding: 40px 32px;
+    gap: 24px;
+  }
+  .bg-hero-title {
+    font-size: 28px;
+    text-align: center;
+  }
+  .bg-hero-illu {
+    width: 220px;
+    height: 140px;
+  }
+  .bg-carousel-track {
+    flex-direction: column;
     align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .number-wrapper { // Cambiato da .icon-wrapper a .number-wrapper
-      background-color: $primary-blue;
-      border-radius: 50%;
-      padding: 15px;
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80px;
-      height: 80px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-      font-size: 45px; // Dimensione del numero
-      font-weight: bold;
-      color: $white-text; // Colore bianco per il numero
-      line-height: 1; // Rimuove spazio extra sopra/sotto il numero
-    }
-
-    h3 {
-      color: $dark-text-blue;
-      font-size: 1.5em;
-      margin-bottom: 15px;
-      font-weight: bold;
-
-      @media (max-width: 768px) {
-        font-size: 1.3em;
-      }
-    }
-
-    p {
-      color: $dark-text-blue;
-      font-size: 1em;
-      line-height: 1.6;
-      opacity: 0.9;
-
-      @media (max-width: 768px) {
-        font-size: 0.9em;
-      }
-    }
-
-    @media (max-width: 992px) {
-      width: 80%;
-      max-width: 450px; // Aumenta larghezza su schermi medi
-    }
-
-    @media (max-width: 576px) {
-      width: 100%;
-      padding: 25px;
-      min-height: unset; // Rimuove altezza fissa su mobile
-    }
   }
-
-  .arrow-icon {
-    font-size: 3em;
-    color: $primary-blue;
-    margin-top: 50px; // Sposta le frecce in alto per allinearsi meglio
-
-    @media (max-width: 992px) {
-      transform: rotate(90deg); // Ruota la freccia per la vista in colonna
-      margin: 20px 0; // Spazio tra le card e le frecce
-      font-size: 2.5em;
-    }
+  .bg-step-card {
+    width: 100%;
+    max-width: 480px;
   }
+  .bg-step-arrow { display: none; }
 }
 
+@media (max-width: 600px) {
+  .bg-section { padding: 60px 20px 0; }
+  .bg-hero-wrap { padding: 0 20px; }
+  .bg-hero { padding: 32px 24px; }
+  .bg-section-title { font-size: 24px; }
+  .bg-submit-wrap { padding: 0 20px; }
+}

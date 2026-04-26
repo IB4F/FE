@@ -2,11 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
-import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatInputModule} from "@angular/material/input";
 import {MatDialog} from "@angular/material/dialog";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {ForgetPasswordComponent} from "../forget-password/forget-password.component";
@@ -24,10 +21,7 @@ import {TranslatePipe} from "../../../../pipes/translate.pipe";
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatIconModule,
-    MatButtonModule,
     CommonModule,
     MatTooltipModule,
     RouterLink,
@@ -39,6 +33,7 @@ import {TranslatePipe} from "../../../../pipes/translate.pipe";
 export class LoginComponent implements OnInit {
   loginFormGroup!: FormGroup;
   hidePass = true;
+  rememberMe = false;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -82,7 +77,7 @@ export class LoginComponent implements OnInit {
   onLogin() {
     this._authService.apiAuthLoginPost(this.loginFormGroup.value).pipe(
       switchMap(resp => {
-        this._tokenStorageService.saveTokens(resp?.data);
+        this._tokenStorageService.saveTokens(resp?.data, this.rememberMe);
         this.toast.success(resp?.message, 'SUCCESS', 3000);
         
         // Check if user must change password

@@ -8,6 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {StripeService} from "../../../../services/stripe.service";
+import {PaddleService} from '../../../../services/paddle.service';
 import {
   AuthService,
   Class,
@@ -26,6 +27,8 @@ import {SubscriptionErrorHandlerService} from "../../../../services/subscription
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
 import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import {PaymentProviderSelectorComponent} from '../../../shared/components/payment-provider-selector/payment-provider-selector.component';
+import {ManualPaymentInstructionsComponent, ManualPaymentDetails} from '../../../shared/components/manual-payment-instructions/manual-payment-instructions.component';
 
 @Component({
   selector: 'app-register-family',
@@ -42,15 +45,21 @@ import {TranslatePipe} from '../../../../pipes/translate.pipe';
     MatOption,
     MatSelect,
     PhoneInputComponent,
-    DynamicBannerComponent
-  ,
-    TranslatePipe],
+    DynamicBannerComponent,
+    TranslatePipe,
+    PaymentProviderSelectorComponent,
+    ManualPaymentInstructionsComponent
+  ],
   templateUrl: './register-family.component.html',
   styleUrl: './register-family.component.scss'
 })
 export class RegisterFamilyComponent implements OnInit {
   private stripeService = inject(StripeService);
+  private paddleService = inject(PaddleService);
   loading = false;
+  selectedProvider = 'Novalnet';
+  manualPaymentDetails: ManualPaymentDetails | null = null;
+  manualPaymentProvider = '';
 
   registerFamilyForm!: FormGroup;
   hidePass = true;
@@ -239,20 +248,31 @@ export class RegisterFamilyComponent implements OnInit {
       ...registerForm,
       phoneNumber: phoneNumber,
       subscriptionPackageId: this.selectedPackage?.id,
+      provider: this.providerToInt(this.selectedProvider)
     }
 
     this._authService.apiAuthRegisterFamilyPost(familyRegistrationDTO).subscribe({
       next: async (response) => {
-        try {
-          // Show success message for registration initiation
-          this.toast.success('Regjistrimi i familjes u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
-          
-          if (!response.sessionId) throw new Error('Stripe session not available');
-          await this.stripeService.redirectToCheckout(response.sessionId);
-        } catch (error) {
-          console.error('Stripe redirect failed:', error);
-          this.toast.danger('Gabim në ridrejtimin e pagesës. Ju lutemi provoni përsëri.', 'GABIM', 3000);
-          this.loading = false;
+        this.loading = false;
+        const session = response.sessionId;
+        const isManual = session?.isManual ?? false;
+
+        if (isManual) {
+          this.manualPaymentDetails = session.manualDetails;
+          this.manualPaymentProvider = this.resolveProviderName(session.provider);
+          this.toast.success('Regjistrimi u krye. Shihni instruksionet e transfertës.', 'SUKSES', 3000);
+        } else {
+          const txnId = typeof session === 'string' ? session : session?.sessionId;
+          const isPaddle = session?.provider === 3 || this.selectedProvider === 'Paddle';
+          if (txnId && isPaddle) {
+            this.toast.success('Regjistrimi i familjes u fillua me sukses. Hapet pagesa...', 'SUKSES', 2000);
+            try { await this.paddleService.openCheckout(txnId); } catch { this.loading = false; }
+          } else if (txnId) {
+            this.toast.success('Regjistrimi i familjes u fillua me sukses. Ridrejtohet në pagesë...', 'SUKSES', 2000);
+            try { await this.stripeService.redirectToCheckout(txnId); } catch { this.loading = false; }
+          } else {
+            this.toast.danger('Gabim në inicializimin e pagesës', 'GABIM', 3000);
+          }
         }
       },
       error: (err) => {
@@ -261,6 +281,17 @@ export class RegisterFamilyComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private providerToInt(provider: string): number {
+    const map: Record<string, number> = { Stripe: 1, Novalnet: 2, Paddle: 3, BKT: 4, Raiffeisen: 5 };
+    return map[provider] ?? 1;
+  }
+
+  private resolveProviderName(provider: number | string): string {
+    if (typeof provider === 'string') return provider;
+    const map: Record<number, string> = { 1: 'Stripe', 2: 'Novalnet', 3: 'Paddle', 4: 'BKT', 5: 'Raiffeisen' };
+    return map[provider] ?? 'Bank';
   }
 
 }

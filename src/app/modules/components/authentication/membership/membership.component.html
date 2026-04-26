@@ -1,25 +1,158 @@
-<div class="container">
-  <img src="assets/svgImages/logo.svg" alt="brainGain-logo" routerLink="/" class="logo"/>
+<!-- Background orbs -->
+<div class="rs-bg" aria-hidden="true">
+  <div class="rs-orb rs-orb-1"></div>
+  <div class="rs-orb rs-orb-2"></div>
+  <div class="rs-orb rs-orb-3"></div>
+  <div class="rs-orb rs-orb-4"></div>
+</div>
 
-  <div class="cards-wrapper">
-    <div class="card student-card">
-      <h2 class="card-title">{{ 'membership.student.title' | translate }}</h2>
-      <p class="card-description">{{ 'membership.student.description' | translate }}</p>
-      <button class="btn primary-btn" routerLink="/student/membership">{{ 'membership.student.register' | translate }}</button>
-    </div>
+<!-- Page shell -->
+<main class="rs-page">
 
-    <div class="card supervisor-card">
-      <h2 class="card-title">{{ 'membership.supervisor.title' | translate }}</h2>
-      <p class="card-description">{{ 'membership.supervisor.description' | translate }}</p>
-      <button class="btn primary-btn" routerLink="/supervizor/apliko">{{ 'membership.supervisor.apply' | translate }}</button>
-    </div>
-
-    <div class="card family-card">
-      <h2 class="card-title">{{ 'membership.family.title' | translate }}</h2>
-      <p class="card-description">{{ 'membership.family.description' | translate }}</p>
-      <button class="btn primary-btn" routerLink="/family/membership">{{ 'membership.family.register' | translate }}</button>
-    </div>
+  <!-- Top bar -->
+  <div class="rs-topbar">
+    <a class="rs-logo" routerLink="/">
+      <img src="assets/svgImages/logo.svg" alt="Brain Gain" class="rs-logo-img">
+    </a>
+    <button class="rs-login-link" routerLink="/hyr">
+      {{ 'membership.login' | translate }}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
   </div>
 
-  <button class="btn secondary-btn" routerLink="/hyr">{{ 'membership.login' | translate }}</button>
-</div>
+  <!-- Hero -->
+  <header class="rs-hero">
+    <div class="rs-eyebrow">
+      <span class="dot"></span>
+      Mirë se vini në Brain Gain
+    </div>
+    <h1 class="rs-title">
+      Zgjidh <span class="grad">rolin tënd</span> për të nisur
+    </h1>
+    <p class="rs-subtitle">
+      Tre rrugë, një komunitet. Zgjidh si dëshiron të jesh pjesë e platformës dhe ne kujdesemi për pjesën tjetër.
+    </p>
+  </header>
+
+  <!-- Card grid -->
+  <div class="rs-grid">
+
+    <!-- Student -->
+    <article class="rs-card" data-role="student"
+             routerLink="/student/membership"
+             role="button" tabindex="0">
+      <div class="rs-card-accent"></div>
+      <div class="rs-card-glow"></div>
+      <div class="rs-card-icon">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+             stroke="white" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10L12 5 2 10l10 5 10-5z"/>
+          <path d="M6 12v4c3 2.5 9 2.5 12 0v-4"/>
+          <line x1="22" y1="10" x2="22" y2="16"/>
+        </svg>
+      </div>
+      <h2 class="rs-card-name">{{ 'membership.student.title' | translate }}</h2>
+      <p class="rs-card-desc">{{ 'membership.student.description' | translate }}</p>
+      <div class="rs-card-tags">
+        <span class="rs-card-tag">Mësime HD</span>
+        <span class="rs-card-tag">Provime</span>
+        <span class="rs-card-tag">Komunitet</span>
+      </div>
+      <button class="rs-card-cta" routerLink="/student/membership" (click)="$event.stopPropagation()">
+        <span>{{ 'membership.student.register' | translate }}</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="rs-card-meta">
+        <span class="num">12k+</span>
+        <span>nxënës aktivë</span>
+      </div>
+    </article>
+
+    <!-- Supervisor (middle — elevated) -->
+    <article class="rs-card rs-card--center" data-role="supervisor"
+             routerLink="/supervizor/apliko"
+             role="button" tabindex="0">
+      <div class="rs-card-accent"></div>
+      <div class="rs-card-glow"></div>
+      <div class="rs-card-icon">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+             stroke="white" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l8 4v5c0 4.5-3.5 8.5-8 9.5C7.5 20.5 4 16.5 4 12V7l8-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <h2 class="rs-card-name">{{ 'membership.supervisor.title' | translate }}</h2>
+      <p class="rs-card-desc">{{ 'membership.supervisor.description' | translate }}</p>
+      <div class="rs-card-tags">
+        <span class="rs-card-tag">Mëso</span>
+        <span class="rs-card-tag">Krijo</span>
+        <span class="rs-card-tag">Fito</span>
+      </div>
+      <button class="rs-card-cta" routerLink="/supervizor/apliko" (click)="$event.stopPropagation()">
+        <span>{{ 'membership.supervisor.apply' | translate }}</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="rs-card-meta">
+        <span class="num">350+</span>
+        <span>supervizorë të verifikuar</span>
+      </div>
+    </article>
+
+    <!-- Family -->
+    <article class="rs-card" data-role="family"
+             routerLink="/family/membership"
+             role="button" tabindex="0">
+      <div class="rs-card-accent"></div>
+      <div class="rs-card-glow"></div>
+      <div class="rs-card-icon">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+             stroke="white" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3"/>
+          <circle cx="17" cy="9" r="2.4"/>
+          <path d="M3 21v-1a6 6 0 0 1 12 0v1"/>
+          <path d="M17 21v-0.5a4 4 0 0 0-3-3.87"/>
+        </svg>
+      </div>
+      <h2 class="rs-card-name">{{ 'membership.family.title' | translate }}</h2>
+      <p class="rs-card-desc">{{ 'membership.family.description' | translate }}</p>
+      <div class="rs-card-tags">
+        <span class="rs-card-tag">Progres</span>
+        <span class="rs-card-tag">Raporte</span>
+        <span class="rs-card-tag">Mbështetje</span>
+      </div>
+      <button class="rs-card-cta" routerLink="/family/membership" (click)="$event.stopPropagation()">
+        <span>{{ 'membership.family.register' | translate }}</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="rs-card-meta">
+        <span class="num">5k+</span>
+        <span>familje të bashkuara</span>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Footnote -->
+  <p class="rs-footnote">
+    Nuk je i sigurt cili rol të takon?
+    <a routerLink="/hyr">Mëso më shumë</a>
+    ose
+    <a href="mailto:info@braingainalbania.al">kontakto ekipin tonë</a>.
+  </p>
+
+</main>
