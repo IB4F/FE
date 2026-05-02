@@ -1,53 +1,39 @@
-import {Component, HostListener, inject, OnInit} from '@angular/core';
-import {RouterOutlet} from "@angular/router";
-import {HeaderComponent} from "./components/header/header.component";
-import {FooterComponent} from "./components/footer/footer.component";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {SidebarComponent} from "../admin/sidebar/sidebar.component";
-import {UserRole} from "../../shared/constant/enums";
-import {TokenStorageService} from "../../../services/token-storage.service";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {MatTooltipModule} from "@angular/material/tooltip";
+import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { CommonModule, AsyncPipe } from '@angular/common';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { SidebarComponent } from '../admin/sidebar/sidebar.component';
+import { UserRole } from '../../shared/constant/enums';
+import { TokenStorageService } from '../../../services/token-storage.service';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-portal-layout',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent,
-    FooterComponent,
-    MatSidenavModule,
-    SidebarComponent,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule
-  ],
+  imports: [RouterOutlet, CommonModule, AsyncPipe, HeaderComponent, FooterComponent, SidebarComponent],
   templateUrl: './portal-layout.component.html',
   styleUrl: './portal-layout.component.scss'
 })
 export class PortalLayoutComponent implements OnInit {
   private tokenStorageService = inject(TokenStorageService);
-  isSideNavOpen = true;
-  isHovered = false;
-  sidenavMode: 'side' | 'over' = 'side';
+  themeService = inject(ThemeService);
+
+  get isDark(): boolean { return this.themeService.isDark; }
+
+  sidebarCollapsed = true;
+  isMobileMenuOpen = false;
+  isMobile = false;
 
   ngOnInit(): void {
-    this.updateSidenavState(window.innerWidth);
+    this.isMobile = window.innerWidth < 768;
   }
 
   @HostListener('window:resize', ['$event.target.innerWidth'])
   onResize(width: number): void {
-    this.updateSidenavState(width);
-  }
-
-  private updateSidenavState(width: number): void {
-    if (width < 768) {
-      this.sidenavMode = 'over';
-      this.isSideNavOpen = false;
-    } else {
-      this.sidenavMode = 'side';
-      this.isSideNavOpen = true;
+    this.isMobile = width < 768;
+    if (!this.isMobile) {
+      this.isMobileMenuOpen = false;
     }
   }
 
@@ -55,18 +41,11 @@ export class PortalLayoutComponent implements OnInit {
     return this.tokenStorageService.getRole() === UserRole.ADMIN;
   }
 
-  toggleSideNav(): void {
-    this.isSideNavOpen = !this.isSideNavOpen;
+  onSidebarCollapsed(collapsed: boolean): void {
+    this.sidebarCollapsed = collapsed;
   }
 
-  onSidenavHover(): void {
-    if (!this.isSideNavOpen) {
-      this.isSideNavOpen = true;
-    }
-    this.isHovered = true;
-  }
-
-  onSidenavLeave(): void {
-    this.isHovered = false;
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 }

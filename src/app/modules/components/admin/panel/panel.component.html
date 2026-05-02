@@ -1,360 +1,304 @@
-<div class="admin-main-content-panel">
+<div class="panel-root" [class.dark]="themeService.isDark$ | async">
 
-  <div class="panel-header">
-    <h1>{{ 'admin.panel.title' | translate }}</h1>
-    <button class="button-primary" (click)="refreshData()" [disabled]="isLoadingStats || isLoadingActivities">
-      <i class="fas fa-sync-alt" [class.spinning]="isLoadingStats || isLoadingActivities"></i>
-      {{ 'common.refresh' | translate }}
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="panel-header">
+    <div class="header-greeting">
+      <span class="greeting-sub">Mirë se erdhe përsëri 👋</span>
+      <h1 class="greeting-title">Paneli i Administratorit</h1>
+    </div>
+
+    <!-- Refresh -->
+    <button class="btn-refresh" (click)="refreshData()" [disabled]="isLoadingStats">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+           [class.spinning]="isLoadingStats">
+        <path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      Rifresho
     </button>
+
+    <!-- Date range -->
+    <div class="date-range">
+      @for (r of ranges; track r) {
+        <button class="range-btn" [class.active]="selectedRange === r" (click)="selectedRange = r">{{ r }}</button>
+      }
+    </div>
+  </header>
+
+  <!-- ── KPI Cards ──────────────────────────────────────────────────────── -->
+  <section class="kpi-grid">
+    @for (kpi of kpis; track kpi.label) {
+      <div class="kpi-card">
+        <div class="kpi-label">{{ kpi.label }}</div>
+        <div class="kpi-body">
+          <div class="kpi-value" [class.loading]="isLoadingStats">
+            @if (isLoadingStats) { <span class="skeleton-val"></span> } @else { {{ kpi.value }} }
+          </div>
+          <svg class="kpi-spark" width="80" height="28" [attr.viewBox]="'0 0 80 28'" overflow="visible">
+            <defs>
+              <linearGradient [attr.id]="'sg-' + kpi.label.replace(' ', '')" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" [attr.stop-color]="kpi.color" stop-opacity="0.25"/>
+                <stop offset="100%" [attr.stop-color]="kpi.color" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path [attr.d]="getSparklineArea(kpi.trend)" [attr.fill]="'url(#sg-' + kpi.label.replace(' ', '') + ')'"/>
+            <path [attr.d]="getSparklinePath(kpi.trend)" fill="none" [attr.stroke]="kpi.color" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="kpi-accent-bar" [style.background]="kpi.color"></div>
+      </div>
+    }
+  </section>
+
+  <!-- ── Revenue + Distribution ─────────────────────────────────────────── -->
+  <div class="charts-row">
+
+    <!-- Revenue chart -->
+    <div class="chart-card chart-revenue">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-sub">Të Ardhurat Mujore</div>
+          <div class="chart-value">
+            @if (isLoadingRevenue) { <span class="skeleton-val wide"></span> } @else { {{ formatCurrency(totalRevenue) }} }
+          </div>
+        </div>
+        <span class="legend-dot indigo">2025</span>
+      </div>
+      <div class="chart-canvas-wrap">
+        @if (isLoadingRevenue) {
+          <div class="chart-skeleton"></div>
+        } @else {
+          <canvas #revenueCanvas></canvas>
+        }
+      </div>
+    </div>
+
+    <!-- Donut chart -->
+    <div class="chart-card chart-donut">
+      <div class="chart-sub">Shpërndarja</div>
+      <div class="chart-title-sm">Sipas Lëmive</div>
+      <div class="donut-canvas-wrap">
+        @if (isLoadingTopLearnHubs) {
+          <div class="chart-skeleton donut-skeleton"></div>
+        } @else {
+          <canvas #donutCanvas></canvas>
+          @if (allLearnHubsEmpty) {
+            <div class="donut-no-data">Nuk ka studentë të regjistruar</div>
+          }
+        }
+      </div>
+      <div class="donut-legend">
+        @for (item of donutLegend; track item.label) {
+          <div class="legend-row">
+            <span class="legend-square" [style.background]="item.color"></span>
+            <span class="legend-text">{{ item.label }}</span>
+            <span class="legend-pct">{{ item.pct }}%</span>
+          </div>
+        }
+      </div>
+    </div>
   </div>
 
-  <section id="dashboard-section" class="dashboard-grid">
-    <div class="card">
-      <div class="card-icon"><i class="fas fa-book-reader"></i></div>
-      <div class="card-title">{{ 'admin.panel.learnhubs.active' | translate }}</div>
-      <div class="card-value">
-        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
-        <span *ngIf="!isLoadingStats">{{ stats.activeLearnHubs | number }}</span>
+  <!-- ── Activity + System Health ──────────────────────────────────────── -->
+  <div class="bottom-row">
+
+    <!-- Activity -->
+    <div class="card-block">
+      <div class="block-header">
+        <span class="block-title">Aktiviteti i Fundit</span>
+        <button class="btn-text">Shiko të gjitha →</button>
       </div>
-      <div class="card-description">{{ 'admin.panel.learnhubs.description' | translate }}</div>
-    </div>
-    <div class="card">
-      <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
-      <div class="card-title">{{ 'admin.panel.users.registered' | translate }}</div>
-      <div class="card-value">
-        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
-        <span *ngIf="!isLoadingStats">{{ stats.totalRegisteredUsers | number }}</span>
-      </div>
-      <div class="card-description">{{ 'admin.panel.users.description' | translate }}</div>
-    </div>
-    <div class="card">
-      <div class="card-icon"><i class="fas fa-check-circle"></i></div>
-      <div class="card-title">{{ 'admin.panel.quizzes.completed' | translate }}</div>
-      <div class="card-value">
-        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
-        <span *ngIf="!isLoadingStats">{{ stats.completedQuizzes | number }}</span>
-      </div>
-      <div class="card-description">{{ 'admin.panel.quizzes.description' | translate }}</div>
-    </div>
-    <div class="card">
-      <div class="card-icon"><i class="fas fa-users-cog"></i></div>
-      <div class="card-title">{{ 'admin.panel.admins.active' | translate }}</div>
-      <div class="card-value">
-        <span *ngIf="isLoadingStats" class="loading-spinner">⏳</span>
-        <span *ngIf="!isLoadingStats">{{ stats.activeAdministrators | number }}</span>
-      </div>
-      <div class="card-description">{{ 'admin.panel.admins.description' | translate }}</div>
-    </div>
-  </section>
 
-  <section id="recent-activity-section" class="section-block">
-    <h2>{{ 'admin.panel.activities.title' | translate }}</h2>
-
-    <!-- Loading state -->
-    <div *ngIf="isLoadingActivities" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.activities.loading' | translate }}</p>
-    </div>
-
-    <!-- Empty state -->
-    <div *ngIf="!isLoadingActivities && recentActivities.length === 0" class="empty-state">
-      <i class="fas fa-inbox"></i>
-      <p>{{ 'admin.panel.activities.empty' | translate }}</p>
-    </div>
-
-    <!-- Activities list -->
-    <div *ngIf="!isLoadingActivities && recentActivities.length > 0">
-      <div *ngFor="let activity of recentActivities" class="activity-item">
-        <span class="icon">
-          <i [class]="getActivityIcon(activity.type)"></i>
-        </span>
-        <span class="text">
-          <strong *ngIf="activity.userName">{{ activity.userName }}</strong>
-          {{ activity.description }}
-        </span>
-        <span class="timestamp">{{ formatTimestamp(activity.timestamp) }}</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="revenue-section" class="section-block">
-    <h2>{{ 'admin.panel.revenue.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingRevenue" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.revenue.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingRevenue && monthlyRevenue.length === 0" class="empty-state">
-      <i class="fas fa-chart-line"></i>
-      <p>{{ 'admin.panel.revenue.empty' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingRevenue && monthlyRevenue.length > 0" class="revenue-grid">
-      <div *ngFor="let revenue of monthlyRevenue" class="revenue-card">
-        <div class="revenue-month">{{ getMonthName(revenue.month) }} {{ revenue.year }}</div>
-        <div class="revenue-amount">{{ formatCurrency(revenue.revenue) }}</div>
-        <div class="revenue-details">
-          <span class="new-subscriptions">+{{ revenue.newSubscriptions || 0 }}</span>
-          <span class="cancellations">-{{ revenue.cancellations || 0 }}</span>
+      @if (isLoadingActivities) {
+        <div class="skeleton-list">
+          @for (_ of [1,2,3,4]; track $index) { <div class="skeleton-item"></div> }
         </div>
+      } @else if (recentActivities.length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Asnjë aktivitet i fundit</p>
+        </div>
+      } @else {
+        <div class="activity-list">
+          @for (act of recentActivities; track act.timestamp; let last = $last) {
+            <div class="activity-item" [class.last]="last">
+              <div class="activity-icon">
+                <i [class]="getActivityIcon(act.type)"></i>
+              </div>
+              <div class="activity-body">
+                <div class="activity-text">
+                  @if (act.userName) { <strong>{{ act.userName }}</strong> }
+                  {{ act.description }}
+                </div>
+                <div class="activity-time">{{ formatTimestamp(act.timestamp) }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- System Health -->
+    <div class="card-block">
+      <div class="block-header">
+        <span class="block-title">Shëndeti i Sistemit</span>
+        <span class="badge-ok">● Operacional</span>
       </div>
-    </div>
-  </section>
 
-  <section id="geographic-section" class="section-block">
-    <h2>{{ 'admin.panel.geographic.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingGeographic" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.geographic.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingGeographic && geographicStats.length === 0" class="empty-state">
-      <i class="fas fa-map-marker-alt"></i>
-      <p>{{ 'admin.panel.geographic.empty' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingGeographic && geographicStats.length > 0" class="geographic-grid">
-      <div *ngFor="let geo of geographicStats" class="geographic-card">
-        <div class="city-name">{{ geo.city || ('admin.panel.geographic.unknown' | translate) }}</div>
-        <div class="geo-stats">
-          <div class="stat-item">
-            <i class="fas fa-users"></i>
-            <span>{{ geo.userCount || 0 }}</span>
-          </div>
-          <div class="stat-item">
-            <i class="fas fa-school"></i>
-            <span>{{ geo.schoolCount || 0 }}</span>
-          </div>
-          <div class="stat-item">
-            <i class="fas fa-euro-sign"></i>
-            <span>{{ formatCurrency(geo.revenue) }}</span>
-          </div>
+      @if (isLoadingSystemHealth) {
+        <div class="health-grid">
+          @for (_ of [1,2,3,4]; track $index) { <div class="health-skeleton"></div> }
         </div>
-      </div>
-    </div>
-  </section>
+      } @else {
+        <div class="health-grid">
+          @for (key of systemHealthKeys.slice(0, 4); track key) {
+            <div class="health-card" [class.good]="isSystemHealthy(key)" [class.bad]="!isSystemHealthy(key)">
+              <div class="health-key">{{ key }}</div>
+              <div class="health-val">{{ getSystemHealthValue(key) }}</div>
+            </div>
+          }
+        </div>
+      }
 
-  <section id="top-learnhubs-section" class="section-block">
-    <h2>{{ 'admin.panel.learnhubs.top.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingTopLearnHubs" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.learnhubs.top.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length === 0" class="empty-state">
-      <i class="fas fa-trophy"></i>
-      <p>{{ 'admin.panel.learnhubs.top.empty' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingTopLearnHubs && topPerformingLearnHubs.length > 0" class="performance-list">
-      <div *ngFor="let learnhub of topPerformingLearnHubs; let i = index" class="performance-item">
-        <div class="rank">#{{ i + 1 }}</div>
-        <div class="content">
-          <div class="title">{{ learnhub.title || ('admin.panel.learnhubs.top.unknown' | translate) }}</div>
-          <div class="stats">
-            <span class="stat">
-              <i class="fas fa-users"></i>
-              {{ learnhub.totalStudents || 0 }}
-            </span>
-            <span class="stat">
-              <i class="fas fa-chart-line"></i>
-              {{ formatPercentage(learnhub.completionRate) }}
-            </span>
-            <span class="stat">
-              <i class="fas fa-star"></i>
-              {{ Math.round((learnhub.averageScore || 0) * 100) }}%
-            </span>
+      <!-- Pending payments summary -->
+      @if (!isLoadingPendingPayments && pendingManualPayments.length > 0) {
+        <div class="pending-alert">
+          <div class="pending-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="challenging-quizzes-section" class="section-block">
-    <h2>{{ 'admin.panel.quizzes.hard.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingChallengingQuizzes" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.quizzes.hard.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length === 0" class="empty-state">
-      <i class="fas fa-question-circle"></i>
-      <p>{{ 'admin.panel.quizzes.hard.empty' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingChallengingQuizzes && challengingQuizzes.length > 0" class="quiz-list">
-      <div *ngFor="let quiz of challengingQuizzes" class="quiz-item">
-        <div class="quiz-header">
-          <div class="quiz-title">{{ quiz.question || ('admin.panel.quizzes.hard.unknown' | translate) }}</div>
-          <div class="difficulty-badge" [style.background-color]="getDifficultyColor(quiz.difficulty)">
-            {{ getDifficultyText(quiz.difficulty) }}
+          <div class="pending-text">
+            <div class="pending-title">{{ pendingManualPayments.length }} Pagesa Manuale në Pritje</div>
+            <div class="pending-sub">Presin konfirmim</div>
           </div>
+          <button class="btn-accent" (click)="showNotifications = true">Kontrollo</button>
         </div>
-        <div class="quiz-details">
-          <span class="detail">
-            <i class="fas fa-chart-bar"></i>
-            {{ formatPercentage(quiz.successRate) }}
-          </span>
-          <span class="detail">
-            <i class="fas fa-play"></i>
-            {{ quiz.totalAttempts || 0 }}
-          </span>
-          <span class="detail">
-            <i class="fas fa-clock"></i>
-            {{ Math.round(quiz.averageTimeSpent || 0) }}s
-          </span>
-        </div>
-        <div class="learnhub-context" *ngIf="quiz.learnHubTitle">
-          <i class="fas fa-book"></i>
-          {{ quiz.learnHubTitle }}
-        </div>
-      </div>
+      }
     </div>
-  </section>
+  </div>
 
-  <section id="system-health-section" class="section-block">
-    <h2>{{ 'admin.panel.health.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingSystemHealth" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.health.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingSystemHealth" class="system-health-grid">
-      <div *ngFor="let key of getSystemHealthKeys()" class="health-item">
-        <div class="health-label">{{ key }}</div>
-        <div class="health-value" [class.healthy]="isSystemHealthy(key)">
-          {{ getSystemHealthValue(key) }}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="supervisor-applications-section" class="section-block">
-    <h2>{{ 'admin.panel.supervisor.apps.title' | translate }}</h2>
-
-    <div *ngIf="isLoadingSupervisorApplications" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>{{ 'admin.panel.supervisor.apps.loading' | translate }}</p>
-    </div>
-
-    <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length > 0" class="supervisor-applications-grid">
-      <div *ngFor="let application of supervisorApplications" class="application-card">
-        <div class="application-header">
-          <h3>{{ application.schoolName }}</h3>
-          <div class="application-status pending">{{ 'admin.panel.supervisor.apps.pending' | translate }}</div>
-        </div>
-
-        <div class="application-details">
-          <div class="detail-row">
-            <span class="label">{{ 'admin.panel.supervisor.apps.contact' | translate }}</span>
-            <span class="value">{{ application.contactPersonFirstName }} {{ application.contactPersonLastName }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">{{ 'common.email' | translate }}:</span>
-            <span class="value">{{ application.contactPersonEmail }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">{{ 'admin.panel.supervisor.apps.phone' | translate }}</span>
-            <span class="value">{{ application.contactPersonPhone }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">{{ 'admin.panel.supervisor.apps.city' | translate }}</span>
-            <span class="value">{{ application.city }}</span>
-          </div>
-          <div class="detail-row" *ngIf="application.additionalInfo">
-            <span class="label">{{ 'admin.panel.supervisor.apps.additional' | translate }}</span>
-            <span class="value">{{ application.additionalInfo }}</span>
-          </div>
-        </div>
-
-        <div class="application-actions">
-          <button class="btn-approve" (click)="approveSupervisorApplication(application)">
-            <i class="fas fa-check"></i>
-            {{ 'common.approve' | translate }}
-          </button>
-          <button class="btn-reject" (click)="rejectSupervisorApplication(application)">
-            <i class="fas fa-times"></i>
-            {{ 'common.reject' | translate }}
-          </button>
-        </div>
+  <!-- ── Top LearnHubs ──────────────────────────────────────────────────── -->
+  <div class="card-block">
+    <div class="block-header">
+      <div>
+        <span class="block-title">Lëndët Më të Suksesshme</span>
+        <div class="block-sub">Bazuar në regjistrime dhe rezultate</div>
       </div>
     </div>
 
-    <div *ngIf="!isLoadingSupervisorApplications && supervisorApplications.length === 0" class="empty-state">
-      <div class="empty-icon">📋</div>
-      <h3>{{ 'admin.panel.supervisor.apps.empty.title' | translate }}</h3>
-      <p>{{ 'admin.panel.supervisor.apps.empty.description' | translate }}</p>
-    </div>
-  </section>
+    @if (isLoadingTopLearnHubs) {
+      <div class="skeleton-list">
+        @for (_ of [1,2,3]; track $index) { <div class="skeleton-item tall"></div> }
+      </div>
+    } @else if (topPerformingLearnHubs.length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-trophy"></i>
+        <p>Asnjë lëndë e gjetur</p>
+      </div>
+    } @else {
+      <div class="top-list">
+        @for (hub of topPerformingLearnHubs; track hub.title; let i = $index; let last = $last) {
+          <div class="top-item" [class.last]="last">
+            <div class="top-rank-badge" [style.background]="['#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'][i] || '#e0e7ff'">
+              {{ (hub.title ?? '?')[0] }}
+            </div>
+            <div class="top-info">
+              <div class="top-name">{{ hub.title }}</div>
+              <div class="top-sub">{{ hub.totalStudents ?? 0 }} studentë të regjistruar</div>
+            </div>
+            <div class="top-score">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/>
+              </svg>
+              {{ (hub.averageScore ?? 0) | number:'1.1-1' }}
+            </div>
+            <div class="top-pct">{{ formatPercentage(hub.completionRate) }}</div>
+            <div class="top-bar-wrap">
+              <div class="top-bar-fill"
+                   [style.width.%]="Math.round((hub.completionRate ?? 0) * 100)"
+                   [style.background]="['#6366f1','#818cf8','#a5b4fc','#c7d2fe','#e0e7ff'][i] || '#e0e7ff'">
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
 
-  <!-- Pending Manual Payments Section -->
-  <section id="manual-payments-section" class="section-block">
-    <div class="section-header-row">
-      <h2>Pagesa Manuale në Pritje</h2>
-      <button class="button-secondary small" (click)="loadPendingManualPayments()" [disabled]="isLoadingPendingPayments">
-        <i class="fas fa-sync-alt" [class.spinning]="isLoadingPendingPayments"></i>
-        Rifresho
-      </button>
-    </div>
-
-    <div *ngIf="isLoadingPendingPayments" class="loading-container">
-      <div class="loading-spinner">⏳</div>
-      <p>Duke ngarkuar pagesat...</p>
-    </div>
-
-    <div *ngIf="!isLoadingPendingPayments && pendingManualPayments.length === 0" class="empty-state">
-      <i class="fas fa-check-circle" style="color: #10b981; font-size: 2rem;"></i>
-      <p>Nuk ka pagesa manuale në pritje.</p>
-    </div>
-
-    <div *ngIf="!isLoadingPendingPayments && pendingManualPayments.length > 0" class="manual-payments-table-wrapper">
-      <table class="manual-payments-table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Referenca</th>
-            <th>Provider</th>
-            <th>Data</th>
-            <th>Shuma</th>
-            <th>Veprime</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let payment of pendingManualPayments">
-            <td>{{ payment.userEmail || payment.email || '—' }}</td>
-            <td class="reference-cell">{{ payment.externalSessionId || payment.reference || '—' }}</td>
-            <td>
-              <span class="provider-badge" [ngClass]="'provider-' + (payment.provider || '').toLowerCase()">
-                {{ payment.provider || '—' }}
-              </span>
-            </td>
-            <td>{{ formatDate(payment.createdAt || payment.date) }}</td>
-            <td>{{ formatAmountCents(payment.amount || payment.amountCents, payment.currency || 'ALL') }}</td>
-            <td class="actions-cell">
-              <button
-                class="btn-confirm"
-                (click)="confirmManualPayment(payment.externalSessionId || payment.reference)"
-                title="Konfirmo pagesën">
-                <i class="fas fa-check"></i>
-                Konfirmo
+  <!-- ── Supervisor Applications ────────────────────────────────────────── -->
+  @if (!isLoadingSupervisorApplications && supervisorApplications.length > 0) {
+    <div class="card-block full-width">
+      <div class="block-header">
+        <span class="block-title">Kërkesa të Reja — Supervisor</span>
+        <span class="badge-warn">{{ supervisorApplications.length }} në pritje</span>
+      </div>
+      <div class="apps-grid">
+        @for (app of supervisorApplications; track app.supervisorId) {
+          <div class="app-card">
+            <div class="app-card-header">
+              <h3 class="app-school">{{ app.schoolName }}</h3>
+              <span class="badge-pending">Në pritje</span>
+            </div>
+            <div class="app-details">
+              <div class="app-row"><span class="app-lbl">Kontakti</span><span>{{ app.contactPersonFirstName }} {{ app.contactPersonLastName }}</span></div>
+              <div class="app-row"><span class="app-lbl">Email</span><span>{{ app.contactPersonEmail }}</span></div>
+              <div class="app-row"><span class="app-lbl">Telefon</span><span>{{ app.contactPersonPhone }}</span></div>
+              <div class="app-row"><span class="app-lbl">Qyteti</span><span>{{ app.city }}</span></div>
+            </div>
+            <div class="app-actions">
+              <button class="btn-approve" (click)="approveSupervisorApplication(app)">
+                <i class="fas fa-check"></i> Aprovo
               </button>
-              <button
-                class="btn-remind"
-                (click)="remindManualPayment(payment.externalSessionId || payment.reference)"
-                title="Dërgo kujtesë">
-                <i class="fas fa-bell"></i>
-                Kujtesë
+              <button class="btn-reject" (click)="rejectSupervisorApplication(app)">
+                <i class="fas fa-times"></i> Refuzo
               </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+          </div>
+        }
+      </div>
     </div>
-  </section>
+  }
+
+  <!-- ── Manual Payments ────────────────────────────────────────────────── -->
+  @if (!isLoadingPendingPayments && pendingManualPayments.length > 0) {
+    <div class="card-block full-width">
+      <div class="block-header">
+        <span class="block-title">Pagesa Manuale në Pritje</span>
+        <button class="btn-text" (click)="loadPendingManualPayments()">
+          <i class="fas fa-sync-alt"></i> Rifresho
+        </button>
+      </div>
+      <div class="payments-table-wrap">
+        <table class="payments-table">
+          <thead>
+            <tr>
+              <th>Email</th><th>Referenca</th><th>Provider</th>
+              <th>Data</th><th>Shuma</th><th>Veprime</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of pendingManualPayments; track p.externalSessionId) {
+              <tr>
+                <td>{{ p.userEmail || p.email || '—' }}</td>
+                <td class="mono">{{ p.externalSessionId || p.reference || '—' }}</td>
+                <td><span class="provider-badge">{{ p.provider || '—' }}</span></td>
+                <td>{{ formatDate(p.createdAt || p.date) }}</td>
+                <td>{{ formatAmountCents(p.amount || p.amountCents, p.currency || 'ALL') }}</td>
+                <td class="actions-cell">
+                  <button class="btn-confirm" (click)="confirmManualPayment(p.externalSessionId || p.reference)">
+                    <i class="fas fa-check"></i> Konfirmo
+                  </button>
+                  <button class="btn-remind" (click)="remindManualPayment(p.externalSessionId || p.reference)">
+                    <i class="fas fa-bell"></i> Kujtesë
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
 
 </div>

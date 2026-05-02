@@ -1,27 +1,49 @@
-<div class="container">
-  <app-header class="header" (toggleSidenav)="toggleSideNav()"
-              [isSideNavOpen]="isSideNavOpen"></app-header>
-  @if (showSideNav()) {
-    <mat-sidenav-container class="content-container">
-      <mat-sidenav #sidenav
-                   [mode]="sidenavMode"
-                   [(opened)]="isSideNavOpen"
-                   class="admin-sidenav"
-                   (mouseenter)="onSidenavHover()"
-                   (mouseleave)="onSidenavLeave()">
-        <app-sidebar></app-sidebar>
-      </mat-sidenav>
+@if (showSideNav()) {
+  <!-- Admin layout: floating sidebar + full-page content, no global header/footer -->
+  <div class="admin-shell" [class.mobile-open]="isMobileMenuOpen">
 
-      <mat-sidenav-content [class.sidenav-closed]="!isSideNavOpen">
-        <main class="content-admin">
-          <router-outlet></router-outlet>
-        </main>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  } @else {
-    <main class="content">
+    <!-- Mobile top bar -->
+    @if (isMobile) {
+      <div class="mobile-topbar" [class.dark]="isDark">
+        <button class="mobile-hamburger" (click)="toggleMobileMenu()" [attr.aria-label]="isMobileMenuOpen ? 'Mbyll menunë' : 'Hap menunë'">
+          @if (isMobileMenuOpen) {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          } @else {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          }
+        </button>
+      </div>
+    }
+
+    <!-- Mobile overlay -->
+    @if (isMobile && isMobileMenuOpen) {
+      <div class="mobile-overlay" (click)="toggleMobileMenu()"></div>
+    }
+
+    <app-sidebar
+      [class.mobile-sidebar]="isMobile"
+      [class.mobile-visible]="isMobile && isMobileMenuOpen"
+      (collapsedChange)="onSidebarCollapsed($event)">
+    </app-sidebar>
+
+    <main class="admin-main" [class.sidebar-collapsed]="sidebarCollapsed">
       <router-outlet></router-outlet>
     </main>
-  }
-  <app-footer class="footer"></app-footer>
-</div>
+  </div>
+
+} @else {
+  <!-- Regular layout: header + content + footer -->
+  <div class="portal-shell">
+    <app-header class="portal-header"></app-header>
+    <main class="portal-content">
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer class="portal-footer"></app-footer>
+  </div>
+}
