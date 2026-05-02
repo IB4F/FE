@@ -64,10 +64,9 @@
         <span class="legend-dot indigo">2025</span>
       </div>
       <div class="chart-canvas-wrap">
+        <canvas #revenueCanvas></canvas>
         @if (isLoadingRevenue) {
-          <div class="chart-skeleton"></div>
-        } @else {
-          <canvas #revenueCanvas></canvas>
+          <div class="chart-skeleton chart-skeleton--overlay"></div>
         }
       </div>
     </div>
@@ -77,13 +76,12 @@
       <div class="chart-sub">Shpërndarja</div>
       <div class="chart-title-sm">Sipas Lëmive</div>
       <div class="donut-canvas-wrap">
+        <canvas #donutCanvas></canvas>
         @if (isLoadingTopLearnHubs) {
-          <div class="chart-skeleton donut-skeleton"></div>
-        } @else {
-          <canvas #donutCanvas></canvas>
-          @if (allLearnHubsEmpty) {
-            <div class="donut-no-data">Nuk ka studentë të regjistruar</div>
-          }
+          <div class="chart-skeleton donut-skeleton chart-skeleton--overlay"></div>
+        }
+        @if (!isLoadingTopLearnHubs && allLearnHubsEmpty) {
+          <div class="donut-no-data">Nuk ka studentë të regjistruar</div>
         }
       </div>
       <div class="donut-legend">

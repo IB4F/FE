@@ -163,9 +163,12 @@ export class ManageQuizComponent implements OnInit {
 
   onDelete(quiz: any) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      panelClass: 'bg-confirm-panel',
+      width: '420px',
+      maxWidth: '95vw',
       data: {
-        title: 'Fshi Quizin',
-        message: 'Jeni i sigurt që dëshironi të fshini këtë quiz?',
+        title: 'Fshi Kuizin',
+        message: 'Jeni i sigurt që dëshironi të fshini këtë kuiz? Ky veprim nuk mund të kthehet mbrapsht.',
         id: quiz.id
       }
     });

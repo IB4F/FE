@@ -14,6 +14,8 @@ import {NgToastService} from "ng-angular-popup";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../../../services/token-storage.service";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-learnhub',
@@ -99,7 +101,8 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
     public router: Router,
     private _detailsService: DetailsService,
     private tokenStorageService: TokenStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {
   }
 
@@ -252,22 +255,34 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDelete(learnHub: any) {
-    if (!this.isComponentActive) return;
-    if (!this.tokenStorageService.getAccessToken()) return;
+    const ref = this.dialog.open(ConfirmModalComponent, {
+      panelClass: 'bg-confirm-panel',
+      width: '420px',
+      maxWidth: '95vw',
+      data: {
+        title: 'Fshi LearnHub',
+        message: `Jeni i sigurt që dëshironi të fshini "${learnHub.title}"? Ky veprim nuk mund të kthehet mbrapsht.`
+      }
+    });
+    ref.afterClosed().subscribe(result => {
+      if (!result?.success) return;
+      if (!this.isComponentActive) return;
+      if (!this.tokenStorageService.getAccessToken()) return;
 
-    this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp) => {
-          if (!this.isComponentActive) return;
-          this.toast.success(resp?.message, 'SUCCESS', 3000);
-          this.getLearnHublist();
-        },
-        error: (error) => {
-          if (!this.isComponentActive) return;
-          this.toast.danger(error?.error?.message, 'GABIM', 3000);
-        }
-      })
+      this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (resp) => {
+            if (!this.isComponentActive) return;
+            this.toast.success(resp?.message, 'SUKSES', 3000);
+            this.getLearnHublist();
+          },
+          error: (error) => {
+            if (!this.isComponentActive) return;
+            this.toast.danger(error?.error?.message, 'GABIM', 3000);
+          }
+        });
+    });
   }
 
   // Metodo per fermare tutte le chiamate API

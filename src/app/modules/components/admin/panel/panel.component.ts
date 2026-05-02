@@ -99,7 +99,7 @@ export class PanelComponent implements OnInit, AfterViewInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           if (this.monthlyRevenue.length > 0) {
-            setTimeout(() => this.buildCharts(), 50);
+            setTimeout(() => this.buildCharts(), 0);
           }
         });
     }
@@ -174,7 +174,7 @@ export class PanelComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.isComponentActive) return;
           this.monthlyRevenue = r;
           this.isLoadingRevenue = false;
-          setTimeout(() => this.buildCharts(), 120);
+          setTimeout(() => this.buildCharts(), 0);
         },
         error: () => { this.isLoadingRevenue = false; }
       });
@@ -190,7 +190,7 @@ export class PanelComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.isComponentActive) return;
           this.topPerformingLearnHubs = r;
           this.isLoadingTopLearnHubs = false;
-          setTimeout(() => this.buildDonutChart(), 120);
+          setTimeout(() => this.buildDonutChart(), 0);
         },
         error: () => { this.isLoadingTopLearnHubs = false; }
       });

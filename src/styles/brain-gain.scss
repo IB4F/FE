@@ -181,7 +181,7 @@
 /* ============ ICON BUTTONS ============ */
 .bg-iconbtn {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px;
+  width: 34px; height: 34px; padding: 0;
   background: transparent; border: 1px solid transparent;
   color: var(--muted); border-radius: var(--radius-md);
   cursor: pointer; transition: all 140ms ease;
@@ -197,7 +197,7 @@
 .bg-menu-wrap { position: relative; display: inline-block; }
 .bg-menu-trigger {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px;
+  width: 34px; height: 34px; padding: 0;
   background: transparent; border: 1px solid transparent;
   color: var(--muted); border-radius: var(--radius-md);
   cursor: pointer; transition: all 140ms ease;
@@ -395,3 +395,12 @@
 .bg-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 .bg-stack-16 > * + * { margin-top: 16px; }
 .bg-stack-18 > * + * { margin-top: 18px; }
+
+/* ============ CONFIRM DIALOG PANEL ============ */
+.bg-confirm-panel .mat-mdc-dialog-surface {
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(14, 42, 71, 0.18), 0 4px 12px rgba(14, 42, 71, 0.08);
+  padding: 0 !important;
+}

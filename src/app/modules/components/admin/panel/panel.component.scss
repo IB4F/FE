@@ -303,6 +303,7 @@ $d-accent-soft: rgba(99,102,241,0.15);
 }
 
 .donut-no-data {
+  position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
@@ -326,6 +327,7 @@ $d-accent-soft: rgba(99,102,241,0.15);
   border-radius: 8px;
   &.donut-skeleton { width: 160px; height: 160px; border-radius: 50%; margin: 0 auto; }
   .dark & { background: linear-gradient(90deg, $d-surface-alt 25%, $d-border 50%, $d-surface-alt 75%); }
+  &--overlay { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
 }
 
 .donut-legend { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
