@@ -1,86 +1,121 @@
-.container {
+// ── Admin shell ───────────────────────────────────────────────────────────────
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f6f7fb;
+  position: relative;
+  transition: background 0.3s;
+
+  :host-context(.dark-theme) & { background: #0f1117; }
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  min-height: 100vh;
+
+  @media (max-width: 767px) {
+    min-height: calc(100vh - 56px);
+  }
+}
+
+// ── Mobile top bar ────────────────────────────────────────────────────────────
+.mobile-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #eef0f6;
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  flex-shrink: 0;
+
+  &.dark {
+    background: #171a23;
+    border-bottom-color: #252a3a;
+  }
+}
+
+.mobile-hamburger {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #f9fafc;
+  border: 1px solid #eef0f6;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #1a1d29;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &:hover { background: #eef0f6; }
+
+  .dark & {
+    background: #1c2030;
+    border-color: #252a3a;
+    color: #e6e8ef;
+    &:hover { background: #252a3a; }
+  }
+}
+
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99;
+}
+
+::ng-deep app-sidebar.mobile-sidebar {
+  position: fixed !important;
+  left: -280px;
+  top: 56px;
+  z-index: 100;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .sidebar {
+    height: calc(100vh - 56px) !important;
+    margin: 0 !important;
+    border-radius: 0 24px 24px 0 !important;
+    width: 248px !important;
+  }
+
+  &.mobile-visible {
+    left: 0;
+  }
+}
+
+// ── Regular portal shell ──────────────────────────────────────────────────────
+.portal-shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
-  .header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 10;
-  }
-
-  .content-container {
-    flex: 1;
-    margin-top: 80px;
-    height: calc(100vh - 80px);
-
-    .admin-sidenav {
-      width: 250px;
-      background: #F8F9FA;
-      color: #333333;
-      padding-top: 12px;
-      box-shadow: 1px 0 0 #E0E0E0;
-    }
-
-    mat-sidenav-content {
-      padding: 20px;
-      overflow-y: auto;
-
-      &.sidenav-closed {
-        margin-left: 0;
-      }
-
-      .content-admin {
-        min-height: 100%;
-        padding-bottom: 80px;
-      }
-    }
-  }
-
-  .content {
-    flex: 1;
-    margin-top: 80px;
-    padding: 20px;
-    padding-bottom: 60px;
-    min-height: calc(100vh - 140px);
-  }
-
-  .footer {
-    width: 100%;
-    margin-top: auto;
-    position: relative;
-    z-index: 5;
-  }
 }
 
-// Tablet (768px - 1024px): sidebar più stretta
-@media (max-width: 1024px) and (min-width: 768px) {
-  .container {
-    .content-container {
-      .admin-sidenav {
-        width: 200px;
-      }
-    }
-  }
+.portal-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 }
 
-// Mobile (<768px): sidebar overlay, chiusa di default
-@media (max-width: 767px) {
-  .container {
-    .content-container {
-      height: calc(100vh - 80px);
+.portal-content {
+  flex: 1;
+  margin-top: 80px;
+  padding: 20px;
+  padding-bottom: 60px;
+  min-height: calc(100vh - 140px);
+}
 
-      .admin-sidenav {
-        width: 240px;
-        z-index: 999;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
-      }
-
-      mat-sidenav-content {
-        padding: 12px;
-        margin-left: 0 !important;
-      }
-    }
-  }
+.portal-footer {
+  width: 100%;
+  margin-top: auto;
 }

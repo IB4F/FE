@@ -1,84 +1,60 @@
-.modal-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  min-width: 400px;
-  max-width: 500px;
+.bg-confirm {
+  font-family: 'Poppins', sans-serif;
+  padding: 36px 28px 28px;
+  text-align: center;
+  background: var(--surface, #fff);
+  border-radius: var(--radius-xl, 16px);
+  width: 100%;
+  max-width: 420px;
+  box-sizing: border-box;
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
+.bg-confirm__icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: #FEF2F2;
+  color: var(--danger, #EF4444);
+  display: inline-flex;
   align-items: center;
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.modal-title {
-  color: #111827;
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin: 0;
+.bg-confirm__title {
+  margin: 0 0 10px;
+  font: 700 18px/1.2 'Poppins';
+  color: var(--navy, #0E2A47);
 }
 
-.close-button {
-  color: #6b7280;
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: #374151;
-  }
+.bg-confirm__msg {
+  margin: 0 0 28px;
+  font: 500 14px/1.6 'Poppins';
+  color: var(--muted, #5B7A99);
 }
 
-.modal-content {
-  padding: 20px 24px;
-}
-
-.message-text {
-  color: #374151;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.modal-actions {
+.bg-confirm__actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 16px 24px 20px;
-  background: #f9fafb;
+  gap: 10px;
+  justify-content: center;
 }
 
-.cancel-button {
-  color: #6b7280;
-  
-  &:hover {
-    background-color: #f3f4f6;
-  }
+/* Override global button padding inside this modal */
+.bg-confirm__actions .bg-btn {
+  min-width: 120px;
+  justify-content: center;
 }
 
-.confirm-button {
-  color: #2563eb;
-  font-weight: 500;
-  
-  &:hover {
-    background-color: #eff6ff;
+@media (max-width: 480px) {
+  .bg-confirm {
+    padding: 28px 20px 24px;
   }
-}
 
-// Responsive design
-@media (max-width: 600px) {
-  .modal-container {
-    min-width: 90vw;
-    max-width: 90vw;
-    margin: 20px;
-  }
-  
-  .modal-actions {
+  .bg-confirm__actions {
     flex-direction: column-reverse;
-    
-    button {
-      width: 100%;
-    }
+  }
+
+  .bg-confirm__actions .bg-btn {
+    width: 100%;
   }
 }

@@ -27,6 +27,7 @@
     "@stripe/stripe-js": "^7.3.0",
     "bootstrap": "^5.3.5",
     "canvas-confetti": "^1.9.3",
+    "chart.js": "^4.5.1",
     "express": "^4.18.2",
     "google-libphonenumber": "^3.2.43",
     "intl-tel-input": "^19.5.7",

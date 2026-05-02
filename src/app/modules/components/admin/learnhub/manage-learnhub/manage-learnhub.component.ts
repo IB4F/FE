@@ -20,6 +20,8 @@ import {
 } from "../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmModalComponent} from "../../../../../modules/shared/components/confirm-modal/confirm-modal.component";
 import {requiredRowsValidator} from "../../../../../helpers/customValidators/links.validator";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
@@ -68,7 +70,8 @@ export class ManageLearnhubComponent implements OnInit {
     public router: Router,
     private location: Location,
     private linksService: LinksService,
-    private subscriptionPackageService: SubscriptionPackageService
+    private subscriptionPackageService: SubscriptionPackageService,
+    private dialog: MatDialog
   ) {
   }
 
@@ -178,17 +181,30 @@ export class ManageLearnhubComponent implements OnInit {
   removeRow(index: number) {
     const linkControl = this.links.at(index);
     const linkId = linkControl.get('id')?.value;
+    const linkTitle = linkControl.get('title')?.value || `Lidhja ${index + 1}`;
 
     if (linkId) {
-      this.linksService.apiLinksDeleteLinkDelete(linkId).subscribe({
-        next: (resp) => {
-          this.links.removeAt(index);
-          this.updateRowNumbers();
-          this.toast.success('Lidhja u fshi me sukses!', 'SUKSES', 3000);
-        },
-        error: (error) => {
-          this.toast.danger(error?.error?.message || 'Gabim gjatë fshirjes së lidhjes', 'GABIM', 3000);
+      const ref = this.dialog.open(ConfirmModalComponent, {
+        panelClass: 'bg-confirm-panel',
+        width: '420px',
+        maxWidth: '95vw',
+        data: {
+          title: 'Fshi Lidhjen',
+          message: `Jeni i sigurt që dëshironi të fshini "${linkTitle}"? Të gjitha kuizet e lidhura do të fshihen gjithashtu.`
         }
+      });
+      ref.afterClosed().subscribe(result => {
+        if (!result?.success) return;
+        this.linksService.apiLinksDeleteLinkDelete(linkId).subscribe({
+          next: () => {
+            this.links.removeAt(index);
+            this.updateRowNumbers();
+            this.toast.success('Lidhja u fshi me sukses!', 'SUKSES', 3000);
+          },
+          error: (error) => {
+            this.toast.danger(error?.error?.message || 'Gabim gjatë fshirjes së lidhjes', 'GABIM', 3000);
+          }
+        });
       });
     } else {
       this.links.removeAt(index);
@@ -266,6 +282,16 @@ export class ManageLearnhubComponent implements OnInit {
         this.toast.danger(error?.error?.message || 'Gabim gjatë ngarkimit të tier-ave', 'GABIM', 3000);
       }
     });
+  }
+
+  getClassName(id: any): string {
+    const found = this.classesList.find(c => c.id === id);
+    return found?.name ?? '';
+  }
+
+  getSubjectName(id: any): string {
+    const found = this.subjectList.find(s => s.id === id);
+    return found?.name ?? '';
   }
 
   goToQuiz(link: AbstractControl) {

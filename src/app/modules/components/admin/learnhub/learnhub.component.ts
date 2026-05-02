@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef, HostListener} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
@@ -14,6 +14,8 @@ import {NgToastService} from "ng-angular-popup";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../../../services/token-storage.service";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-learnhub',
@@ -42,6 +44,40 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
   pageSize: number = this.pageSizeOptions[0];
+  openMenuId: string | null = null;
+  Math = Math;
+
+  @HostListener('document:click')
+  closeMenu(): void { this.openMenuId = null; }
+
+  toggleMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === id ? null : id;
+  }
+
+  prevPage(): void {
+    if (this.pageNumber > 0) { this.pageNumber--; this.getLearnHublist(); }
+  }
+
+  nextPage(): void {
+    if ((this.pageNumber + 1) * this.pageSize < this.length) { this.pageNumber++; this.getLearnHublist(); }
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.pageSize = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.pageNumber = 0;
+    this.getLearnHublist();
+  }
+
+  getSubjectBadgeClass(id: any): string {
+    const name = (this.getSubjectName(id) || '').toLowerCase();
+    if (name.includes('matematik')) return 'bg-badge--matematike';
+    if (name.includes('histori')) return 'bg-badge--histori';
+    if (name.includes('gjuh') || name.includes('shqip') || name.includes('anglisht')) return 'bg-badge--gjuhe';
+    if (name.includes('fizik')) return 'bg-badge--fizike';
+    if (name.includes('biologji')) return 'bg-badge--biologji';
+    return 'bg-badge--standard';
+  }
 
   // Subject per gestire la cancellazione delle subscription
   private destroy$ = new Subject<void>();
@@ -65,7 +101,8 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
     public router: Router,
     private _detailsService: DetailsService,
     private tokenStorageService: TokenStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {
   }
 
@@ -218,22 +255,34 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDelete(learnHub: any) {
-    if (!this.isComponentActive) return;
-    if (!this.tokenStorageService.getAccessToken()) return;
+    const ref = this.dialog.open(ConfirmModalComponent, {
+      panelClass: 'bg-confirm-panel',
+      width: '420px',
+      maxWidth: '95vw',
+      data: {
+        title: 'Fshi LearnHub',
+        message: `Jeni i sigurt që dëshironi të fshini "${learnHub.title}"? Ky veprim nuk mund të kthehet mbrapsht.`
+      }
+    });
+    ref.afterClosed().subscribe(result => {
+      if (!result?.success) return;
+      if (!this.isComponentActive) return;
+      if (!this.tokenStorageService.getAccessToken()) return;
 
-    this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp) => {
-          if (!this.isComponentActive) return;
-          this.toast.success(resp?.message, 'SUCCESS', 3000);
-          this.getLearnHublist();
-        },
-        error: (error) => {
-          if (!this.isComponentActive) return;
-          this.toast.danger(error?.error?.message, 'GABIM', 3000);
-        }
-      })
+      this._learnHubsService.apiLearnHubsDeleteLearnhubDelete(learnHub.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (resp) => {
+            if (!this.isComponentActive) return;
+            this.toast.success(resp?.message, 'SUKSES', 3000);
+            this.getLearnHublist();
+          },
+          error: (error) => {
+            if (!this.isComponentActive) return;
+            this.toast.danger(error?.error?.message, 'GABIM', 3000);
+          }
+        });
+    });
   }
 
   // Metodo per fermare tutte le chiamate API

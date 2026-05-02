@@ -1,88 +1,124 @@
-<div class="app-container">
-  <div class="section-title">
-    <h1>{{ 'admin.learnhub.title' | translate }}</h1>
-  </div>
-  <div class="action-button-row">
-    <button mat-raised-button color="primary" class="add-button" (click)="goToAddLearnHub()">
-      <mat-icon>add</mat-icon>
-      {{ 'admin.learnhub.add' | translate }}
-    </button>
-  </div>
-  <div class="search-bar-container">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>{{ 'admin.learnhub.search.label' | translate }}</mat-label>
-      <input
-        matInput
-        [placeholder]="'admin.learnhub.search.placeholder' | translate"
-        (keyup)="applyFilter($event)"
-      >
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </div>
-  <ng-container *ngIf="this.dataSource.data.length > 0">
-    <div class="modern-table-container">
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<div class="bg-app">
+  <div class="bg-page">
+    <header class="bg-page-header">
+      <div>
+        <h1 class="bg-page-header__title">Menaxhimi i LearnHub</h1>
+        <p class="bg-page-header__sub">Krijo dhe administro burime mësimore për studentët</p>
+      </div>
+      <div class="bg-page-header__spacer"></div>
+      <div class="bg-page-header__actions">
+        <button class="bg-btn bg-btn--primary" (click)="goToAddLearnHub()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Shto LearnHub
+        </button>
+      </div>
+    </header>
 
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="title">{{ 'admin.learnhub.col.title' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.title }}</td>
-        </ng-container>
+    <div class="bg-card">
+      <!-- Toolbar -->
+      <div class="bg-toolbar">
+        <div class="bg-search" style="width:320px;">
+          <span class="bg-search__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+          <input placeholder="Kërko sipas titullit, lëndës ose klasës…" (keyup)="applyFilter($event)"/>
+        </div>
+        <div class="bg-page-header__spacer"></div>
+        <span style="font:500 12.5px Poppins;color:var(--muted);">{{ length }} burime</span>
+      </div>
 
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.learnhub.col.description' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-        </ng-container>
+      <!-- Table -->
+      @if (dataSource.data.length > 0) {
+        <table class="bg-table">
+          <thead>
+            <tr>
+              <th>Burimi</th>
+              <th>Klasa</th>
+              <th>Lënda</th>
+              <th>Linke</th>
+              <th>Niveli</th>
+              <th style="text-align:right;">Veprime</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of dataSource.data; track row.id) {
+              <tr>
+                <td style="max-width:380px;">
+                  <div style="display:flex;align-items:flex-start;gap:12px;">
+                    <span style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary-soft),#F5FAFD);border:1px solid #D6E2EF;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </span>
+                    <div>
+                      <div style="font:600 14px Poppins;">{{ row.title }}</div>
+                      <div style="font:500 12.5px Poppins;color:var(--muted);margin-top:3px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">
+                        {{ row.description }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ getClassName(row.classType) }}</td>
+                <td><span class="bg-badge" [ngClass]="getSubjectBadgeClass(row.subject)">{{ getSubjectName(row.subject) }}</span></td>
+                <td>
+                  <span style="display:inline-flex;align-items:center;gap:6px;font:500 13px Poppins;color:var(--muted);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L11.76 5"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    {{ row.links?.length ?? 0 }}
+                  </span>
+                </td>
+                <td>
+                  @if (row.isFree) {
+                    <span class="bg-badge bg-badge--standard">Standard</span>
+                  } @else {
+                    <span class="bg-badge bg-badge--premium">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      Premium
+                    </span>
+                  }
+                </td>
+                <td style="text-align:right;">
+                  <div class="bg-menu-wrap">
+                    <button class="bg-menu-trigger" [class.is-open]="openMenuId === row.id" (click)="toggleMenu(row.id, $event)" aria-label="Veprime">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+                    </button>
+                    @if (openMenuId === row.id) {
+                      <div class="bg-menu">
+                        <button class="bg-menu__item" (click)="onEdit(row)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                          Modifiko
+                        </button>
+                        <div class="bg-menu__divider"></div>
+                        <button class="bg-menu__item bg-menu__item--danger" (click)="onDelete(row)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                          Elimino
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
 
-        <ng-container matColumnDef="klasa">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.learnhub.col.class' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ getClassName(element.classType) }}</td>
-        </ng-container>
+        <!-- Pagination -->
+        <div class="bg-pagination">
+          <span>Rreshta për faqe</span>
+          <select class="bg-pagination__select" [value]="pageSize" (change)="onPageSizeChange($event)">
+            @for (size of pageSizeOptions; track size) {
+              <option [value]="size">{{ size }}</option>
+            }
+          </select>
+          <div class="bg-pagination__spacer"></div>
+          <button class="bg-pagination__select" (click)="prevPage()" [disabled]="pageNumber === 0" style="cursor:pointer;">‹</button>
+          <span>{{ pageNumber * pageSize + 1 }}–{{ Math.min((pageNumber + 1) * pageSize, length) }} nga {{ length }}</span>
+          <button class="bg-pagination__select" (click)="nextPage()" [disabled]="(pageNumber + 1) * pageSize >= length" style="cursor:pointer;">›</button>
+        </div>
 
-        <ng-container matColumnDef="lenda">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.learnhub.col.subject' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ getSubjectName(element.subject) }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="links">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.learnhub.col.links' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.links.length }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.learnhub.col.actions' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <span>{{ 'common.actions' | translate }}</span>
-              <mat-icon>expand_more</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onEdit(element)">
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'admin.learnhub.action.edit' | translate }}</span>
-              </button>
-              <button mat-menu-item (click)="onDelete(element)" class="delete-item">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'admin.learnhub.action.delete' | translate }}</span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      } @else {
+        <div style="text-align:center;padding:48px 24px;color:var(--muted);font:500 14px Poppins;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.4;display:block;margin-left:auto;margin-right:auto;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          {{ getNoDataMessage() }}
+        </div>
+      }
     </div>
-    <mat-paginator
-      #paginator
-      showFirstLastButtons
-      [length]="length"
-      [pageSize]="pageSize"
-      [pageIndex]="pageNumber"
-      [pageSizeOptions]="pageSizeOptions"
-      (page)="onPageChange($event)">
-    </mat-paginator>
-  </ng-container>
-  <div *ngIf="dataSource.data.length === 0" class="no-data-message">
-    <p>{{ getNoDataMessage() }}</p>
   </div>
 </div>

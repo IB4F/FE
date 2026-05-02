@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, DestroyRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule, MatIconButton} from "@angular/material/button";
 import {
@@ -50,6 +50,44 @@ export class ManageQuizComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
   pageSize: number = this.pageSizeOptions[0];
+  openMenuId: string | null = null;
+  Math = Math;
+  private filterQuizTypeId: string = '';
+
+  @HostListener('document:click')
+  closeMenu(): void { this.openMenuId = null; }
+
+  toggleMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === id ? null : id;
+  }
+
+  prevPage(): void {
+    if (this.pageNumber > 0) { this.pageNumber--; this.getQuizList(); }
+  }
+
+  nextPage(): void {
+    if ((this.pageNumber + 1) * this.pageSize < this.length) { this.pageNumber++; this.getQuizList(); }
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.pageSize = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.pageNumber = 0;
+    this.getQuizList();
+  }
+
+  onQuizTypeFilter(event: Event): void {
+    this.filterQuizTypeId = (event.target as HTMLSelectElement).value;
+    this.pageNumber = 0;
+    this.getQuizList();
+  }
+
+  getQuizTypeBadgeClass(id: any): string {
+    const name = (this.getQuizTypeName(id) || '').toLowerCase();
+    if (name.includes('audio')) return 'bg-badge--audio';
+    if (name.includes('imazh') || name.includes('image')) return 'bg-badge--gjuhe';
+    return 'bg-badge--multiple';
+  }
 
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
@@ -125,9 +163,12 @@ export class ManageQuizComponent implements OnInit {
 
   onDelete(quiz: any) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      panelClass: 'bg-confirm-panel',
+      width: '420px',
+      maxWidth: '95vw',
       data: {
-        title: 'Fshi Quizin',
-        message: 'Jeni i sigurt që dëshironi të fshini këtë quiz?',
+        title: 'Fshi Kuizin',
+        message: 'Jeni i sigurt që dëshironi të fshini këtë kuiz? Ky veprim nuk mund të kthehet mbrapsht.',
         id: quiz.id
       }
     });

@@ -1,144 +1,305 @@
-// Palette dell'app (da styles.scss)
-$brand-blue: #259ccb;
-$text-dark: #333333;
-$text-light: #555555;
-$bg-light: #F8F9FA;
-$hover-bg: #EFEFEF;
-$border: #E0E0E0;
+// Design tokens — light
+$accent:      #6366f1;
+$accent-soft: #eef0ff;
+$surface:     #ffffff;
+$surface-alt: #f9fafc;
+$bg:          #f6f7fb;
+$text:        #1a1d29;
+$muted:       #6b7280;
+$border:      #eef0f6;
+$shadow:      rgba(99, 102, 241, 0.06);
+
+// Design tokens — dark
+$d-surface:     #171a23;
+$d-surface-alt: #1c2030;
+$d-bg:          #0f1117;
+$d-text:        #e6e8ef;
+$d-muted:       #8a90a3;
+$d-border:      #252a3a;
+$d-accent-soft: rgba(99, 102, 241, 0.15);
+$d-shadow:      rgba(0, 0, 0, 0.3);
 
 :host {
-  display: flex;
-  flex-direction: column;
+  display: block;
   height: 100%;
 }
 
-nav {
+.sidebar {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 12px 0;
+  width: 248px;
+  height: calc(100vh - 32px);
+  margin: 16px 0 16px 16px;
+  background: $surface;
+  border-radius: 24px;
+  border: 1px solid $border;
+  box-shadow: 0 4px 24px $shadow;
+  padding: 16px;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  position: sticky;
+  top: 16px;
+  align-self: flex-start;
+
+  &.collapsed {
+    width: 76px;
+
+    .nav-item {
+      justify-content: center;
+      padding: 12px;
+    }
+  }
+
+  &.dark {
+    background: $d-surface;
+    border-color: $d-border;
+    box-shadow: 0 4px 24px $d-shadow;
+    color: $d-text;
+
+    .logo-sub   { color: $d-muted; }
+    .nav-section-label { color: $d-muted; }
+
+    .nav-item {
+      color: $d-text;
+      &:hover  { background: $d-surface-alt; }
+      &.active {
+        background: $d-accent-soft;
+        color: $accent;
+        .nav-active-bar { opacity: 1; }
+      }
+    }
+
+    .theme-toggle {
+      color: $d-muted;
+      &:hover { background: $d-surface-alt; }
+    }
+
+    .sidebar-user { background: $d-surface-alt; }
+    .user-email   { color: $d-muted; }
+  }
 }
 
-mat-nav-list {
-  padding: 0 !important;
-}
-
-a[mat-list-item] {
-  display: flex !important;
+// ── Logo ──────────────────────────────────────────────────────────────────────
+.sidebar-logo {
+  display: flex;
   align-items: center;
-  height: 48px !important;
-  margin: 2px 12px;
+  justify-content: center;
+  padding: 4px 8px 20px;
+  border-bottom: 1px solid $border;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.dark .sidebar-logo { border-bottom-color: $d-border; }
+
+.logo-icon-sm {
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
-  padding: 0 14px !important;
-  color: $text-light;
+  background: linear-gradient(135deg, $accent, #818cf8);
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.logo-full {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.logo-img {
+  height: 26px;
+  width: auto;
+  max-width: 160px;
+  display: block;
+
+  .dark & { filter: brightness(0) invert(1); }
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: $muted;
+  white-space: nowrap;
+  padding-left: 2px;
+  .dark & { color: $d-muted; }
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 8px 12px 4px;
+  display: block;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  color: $text;
+  font-weight: 500;
+  font-size: 13.5px;
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
   cursor: pointer;
-
-  mat-icon {
-    margin-right: 10px;
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    color: $text-light;
-    transition: color 0.15s ease;
-    flex-shrink: 0;
-  }
-
-  span {
-    font-size: 13.5px;
-    font-weight: 500;
-    white-space: nowrap;
-    font-family: 'Work-Sans-Regular', sans-serif;
-    letter-spacing: 0.1px;
-  }
+  position: relative;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
 
   &:hover {
-    background: $hover-bg;
-    color: $text-dark;
-
-    mat-icon {
-      color: $text-dark;
-    }
+    background: $surface-alt;
   }
 
   &.active {
-    background: rgba(37, 156, 203, 0.1);
-    color: $brand-blue;
+    background: $accent-soft;
+    color: $accent;
+    font-weight: 600;
 
-    mat-icon {
-      color: $brand-blue;
-    }
-
-    span {
-      font-weight: 600;
-      color: $brand-blue;
+    .nav-active-bar {
+      opacity: 1;
     }
   }
 }
 
-// Tablet (768px - 1024px): item leggermente più compatti
-@media (max-width: 1024px) and (min-width: 768px) {
-  a[mat-list-item] {
-    height: 44px !important;
-    margin: 2px 8px;
-    padding: 0 10px !important;
-
-    mat-icon {
-      margin-right: 8px;
-      font-size: 17px;
-      width: 17px;
-      height: 17px;
-    }
-
-    span {
-      font-size: 13px;
-    }
-  }
+.nav-active-bar {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: $accent;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-// Mobile (<768px): item più comodi da toccare
-@media (max-width: 767px) {
-  a[mat-list-item] {
-    height: 52px !important;
-    margin: 3px 10px;
-    padding: 0 16px !important;
-
-    mat-icon {
-      margin-right: 14px;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    span {
-      font-size: 15px;
-    }
-  }
+.nav-icon {
+  flex-shrink: 0;
 }
 
-// Rimuove focus/ripple default di Angular Material
-::ng-deep mat-nav-list {
-  --mat-list-active-indicator-color: transparent;
-  --mat-list-list-item-focus-state-layer-color: transparent;
-  --mat-list-list-item-hover-state-layer-color: transparent;
-  --mat-list-list-item-ripple-color: transparent;
+.nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .mat-mdc-list-item-interactive:focus::before,
-  .mat-mdc-list-item-interactive:focus-visible::before {
-    opacity: 0 !important;
-  }
+// ── Spacer ────────────────────────────────────────────────────────────────────
+.sidebar-spacer { flex: 1; }
 
-  .mat-mdc-list-item .mat-ripple-element {
-    background-color: transparent !important;
-  }
+// ── Theme toggle ──────────────────────────────────────────────────────────────
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: $muted;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  margin-bottom: 4px;
+  width: 100%;
+  transition: background 0.2s;
 
-  .mdc-list-item--activated,
-  .mdc-list-item:focus {
-    background-color: transparent !important;
+  &:hover { background: $surface-alt; }
 
-    &::before {
-      opacity: 0 !important;
-    }
-  }
+  .collapsed & { justify-content: center; padding: 10px; }
+}
+
+// ── Logout ────────────────────────────────────────────────────────────────────
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  width: 100%;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(239, 68, 68, 0.08); }
+
+  .collapsed & { justify-content: center; padding: 10px; }
+  .dark & { &:hover { background: rgba(239, 68, 68, 0.12); } }
+}
+
+
+// ── User ──────────────────────────────────────────────────────────────────────
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: $surface-alt;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, $accent, #f472b6);
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+.user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $text;
+}
+
+.dark .user-name { color: $d-text; }
+
+.user-email {
+  font-size: 11px;
+  color: $muted;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -34,6 +34,12 @@ export class TokenStorageService {
   getRole = (): string | null => this.userRoleSubject.value;
   getMustChangePassword = (): boolean => this.mustChangePasswordSubject.value;
   getUserId = (): string | null => this.userIdSubject.value;
+  getUserEmail = (): string | null => {
+    const token = this.getAccessToken();
+    if (!token) return null;
+    const payload = this.parseJwt(token);
+    return payload?.email ?? payload?.unique_name ?? null;
+  };
 
   // SETTERS (optimized for speed)
   saveTokens = (tokens: { accessToken: string; refreshToken: string; mustChangePassword?: boolean }, rememberMe = false): void => {

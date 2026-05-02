@@ -1,8 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 export interface ConfirmModalData {
   title: string;
@@ -13,12 +10,7 @@ export interface ConfirmModalData {
 @Component({
   selector: 'app-confirm-modal',
   standalone: true,
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule
-  ,
-    TranslatePipe],
+  imports: [],
   templateUrl: './confirm-modal.component.html',
   styleUrl: './confirm-modal.component.scss'
 })
