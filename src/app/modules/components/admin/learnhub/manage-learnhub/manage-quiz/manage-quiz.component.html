@@ -1,78 +1,156 @@
-<div class="app-container">
-  <div class="section-title">
-    <h1>{{ 'admin.manageQuiz.title' | translate }}</h1>
-  </div>
-  <div class="action-button-row">
-    <button mat-raised-button (click)="goBack()" matTooltipPosition="above"
-            class="back-button" color="warn">
-      <mat-icon>arrow_back</mat-icon>
-      {{ 'admin.manageQuiz.back' | translate }}
-    </button>
-    <button mat-raised-button color="primary" class="add-button" (click)="goToAddQuiz()">
-      <mat-icon>add</mat-icon>
-      {{ 'admin.manageQuiz.add' | translate }}
-    </button>
-  </div>
-  <ng-container *ngIf="this.dataSource.data.length > 0">
-    <div class="search-bar-container">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>{{ 'admin.manageQuiz.search.label' | translate }}</mat-label>
-        <input
-          matInput
-          [placeholder]="'admin.manageQuiz.search.placeholder' | translate"
-          (keyup)="applyFilter($event)"
-        >
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+<div class="bg-app">
+  <div class="bg-page">
+    <header class="bg-page-header">
+      <div>
+        <h1 class="bg-page-header__title">Menaxhimi i Quiz-eve</h1>
+        <p class="bg-page-header__sub">Banka e pyetjeve që mund t'i caktosh në kuize të ndryshme</p>
+      </div>
+      <div class="bg-page-header__spacer"></div>
+      <div class="bg-page-header__actions">
+        <button class="bg-btn bg-btn--ghost" (click)="goBack()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Mbrapsht
+        </button>
+        <button class="bg-btn bg-btn--primary" (click)="goToAddQuiz()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Shto Pyetje
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
+      <div class="bg-card bg-card--padded">
+        <div class="bg-stat">
+          <div>
+            <div class="bg-stat__label">Total pyetje</div>
+            <div class="bg-stat__value">{{ length }}</div>
+            <div class="bg-stat__sub">Në bankë</div>
+          </div>
+          <span class="bg-stat__bar" style="background:#1B9CD8;"></span>
+        </div>
+      </div>
+      <div class="bg-card bg-card--padded">
+        <div class="bg-stat">
+          <div>
+            <div class="bg-stat__label">Faqja aktuale</div>
+            <div class="bg-stat__value">{{ pageNumber + 1 }}</div>
+            <div class="bg-stat__sub">nga {{ Math.ceil(length / pageSize) || 1 }} faqe</div>
+          </div>
+          <span class="bg-stat__bar" style="background:#10B981;"></span>
+        </div>
+      </div>
+      <div class="bg-card bg-card--padded">
+        <div class="bg-stat">
+          <div>
+            <div class="bg-stat__label">Tipi i quiz-eve</div>
+            <div class="bg-stat__value">{{ quizTypes.length }}</div>
+            <div class="bg-stat__sub">Tipet disponueshme</div>
+          </div>
+          <span class="bg-stat__bar" style="background:#BE185D;"></span>
+        </div>
+      </div>
+      <div class="bg-card bg-card--padded">
+        <div class="bg-stat">
+          <div>
+            <div class="bg-stat__label">Rreshta / faqe</div>
+            <div class="bg-stat__value">{{ pageSize }}</div>
+            <div class="bg-stat__sub">Të shfaqura</div>
+          </div>
+          <span class="bg-stat__bar" style="background:#D97706;"></span>
+        </div>
+      </div>
     </div>
-    <div class="modern-table-container">
-      <table mat-table [dataSource]="dataSource" matSort>
 
-        <ng-container matColumnDef="question">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.manageQuiz.col.question' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ element.question }}</td>
-        </ng-container>
+    <div class="bg-card">
+      <!-- Toolbar -->
+      <div class="bg-toolbar">
+        <div class="bg-search" style="width:280px;">
+          <span class="bg-search__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+          <input placeholder="Kërko në pyetje…" (keyup)="applyFilter($event)"/>
+        </div>
+        <div class="bg-page-header__spacer"></div>
+        <select class="bg-pagination__select" (change)="onQuizTypeFilter($event)">
+          <option value="">Tipi: Të gjithë</option>
+          @for (qt of quizTypes; track qt.id) {
+            <option [value]="qt.id">{{ qt.name }}</option>
+          }
+        </select>
+      </div>
 
-        <ng-container matColumnDef="explanation">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'admin.manageQuiz.col.type' | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ getQuizTypeName(element.quizType) }}</td>
-        </ng-container>
+      <!-- Table -->
+      @if (dataSource.data.length > 0) {
+        <table class="bg-table">
+          <thead>
+            <tr>
+              <th>Pyetja</th>
+              <th>Tipi i kuizit</th>
+              <th>Pikët</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of dataSource.data; track row.id) {
+              <tr>
+                <td style="max-width:420px;">
+                  <div style="font:600 14px Poppins;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ row.question }}</div>
+                </td>
+                <td>
+                  <span class="bg-badge" [ngClass]="getQuizTypeBadgeClass(row.quizType)">{{ getQuizTypeName(row.quizType) }}</span>
+                </td>
+                <td>
+                  <strong>{{ row.points ?? '—' }}</strong>
+                  @if (row.points) {
+                    <span style="color:var(--muted-2);font:500 12px Poppins;"> pikë</span>
+                  }
+                </td>
+                <td style="text-align:right;">
+                  <div class="bg-menu-wrap">
+                    <button class="bg-menu-trigger" [class.is-open]="openMenuId === row.id" (click)="toggleMenu(row.id, $event)" aria-label="Veprime">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+                    </button>
+                    @if (openMenuId === row.id) {
+                      <div class="bg-menu">
+                        <button class="bg-menu__item" (click)="onEditQuiz(row)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                          Modifiko
+                        </button>
+                        <div class="bg-menu__divider"></div>
+                        <button class="bg-menu__item bg-menu__item--danger" (click)="onDelete(row)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                          Elimino
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>{{ 'admin.manageQuiz.col.actions' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <span>{{ 'common.actions' | translate }}</span>
-              <mat-icon>expand_more</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onEditQuiz(element)">
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'admin.manageQuiz.action.edit' | translate }}</span>
-              </button>
-              <button mat-menu-item (click)="onDelete(element)" class="delete-item">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'admin.manageQuiz.action.delete' | translate }}</span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
+        <!-- Pagination -->
+        <div class="bg-pagination">
+          <span>Rreshta për faqe</span>
+          <select class="bg-pagination__select" [value]="pageSize" (change)="onPageSizeChange($event)">
+            @for (size of pageSizeOptions; track size) {
+              <option [value]="size">{{ size }}</option>
+            }
+          </select>
+          <div class="bg-pagination__spacer"></div>
+          <button class="bg-pagination__select" (click)="prevPage()" [disabled]="pageNumber === 0" style="cursor:pointer;">‹</button>
+          <span>{{ pageNumber * pageSize + 1 }}–{{ Math.min((pageNumber + 1) * pageSize, length) }} nga {{ length }}</span>
+          <button class="bg-pagination__select" (click)="nextPage()" [disabled]="(pageNumber + 1) * pageSize >= length" style="cursor:pointer;">›</button>
+        </div>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      } @else {
+        <div style="text-align:center;padding:48px 24px;color:var(--muted);font:500 14px Poppins;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.4;display:block;margin-left:auto;margin-right:auto;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Nuk ka pyetje të disponueshme. Shto pyetje të reja duke klikuar "Shto Pyetje".
+        </div>
+      }
     </div>
-    <mat-paginator
-      #paginator
-      showFirstLastButtons
-      [length]="length"
-      [pageSize]="pageSize"
-      [pageIndex]="pageNumber"
-      [pageSizeOptions]="pageSizeOptions"
-      (page)="onPageChange($event)">
-    </mat-paginator>
-  </ng-container>
-  <div *ngIf="dataSource.data.length === 0" class="no-data-message">
-    <p>{{ 'admin.manageQuiz.noData' | translate }}</p>
   </div>
 </div>

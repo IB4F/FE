@@ -1,376 +1,384 @@
-<div class="app-container">
-  <div class="section-title">
-    <h1 *ngIf="isEditMode">{{ 'admin.quizzes.title.edit' | translate }}</h1>
-    <h1 *ngIf="!isEditMode">{{ 'admin.quizzes.title.add' | translate }}</h1>
-    <p>
-      {{ isEditMode ? ('admin.quizzes.desc.edit' | translate) : ('admin.quizzes.desc.add' | translate) }}
-    </p>
-  </div>
-  <div class="action-button-row">
-    <button mat-raised-button (click)="goBack()" matTooltipPosition="above"
-            class="back-button" color="warn">
-      <mat-icon>arrow_back</mat-icon>
-      {{ 'admin.quizModal.backToList' | translate }}
+<div class="bg-app">
+  <div class="bg-page">
+    <button class="bg-back" (click)="goBack()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Mbrapsht te kuizet
     </button>
-  </div>
 
-  <div class="quiz-form-container">
-    <div class="modal-header">
-      <h3>{{ isEditMode ? ('admin.quizModal.title.edit' | translate) : ('admin.quizModal.title.add' | translate) }}</h3>
-    </div>
-    <div class="quiz-form-content">
-      <form [formGroup]="quizFormGroup">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>{{ 'admin.quizModal.quizType' | translate }}</mat-label>
-          <mat-select formControlName="quizType" required>
-            <mat-option *ngFor="let type of quizTypes" [value]="type.id">
-              {{ type.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="quizFormGroup.get('quizType')?.hasError('required')">
-            {{ 'common.required' | translate }}
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>{{ 'admin.quizModal.questionField' | translate }}</mat-label>
-          <textarea matInput formControlName="question" rows="3" required></textarea>
-          <mat-error *ngIf="quizFormGroup.get('question')?.hasError('required')">
-            {{ 'admin.quizModal.questionRequired' | translate }}
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Question Audio Section -->
-        <div class="audio-section">
-          <label class="audio-section-label">{{ 'admin.quizModal.audio.question' | translate }}</label>
-
-          <div *ngIf="existingQuestionAudio && !selectedQuestionAudio" class="existing-audio">
-            <div class="audio-player">
-              <audio controls>
-                <source [src]="existingQuestionAudio.url" type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-            <div class="audio-actions">
-              <button type="button" mat-icon-button color="warn" (click)="removeQuestionAudio()">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </div>
-
-          <div *ngIf="!existingQuestionAudio || selectedQuestionAudio" class="file-upload-section">
-            <label class="file-upload-label">{{ 'admin.quizModal.audio.optional' | translate }}</label>
-            <div class="file-upload-area">
-              <input type="file"
-                     #questionAudioInput
-                     accept="audio/*"
-                     (change)="onQuestionAudioSelected($event)"
-                     class="file-input">
-              <div class="upload-placeholder">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'admin.quizModal.audio.upload' | translate }}</span>
-                <small>{{ 'admin.quizModal.audio.formats' | translate }}</small>
-              </div>
-            </div>
-            <div class="file-info" *ngIf="selectedQuestionAudio">
-              <mat-icon>audiotrack</mat-icon>
-              <span>{{ selectedQuestionAudio.name }}</span>
-              <button type="button" mat-icon-button color="warn" (click)="selectedQuestionAudio = null">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Options Section -->
-        <div formArrayName="options" class="options-section">
-          <div class="options-section-header">
-            <p class="section-title-options">{{ 'admin.quizModal.options.title' | translate }}</p>
-            <span class="options-count">{{ options.length }} / 4 {{ 'admin.quizModal.option.count' | translate }}</span>
-          </div>
-
-          <div *ngFor="let option of options?.controls; let i = index" [formGroupName]="i" class="option-item">
-            <div class="option-header">
-              <p class="option-label">{{ 'admin.quizModal.option.label' | translate }} {{ i + 1 }}</p>
-              <button type="button" mat-icon-button color="warn"
-                      *ngIf="options.length > 2"
-                      (click)="removeOption(i)">
-                <mat-icon>remove_circle_outline</mat-icon>
-              </button>
-            </div>
-            <div class="option-input-group">
-              <mat-form-field appearance="outline" class="flex-grow">
-                <mat-label>{{ 'admin.quizModal.option.text' | translate }}</mat-label>
-                <textarea matInput formControlName="optionText" rows="3"></textarea>
-                <mat-error *ngIf="option.get('optionText')?.hasError('required')">
-                  {{ 'admin.quizModal.option.empty' | translate }}
-                </mat-error>
-              </mat-form-field>
-              <mat-checkbox formControlName="isCorrect" class="option-checkbox">{{ 'admin.quizModal.option.correct' | translate }}</mat-checkbox>
-            </div>
-
-            <!-- Option Image Upload (only for image quiz types) -->
-            <div class="file-upload-section" *ngIf="shouldShowImageFields()">
-              <label class="file-upload-label">
-                {{ 'admin.quizModal.option.label' | translate }} {{ i + 1 }}
-                <span *ngIf="areImagesRequired()" class="required-field">*</span>
-                <mat-icon *ngIf="isOptionMissingImage(i)"
-                         class="warning-icon">warning</mat-icon>
-              </label>
-
-              <div *ngIf="existingOptionImages[i] && !selectedOptionImages[i]" class="existing-image">
-                <div class="image-preview">
-                  <img [src]="existingOptionImages[i]?.url"
-                       [alt]="'Option ' + (i + 1) + ' image'"
-                       class="option-image clickable"
-                       (click)="previewOptionImage(i)">
-                </div>
-                <div class="image-actions">
-                  <button type="button" mat-icon-button color="warn" (click)="removeOptionImage(i)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </div>
-
-              <div *ngIf="!existingOptionImages[i] || selectedOptionImages[i]">
-                <div class="file-upload-area">
-                  <input type="file"
-                         accept="image/*"
-                         (change)="onOptionImageSelected($event, i)"
-                         class="file-input">
-                  <div class="upload-placeholder">
-                    <mat-icon>image</mat-icon>
-                    <span>{{ 'admin.quizModal.image.upload' | translate }}</span>
-                    <small>{{ 'admin.quizModal.image.formats' | translate }}</small>
-                  </div>
-                </div>
-                <div class="file-info" *ngIf="selectedOptionImages[i]">
-                  <mat-icon>image</mat-icon>
-                  <span>{{ selectedOptionImages[i]?.name }}</span>
-                  <button type="button" mat-icon-button color="warn" (click)="selectedOptionImages[i] = null">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add Option Button -->
-          <div class="add-option-row" *ngIf="options.length < 4">
-            <button type="button" mat-stroked-button color="primary" (click)="addOption()" class="add-option-btn">
-              <mat-icon>add_circle_outline</mat-icon>
-              {{ 'admin.quizModal.addOption' | translate }}
-            </button>
-          </div>
-
-          <mat-error *ngIf="quizFormGroup.get('options')?.hasError('atLeastOneCorrectOption')" class="options-error">
-            {{ 'admin.quizModal.option.oneRequired' | translate }}
-          </mat-error>
-          <mat-error *ngIf="areImagesRequired() && !validateImageOptions()" class="options-error">
-            {{ getImageValidationError() }}
-          </mat-error>
-        </div>
-
-        <!-- Explanation Section -->
-        <div class="explanation-section">
-          <label class="explanation-section-label">{{ 'admin.quizModal.explanation' | translate }}</label>
-
-          <!-- Rich text editor (browser only - SSR safe) -->
-          <div class="quill-wrapper" *ngIf="isBrowser">
-            <quill-editor
-              formControlName="explanation"
-              [modules]="quillModules"
-              placeholder="Shkruani shpjegimin këtu..."
-              [styles]="{'min-height': '180px'}">
-            </quill-editor>
-            <div *ngIf="quizFormGroup.get('explanation')?.hasError('required') && quizFormGroup.get('explanation')?.touched"
-                 class="explanation-error">
-              {{ 'admin.quizModal.explanationRequired' | translate }}
-            </div>
-          </div>
-          <!-- Fallback textarea for SSR -->
-          <mat-form-field appearance="outline" class="full-width" *ngIf="!isBrowser">
-            <textarea matInput formControlName="explanation" rows="6"></textarea>
-          </mat-form-field>
-
-          <!-- Explanation Image Upload -->
-          <div class="explanation-image-section">
-            <label class="sub-section-label">
-              <mat-icon>image</mat-icon>
-              {{ 'admin.quizModal.image.explanation' | translate }}
-            </label>
-
-            <div *ngIf="existingExplanationImage && !selectedExplanationImage" class="existing-image explanation-existing-image">
-              <div class="image-preview">
-                <img [src]="existingExplanationImage.url"
-                     alt="Shpjegimi imazh"
-                     class="option-image clickable"
-                     (click)="previewImage(existingExplanationImage.url, 'Imazh Shpjegimi')">
-              </div>
-              <div class="image-actions">
-                <button type="button" mat-icon-button color="warn" (click)="removeExplanationImage()">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-
-            <div *ngIf="!existingExplanationImage || selectedExplanationImage">
-              <div class="file-upload-area">
-                <input type="file"
-                       accept="image/*"
-                       (change)="onExplanationImageSelected($event)"
-                       class="file-input">
-                <div class="upload-placeholder">
-                  <mat-icon>image</mat-icon>
-                  <span>{{ 'admin.quizModal.image.upload' | translate }}</span>
-                  <small>{{ 'admin.quizModal.image.formats' | translate }}</small>
-                </div>
-              </div>
-              <div class="file-info" *ngIf="selectedExplanationImage">
-                <mat-icon>image</mat-icon>
-                <span>{{ selectedExplanationImage.name }}</span>
-                <button type="button" mat-icon-button color="warn" (click)="selectedExplanationImage = null">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Explanation Audio Section -->
-        <div class="audio-section">
-          <label class="audio-section-label">{{ 'admin.quizModal.audio.explanation' | translate }}</label>
-
-          <div *ngIf="existingExplanationAudio && !selectedExplanationAudio" class="existing-audio">
-            <div class="audio-player">
-              <audio controls>
-                <source [src]="existingExplanationAudio.url" type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-            <div class="audio-actions">
-              <button type="button" mat-icon-button color="warn" (click)="removeExplanationAudio()">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </div>
-
-          <div *ngIf="!existingExplanationAudio || selectedExplanationAudio" class="file-upload-section">
-            <label class="file-upload-label">{{ 'admin.quizModal.audio.explanation.optional' | translate }}</label>
-            <div class="file-upload-area">
-              <input type="file"
-                     #explanationAudioInput
-                     accept="audio/*"
-                     (change)="onExplanationAudioSelected($event)"
-                     class="file-input">
-              <div class="upload-placeholder">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>{{ 'admin.quizModal.audio.upload' | translate }}</span>
-                <small>{{ 'admin.quizModal.audio.formats' | translate }}</small>
-              </div>
-            </div>
-            <div class="file-info" *ngIf="selectedExplanationAudio">
-              <mat-icon>audiotrack</mat-icon>
-              <span>{{ selectedExplanationAudio.name }}</span>
-              <button type="button" mat-icon-button color="warn" (click)="selectedExplanationAudio = null">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="points-section">
-          <div class="points-header">
-            <mat-label>{{ 'admin.quizModal.points' | translate }}</mat-label>
-            <div class="points-display">
-              <span class="points-value">{{ quizFormGroup.get('points')?.value }}</span>
-              <span class="points-label">{{ 'admin.quizModal.points.unit' | translate }}</span>
-            </div>
-          </div>
-          <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="true">
-            <input matSliderThumb formControlName="points">
-          </mat-slider>
-          <div class="points-scale">
-            <span>1</span>
-            <span>5</span>
-            <span>10</span>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button mat-flat-button color="primary" [disabled]="!isFormValid()"
-                  (click)="handleButtonClick()">
-            {{ isEditMode ? ('admin.quizModal.save.edit' | translate) : ('admin.quizModal.save.add' | translate) }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Child Quizzes Section -->
-  <div *ngIf="showChildQuizzesSection" class="child-quizzes-section">
-    <div class="section-title">
-      <h2>{{ 'admin.quizzes.childSection.title' | translate }}</h2>
-      <p>{{ 'admin.quizzes.childSection.desc' | translate }}</p>
-    </div>
-
-    <div class="child-quizzes-header">
-      <button mat-raised-button color="primary"
-              [disabled]="!canAddChildQuizzes()"
-              (click)="openAddChildQuizModal()"
-              class="add-child-quiz-button">
-        <mat-icon>add</mat-icon>
-        {{ 'admin.quizzes.addChild' | translate }}
-      </button>
-
-      <div *ngIf="!canAddChildQuizzes()" class="warning-message">
-        <mat-icon>warning</mat-icon>
-        <span>{{ getChildQuizzesDisabledReason() }}</span>
+    <header class="bg-page-header">
+      <div>
+        <h1 class="bg-page-header__title">{{ isEditMode ? 'Modifiko Pyetjen' : 'Shto Pyetje të Re' }}</h1>
+        <p class="bg-page-header__sub">{{ isEditMode ? 'Përditëso pyetjen, opsionet dhe shpjegimin' : 'Krijo një pyetje të re me opsione, audio dhe sqarime për nxënësit' }}</p>
       </div>
-    </div>
-
-    <div class="child-quizzes-list" *ngIf="childQuizzes.length > 0">
-      <div *ngFor="let childQuiz of childQuizzes; let i = index" class="child-quiz-item">
-        <div class="child-quiz-info">
-          <div class="quiz-number">{{ i + 1 }}.</div>
-          <div class="quiz-details">
-            <h4>{{ childQuiz.question }}</h4>
-            <p class="quiz-type">{{ getQuizTypeName(childQuiz.quizType) }}</p>
-            <p class="quiz-points">{{ childQuiz.points }} {{ 'admin.quizModal.points.unit' | translate }}</p>
-          </div>
-        </div>
-        <div class="child-quiz-actions">
-          <button mat-icon-button color="primary"
-                  (click)="editChildQuiz(childQuiz)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn"
-                  (click)="deleteChildQuiz(childQuiz)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="childQuizzes.length === 0 && canAddChildQuizzes()" class="no-child-quizzes">
-      <mat-icon>quiz</mat-icon>
-      <p>{{ 'admin.quizzes.noChild' | translate }}</p>
-      <p>{{ 'admin.quizzes.noChild.hint' | translate }}</p>
-    </div>
-  </div>
-
-  <!-- Image Preview Modal -->
-  <div *ngIf="showImagePreview" class="image-preview-modal" (click)="closeImagePreview()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ previewImageTitle }}</h3>
-        <button mat-icon-button (click)="closeImagePreview()" class="close-button">
-          <mat-icon>close</mat-icon>
+      <div class="bg-page-header__spacer"></div>
+      <div class="bg-page-header__actions">
+        <button type="button" class="bg-btn bg-btn--primary" [disabled]="!isFormValid()" (click)="handleButtonClick()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ isEditMode ? 'Ruaj ndryshimet' : 'Publiko Pyetjen' }}
         </button>
       </div>
-      <div class="modal-body">
-        <img [src]="previewImageUrl" [alt]="previewImageTitle" class="preview-image">
+    </header>
+
+    <form [formGroup]="quizFormGroup">
+      <div class="bg-grid-main-side">
+        <div class="bg-stack-16">
+
+          <!-- Step 1: Question & Config -->
+          <section class="bg-card bg-card--padded">
+            <div class="bg-section-h">
+              <span class="bg-section-h__num">1</span>
+              <div>
+                <h3>Pyetja &amp; Konfigurimi</h3>
+                <p>Tipi i kuizit, teksti i pyetjes dhe peshat</p>
+              </div>
+            </div>
+
+            <label class="bg-field" style="margin-top:14px;">
+              <span class="bg-field__label">Lloji i kuizit<span class="req">*</span></span>
+              <div class="bg-select-wrap">
+                <select class="bg-select" formControlName="quizType">
+                  <option value="">Zgjidh tipin…</option>
+                  @for (type of quizTypes; track type.id) {
+                    <option [value]="type.id">{{ type.name }}</option>
+                  }
+                </select>
+              </div>
+              @if (quizFormGroup.get('quizType')?.hasError('required') && quizFormGroup.get('quizType')?.touched) {
+                <span class="field-error">Fusha është e detyrueshme</span>
+              }
+            </label>
+
+            <label class="bg-field" style="margin-top:14px;">
+              <span class="bg-field__label">Teksti i pyetjes<span class="req">*</span></span>
+              <textarea class="bg-textarea" rows="3" formControlName="question" placeholder="Shkruani pyetjen këtu…"></textarea>
+              <span class="bg-field__hint">Formuloje qartë; përdor 1-2 fjali maksimum</span>
+              @if (quizFormGroup.get('question')?.hasError('required') && quizFormGroup.get('question')?.touched) {
+                <span class="field-error">Pyetja është e detyrueshme</span>
+              }
+            </label>
+
+            <!-- Points -->
+            <div class="bg-field" style="margin-top:14px;">
+              <span class="bg-field__label">Pikët</span>
+              <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range"/>
+                <span style="font:700 22px Poppins;color:var(--navy);min-width:32px;">{{ quizFormGroup.get('points')?.value }}</span>
+                <span style="font:500 12.5px Poppins;color:var(--muted);">pikë</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
+                <span>1</span><span>5</span><span>10</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Step 2: Audio for question -->
+          <section class="bg-card bg-card--padded">
+            <div class="bg-section-h">
+              <span class="bg-section-h__num">2</span>
+              <div>
+                <h3>Audio për Pyetjen <span class="bg-section-h__opt">Opsionale</span></h3>
+                <p>Opsionale — për pyetje me dëgjim</p>
+              </div>
+            </div>
+
+            @if (existingQuestionAudio && !selectedQuestionAudio) {
+              <div class="audio-existing">
+                <audio controls style="width:100%;margin-top:14px;">
+                  <source [src]="existingQuestionAudio.url" type="audio/mpeg">
+                </audio>
+                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:10px;" (click)="removeQuestionAudio()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  Fshi audion
+                </button>
+              </div>
+            } @else {
+              <label class="bg-upload" style="margin-top:14px;cursor:pointer;">
+                <span class="bg-upload__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                </span>
+                <div>
+                  <div class="bg-upload__title">{{ selectedQuestionAudio ? selectedQuestionAudio.name : 'Kliko për të ngarkuar audio' }}</div>
+                  <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                </div>
+                <div class="bg-upload__spacer"></div>
+                <input #questionAudioInput type="file" accept="audio/*" (change)="onQuestionAudioSelected($event)" style="display:none;"/>
+                <span class="bg-btn bg-btn--soft">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Ngarko
+                </span>
+              </label>
+              @if (selectedQuestionAudio) {
+                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="selectedQuestionAudio = null">Hiq skedarin</button>
+              }
+            }
+          </section>
+
+          <!-- Step 3: Options -->
+          <section class="bg-card bg-card--padded">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="bg-section-h">
+                <span class="bg-section-h__num">3</span>
+                <div>
+                  <h3>Opsionet e Përgjigjes</h3>
+                  <p>Shëno opsionet dhe zgjidh të saktat</p>
+                </div>
+              </div>
+              <div class="bg-page-header__spacer"></div>
+              <span class="bg-badge bg-badge--correct">{{ options.length }} opsione</span>
+            </div>
+
+            <div formArrayName="options" style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+              @for (option of options.controls; track option; let i = $index) {
+                <div class="bg-opt-row" [class.is-correct]="option.get('isCorrect')?.value" [formGroupName]="i">
+                  <span class="bg-opt-row__check">
+                    @if (option.get('isCorrect')?.value) {
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    }
+                  </span>
+                  <div class="bg-link-row__field">
+                    <div class="bg-link-row__label">Opsioni {{ i + 1 }}</div>
+                    <textarea class="opt-textarea" formControlName="optionText" rows="2" placeholder="Shkruani opsionin këtu…"></textarea>
+                  </div>
+                  <label style="display:inline-flex;align-items:center;gap:6px;font:500 12.5px Poppins;flex-shrink:0;" [style.color]="option.get('isCorrect')?.value ? '#065F46' : 'var(--muted)'">
+                    <input type="checkbox" formControlName="isCorrect"/> E saktë
+                  </label>
+                  @if (options.length > 2) {
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOption(i)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  }
+                </div>
+
+                <!-- Option image (for image quiz types) -->
+                @if (shouldShowImageFields()) {
+                  <div style="padding:0 0 8px 0;">
+                    @if (existingOptionImages[i] && !selectedOptionImages[i]) {
+                      <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
+                        <img [src]="existingOptionImages[i]?.url" alt="Opsioni {{ i+1 }}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewOptionImage(i)"/>
+                        <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOptionImage(i)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                        </button>
+                      </div>
+                    } @else {
+                      <label class="bg-upload bg-upload--small" style="margin-top:6px;cursor:pointer;">
+                        <span class="bg-upload__icon" style="width:34px;height:34px;">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </span>
+                        <div>
+                          <div class="bg-upload__title" style="font-size:12.5px;">{{ selectedOptionImages[i] ? selectedOptionImages[i]?.name : 'Ngarko imazh opsioni ' + (i+1) }}</div>
+                          <div class="bg-upload__hint">PNG, JPG</div>
+                        </div>
+                        <input type="file" accept="image/*" (change)="onOptionImageSelected($event, i)" style="display:none;"/>
+                      </label>
+                    }
+                  </div>
+                }
+              }
+            </div>
+
+            @if (options.length < 4) {
+              <button type="button" class="bg-add-dashed" style="margin-top:12px;" (click)="addOption()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                Shto Opsion
+              </button>
+            }
+          </section>
+
+          <!-- Step 4: Explanation -->
+          <section class="bg-card bg-card--padded">
+            <div class="bg-section-h">
+              <span class="bg-section-h__num">4</span>
+              <div>
+                <h3>Shpjegimi</h3>
+                <p>Sqaro përgjigjen e saktë për nxënësit</p>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              @if (isBrowser) {
+                <quill-editor
+                  formControlName="explanation"
+                  [modules]="quillModules"
+                  placeholder="Shkruani shpjegimin këtu..."
+                  [styles]="{'min-height': '160px', 'font-family': 'Poppins, sans-serif'}">
+                </quill-editor>
+              } @else {
+                <textarea class="bg-textarea" formControlName="explanation" rows="6" placeholder="Shkruani shpjegimin këtu..."></textarea>
+              }
+              @if (quizFormGroup.get('explanation')?.hasError('required') && quizFormGroup.get('explanation')?.touched) {
+                <span class="field-error">Shpjegimi është i detyrueshëm</span>
+              }
+            </div>
+
+            <!-- Explanation image -->
+            <div style="margin-top:16px;">
+              <div class="bg-kicker" style="margin-bottom:10px;">Imazh shpjegimi (opsionale)</div>
+              @if (existingExplanationImage && !selectedExplanationImage) {
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <img [src]="existingExplanationImage.url" alt="Imazh shpjegimi" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(existingExplanationImage.url, 'Imazh Shpjegimi')"/>
+                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeExplanationImage()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  </button>
+                </div>
+              } @else {
+                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                  <span class="bg-upload__icon" style="width:34px;height:34px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  </span>
+                  <div>
+                    <div class="bg-upload__title">{{ selectedExplanationImage ? selectedExplanationImage.name : 'Ngarko imazh shpjegimi' }}</div>
+                    <div class="bg-upload__hint">PNG, JPG</div>
+                  </div>
+                  <input type="file" accept="image/*" (change)="onExplanationImageSelected($event)" style="display:none;"/>
+                </label>
+              }
+            </div>
+
+            <!-- Explanation audio -->
+            <div style="margin-top:16px;">
+              <div class="bg-kicker" style="margin-bottom:10px;">Audio shpjegimi (opsionale)</div>
+              @if (existingExplanationAudio && !selectedExplanationAudio) {
+                <div>
+                  <audio controls style="width:100%;">
+                    <source [src]="existingExplanationAudio.url" type="audio/mpeg">
+                  </audio>
+                  <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="removeExplanationAudio()">Fshi audion</button>
+                </div>
+              } @else {
+                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                  <span class="bg-upload__icon" style="width:34px;height:34px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  </span>
+                  <div>
+                    <div class="bg-upload__title">{{ selectedExplanationAudio ? selectedExplanationAudio.name : 'Ngarko audio shpjegimi' }}</div>
+                    <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                  </div>
+                  <input #explanationAudioInput type="file" accept="audio/*" (change)="onExplanationAudioSelected($event)" style="display:none;"/>
+                </label>
+              }
+            </div>
+          </section>
+
+          <!-- Child quizzes section -->
+          @if (showChildQuizzesSection) {
+            <section class="bg-card bg-card--padded">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div>
+                  <h3 style="margin:0;font:600 15px Poppins;">Nën-Kuizet</h3>
+                  <p style="margin:3px 0 0;font:500 12.5px Poppins;color:var(--muted);">Nën-pyetje të lidhura me këtë pyetje kryesore</p>
+                </div>
+                <div class="bg-page-header__spacer"></div>
+                <button type="button" class="bg-btn bg-btn--soft" [disabled]="!canAddChildQuizzes()" (click)="openAddChildQuizModal()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                  Shto nën-kuiz
+                </button>
+              </div>
+
+              @if (!canAddChildQuizzes() && isEditMode) {
+                <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--surface-2);border-radius:10px;font:500 13px Poppins;color:var(--muted);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  {{ getChildQuizzesDisabledReason() }}
+                </div>
+              }
+
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                @for (cq of childQuizzes; track cq.id; let i = $index) {
+                  <div class="bg-link-row">
+                    <span class="bg-link-row__icon">{{ i + 1 }}</span>
+                    <div class="bg-link-row__field">
+                      <div class="bg-link-row__label">{{ getQuizTypeName(cq.quizType) }}</div>
+                      <div style="font:500 13.5px Poppins;color:var(--navy);margin-top:2px;">{{ cq.question }}</div>
+                    </div>
+                    <span style="font:500 12px Poppins;color:var(--muted);">{{ cq.points }} pikë</span>
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--primary" (click)="editChildQuiz(cq)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="deleteChildQuiz(cq)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+        </div>
+
+        <!-- Stepper sidebar -->
+        <aside>
+          <div class="bg-card bg-card--padded" style="position:sticky;top:20px;">
+            <div class="bg-kicker" style="margin-bottom:14px;">Hapat</div>
+            <div class="bg-stepper">
+              <div class="bg-stepper__row">
+                <div class="bg-stepper__col">
+                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid" [class.bg-stepper__circle--current]="!(quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid)">
+                    @if (quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid) {
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    } @else { 1 }
+                  </span>
+                  <span class="bg-stepper__line" [class.bg-stepper__line--done]="quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid"></span>
+                </div>
+                <div style="padding-bottom:18px;padding-top:4px;">
+                  <div class="bg-stepper__title">Pyetja &amp; konfigurimi</div>
+                  <div class="bg-stepper__sub">{{ (quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid) ? 'Përfunduar' : 'Plotëso' }}</div>
+                </div>
+              </div>
+              <div class="bg-stepper__row">
+                <div class="bg-stepper__col">
+                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="true">2</span>
+                  <span class="bg-stepper__line bg-stepper__line--done"></span>
+                </div>
+                <div style="padding-bottom:18px;padding-top:4px;">
+                  <div class="bg-stepper__title">Audio (opsionale)</div>
+                  <div class="bg-stepper__sub">{{ (existingQuestionAudio || selectedQuestionAudio) ? 'Me audio' : 'Pa audio' }}</div>
+                </div>
+              </div>
+              <div class="bg-stepper__row">
+                <div class="bg-stepper__col">
+                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="options.valid" [class.bg-stepper__circle--current]="!options.valid">
+                    @if (options.valid) {
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    } @else { 3 }
+                  </span>
+                  <span class="bg-stepper__line" [class.bg-stepper__line--done]="options.valid"></span>
+                </div>
+                <div style="padding-bottom:18px;padding-top:4px;">
+                  <div class="bg-stepper__title">Opsionet</div>
+                  <div class="bg-stepper__sub">{{ options.length }} opsione</div>
+                </div>
+              </div>
+              <div class="bg-stepper__row">
+                <div class="bg-stepper__col">
+                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="quizFormGroup.get('explanation')?.valid" [class.bg-stepper__circle--current]="!quizFormGroup.get('explanation')?.valid">
+                    @if (quizFormGroup.get('explanation')?.valid) {
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    } @else { 4 }
+                  </span>
+                </div>
+                <div style="padding-top:4px;">
+                  <div class="bg-stepper__title" [class.bg-stepper__title--todo]="!quizFormGroup.get('explanation')?.valid">Shpjegimi</div>
+                  <div class="bg-stepper__sub">{{ quizFormGroup.get('explanation')?.valid ? 'Përfunduar' : 'Pritshëm' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
-    </div>
+    </form>
   </div>
 </div>
+
+<!-- Image Preview Modal -->
+@if (showImagePreview) {
+  <div class="img-preview-backdrop" (click)="closeImagePreview()">
+    <div class="img-preview-box" (click)="$event.stopPropagation()">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h3 style="margin:0;font:600 16px Poppins;">{{ previewImageTitle }}</h3>
+        <button type="button" class="bg-iconbtn" (click)="closeImagePreview()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <img [src]="previewImageUrl" [alt]="previewImageTitle" style="max-width:100%;max-height:70vh;border-radius:10px;"/>
+    </div>
+  </div>
+}

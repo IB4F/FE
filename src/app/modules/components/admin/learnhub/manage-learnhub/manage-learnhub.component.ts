@@ -268,6 +268,16 @@ export class ManageLearnhubComponent implements OnInit {
     });
   }
 
+  getClassName(id: any): string {
+    const found = this.classesList.find(c => c.id === id);
+    return found?.name ?? '';
+  }
+
+  getSubjectName(id: any): string {
+    const found = this.subjectList.find(s => s.id === id);
+    return found?.name ?? '';
+  }
+
   goToQuiz(link: AbstractControl) {
     const linkId = link.get('id')?.value;
     this.router.navigate(['/admin/learnhub/manage/quiz', linkId]);

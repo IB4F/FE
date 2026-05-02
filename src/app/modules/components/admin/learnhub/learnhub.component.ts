@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef, HostListener} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatIconModule} from "@angular/material/icon";
@@ -42,6 +42,40 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
   pageSize: number = this.pageSizeOptions[0];
+  openMenuId: string | null = null;
+  Math = Math;
+
+  @HostListener('document:click')
+  closeMenu(): void { this.openMenuId = null; }
+
+  toggleMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === id ? null : id;
+  }
+
+  prevPage(): void {
+    if (this.pageNumber > 0) { this.pageNumber--; this.getLearnHublist(); }
+  }
+
+  nextPage(): void {
+    if ((this.pageNumber + 1) * this.pageSize < this.length) { this.pageNumber++; this.getLearnHublist(); }
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.pageSize = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.pageNumber = 0;
+    this.getLearnHublist();
+  }
+
+  getSubjectBadgeClass(id: any): string {
+    const name = (this.getSubjectName(id) || '').toLowerCase();
+    if (name.includes('matematik')) return 'bg-badge--matematike';
+    if (name.includes('histori')) return 'bg-badge--histori';
+    if (name.includes('gjuh') || name.includes('shqip') || name.includes('anglisht')) return 'bg-badge--gjuhe';
+    if (name.includes('fizik')) return 'bg-badge--fizike';
+    if (name.includes('biologji')) return 'bg-badge--biologji';
+    return 'bg-badge--standard';
+  }
 
   // Subject per gestire la cancellazione delle subscription
   private destroy$ = new Subject<void>();

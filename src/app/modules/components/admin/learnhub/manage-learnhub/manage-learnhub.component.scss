@@ -1,92 +1,11 @@
-.container {
-  padding: 40px 10px;
-  max-width: 800px;
-  margin: 0 auto;
+.field-error {
+  color: var(--danger);
+  font: 500 12px 'Poppins';
+  margin-top: 4px;
+  display: block;
+}
 
-  .title {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin-bottom: 30px;
-
-    h1,
-    p {
-      text-align: center;
-    }
-
-    p {
-      margin: 20px 0;
-      opacity: 0.75;
-    }
-  }
-
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .field-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-  }
-
-  .btn-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-
-    button {
-      width: fit-content;
-    }
-  }
-
-  .section-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    justify-content: space-between;
-
-    p {
-      margin: 0;
-    }
-
-    mat-icon {
-      cursor: pointer;
-    }
-  }
-
-  .row-container {
-    margin-bottom: 15px;
-
-    .row-content {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      mat-icon {
-        cursor: pointer;
-        transition: opacity 0.2s;
-
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-
-      .manage-icon {
-        color: #2196F3;
-      }
-
-      .delete-icon {
-        color: #f44336;
-      }
-    }
-  }
-
-  .error-message {
-    color: #f44336;
-    margin-bottom: 10px;
-  }
+.req {
+  color: var(--danger);
+  margin-left: 3px;
 }

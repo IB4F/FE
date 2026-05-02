@@ -1,0 +1,397 @@
+/* ===========================================================
+   Brain Gain — Design tokens & component styles
+   Drop this file into src/styles/ and @import in styles.scss
+   =========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg:        #F5F7FB;
+  --surface:   #FFFFFF;
+  --surface-2: #FAFBFD;
+  --border:    #EEF2F7;
+  --border-2:  #E6EDF5;
+  --line:      #F1F5F9;
+  --primary:   #1B9CD8;
+  --primary-d: #1A6FB8;
+  --primary-soft: #E8F4FB;
+  --navy:      #0E2A47;
+  --muted:     #5B7A99;
+  --muted-2:   #9FB4CC;
+  --danger:    #EF4444;
+  --success:   #10B981;
+  --warning:   #D97706;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-1: 0 1px 2px rgba(14,42,71,0.04);
+  --shadow-2: 0 4px 12px rgba(14,42,71,0.06);
+  --shadow-3: 0 12px 32px rgba(14,42,71,0.10);
+}
+
+* { box-sizing: border-box; }
+.bg-app, .bg-app * { font-family: 'Poppins', system-ui, sans-serif; color: var(--navy); }
+.bg-app { background: var(--bg); min-height: 100%; }
+
+/* ============ PAGE ============ */
+.bg-page { padding: 36px; min-height: 100%; background: var(--bg); }
+.bg-page-header {
+  display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;
+}
+.bg-page-header__title  { margin: 0; font: 700 24px/1.2 'Poppins'; letter-spacing: -0.3px; }
+.bg-page-header__sub    { margin: 6px 0 0; color: var(--muted); font: 500 14px 'Poppins'; }
+.bg-page-header__spacer { flex: 1; }
+.bg-page-header__actions { display: flex; gap: 10px; }
+
+.bg-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 500 13px 'Poppins'; color: var(--muted);
+  background: transparent; border: 0; cursor: pointer; padding: 0; margin-bottom: 8px;
+}
+.bg-back:hover { color: var(--navy); }
+
+/* ============ CARD ============ */
+.bg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+.bg-card--padded { padding: 28px; }
+
+/* ============ BUTTONS ============ */
+.bg-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 13.5px 'Poppins';
+  padding: 10px 18px; border-radius: var(--radius-md);
+  cursor: pointer; border: 1px solid transparent;
+  transition: all 160ms ease; white-space: nowrap;
+}
+.bg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.bg-btn--primary { background: var(--primary); color: #FFF; box-shadow: 0 4px 14px rgba(27,156,216,0.32); }
+.bg-btn--primary:hover:not(:disabled) { background: var(--primary-d); }
+.bg-btn--navy    { background: var(--navy); color: #FFF; box-shadow: 0 4px 14px rgba(14,42,71,0.22); }
+.bg-btn--danger  { background: var(--danger); color: #FFF; box-shadow: 0 4px 14px rgba(239,68,68,0.28); }
+.bg-btn--ghost   { background: var(--surface); color: var(--navy); border-color: var(--border-2); box-shadow: var(--shadow-1); }
+.bg-btn--ghost:hover { background: var(--surface-2); }
+.bg-btn--soft    { background: var(--primary-soft); color: var(--primary); }
+.bg-btn .icon    { width: 16px; height: 16px; }
+
+/* ============ SEARCH / INPUTS ============ */
+.bg-search { position: relative; }
+.bg-search__icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--muted-2); display: inline-flex;
+}
+.bg-search input {
+  font: 500 13.5px 'Poppins';
+  padding: 11px 14px 11px 40px; width: 100%;
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius-md); color: var(--navy); outline: none;
+  box-shadow: var(--shadow-1);
+}
+.bg-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(27,156,216,0.12); }
+
+.bg-input, .bg-textarea, .bg-select {
+  font: 500 14px 'Poppins';
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-md);
+  color: var(--navy); outline: none;
+  width: 100%; box-shadow: var(--shadow-1);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+.bg-input:focus, .bg-textarea:focus, .bg-select:focus {
+  border-color: var(--primary); box-shadow: 0 0 0 4px rgba(27,156,216,0.12);
+}
+.bg-textarea { resize: vertical; min-height: 100px; line-height: 1.55; }
+
+.bg-select-wrap { position: relative; }
+.bg-select-wrap::after {
+  content: ''; position: absolute; right: 14px; top: 50%; pointer-events: none;
+  width: 10px; height: 10px;
+  border-right: 2px solid var(--muted-2); border-bottom: 2px solid var(--muted-2);
+  transform: translateY(-70%) rotate(45deg);
+}
+.bg-select-wrap .bg-select { appearance: none; padding-right: 36px; cursor: pointer; }
+
+/* ============ FIELD ============ */
+.bg-field { display: flex; flex-direction: column; gap: 6px; }
+.bg-field__label {
+  font: 600 12px 'Poppins'; color: var(--muted);
+  letter-spacing: 0.3px; text-transform: uppercase;
+}
+.bg-field__label .req { color: var(--danger); margin-left: 4px; }
+.bg-field__hint { font: 500 12px 'Poppins'; color: var(--muted-2); }
+
+/* ============ TABLE ============ */
+.bg-table { width: 100%; border-collapse: collapse; }
+.bg-table thead th {
+  text-align: left; padding: 14px 22px;
+  font: 600 11.5px 'Poppins'; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+}
+.bg-table tbody td { padding: 16px 22px; font: 500 13.5px 'Poppins'; vertical-align: middle; }
+.bg-table tbody tr { border-top: 1px solid var(--line); transition: background 120ms ease; }
+.bg-table tbody tr:hover { background: var(--surface-2); }
+
+.bg-toolbar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+/* ============ CHIP / BADGE ============ */
+.bg-chip {
+  padding: 7px 13px;
+  background: var(--surface-2); color: var(--muted);
+  border: 1px solid var(--border-2);
+  border-radius: 999px; font: 500 12.5px 'Poppins'; cursor: pointer;
+}
+.bg-chip--active { background: var(--navy); color: #FFF; border-color: var(--navy); }
+
+.bg-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font: 600 12px 'Poppins';
+}
+.bg-badge--matematike { background: #EEF2FF; color: #4338CA; }
+.bg-badge--histori    { background: #FEF3C7; color: #92400E; }
+.bg-badge--gjuhe      { background: #FCE7F3; color: #BE185D; }
+.bg-badge--fizike     { background: #E8F4FB; color: #0E5A85; }
+.bg-badge--biologji   { background: #ECFDF5; color: #065F46; }
+.bg-badge--standard   { background: #F1F5F9; color: #475569; }
+.bg-badge--premium    { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; }
+.bg-badge--correct    { background: #ECFDF5; color: #065F46; }
+.bg-badge--multiple   { background: #EEF2FF; color: #4338CA; }
+.bg-badge--text       { background: #E8F4FB; color: #0E5A85; }
+.bg-badge--audio      { background: #FCE7F3; color: #BE185D; }
+
+.bg-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+.bg-dot--easy { background: var(--success); }
+.bg-dot--med  { background: var(--warning); }
+.bg-dot--hard { background: var(--danger); }
+
+/* ============ ICON BUTTONS ============ */
+.bg-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: transparent; border: 1px solid transparent;
+  color: var(--muted); border-radius: var(--radius-md);
+  cursor: pointer; transition: all 140ms ease;
+}
+.bg-iconbtn:hover { background: var(--surface-2); color: var(--navy); }
+.bg-iconbtn--small   { width: 30px; height: 30px; border-radius: var(--radius-sm); }
+.bg-iconbtn--primary { color: var(--primary); }
+.bg-iconbtn--primary:hover { background: var(--primary-soft); }
+.bg-iconbtn--danger  { color: var(--danger); }
+.bg-iconbtn--danger:hover  { background: #FEF2F2; }
+
+/* ============ ACTION MENU (popover) ============ */
+.bg-menu-wrap { position: relative; display: inline-block; }
+.bg-menu-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  background: transparent; border: 1px solid transparent;
+  color: var(--muted); border-radius: var(--radius-md);
+  cursor: pointer; transition: all 140ms ease;
+}
+.bg-menu-trigger:hover { background: var(--surface-2); color: var(--navy); }
+.bg-menu-trigger.is-open {
+  background: var(--primary-soft); border-color: var(--primary); color: var(--primary);
+}
+.bg-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 30;
+  background: var(--surface); border: 1px solid var(--border-2);
+  box-shadow: 0 12px 32px rgba(14, 42, 71, 0.12), 0 2px 6px rgba(14, 42, 71, 0.04);
+  border-radius: var(--radius-lg); padding: 6px; min-width: 180px;
+  animation: bgMenuIn 160ms cubic-bezier(.2,.9,.3,1.2);
+  transform-origin: top right;
+}
+.bg-menu__item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 9px 12px; background: transparent; border: 0;
+  border-radius: var(--radius-sm);
+  font: 500 13.5px 'Poppins'; color: var(--navy);
+  cursor: pointer; text-align: left;
+}
+.bg-menu__item:hover { background: var(--surface-2); }
+.bg-menu__item--danger { color: var(--danger); }
+.bg-menu__item--danger:hover { background: #FEF2F2; }
+.bg-menu__divider { height: 1px; background: var(--border); margin: 6px 4px; }
+
+@keyframes bgMenuIn {
+  from { opacity: 0; transform: scale(.96) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ============ PAGINATION ============ */
+.bg-pagination {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 22px; border-top: 1px solid var(--border);
+  color: var(--muted); font: 500 13px 'Poppins';
+}
+.bg-pagination__select {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm); padding: 5px 10px;
+  color: var(--navy); cursor: pointer; font: inherit;
+}
+.bg-pagination__spacer { flex: 1; }
+
+/* ============ NUMBERED SECTION HEADER ============ */
+.bg-section-h { display: flex; align-items: center; gap: 12px; }
+.bg-section-h__num {
+  width: 32px; height: 32px; border-radius: var(--radius-md);
+  background: var(--navy); color: #FFF;
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 700 13px 'Poppins'; flex-shrink: 0;
+}
+.bg-section-h h3 { margin: 0; font: 600 16px 'Poppins'; color: var(--navy); }
+.bg-section-h p  { margin: 2px 0 0; font: 500 12.5px 'Poppins'; color: var(--muted); }
+.bg-section-h__opt {
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--line); color: var(--muted-2);
+  font: 500 11px 'Poppins'; margin-left: 8px;
+}
+
+/* ============ UPLOAD ZONE ============ */
+.bg-upload {
+  margin-top: 12px; padding: 28px 20px;
+  background: var(--surface-2);
+  border: 1.5px dashed var(--border-2);
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all 160ms ease;
+}
+.bg-upload:hover { border-color: var(--primary); background: #F5FAFD; }
+.bg-upload__icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border-2);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--primary);
+}
+.bg-upload__title { font: 600 13.5px 'Poppins'; color: var(--navy); }
+.bg-upload__hint  { font: 500 12.5px 'Poppins'; color: var(--muted); margin-top: 2px; }
+.bg-upload__spacer { flex: 1; }
+.bg-upload--small { padding: 20px 16px; }
+
+/* ============ SEGMENTED + DIFFICULTY (form helpers) ============ */
+.bg-seg { display: flex; background: var(--line); border-radius: var(--radius-md); padding: 3px; }
+.bg-seg__btn {
+  flex: 1; padding: 8px 0; background: transparent; color: var(--muted);
+  border: 0; border-radius: var(--radius-sm); font: 600 13px 'Poppins'; cursor: pointer;
+}
+.bg-seg__btn.active {
+  background: var(--surface); color: var(--navy);
+  box-shadow: 0 1px 3px rgba(14,42,71,0.08);
+}
+
+.bg-diff { display: flex; gap: 4px; }
+.bg-diff__btn {
+  flex: 1; padding: 10px 0;
+  background: var(--surface); color: var(--muted-2);
+  border: 1px solid var(--border-2); border-radius: var(--radius-sm);
+  font: 600 13px 'Poppins'; cursor: pointer;
+}
+.bg-diff__btn.active { background: var(--primary); color: #FFF; border-color: var(--primary); }
+
+/* ============ STEPPER (form sidebar) ============ */
+.bg-stepper { display: flex; flex-direction: column; }
+.bg-stepper__row { display: flex; gap: 12px; align-items: flex-start; }
+.bg-stepper__col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.bg-stepper__circle {
+  width: 28px; height: 28px; border-radius: 999px;
+  background: var(--surface); border: 1.5px solid var(--border-2); color: var(--muted-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 700 12px 'Poppins';
+}
+.bg-stepper__circle--done    { background: var(--success); border-color: var(--success); color: #FFF; }
+.bg-stepper__circle--current { background: var(--primary); border-color: var(--primary); color: #FFF; }
+.bg-stepper__line {
+  width: 2px; flex: 1; min-height: 24px;
+  background: var(--border); margin: 4px 0;
+}
+.bg-stepper__line--done { background: var(--success); }
+.bg-stepper__title { font: 600 13.5px 'Poppins'; color: var(--navy); }
+.bg-stepper__title--todo { color: var(--muted-2); }
+.bg-stepper__sub   { font: 500 12px 'Poppins'; color: var(--muted-2); margin-top: 2px; }
+
+/* ============ KICKER (small caps) ============ */
+.bg-kicker {
+  font: 600 11.5px 'Poppins'; color: var(--muted-2);
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+
+/* ============ LINK ROW (form) ============ */
+.bg-link-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.bg-link-row__grip { cursor: grab; color: var(--muted-2); background: transparent; border: 0; padding: 4px; display: inline-flex; }
+.bg-link-row__icon {
+  width: 30px; height: 30px; border-radius: var(--radius-sm);
+  background: var(--primary-soft); color: var(--primary);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.bg-link-row__field { flex: 1; min-width: 0; }
+.bg-link-row__label { font: 600 11px 'Poppins'; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.bg-link-row__field input {
+  width: 100%; font: 500 13.5px 'Poppins'; color: var(--navy);
+  background: transparent; border: 0; outline: none; padding: 0; margin-top: 2px;
+}
+
+/* ============ OPTION ROW (quiz form) ============ */
+.bg-opt-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.bg-opt-row.is-correct {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+}
+.bg-opt-row__check {
+  width: 26px; height: 26px; border-radius: 999px;
+  background: var(--surface); border: 1.5px solid var(--border-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: #FFF;
+}
+.bg-opt-row.is-correct .bg-opt-row__check { background: var(--success); border-color: var(--success); }
+
+/* ============ DASHED ADD BUTTON ============ */
+.bg-add-dashed {
+  width: 100%;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1.5px dashed var(--border-2);
+  color: var(--primary);
+  border-radius: var(--radius-lg);
+  font: 600 13.5px 'Poppins'; cursor: pointer;
+}
+.bg-add-dashed:hover { border-color: var(--primary); background: #F5FAFD; }
+
+/* ============ STAT CARD ============ */
+.bg-stat { display: flex; align-items: flex-start; justify-content: space-between; }
+.bg-stat__label { font: 500 12px 'Poppins'; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.bg-stat__value { font: 700 26px 'Poppins'; color: var(--navy); margin-top: 4px; }
+.bg-stat__sub   { font: 500 12px 'Poppins'; color: var(--muted-2); margin-top: 2px; }
+.bg-stat__bar   { width: 8px; height: 36px; border-radius: 4px; }
+
+/* ============ GRID HELPERS ============ */
+.bg-grid-main-side { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; }
+.bg-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bg-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.bg-stack-16 > * + * { margin-top: 16px; }
+.bg-stack-18 > * + * { margin-top: 18px; }

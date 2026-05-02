@@ -1,135 +1,194 @@
-<div class="container">
-  <div class="title">
-    <h1>{{ 'admin.learnhub.title' | translate }}</h1>
-  </div>
+<div class="bg-app">
+  <div class="bg-page">
+    <button class="bg-back" (click)="goBack()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Mbrapsht te LearnHub
+    </button>
 
-  <form [formGroup]="learnHubFormGroup" class="form-container">
-    <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>{{ 'admin.manageLearnhub.titleField' | translate }}</mat-label>
-      <input matInput formControlName="title" required>
-      <mat-error *ngIf="learnHubFormGroup.get('title')?.hasError('required')">
-        {{ 'common.required' | translate }}
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>{{ 'admin.manageLearnhub.descriptionField' | translate }}</mat-label>
-      <textarea matInput formControlName="description" rows="9" required></textarea>
-      <mat-error *ngIf="learnHubFormGroup.get('description')?.hasError('required')">
-        {{ 'common.required' | translate }}
-      </mat-error>
-    </mat-form-field>
-
-    <div class="field-container">
-      <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>{{ 'admin.manageLearnhub.classField' | translate }}</mat-label>
-        <mat-select formControlName="classType" required>
-          <mat-option *ngFor="let class of classesList" [value]="class.id">
-            {{ class.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="learnHubFormGroup.get('classType')?.hasError('required')">
-          {{ 'common.required' | translate }}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>{{ 'admin.manageLearnhub.subjectField' | translate }}</mat-label>
-        <mat-select formControlName="subject" required>
-          <mat-option *ngFor="let subject of subjectList" [value]="subject.id">
-            {{ subject.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="learnHubFormGroup.get('subject')?.hasError('required')">
-          {{ 'common.required' | translate }}
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="field-container">
-      <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>{{ 'admin.manageLearnhub.difficultyField' | translate }}</mat-label>
-        <input matInput formControlName="difficulty" type="number" required>
-        <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('required')">
-          {{ 'common.required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('min')">
-          {{ 'admin.manageLearnhub.difficultyMin' | translate }}
-        </mat-error>
-        <mat-error *ngIf="learnHubFormGroup.get('difficulty')?.hasError('max')">
-          {{ 'admin.manageLearnhub.difficultyMax' | translate }}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" style="width: 48%;">
-        <mat-label>{{ 'admin.manageLearnhub.isFreeField' | translate }}</mat-label>
-        <mat-select formControlName="isFree" required>
-          <mat-option [value]="true">{{ 'common.yes' | translate }}</mat-option>
-          <mat-option [value]="false">{{ 'common.no' | translate }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="learnHubFormGroup.get('isFree')?.hasError('required')">
-          {{ 'common.required' | translate }}
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="field-container" *ngIf="learnHubFormGroup.get('isFree')?.value === false">
-      <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>{{ 'admin.manageLearnhub.tierField' | translate }}</mat-label>
-        <mat-select formControlName="tier" required>
-          <mat-option *ngFor="let tier of tiersList" [value]="tier.value">
-            {{ tier.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="learnHubFormGroup.get('tier')?.hasError('required')">
-          {{ 'common.required' | translate }}
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="section-container">
-      <p>{{ 'admin.manageLearnhub.linksSection' | translate }}</p>
-      <button mat-raised-button color="primary" class="add-button" (click)="addRow()">
-        <mat-icon>add_circle_outline</mat-icon>
-        {{ 'admin.manageLearnhub.addLink' | translate }}
-      </button>
-    </div>
-    <div formArrayName="links" class="numbered-rows">
-      <div *ngIf="links.invalid && links.length == 0" class="error-message">
-        {{ 'admin.manageLearnhub.linkRequired' | translate }}
+    <header class="bg-page-header">
+      <div>
+        <h1 class="bg-page-header__title">{{ isEditMode ? 'Modifiko Burimin' : 'Shto LearnHub të Ri' }}</h1>
+        <p class="bg-page-header__sub">{{ isEditMode ? 'Përditëso titullin, përmbajtjen dhe lidhjet e këtij burimi' : 'Krijo një burim të ri mësimor për studentët' }}</p>
       </div>
-      <div *ngFor="let row of links.controls; let i = index" [formGroupName]="i" class="row-container">
-        <div class="row-content">
-          <mat-form-field appearance="outline" style="width: 90%;">
-            <mat-label>{{ 'admin.manageLearnhub.linkLabel' | translate }} {{ i + 1 }}</mat-label>
-            <input matInput formControlName="title" required>
-            <mat-error *ngIf="row.get('title')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-icon
-            *ngIf="row.get('id')?.value"
-            matTooltip="Menaxho Kuizet"
-            class="manage-icon"
-            (click)="goToQuiz(row)">
-            visibility
-          </mat-icon>
+    </header>
 
-          <mat-icon
-            matTooltip="Fshije Linkun"
-            class="delete-icon"
-            (click)="removeRow(i)">
-            delete_outline
-          </mat-icon>
+    <form [formGroup]="learnHubFormGroup">
+      <div class="bg-grid-main-side">
+        <div class="bg-stack-16">
+
+          <!-- Basics -->
+          <section class="bg-card bg-card--padded">
+            <div class="bg-stack-18">
+
+              <label class="bg-field">
+                <span class="bg-field__label">Titulli<span class="req">*</span></span>
+                <input class="bg-input" formControlName="title" placeholder="P.sh. Hyrje në Algjebër"/>
+                @if (learnHubFormGroup.get('title')?.hasError('required') && learnHubFormGroup.get('title')?.touched) {
+                  <span class="field-error">Fusha është e detyrueshme</span>
+                }
+              </label>
+
+              <label class="bg-field">
+                <span class="bg-field__label">Përshkrimi<span class="req">*</span></span>
+                <textarea class="bg-textarea" rows="5" formControlName="description" placeholder="Përshkrim i shkurtër që do shfaqet te studentët"></textarea>
+                <span class="bg-field__hint">Përshkrim i shkurtër që do shfaqet te studentët</span>
+                @if (learnHubFormGroup.get('description')?.hasError('required') && learnHubFormGroup.get('description')?.touched) {
+                  <span class="field-error">Fusha është e detyrueshme</span>
+                }
+              </label>
+
+              <div class="bg-row-2">
+                <label class="bg-field">
+                  <span class="bg-field__label">Klasa<span class="req">*</span></span>
+                  <div class="bg-select-wrap">
+                    <select class="bg-select" formControlName="classType">
+                      <option value="">Zgjidh klasën…</option>
+                      @for (cls of classesList; track cls.id) {
+                        <option [value]="cls.id">{{ cls.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  @if (learnHubFormGroup.get('classType')?.hasError('required') && learnHubFormGroup.get('classType')?.touched) {
+                    <span class="field-error">Fusha është e detyrueshme</span>
+                  }
+                </label>
+                <label class="bg-field">
+                  <span class="bg-field__label">Lënda<span class="req">*</span></span>
+                  <div class="bg-select-wrap">
+                    <select class="bg-select" formControlName="subject">
+                      <option value="">Zgjidh lëndën…</option>
+                      @for (subj of subjectList; track subj.id) {
+                        <option [value]="subj.id">{{ subj.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  @if (learnHubFormGroup.get('subject')?.hasError('required') && learnHubFormGroup.get('subject')?.touched) {
+                    <span class="field-error">Fusha është e detyrueshme</span>
+                  }
+                </label>
+              </div>
+
+              <div class="bg-row-2">
+                <label class="bg-field">
+                  <span class="bg-field__label">Vështirësia (0–10)<span class="req">*</span></span>
+                  <input class="bg-input" type="number" min="0" max="10" formControlName="difficulty" placeholder="P.sh. 5"/>
+                  @if (learnHubFormGroup.get('difficulty')?.hasError('required') && learnHubFormGroup.get('difficulty')?.touched) {
+                    <span class="field-error">Fusha është e detyrueshme</span>
+                  }
+                  @if (learnHubFormGroup.get('difficulty')?.hasError('min')) {
+                    <span class="field-error">Vlera minimale është 0</span>
+                  }
+                  @if (learnHubFormGroup.get('difficulty')?.hasError('max')) {
+                    <span class="field-error">Vlera maksimale është 10</span>
+                  }
+                </label>
+                <div class="bg-field">
+                  <span class="bg-field__label">Është falas?<span class="req">*</span></span>
+                  <div class="bg-seg">
+                    <button type="button" class="bg-seg__btn"
+                      [class.active]="learnHubFormGroup.get('isFree')?.value === true"
+                      (click)="learnHubFormGroup.get('isFree')?.setValue(true); learnHubFormGroup.markAsDirty()">Po</button>
+                    <button type="button" class="bg-seg__btn"
+                      [class.active]="learnHubFormGroup.get('isFree')?.value === false"
+                      (click)="learnHubFormGroup.get('isFree')?.setValue(false); learnHubFormGroup.markAsDirty()">Jo</button>
+                  </div>
+                </div>
+              </div>
+
+              @if (learnHubFormGroup.get('isFree')?.value === false) {
+                <label class="bg-field">
+                  <span class="bg-field__label">Niveli i Paketës<span class="req">*</span></span>
+                  <div class="bg-select-wrap">
+                    <select class="bg-select" formControlName="tier">
+                      <option value="">Zgjidh nivelin…</option>
+                      @for (tier of tiersList; track tier.value) {
+                        <option [value]="tier.value">{{ tier.name }}</option>
+                      }
+                    </select>
+                  </div>
+                  @if (learnHubFormGroup.get('tier')?.hasError('required') && learnHubFormGroup.get('tier')?.touched) {
+                    <span class="field-error">Fusha është e detyrueshme</span>
+                  }
+                </label>
+              }
+            </div>
+          </section>
+
+          <!-- Links -->
+          <section class="bg-card bg-card--padded">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div>
+                <h3 style="margin:0;font:600 15px Poppins;">Lidhjet e Burimit</h3>
+                <p style="margin:3px 0 0;font:500 12.5px Poppins;color:var(--muted);">Shto seksionet e mësimit</p>
+              </div>
+              <div class="bg-page-header__spacer"></div>
+              <button type="button" class="bg-btn bg-btn--soft" (click)="addRow()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                Shto Lidhje
+              </button>
+            </div>
+
+            <div formArrayName="links" style="display:flex;flex-direction:column;gap:10px;">
+              @if (links.invalid && links.length === 0) {
+                <span class="field-error">Të paktën një lidhje është e detyrueshme</span>
+              }
+              @for (row of links.controls; track row; let i = $index) {
+                <div class="bg-link-row" [formGroupName]="i">
+                  <span class="bg-link-row__icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L11.76 5"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </span>
+                  <div class="bg-link-row__field">
+                    <div class="bg-link-row__label">Lidhja {{ i + 1 }}</div>
+                    <input formControlName="title" placeholder="Titulli i seksionit…"/>
+                  </div>
+                  @if (row.get('id')?.value) {
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--primary" (click)="goToQuiz(row)" title="Menaxho Kuizet">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  }
+                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeRow(i)" title="Fshi lidhjen">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  </button>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Actions -->
+          <div style="display:flex;gap:12px;justify-content:space-between;padding-top:4px;">
+            <button type="button" class="bg-btn bg-btn--ghost" (click)="goBack()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Anulo
+            </button>
+            <button type="button" class="bg-btn bg-btn--primary" (click)="handleButtonClick()" [disabled]="!isFormValid() || learnHubFormGroup.pristine">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+              {{ isEditMode ? 'Përditëso burimin' : 'Krijo burimin' }}
+            </button>
+          </div>
         </div>
+
+        <!-- Side preview -->
+        <aside class="bg-stack-16">
+          <div class="bg-card bg-card--padded" style="position:sticky;top:20px;">
+            <div class="bg-kicker" style="margin-bottom:10px;">Pamje paraprake</div>
+            <div style="background:linear-gradient(135deg,#1B9CD8,#1A6FB8);border-radius:14px;padding:20px;color:#FFF;position:relative;overflow:hidden;">
+              <div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:999px;background:rgba(255,255,255,0.1);"></div>
+              <div style="font:600 11px Poppins;opacity:0.85;letter-spacing:0.6px;text-transform:uppercase;">
+                {{ getClassName(learnHubFormGroup.get('classType')?.value) || 'Klasa' }} · {{ getSubjectName(learnHubFormGroup.get('subject')?.value) || 'Lënda' }}
+              </div>
+              <div style="font:700 18px Poppins;margin-top:8px;">
+                {{ learnHubFormGroup.get('title')?.value || 'Titulli i burimit' }}
+              </div>
+              <div style="font:500 12.5px Poppins;opacity:0.85;margin-top:6px;line-height:1.5;">
+                {{ learnHubFormGroup.get('description')?.value || 'Përshkrimi do të shfaqet këtu…' }}
+              </div>
+            </div>
+            <p style="margin-top:18px;font:500 12.5px Poppins;color:var(--muted);line-height:1.5;">
+              Studentët do ta shohin këtë kartë në LearnHub. Ndryshimet ruhen pasi klikoni "Përditëso".
+            </p>
+          </div>
+        </aside>
       </div>
-    </div>
-    <div class="btn-container">
-      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
-        <mat-icon>arrow_back</mat-icon>
-        {{ 'admin.manageLearnhub.back' | translate }}
-      </button>
-      <button mat-raised-button color="primary" (click)="handleButtonClick()" [disabled]="!isFormValid() || learnHubFormGroup.pristine">
-        {{ isEditMode ? ('admin.manageLearnhub.update' | translate) : ('admin.manageLearnhub.create' | translate) }}
-      </button>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
