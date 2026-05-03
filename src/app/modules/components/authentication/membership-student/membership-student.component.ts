@@ -37,7 +37,7 @@ export class MembershipStudentComponent implements OnInit, OnDestroy {
   private paddleService = inject(PaddleService);
 
   loading = false;
-  selectedProvider = 'Novalnet';
+  selectedProvider = 'Paddle';
   manualPaymentDetails: ManualPaymentDetails | null = null;
   manualPaymentProvider = '';
 

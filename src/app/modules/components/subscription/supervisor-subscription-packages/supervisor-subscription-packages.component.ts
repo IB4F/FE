@@ -64,7 +64,7 @@ export class SupervisorSubscriptionPackagesComponent implements OnInit {
   packageForm!: FormGroup;
   paymentInfo: any[] = [];
   loading = false;
-  selectedProvider = 'Novalnet';
+  selectedProvider = 'Paddle';
   manualPaymentDetails: ManualPaymentDetails | null = null;
   manualPaymentProvider = '';
   private destroyRef = inject(DestroyRef);

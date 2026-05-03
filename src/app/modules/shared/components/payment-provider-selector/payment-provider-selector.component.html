@@ -11,14 +11,16 @@
   <div class="bg-payment-grid">
     <div class="bg-payment-card"
          *ngFor="let p of cardProviders"
-         [class.is-selected]="selectedProvider === p.value"
-         (click)="select(p.value)">
+         [class.is-selected]="selectedProvider === p.value && !p.disabled"
+         [class.is-disabled]="p.disabled"
+         (click)="select(p)">
       <div class="bg-payment-icon">
         <mat-icon>{{ p.icon }}</mat-icon>
       </div>
       <span class="bg-payment-name">{{ p.shortLabel }}</span>
       <span class="bg-payment-label">{{ p.sublabel }}</span>
       <span *ngIf="p.recommended" class="pay-badge">I Rekomanduar</span>
+      <span *ngIf="p.disabled" class="pay-badge pay-badge--soon">Së shpejti</span>
     </div>
   </div>
 
@@ -30,13 +32,15 @@
   <div class="bg-payment-grid">
     <div class="bg-payment-card"
          *ngFor="let p of bankProviders"
-         [class.is-selected]="selectedProvider === p.value"
-         (click)="select(p.value)">
+         [class.is-selected]="selectedProvider === p.value && !p.disabled"
+         [class.is-disabled]="p.disabled"
+         (click)="select(p)">
       <div class="bg-payment-icon">
         <mat-icon>{{ p.icon }}</mat-icon>
       </div>
       <span class="bg-payment-name">{{ p.shortLabel }}</span>
       <span class="bg-payment-label">{{ p.sublabel }}</span>
+      <span *ngIf="p.disabled" class="pay-badge pay-badge--soon">Së shpejti</span>
     </div>
   </div>
 
