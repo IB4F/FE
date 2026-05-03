@@ -10,6 +10,7 @@ interface ProviderOption {
   sublabel: string;
   icon: string;
   recommended?: boolean;
+  disabled?: boolean;
 }
 
 @Component({
@@ -20,28 +21,23 @@ interface ProviderOption {
   styleUrl: './payment-provider-selector.component.scss'
 })
 export class PaymentProviderSelectorComponent implements OnInit {
-  @Input() selectedProvider: string = 'Novalnet';
+  @Input() selectedProvider: string = 'Paddle';
   @Output() providerChange = new EventEmitter<string>();
 
   cardProviders: ProviderOption[] = [
     {
-      value: 'Stripe',
-      shortLabel: 'Stripe',
-      sublabel: 'Visa / Mastercard (ndërkombëtare)',
-      icon: 'credit_card'
+      value: 'Paddle',
+      shortLabel: 'Paddle',
+      sublabel: 'Checkout ndërkombëtar',
+      icon: 'language',
+      recommended: true
     },
     {
       value: 'Novalnet',
       shortLabel: 'Novalnet',
       sublabel: 'Visa / Mastercard / Maestro',
       icon: 'credit_card',
-      recommended: true
-    },
-    {
-      value: 'Paddle',
-      shortLabel: 'Paddle',
-      sublabel: 'Checkout ndërkombëtar',
-      icon: 'language'
+      disabled: true
     }
   ];
 
@@ -50,13 +46,15 @@ export class PaymentProviderSelectorComponent implements OnInit {
       value: 'BKT',
       shortLabel: 'BKT',
       sublabel: 'Bankë Kombëtare Tregtare',
-      icon: 'account_balance'
+      icon: 'account_balance',
+      disabled: true
     },
     {
       value: 'Raiffeisen',
       shortLabel: 'Raiffeisen',
       sublabel: 'Raiffeisen Bank Albania',
-      icon: 'account_balance'
+      icon: 'account_balance',
+      disabled: true
     }
   ];
 
@@ -64,8 +62,9 @@ export class PaymentProviderSelectorComponent implements OnInit {
     this.providerChange.emit(this.selectedProvider);
   }
 
-  select(provider: string): void {
-    this.selectedProvider = provider;
-    this.providerChange.emit(provider);
+  select(provider: ProviderOption): void {
+    if (provider.disabled) return;
+    this.selectedProvider = provider.value;
+    this.providerChange.emit(provider.value);
   }
 }

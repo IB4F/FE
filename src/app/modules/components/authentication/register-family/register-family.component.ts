@@ -57,7 +57,7 @@ export class RegisterFamilyComponent implements OnInit {
   private stripeService = inject(StripeService);
   private paddleService = inject(PaddleService);
   loading = false;
-  selectedProvider = 'Novalnet';
+  selectedProvider = 'Paddle';
   manualPaymentDetails: ManualPaymentDetails | null = null;
   manualPaymentProvider = '';
 
