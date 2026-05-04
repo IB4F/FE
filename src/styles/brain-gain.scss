@@ -38,6 +38,7 @@
 
 /* ============ PAGE ============ */
 .bg-page { padding: 36px; min-height: 100%; background: var(--bg); }
+@media (max-width: 900px) { .bg-page { padding: 20px 16px; } }
 .bg-page-header {
   display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;
 }
@@ -169,6 +170,7 @@
 .bg-badge--standard   { background: #F1F5F9; color: #475569; }
 .bg-badge--premium    { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; }
 .bg-badge--falas      { background: #ECFDF5; color: #065F46; }
+.bg-badge--navy       { background: #E8EDF3; color: #0E2A47; }
 .bg-badge--correct    { background: #ECFDF5; color: #065F46; }
 .bg-badge--multiple   { background: #EEF2FF; color: #4338CA; }
 .bg-badge--text       { background: #E8F4FB; color: #0E5A85; }
