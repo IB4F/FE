@@ -1,61 +1,61 @@
-import {Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {Component, DestroyRef, HostListener, inject, OnInit} from '@angular/core';
 import {AdminUserDetailsDTO, AdminUserService} from "../../../../api-client";
 import {CommonModule} from "@angular/common";
 import {NgToastService} from "ng-angular-popup";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
-import {MatSort, MatSortModule} from "@angular/material/sort";
-import {MatIconModule} from "@angular/material/icon";
-import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
-import {MatIconButton} from "@angular/material/button";
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {MatTableDataSource} from "@angular/material/table";
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmModalComponent} from "../../../shared/components/confirm-modal/confirm-modal.component";
-import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatIconModule,
-    MatIconButton,
-    MatPaginatorModule,
-    MatSortModule,
-    MatMenuTrigger,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatInputModule,
-    TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
-  displayedColumns: string[] = ['email', 'firstName', 'lastName', 'role', 'school', 'city', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
   length: number = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
   pageSize: number = this.pageSizeOptions[0];
+  openMenuId: string | null = null;
+  Math = Math;
 
   private searchSubject = new Subject<string>();
   private currentSearchTerm: string = '';
   private destroyRef = inject(DestroyRef);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _adminUserService: AdminUserService,
     private toast: NgToastService,
     public router: Router,
     private dialog: MatDialog
-  ) {
+  ) {}
+
+  @HostListener('document:click')
+  closeMenu(): void { this.openMenuId = null; }
+
+  toggleMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === id ? null : id;
+  }
+
+  prevPage(): void {
+    if (this.pageNumber > 0) { this.pageNumber--; this.getUserslist(); }
+  }
+
+  nextPage(): void {
+    if ((this.pageNumber + 1) * this.pageSize < this.length) { this.pageNumber++; this.getUserslist(); }
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.pageSize = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.pageNumber = 0;
+    this.getUserslist();
   }
 
   ngOnInit() {
@@ -86,7 +86,6 @@ export class UsersComponent implements OnInit {
       pageSize: this.pageSize,
       search: this.currentSearchTerm || null
     };
-
     this._adminUserService.apiAdminUsersPaginatedPost(paginationRequest).subscribe({
       next: (resp) => {
         this.dataSource.data = resp.items;
@@ -98,10 +97,19 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  onPageChange(event: PageEvent) {
-    this.pageNumber = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.getUserslist();
+  getInitials(user: any): string {
+    const f = (user.firstName ?? '').charAt(0).toUpperCase();
+    const l = (user.lastName ?? '').charAt(0).toUpperCase();
+    return f + l || '?';
+  }
+
+  getRoleBadgeClass(role: string): string {
+    switch ((role ?? '').toLowerCase()) {
+      case 'admin':       return 'bg-badge--navy';
+      case 'supervisor':  return 'bg-badge--histori';
+      case 'student':     return 'bg-badge--fizike';
+      default:            return 'bg-badge--standard';
+    }
   }
 
   onEdit(user: AdminUserDetailsDTO) {
@@ -109,24 +117,25 @@ export class UsersComponent implements OnInit {
   }
 
   onDelete(user: AdminUserDetailsDTO) {
-    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+    const ref = this.dialog.open(ConfirmModalComponent, {
+      panelClass: 'bg-confirm-panel',
+      width: '420px',
+      maxWidth: '95vw',
       data: {
         title: 'Fshi Përdoruesin',
-        message: 'Jeni i sigurt që dëshironi të fshini këtë përdorues?',
-        id: user.id
+        message: `Jeni i sigurt që dëshironi të fshini "${(user as any).firstName} ${(user as any).lastName}"? Ky veprim nuk mund të kthehet mbrapsht.`
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result.success) {
-        this.deleteUser(user.id);
-      }
-    })
+    ref.afterClosed().subscribe(result => {
+      if (!result?.success) return;
+      this.deleteUser(user.id);
+    });
   }
 
   deleteUser(userId: any) {
     this._adminUserService.apiAdminUsersIdDelete(userId).subscribe({
       next: (resp) => {
-        this.toast.success(resp?.message, 'SUCCESS', 3000);
+        this.toast.success(resp?.message, 'SUKSES', 3000);
         this.getUserslist();
       },
       error: (error) => {
