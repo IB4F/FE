@@ -39,6 +39,11 @@
 /* ============ PAGE ============ */
 .bg-page { padding: 36px; min-height: 100%; background: var(--bg); }
 @media (max-width: 900px) { .bg-page { padding: 20px 16px; } }
+
+/* Responsive column hiding utilities */
+@media (max-width: 1100px) { .col-hide-lg { display: none !important; } }
+@media (max-width: 768px)  { .col-hide-md { display: none !important; } }
+@media (max-width: 640px)  { .col-hide-sm { display: none !important; } }
 .bg-page-header {
   display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;
 }

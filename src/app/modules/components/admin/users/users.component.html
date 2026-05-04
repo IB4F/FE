@@ -31,14 +31,13 @@
 
       <!-- Table -->
       @if (dataSource.data.length > 0) {
-        <div class="table-scroll">
-          <table class="bg-table">
+        <table class="bg-table">
             <thead>
               <tr>
                 <th>Përdoruesi</th>
                 <th>Roli</th>
-                <th class="col-hide-sm">Shkolla</th>
-                <th class="col-hide-sm">Qyteti</th>
+                <th class="col-hide-md">Shkolla</th>
+                <th class="col-hide-lg">Qyteti</th>
                 <th style="text-align:right;">Veprime</th>
               </tr>
             </thead>
@@ -46,12 +45,12 @@
               @for (row of dataSource.data; track row.id) {
                 <tr>
                   <!-- Përdoruesi: avatar + nome + email -->
-                  <td>
+                  <td style="max-width:280px;">
                     <div style="display:flex;align-items:center;gap:12px;">
                       <span class="user-avatar-cell">{{ getInitials(row) }}</span>
                       <div>
-                        <div style="font:600 14px Poppins;color:var(--navy);">{{ row.firstName }} {{ row.lastName }}</div>
-                        <div style="font:500 12px Poppins;color:var(--muted);margin-top:2px;">{{ row.email }}</div>
+                        <div style="font:600 14px Poppins;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">{{ row.firstName }} {{ row.lastName }}</div>
+                        <div style="font:500 12px Poppins;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">{{ row.email }}</div>
                       </div>
                     </div>
                   </td>
@@ -62,10 +61,10 @@
                   </td>
 
                   <!-- Shkolla -->
-                  <td class="col-hide-sm" style="color:var(--muted);">{{ row.school || '—' }}</td>
+                  <td class="col-hide-md" style="color:var(--muted);">{{ row.school || '—' }}</td>
 
                   <!-- Qyteti -->
-                  <td class="col-hide-sm" style="color:var(--muted);">{{ row.city || '—' }}</td>
+                  <td class="col-hide-lg" style="color:var(--muted);">{{ row.city || '—' }}</td>
 
                   <!-- Veprime -->
                   <td style="text-align:right;">
@@ -91,8 +90,7 @@
                 </tr>
               }
             </tbody>
-          </table>
-        </div>
+        </table>
 
         <!-- Pagination -->
         <div class="bg-pagination">
