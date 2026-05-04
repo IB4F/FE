@@ -36,12 +36,12 @@ export class SidebarComponent implements OnInit {
     },
     {
       path: '/admin/users',
-      label: 'Menaxhimi i Përdoruesve',
+      label: 'Përdoruesit',
       icon: 'M16 11a4 4 0 10-8 0 4 4 0 008 0zM3 21a9 9 0 0118 0'
     },
     {
       path: '/admin/learnhub',
-      label: 'Menaxhimi i LearnHub-it',
+      label: 'LearnHub',
       icon: 'M4 6h16M4 12h16M4 18h10'
     }
   ];

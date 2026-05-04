@@ -9,13 +9,14 @@
  */
 
 
-export interface LearnHubStatsDTO { 
+export interface LearnHubStatsDTO {
     id?: string;
     title?: string | null;
     subject?: string | null;
     classType?: string | null;
     difficulty?: number;
     isFree?: boolean;
+    requiredTier?: 1 | 2 | 3 | null;
     createdAt?: string;
     totalLinks?: number;
     totalQuizzes?: number;
