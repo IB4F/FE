@@ -29,14 +29,13 @@
 
       <!-- Table -->
       @if (dataSource.data.length > 0) {
-        <div class="table-scroll">
         <table class="bg-table">
           <thead>
             <tr>
               <th>Burimi</th>
-              <th>Klasa</th>
-              <th>Lënda</th>
-              <th>Linke</th>
+              <th class="col-hide-md">Klasa</th>
+              <th class="col-hide-md">Lënda</th>
+              <th class="col-hide-lg">Linke</th>
               <th>Niveli</th>
               <th style="text-align:right;">Veprime</th>
             </tr>
@@ -57,9 +56,9 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ getClassName(row.classType) }}</td>
-                <td><span class="bg-badge" [ngClass]="getSubjectBadgeClass(row.subject)">{{ getSubjectName(row.subject) }}</span></td>
-                <td>
+                <td class="col-hide-md">{{ getClassName(row.classType) }}</td>
+                <td class="col-hide-md"><span class="bg-badge" [ngClass]="getSubjectBadgeClass(row.subject)">{{ getSubjectName(row.subject) }}</span></td>
+                <td class="col-hide-lg">
                   <span style="display:inline-flex;align-items:center;gap:6px;font:500 13px Poppins;color:var(--muted);">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L11.76 5"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                     {{ row.links?.length ?? 0 }}
@@ -111,7 +110,6 @@
             }
           </tbody>
         </table>
-        </div>
 
         <!-- Pagination -->
         <div class="bg-pagination">

@@ -14,26 +14,13 @@
 /* Allow dropdown menus to overflow the card */
 .bg-card { overflow: visible; }
 
-/* Action column compact padding */
+/* Action column compact padding — never shrinks below the trigger button */
 .bg-table thead th:last-child,
 .bg-table tbody td:last-child {
   padding-left: 8px;
   padding-right: 16px;
   width: 66px;
+  min-width: 54px;
   white-space: nowrap;
 }
 
-/* Horizontal scroll wrapper — keeps the card corners intact */
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.table-scroll .bg-table {
-  min-width: 560px;
-}
-
-/* Hide secondary columns on small screens */
-@media (max-width: 640px) {
-  .col-hide-sm { display: none; }
-}

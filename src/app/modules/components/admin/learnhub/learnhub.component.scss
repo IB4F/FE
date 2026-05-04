@@ -8,16 +8,6 @@
 /* Allow dropdown menus to overflow the card boundary */
 .bg-card { overflow: visible; }
 
-/* Horizontal scroll — keeps table contained when sidebar expands */
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.table-scroll .bg-table {
-  min-width: 640px;
-}
-
 /* Action column: compact padding so the 34px button fits */
 .bg-table thead th:last-child,
 .bg-table tbody td:last-child {
