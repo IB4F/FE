@@ -9,10 +9,13 @@
  */
 
 
-export interface DashboardStatsDTO { 
+export interface DashboardStatsDTO {
     totalProgress?: number;
     pointsCollected?: number;
     completedLearnHubs?: number;
     totalLearnHubs?: number;
+    averageAccuracy?: number | null;
+    todayExercisesCompleted?: number;
+    dailyGoal?: number;
 }
 

@@ -3,119 +3,90 @@
   width: 100%;
 }
 
-.phone-input-container {
+.phone-wrap {
   display: flex;
   align-items: center;
-  width: 100%;
+  height: 50px;
+  border: 1.5px solid #DCE6ED;
+  border-radius: 14px;
+  background: white;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
 
-  .country-select {
-    width: 90px;
-    flex-shrink: 0;
-    margin-right: 10px;
+  &:hover { border-color: #B7CBD8; }
 
-    ::ng-deep .mat-mdc-select-trigger {
-      border: none;
-      padding: 0;
-      background: transparent;
-      min-height: auto;
-    }
-
-    ::ng-deep .mat-mdc-select-value {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      overflow: visible;
-    }
-
-    ::ng-deep .mat-mdc-select-arrow-wrapper {
-      transform: translateY(0);
-    }
-
-    .flag-icon {
-      font-size: 16px;
-      line-height: 1;
-    }
-
-    .dial-code {
-      font-size: 13px;
-      color: rgba(0, 0, 0, 0.7);
-      font-weight: 500;
-      white-space: nowrap;
-    }
+  &.focused {
+    border-color: #2BA8DC;
+    box-shadow: 0 0 0 4px rgba(43,168,220,.12);
   }
 
-  .phone-number-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 16px;
-    line-height: 1.125;
-    padding: 0;
-    color: rgba(0, 0, 0, 0.87);
-    font-family: inherit;
-    min-width: 0;
-
-    &::placeholder {
-      color: rgba(0, 0, 0, 0.6);
-    }
-
-    &:disabled {
-      color: rgba(0, 0, 0, 0.38);
-      cursor: default;
-    }
+  &.disabled {
+    background: #F4F8FB;
+    opacity: .6;
+    cursor: not-allowed;
   }
 }
 
-// Country dropdown panel
-::ng-deep .phone-country-panel {
-  .country-search-wrapper {
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 1;
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+.country-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px 0 14px;
+  height: 100%;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
 
-    .country-search-input {
-      width: 100%;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
-      padding: 6px 10px;
-      font-size: 14px;
-      outline: none;
-      font-family: inherit;
+.flag { font-size: 18px; line-height: 1; }
 
-      &:focus {
-        border-color: #3f51b5;
-      }
-    }
-  }
+.code {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B1F2A;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
 
-  .mat-mdc-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 40px;
+.chevron {
+  color: #5A7383;
+  flex-shrink: 0;
+  pointer-events: none;
+}
 
-    .flag-icon {
-      font-size: 18px;
-      line-height: 1;
-      flex-shrink: 0;
-    }
+.country-native {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
 
-    .country-name {
-      flex: 1;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+.sep {
+  width: 1px;
+  height: 26px;
+  background: #DCE6ED;
+  flex-shrink: 0;
+}
 
-    .dial-code-option {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.5);
-      flex-shrink: 0;
-    }
+.number-input {
+  flex: 1;
+  height: 100%;
+  padding: 0 16px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  color: #0B1F2A;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  min-width: 0;
+
+  &::placeholder { color: #94A8B5; }
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
   }
 }

@@ -70,6 +70,10 @@ export class PreferencesComponent {
     private translationService: TranslationService
   ) {}
 
+  darkMode = false;
+  emailNotifications = false;
+  sounds = false;
+
   toggleDyslexicFont(): void {
     this.dyslexicFontService.toggle();
   }
@@ -77,5 +81,9 @@ export class PreferencesComponent {
   onLanguageChange(language: Language): void {
     this.translationService.setLanguage(language);
   }
+
+  toggleDarkMode(): void { this.darkMode = !this.darkMode; }
+  toggleEmailNotifications(): void { this.emailNotifications = !this.emailNotifications; }
+  toggleSounds(): void { this.sounds = !this.sounds; }
 }
 

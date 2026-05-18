@@ -10,14 +10,19 @@
 import { OptionDTO } from './optionDTO';
 
 
-export interface CreateQuizzDTO { 
+export interface CreateQuizzDTO {
     question?: string | null;
     questionAudioId?: string | null;
+    questionImageId?: string | null;
     explanation?: string | null;
     explanationAudioId?: string | null;
+    explanationImageId?: string | null;
     points?: number;
     options?: Array<OptionDTO> | null;
     quizType?: string | null;
     parentQuizId?: string | null;
+    dndSpell?: any | null;
+    dndOrder?: any | null;
+    dndMatch?: any | null;
 }
 

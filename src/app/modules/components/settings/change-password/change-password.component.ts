@@ -32,19 +32,43 @@ export class ChangePasswordComponent implements OnInit{
 
   hidePass = true;
   hidePass1 = true;
+  hidePass2 = true;
+
+  get pwScore(): number {
+    const val = this.changePasswordFormGroup.get('newPassword')?.value || '';
+    let s = 0;
+    if (val.length >= 8) s++;
+    if (/[A-Z]/.test(val)) s++;
+    if (/[0-9]/.test(val)) s++;
+    if (/[^A-Za-z0-9]/.test(val)) s++;
+    return s;
+  }
+
+  get pwChecks() {
+    const val = this.changePasswordFormGroup.get('newPassword')?.value || '';
+    return {
+      len: val.length >= 8,
+      upper: /[A-Z]/.test(val),
+      num: /[0-9]/.test(val),
+      sym: /[^A-Za-z0-9]/.test(val),
+    };
+  }
 
   ngOnInit(): void {
     this.changePasswordFormGroup.get('currentPassword')?.setValidators([Validators.required, passwordValidator]);
     this.changePasswordFormGroup.get('newPassword')?.setValidators([Validators.required, passwordValidator]);
+    this.changePasswordFormGroup.get('confirmPassword')?.setValidators([Validators.required]);
     this.changePasswordFormGroup.get('currentPassword')?.updateValueAndValidity();
     this.changePasswordFormGroup.get('newPassword')?.updateValueAndValidity();
+    this.changePasswordFormGroup.get('confirmPassword')?.updateValueAndValidity();
   }
 
   emitPasswordChange() {
     if (this.changePasswordFormGroup.valid) {
       this.passwordChangeRequest.emit({
         currentPassword: this.changePasswordFormGroup.get('currentPassword')?.value,
-        newPassword: this.changePasswordFormGroup.get('newPassword')?.value
+        newPassword: this.changePasswordFormGroup.get('newPassword')?.value,
+        confirmPassword: this.changePasswordFormGroup.get('confirmPassword')?.value,
       });
     }
   }

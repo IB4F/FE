@@ -1,136 +1,454 @@
-<div class="subscription-dashboard">
-  <div class="dashboard-header">
-    <h1>{{ 'settings.subscription.title' | translate }}</h1>
-    <p>{{ 'settings.subscription.description' | translate }}</p>
-  </div>
+<div class="panel">
+  <div class="sub-stage">
 
-  <div class="dashboard-content">
-    <!-- Loading State -->
-    <div *ngIf="loading" class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>{{ 'settings.subscription.loading' | translate }}</p>
-    </div>
+    <!-- ================================================
+         VIEW: OVERVIEW
+         ================================================ -->
+    <div class="sub-view" [class.active]="currentView === 'overview'">
+      <div class="panel-head">
+        <div>
+          <h2>{{ 'settings.subscription.title' | translate }}</h2>
+          <p>{{ 'settings.subscription.description' | translate }}</p>
+        </div>
+      </div>
 
-    <!-- No Subscription State -->
-    <div *ngIf="!loading && !subscription" class="no-subscription">
-      <mat-card class="no-subscription-card">
-        <mat-card-content>
-          <div class="no-subscription-content">
-            <mat-icon class="no-subscription-icon">account_circle</mat-icon>
-            <h2>{{ 'settings.subscription.noSub.title' | translate }}</h2>
-            <p>{{ 'settings.subscription.noSub.description' | translate }}</p>
-            <button mat-raised-button color="primary" routerLink="/membership">
-              {{ 'settings.subscription.noSub.viewPlans' | translate }}
-            </button>
+      <div class="panel-body">
+        <!-- Loading -->
+        <div *ngIf="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>{{ 'settings.subscription.loading' | translate }}</p>
+        </div>
+
+        <!-- No subscription -->
+        <div *ngIf="!loading && !subscription" class="empty-state">
+          <div class="es-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="5" width="20" height="14" rx="3"/>
+              <path d="M2 9h20" stroke-linecap="round"/>
+              <path d="M6 13h4" stroke-linecap="round"/>
+            </svg>
           </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+          <h3>{{ 'settings.subscription.noSub.title' | translate }}</h3>
+          <p>{{ 'settings.subscription.noSub.description' | translate }}</p>
+          <a class="btn btn-primary" routerLink="/membership">
+            {{ 'settings.subscription.noSub.viewPlans' | translate }}
+          </a>
+        </div>
 
-    <!-- Active Subscription State -->
-    <div *ngIf="!loading && subscription" class="subscription-content">
-      <!-- Subscription Overview Card -->
-      <mat-card class="subscription-overview-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon class="subscription-icon">card_membership</mat-icon>
-            {{ 'settings.subscription.card.title' | translate }}
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="subscription-details">
-            <div class="plan-info">
-              <h3>{{ getPlanName() }}</h3>
-              <div class="status-badge" [ngClass]="{
-                'status-trial': isInTrial(),
-                'status-active': isActive() && !isInTrial(),
-                'status-paused': !isActive() && !isInTrial()
-              }">
-                {{ getStatusText() }}
+        <!-- Active subscription -->
+        <ng-container *ngIf="!loading && subscription">
+          <!-- Hero -->
+          <div class="sub-hero">
+            <div class="sub-top">
+              <div>
+                <span class="pill" *ngIf="isActive()">{{ getStatusText() }}</span>
+                <h3 class="sub-name">{{ getPlanName() }}</h3>
+                <p class="sub-tag">{{ getBillingIntervalText() }}</p>
+              </div>
+              <div class="sub-price">
+                <span class="big">{{ getFormattedAmount() }}</span>
+                <span class="per">/ {{ getBillingIntervalText() }}</span>
               </div>
             </div>
 
-            <div class="billing-info">
-              <div class="billing-amount">
-                <span class="amount">{{ getFormattedAmount() }}</span>
-                <span class="interval">/ {{ getBillingIntervalText() }}</span>
+            <div class="sub-period">
+              <div class="cell">
+                <div class="lbl">{{ 'settings.subscription.period.start' | translate }}</div>
+                <div class="val">{{ getFormattedDate(subscription.currentPeriodStart) }}</div>
               </div>
-              <div class="billing-dates">
-                <p *ngIf="subscription.currentPeriodStart">
-                  <strong>{{ 'settings.subscription.period.start' | translate }}</strong> {{ getFormattedDate(subscription.currentPeriodStart) }}
-                </p>
-                <p *ngIf="subscription.currentPeriodEnd">
-                  <strong>{{ 'settings.subscription.period.end' | translate }}</strong> {{ getFormattedDate(subscription.currentPeriodEnd) }}
-                </p>
-                <p *ngIf="subscription.trialEnd">
-                  <strong>{{ 'settings.subscription.trial.end' | translate }}</strong> {{ getFormattedDate(subscription.trialEnd) }}
-                </p>
+              <div class="cell">
+                <div class="lbl">{{ 'settings.subscription.period.end' | translate }}</div>
+                <div class="val">{{ getFormattedDate(subscription.currentPeriodEnd) }}</div>
               </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
 
-      <!-- Subscription Actions Card -->
-      <mat-card class="subscription-actions-card">
-        <mat-card-header>
-          <mat-card-title>{{ 'settings.subscription.actions.title' | translate }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="actions-grid">
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="onChangePlan()"
-              class="action-button">
-              <mat-icon>swap_horiz</mat-icon>
-              {{ 'settings.subscription.actions.changePlan' | translate }}
-            </button>
-
-            <button
-              mat-raised-button
-              color="accent"
-              (click)="onViewBillingHistory()"
-              class="action-button">
-              <mat-icon>receipt</mat-icon>
-              {{ 'settings.subscription.actions.billingHistory' | translate }}
-            </button>
-
-            <button
-              *ngIf="canUnsubscribe()"
-              mat-raised-button
-              color="warn"
-              (click)="onUnsubscribe()"
-              class="action-button unsubscribe-button">
-              <mat-icon>exit_to_app</mat-icon>
-              {{ 'settings.subscription.actions.unsubscribe' | translate }}
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Subscription Details Card -->
-      <mat-card class="subscription-details-card">
-        <mat-card-header>
-          <mat-card-title>{{ 'settings.subscription.details.title' | translate }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="details-grid">
-            <div class="detail-item">
-              <label>{{ 'settings.subscription.details.created' | translate }}</label>
-              <span>{{ getFormattedDate(subscription.createdAt) }}</span>
-            </div>
-            <div class="detail-item">
-              <label>{{ 'settings.subscription.details.updated' | translate }}</label>
-              <span>{{ getFormattedDate(subscription.updatedAt) }}</span>
-            </div>
-            <div class="detail-item">
-              <label>{{ 'settings.subscription.details.type' | translate }}</label>
-              <span>{{ subscription.registrationType || 'N/A' }}</span>
+            <div class="sub-progress">
+              <div class="sub-progress-top">
+                <span><strong>{{ getDaysUsed() }} ditë</strong> të kaluara</span>
+                <span>{{ getDaysLeft() }} ditë të mbetura</span>
+              </div>
+              <div class="sub-progress-bar" [style.--p.%]="getProgressPercent()"></div>
             </div>
           </div>
-        </mat-card-content>
-      </mat-card>
+
+          <!-- Action cards -->
+          <div class="sub-actions">
+            <button class="sub-action primary" type="button" (click)="setView('change-plan')">
+              <span class="ai">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 7h11l-3-3M17 17H6l3 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div>
+                <div class="at">{{ 'settings.subscription.actions.changePlan' | translate }}</div>
+                <div class="ad">Ndrysho ose kalo paketë</div>
+              </div>
+            </button>
+
+            <button class="sub-action alt" type="button" (click)="setView('billing')">
+              <span class="ai">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/>
+                  <path d="M3 9h18" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div>
+                <div class="at">{{ 'settings.subscription.actions.billingHistory' | translate }}</div>
+                <div class="ad">Shiko faturat</div>
+              </div>
+            </button>
+
+            <button class="sub-action danger" *ngIf="canUnsubscribe()" type="button" (click)="setView('cancel')">
+              <span class="ai">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 17l-5-5 5-5M15 12H5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M21 19V5" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <div>
+                <div class="at">{{ 'settings.subscription.actions.unsubscribe' | translate }}</div>
+                <div class="ad">Anulo rinovimin</div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Details -->
+          <section class="sub-details">
+            <h3>
+              <span class="ic">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+              </span>
+              {{ 'settings.subscription.details.title' | translate }}
+            </h3>
+            <div class="meta-grid">
+              <div class="meta-item">
+                <div class="k">{{ 'settings.subscription.details.created' | translate }}</div>
+                <div class="v">{{ getFormattedDate(subscription.createdAt) }}</div>
+              </div>
+              <div class="meta-item">
+                <div class="k">{{ 'settings.subscription.details.updated' | translate }}</div>
+                <div class="v">{{ getFormattedDate(subscription.updatedAt) }}</div>
+              </div>
+              <div class="meta-item">
+                <div class="k">{{ 'settings.subscription.details.type' | translate }}</div>
+                <div class="v">{{ subscription.registrationType || 'N/A' }}</div>
+              </div>
+            </div>
+          </section>
+        </ng-container>
+      </div>
     </div>
+
+    <!-- ================================================
+         VIEW: CHANGE PLAN
+         ================================================ -->
+    <div class="sub-view" [class.active]="currentView === 'change-plan'">
+      <header class="view-head">
+        <button class="view-back" type="button" (click)="setView('overview')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Kthehu
+        </button>
+        <div>
+          <div class="crumb-mini">Abonimenti · Ndrysho planin</div>
+          <h2>Zgjidh paketën <em>e duhur</em>.</h2>
+          <p>Normat e reja zbatohen nga fillimi i periudhës tjetër të faturimit.</p>
+        </div>
+      </header>
+
+      <div class="view-body">
+        <!-- Loading plans -->
+        <div *ngIf="plansLoading" class="loading-state">
+          <div class="spinner"></div>
+        </div>
+
+        <ng-container *ngIf="!plansLoading">
+          <!-- Current plan tag -->
+          <div class="current-plan-tag">
+            <span class="ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div>
+              <div class="ttl">Plani aktual</div>
+              <div class="name">{{ getPlanName() }}</div>
+            </div>
+            <div class="price">
+              {{ getFormattedAmount() }} <small>/ {{ getBillingIntervalText() }}</small>
+            </div>
+          </div>
+
+          <!-- Billing toggle -->
+          <div class="billing-row">
+            <h3>Zgjidh një plan të ri</h3>
+            <div class="billing-toggle" [class.annual]="billingPeriod === 'annual'">
+              <span class="slider"></span>
+              <button type="button" [class.active]="billingPeriod === 'monthly'" (click)="setBillingPeriod('monthly')">
+                Mujore
+              </button>
+              <button type="button" [class.active]="billingPeriod === 'annual'" (click)="setBillingPeriod('annual')">
+                Vjetore <span class="save-pill">–20%</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Plans grid -->
+          <div class="plan-grid">
+            <button
+              type="button"
+              *ngFor="let plan of filteredPlans"
+              class="plan"
+              [class.current]="isCurrentPlan(plan)"
+              [class.selected]="isSelectedPlan(plan)"
+              (click)="selectPlan(plan)">
+              <span class="plan-badge" *ngIf="isCurrentPlan(plan)">Plani aktual</span>
+
+              <div class="plan-name">{{ plan.name }}</div>
+              <div class="plan-tag">{{ plan.description }}</div>
+
+              <div class="plan-price">
+                <span class="cur">€</span>
+                <span class="big">{{ getPlanPrice(plan) }}</span>
+                <span class="per">/ muaj</span>
+              </div>
+
+              <span class="plan-select">
+                <ng-container *ngIf="isCurrentPlan(plan)">Plani aktual</ng-container>
+                <ng-container *ngIf="!isCurrentPlan(plan)">
+                  {{ isSelectedPlan(plan) ? 'I zgjedhur' : 'Zgjidh planin' }}
+                </ng-container>
+              </span>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+
+      <footer class="view-foot">
+        <div class="total" *ngIf="getSelectedPlan() as sp">
+          Totali i ri
+          <span class="v" *ngIf="billingPeriod === 'monthly'">
+            {{ getPlanPrice(sp) }} € <small>/ muaj</small>
+          </span>
+          <span class="v" *ngIf="billingPeriod === 'annual'">
+            {{ getPlanPrice(sp) }} € <small>/ muaj</small>
+            &nbsp;·&nbsp;{{ getPlanYearlyTotal(sp) }} € <small>/ vit</small>
+          </span>
+        </div>
+        <div class="foot-actions">
+          <button class="btn btn-soft" type="button" (click)="setView('overview')">Anulo</button>
+          <button class="btn btn-primary" type="button" (click)="confirmPlan()"
+                  [disabled]="!selectedPlanId || isCurrentPlan(getSelectedPlan()!)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Konfirmo ndryshimin
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ================================================
+         VIEW: BILLING HISTORY
+         ================================================ -->
+    <div class="sub-view" [class.active]="currentView === 'billing'">
+      <header class="view-head">
+        <button class="view-back" type="button" (click)="setView('overview')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Kthehu
+        </button>
+        <div>
+          <div class="crumb-mini">Abonimenti · Faturimi</div>
+          <h2>Historia e <em>faturimit</em></h2>
+          <p>Të gjitha faturat dhe pagesat tuaja, në një vend.</p>
+        </div>
+      </header>
+
+      <div class="view-body">
+        <div *ngIf="billingLoading" class="loading-state"><div class="spinner"></div></div>
+
+        <ng-container *ngIf="!billingLoading">
+          <!-- Stats -->
+          <div class="billing-stats">
+            <div class="bs-card">
+              <div class="ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="lbl">Totali paguar</div>
+                <div class="val">{{ totalPaid | number:'1.2-2' }} <small>€</small></div>
+              </div>
+            </div>
+            <div class="bs-card success">
+              <div class="ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="lbl">Të suksesshme</div>
+                <div class="val">{{ successfulCount }}</div>
+              </div>
+            </div>
+            <div class="bs-card warn">
+              <div class="ico">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="lbl">Në pritje</div>
+                <div class="val">{{ pendingCount }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty billing -->
+          <div *ngIf="paymentHistory.length === 0" class="billing-empty">
+            <p>Nuk ka fatura të disponueshme.</p>
+          </div>
+
+          <!-- Invoice table -->
+          <table *ngIf="paymentHistory.length > 0" class="invoice-table">
+            <thead>
+              <tr>
+                <th>Statusi</th>
+                <th>Plani</th>
+                <th>Shuma</th>
+                <th>Periudha</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inv of paymentHistory">
+                <td data-label="Statusi">
+                  <span class="status" [class.pending]="inv.status === 'pending'">
+                    {{ inv.status === 'paid' ? 'Paguar' : 'Në pritje' }}
+                  </span>
+                </td>
+                <td data-label="Plani" class="plan-cell">
+                  <strong>{{ inv.planName }}</strong>
+                  <small>{{ inv.planTag }}</small>
+                </td>
+                <td data-label="Shuma" class="amount">
+                  {{ inv.amount | number:'1.2-2' }} {{ inv.currency }}
+                </td>
+                <td data-label="Periudha">
+                  <span class="period-cell">
+                    {{ inv.periodStart }} <span class="arr">→</span> {{ inv.periodEnd }}
+                  </span>
+                </td>
+                <td data-label="Data">{{ inv.date }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+      </div>
+
+      <footer class="view-foot">
+        <span class="hint">{{ paymentHistory.length }} fatura gjithsej</span>
+        <button class="btn btn-soft" type="button" (click)="setView('overview')">Kthehu</button>
+      </footer>
+    </div>
+
+    <!-- ================================================
+         VIEW: CANCEL
+         ================================================ -->
+    <div class="sub-view" [class.active]="currentView === 'cancel'">
+      <header class="view-head">
+        <button class="view-back" type="button" (click)="setView('overview')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Kthehu
+        </button>
+        <div>
+          <div class="crumb-mini">Abonimenti · Anulim</div>
+          <h2>Anulo <em>abonimin</em></h2>
+          <p>Konfirmo më poshtë për të ndaluar rinovimin automatik.</p>
+        </div>
+      </header>
+
+      <div class="view-body">
+        <div class="cancel-hero">
+          <div class="ci">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 8v5M12 17h.01" stroke-linecap="round"/>
+              <path d="M10.3 3.86l-8.4 14a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3l-8.4-14a2 2 0 0 0-3.4 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Qasja ruhet deri {{ getFormattedDate(subscription?.currentPeriodEnd) }}</h3>
+            <p>Pas kësaj date abonimenti nuk do të rinovohet. Mund të ribashkoheni në çdo kohë me një klik.</p>
+          </div>
+        </div>
+
+        <ul class="cancel-bullets">
+          <li class="ok">
+            <span class="lc">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Qasje e plotë në të gjithë përmbajtjen deri në fund të periudhës.
+          </li>
+          <li class="warn">
+            <span class="lc">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Asnjë tarifë pas {{ getFormattedDate(subscription?.currentPeriodEnd) }}.
+          </li>
+          <li class="ok">
+            <span class="lc">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Progresi, distinktivët dhe profili do të mbeten të sigurta.
+          </li>
+          <li>
+            <span class="lc">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 3v5h5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            Riaktivizohet kur të dëshironi — i njëjti plan, i njëjti çmim.
+          </li>
+        </ul>
+
+        <div class="field">
+          <label>Opsionale · Ndihmoni na të përmirësohemi</label>
+          <select class="select" [(ngModel)]="cancelReason">
+            <option *ngFor="let r of cancelReasons; let i = index" [value]="i === 0 ? '' : r">{{ r }}</option>
+          </select>
+        </div>
+      </div>
+
+      <footer class="view-foot">
+        <span class="hint">Kjo ndalon vetëm rinovimin — qasja ruhet deri {{ getFormattedDate(subscription?.currentPeriodEnd) }}.</span>
+        <div class="foot-actions">
+          <button class="btn btn-soft" type="button" (click)="setView('overview')">Ruaj planin tim</button>
+          <button class="btn btn-danger" type="button" (click)="confirmCancel()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 17l-5-5 5-5M15 12H5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 19V5" stroke-linecap="round"/>
+            </svg>
+            Konfirmo anulimin
+          </button>
+        </div>
+      </footer>
+    </div>
+
   </div>
 </div>

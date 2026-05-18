@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 interface QuizOption {
@@ -17,12 +18,24 @@ interface QuizOption {
   styleUrl: './quiz.component.scss',
 })
 export class QuizComponent implements OnDestroy {
+  private sanitizer = inject(DomSanitizer);
+
   @Input() question: string = '';
+
+  get safeQuestion(): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(this.question || '');
+  }
   @Input() options: QuizOption[] = [];
   @Input() questionAudioUrl: string | null = null;
   @Input() multipleAnswer: boolean = false;
+  @Input() isChildQuiz = false;
+  @Input() points = 0;
   @Output() optionSelected = new EventEmitter<string>();
   @Output() multipleOptionsSelected = new EventEmitter<string[]>();
+
+  get hasAnyImage(): boolean {
+    return this.options.some(o => !!o.optionImageUrl);
+  }
 
   selectedOptionId: string | null = null;
   selectedOptionIds: string[] = [];

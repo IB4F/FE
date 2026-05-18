@@ -2,9 +2,10 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { SubscriptionManagementService } from '../services/subscription.service';
 import { UserService } from '../services/user.service';
+import { TokenStorageService } from '../services/token-storage.service';
 import { SubscriptionAccessService } from '../api-client';
 import { NgToastService } from "ng-angular-popup";
-import { map, take, catchError, switchMap } from "rxjs";
+import { map, catchError, switchMap } from "rxjs";
 import { of } from 'rxjs';
 
 /**
@@ -15,12 +16,21 @@ import { of } from 'rxjs';
 export const smartSubscriptionGuard: CanActivateFn = (route, state) => {
   const subscriptionService = inject(SubscriptionManagementService);
   const userService = inject(UserService);
+  const tokenService = inject(TokenStorageService);
   const subscriptionAccessService = inject(SubscriptionAccessService);
   const router = inject(Router);
   const notificationService = inject(NgToastService);
 
-  return userService.user$.pipe(
-    take(1),
+  // Synchronous check — token is read from localStorage before any async work
+  if (!tokenService.getAccessToken()) {
+    notificationService.warning('Nuk mund të verifikohet informacioni i përdoruesit!', 'KUJDES', 3000);
+    router.navigate(['/membership']);
+    return of(false);
+  }
+
+  // loadUserData() returns cached user or fetches from API — avoids the null
+  // BehaviorSubject value that user$.pipe(take(1)) captures on fresh page load
+  return userService.loadUserData().pipe(
     switchMap(user => {
       if (!user) {
         notificationService.warning('Nuk mund të verifikohet informacioni i përdoruesit!', 'KUJDES', 3000);

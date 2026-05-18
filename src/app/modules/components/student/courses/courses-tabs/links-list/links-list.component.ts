@@ -1,36 +1,58 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {Router} from "@angular/router";
-import {MatIconModule} from "@angular/material/icon";
-import {TierIconComponent} from "../../../../../shared/components/tier-icon/tier-icon.component";
-import {TranslatePipe} from '../../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-links-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    TierIconComponent
-  ,
-    TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './links-list.component.html',
   styleUrl: './links-list.component.scss'
 })
 export class LinksListComponent implements OnInit {
   @Input() course!: any;
-  difficultyColorClass!: string;
+  @Input() courseIndex = 0;
+  @Input() subjectToneColor = '#1B9CD8';
+  @Input() subjectSoftColor = '#E8F4FB';
 
-  constructor(private router: Router) {
+  readonly difficultyDots = [1, 2, 3, 4, 5];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {}
+
+  get courseCode(): string {
+    return String.fromCharCode(65 + this.courseIndex);
   }
 
-  ngOnInit() {
-    if (this.course && this.course.difficulty) {
-      this.difficultyColorClass = `difficulty-${this.course.difficulty}`;
-    }
+  get totalExercises(): number {
+    return (this.course?.links || []).reduce((sum: number, l: any) => sum + (l.quizzesCount || 0), 0);
   }
 
-  goToQuizList(linkId: string) { // Metodo per la navigazione
+  get doneExercises(): number {
+    return (this.course?.links || [])
+      .filter((l: any) => l.status === 'Completed')
+      .reduce((sum: number, l: any) => sum + (l.quizzesCount || 0), 0);
+  }
+
+  get progressPct(): number {
+    return this.totalExercises ? this.doneExercises / this.totalExercises : 0;
+  }
+
+  get progressPctDisplay(): number {
+    return Math.round(this.progressPct * 100);
+  }
+
+  private get ringR(): number { return (44 - 6) / 2; }
+  private get ringC(): number { return 2 * Math.PI * this.ringR; }
+
+  get ringCircumference(): number { return this.ringC; }
+
+  get ringOffset(): number {
+    return this.ringC * (1 - this.progressPct);
+  }
+
+  goToQuizList(linkId: string) {
     this.router.navigate(['/student/quiz-list', linkId]);
   }
 
@@ -40,40 +62,19 @@ export class LinksListComponent implements OnInit {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Completed':
-        return 'status-completed';
-      case 'Not Started':
-        return 'status-not-started';
-      case 'In Progress':
-        return 'status-in-progress';
-      default:
-        return 'status-unknown';
+      case 'Completed':   return 'done';
+      case 'In Progress': return 'progress';
+      case 'Not Started': return 'todo';
+      default:            return 'todo';
     }
   }
 
   getStatusText(status: string): string {
     switch (status) {
-      case 'Completed':
-        return 'Përfunduar';
-      case 'Not Started':
-        return 'Nuk është filluar';
-      case 'In Progress':
-        return 'Në progres';
-      default:
-        return 'E panjohur';
-    }
-  }
-
-  getStatusIcon(status: string): string {
-    switch (status) {
-      case 'Completed':
-        return 'check_circle';
-      case 'Not Started':
-        return 'radio_button_unchecked';
-      case 'In Progress':
-        return 'play_circle';
-      default:
-        return 'help';
+      case 'Completed':   return 'Përfunduar';
+      case 'In Progress': return 'Në vazhdim';
+      case 'Not Started': return 'I pastartuar';
+      default:            return 'I pastartuar';
     }
   }
 }

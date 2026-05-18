@@ -1,8 +1,28 @@
-<div class="container">
-  <app-dynamic-banner [bannerType]="'quiz'"></app-dynamic-banner>
-  <div class="title">
-    <h1>{{ 'courses.title' | translate }}</h1>
-    <p>{{ 'courses.description' | translate }}</p>
-  </div>
+<div class="lh-page">
+
+  <!-- ── Hero ── -->
+  <section class="lh-hero">
+    <div class="lh-hero__content">
+      <span class="lh-hero__badge">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+          <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+        </svg>
+        Burimet mësimore të klasës tënde
+      </span>
+      <h1 class="lh-hero__title">Mirëdita{{ name ? ', ' + name : '' }} — vazhdo aty ku le.</h1>
+      <p class="lh-hero__sub">Eksploro lëndët dhe burimet e disponueshme. Klikoje lëndën dhe fillo ushtrimin.</p>
+    </div>
+    <div class="lh-hero__glyphs" aria-hidden="true">
+      <div class="lh-glyph lh-glyph--1">Aa</div>
+      <div class="lh-glyph lh-glyph--2">π</div>
+      <div class="lh-glyph lh-glyph--3">⌛</div>
+      <div class="lh-glyph lh-glyph--4">✦</div>
+    </div>
+    <div class="lh-hero__blob lh-hero__blob--1"></div>
+    <div class="lh-hero__blob lh-hero__blob--2"></div>
+  </section>
+
+  <!-- ── Body ── -->
   <app-courses-tabs></app-courses-tabs>
+
 </div>

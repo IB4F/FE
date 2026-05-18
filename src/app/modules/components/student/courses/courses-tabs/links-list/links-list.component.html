@@ -1,46 +1,88 @@
-<div class="course-card">
-  <div class="card-header">
-    <div class="header-left">
-      <h3 class="course-title">{{ course.title }}</h3>
-      <app-tier-icon [tier]="course.requiredTier"></app-tier-icon>
-    </div>
-    <span class="course-subject">{{ course.subject }}</span>
-  </div>
-  <div class="card-body">
-    <p class="course-description">{{ course.description }}</p>
+<div class="topic-card">
 
-    <div *ngIf="course.links && course.links.length > 0" class="course-links">
-      <h4>{{ 'courses.relatedResources' | translate }}</h4>
-      <ol>
-        <li *ngFor="let link of course.links" class="link-item">
-          <div class="link-content">
-            <a *ngIf="hasQuizzes(link)"
-               (click)="goToQuizList(link.id)"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="link-title">
-              {{ link.title }}
-              <span class="quiz-count">({{ link.quizzesCount }})</span>
-
-            </a>
-            <span *ngIf="!hasQuizzes(link)"
-                  class="link-title disabled-link">
-              {{ link.title }}
-              <span class="quiz-count">({{ link.quizzesCount }})</span>
-            </span>
-            <div *ngIf="link.status" class="status-badge" [class]="getStatusClass(link.status)">
-              <mat-icon class="status-icon">{{ getStatusIcon(link.status) }}</mat-icon>
-              <span class="status-text">{{ getStatusText(link.status) }}</span>
-            </div>
-          </div>
-        </li>
-      </ol>
+  <!-- ── Left visual panel ── -->
+  <div class="topic-card__left"
+       [style.background]="'linear-gradient(140deg, ' + subjectSoftColor + ', #FFFFFF 80%)'">
+    <div>
+      <div class="topic-card__njesia" [style.color]="subjectToneColor">
+        Njësia {{ courseCode }}
+      </div>
+      <div class="topic-card__code" [style.color]="subjectToneColor">{{ courseCode }}</div>
     </div>
+
+    <div class="topic-card__ring-wrap">
+      <svg width="44" height="44" class="topic-card__ring-svg">
+        <circle cx="22" cy="22" r="19" fill="none" stroke="#EEF2F7" stroke-width="3"/>
+        <circle cx="22" cy="22" r="19" fill="none"
+                [attr.stroke]="subjectToneColor"
+                stroke-width="3"
+                [attr.stroke-dasharray]="ringCircumference"
+                [attr.stroke-dashoffset]="ringOffset"
+                stroke-linecap="round"
+                [attr.transform]="'rotate(-90 22 22)'"/>
+      </svg>
+      <div class="topic-card__ring-info">
+        <div class="topic-card__ring-pct">{{ progressPctDisplay }}%</div>
+        <div class="topic-card__ring-sub">{{ doneExercises }}/{{ totalExercises }} ushtrime</div>
+      </div>
+    </div>
+
+    <div class="topic-card__left-blob" [style.background]="subjectToneColor"></div>
   </div>
-  <div class="card-footer">
-    <span class="course-class-type">{{ course.classType }}</span>
-    <span [class]="difficultyColorClass">
-      {{ 'courses.difficulty' | translate }} {{ course.difficulty }}
-    </span>
+
+  <!-- ── Right content panel ── -->
+  <div class="topic-card__right">
+
+    <!-- Meta row -->
+    <div class="topic-card__meta">
+      <span class="topic-card__level">{{ course.classType }}</span>
+      <span class="topic-card__dots">
+        <span *ngFor="let n of difficultyDots"
+              class="topic-card__dot"
+              [style.background]="n <= course.difficulty ? subjectToneColor : '#E6EDF5'">
+        </span>
+      </span>
+      <span class="topic-card__diff-lbl">Vështirësi {{ course.difficulty }}/10</span>
+    </div>
+
+    <h3 class="topic-card__title">{{ courseCode }}. {{ course.title }}</h3>
+    <p class="topic-card__desc">{{ course.description }}</p>
+
+    <!-- Resources -->
+    <div class="topic-card__resources" *ngIf="course.links?.length">
+      <div class="topic-card__res-label">Burimet e ndërlidhura</div>
+
+      <div *ngFor="let link of course.links; let j = index"
+           class="topic-card__res-row"
+           [class.topic-card__res-row--sep]="j > 0">
+        <span class="topic-card__res-num">{{ j + 1 }}</span>
+
+        <a *ngIf="hasQuizzes(link)"
+           (click)="goToQuizList(link.id)"
+           class="topic-card__res-name topic-card__res-name--link"
+           [style.color]="subjectToneColor">
+          {{ link.title }}
+        </a>
+        <span *ngIf="!hasQuizzes(link)"
+              class="topic-card__res-name topic-card__res-name--disabled">
+          {{ link.title }}
+        </span>
+
+        <span class="topic-card__quiz-count">{{ link.quizzesCount }} ushtrime</span>
+
+        <span *ngIf="link.status"
+              class="topic-card__status"
+              [ngClass]="'topic-card__status--' + getStatusClass(link.status)">
+          <span class="topic-card__status-dot"></span>
+          {{ getStatusText(link.status) }}
+        </span>
+
+        <svg class="topic-card__arrow" viewBox="0 0 24 24" width="14" height="14" fill="none"
+             stroke="#9FB4CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+
   </div>
 </div>

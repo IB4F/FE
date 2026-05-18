@@ -13,7 +13,7 @@ import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/pag
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {CommonModule, Location} from "@angular/common";
 import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
-import {DetailsService, QuizType, QuizzesService} from "../../../../../../api-client";
+import {DetailsService, QuizItemDTO, QuizType, QuizzesService} from "../../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
 import {ConfirmModalComponent} from "../../../../../shared/components/confirm-modal/confirm-modal.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -45,7 +45,7 @@ import {TranslatePipe} from '../../../../../../pipes/translate.pipe';
 })
 export class ManageQuizComponent implements OnInit {
   displayedColumns: string[] = ['question', 'explanation', 'actions'];
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<QuizItemDTO>([]);
   length: number = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   pageNumber: number = 0;
@@ -127,7 +127,7 @@ export class ManageQuizComponent implements OnInit {
     };
     this.quizzesService.apiQuizzesGetPaginatedQuizzesPost(this.linkId, paginationRequest).subscribe(
       {
-        next: (resp) => {
+        next: (resp: { items: QuizItemDTO[]; totalCount: number }) => {
           this.dataSource.data = resp.items;
           this.length = resp.totalCount ?? 0;
         },
@@ -256,5 +256,14 @@ export class ManageQuizComponent implements OnInit {
     return foundClass ? foundClass.name : id;
   }
 
-
+  stripHtml(html: string | null | undefined): string {
+    if (!html) return '';
+    return html
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .trim();
+  }
 }

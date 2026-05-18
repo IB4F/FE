@@ -1,193 +1,113 @@
-/* Stili specifici per il componente footer */
-.footer {
+/* ---- Footer ---- */
+.lp-footer {
+  background: linear-gradient(180deg, #0D7A8C 0%, #07515E 100%);
+  color: white;
+  padding: 80px 0 32px;
   position: relative;
-  background: linear-gradient(to right, #2c3e50, #4ca1af); /* Sfumatura di colore moderna */
-  color: #fff;
-  padding: 40px 20px 20px; /* Più padding in alto */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  box-sizing: border-box;
+  overflow: hidden;
+}
+.lp-footer::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 500px at 80% 0%, rgba(43,168,220,.22), transparent 60%),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 1px, transparent 1px 30px);
+  pointer-events: none;
 }
 
-.footer-content {
-  max-width: 1200px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.f-container {
+  width: min(1240px, 92vw);
+  margin-inline: auto;
 }
 
-.footer-links {
-  display: flex;
-  justify-content: space-around; /* Distribuisce le sezioni */
-  width: 100%;
-  max-width: 800px; /* Limita la larghezza delle sezioni */
-  flex-wrap: wrap; /* Permette il wrap su schermi piccoli */
-  margin-bottom: 30px; /* Spazio prima del copyright */
-}
-
-.footer-section {
-  flex: 1; /* Permette alle sezioni di occupare spazio equamente */
-  min-width: 250px; /* Larghezza minima per le sezioni */
-  margin: 10px 20px; /* Margine per spaziatura */
-  text-align: left; /* Allinea il testo a sinistra */
-}
-
-.footer-section h3 {
-  color: #fff;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+/* ---- Top grid ---- */
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(255,255,255,.14);
   position: relative;
-  padding-bottom: 5px; /* Spazio per la sottolineatura */
 }
 
-.footer-section h3::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 50px; /* Sottolineatura più corta */
-  height: 3px;
-  background-color: #a7d9f2; /* Colore della sottolineatura */
+/* ---- Logo ---- */
+.f-logo {
+  display: flex; align-items: center;
+  text-decoration: none;
+}
+.f-logo-img {
+  height: 28px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+.footer-tagline {
+  margin-top: 20px;
+  color: rgba(255,255,255,.7);
+  max-width: 320px; font-size: 15px; line-height: 1.6;
 }
 
-.footer-section p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-  display: flex; /* Permette allineamento icona-testo */
-  align-items: center;
+/* ---- Columns ---- */
+.footer-col h5 {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .18em;
+  margin: 0 0 22px; color: rgba(255,255,255,.55); font-weight: 500;
 }
-
-.footer-section p i {
-  margin-right: 10px; /* Spazio tra icona e testo */
-  color: #a7d9f2; /* Colore dell'icona */
-  font-size: 1.1rem;
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col ul li { display: block; color: rgba(255,255,255,.85); font-size: 15px; margin-bottom: 12px; }
+.footer-col a {
+  color: rgba(255,255,255,.85); font-size: 15px;
+  text-decoration: none; display: inline-block;
+  transition: color .2s, transform .2s;
 }
+.footer-col a:hover { color: white; transform: translateX(3px); }
 
-.preferences-link {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  margin-top: 8px;
-  font-family: inherit;
-
-  i {
-    color: #a7d9f2;
-    font-size: 1rem;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #fff;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-.social-icon {
-  display: flex;
-  justify-content: flex-start; /* Allinea a sinistra sotto "Seguici" */
-  align-items: center;
-  margin-top: 15px; /* Spazio sopra le icone */
-  padding: 0;
-  list-style: none;
-}
-
-.social-icon__item {
-  margin: 0 12px 0 0; /* Spazio tra le icone, meno margine a destra */
-}
-
-.social-icon__link {
-  font-size: 2rem; /* Dimensione aumentata per maggiore visibilità */
-  color: #fff;
+/* Preferences button styled as a link */
+.f-pref-btn {
+  background: transparent; border: none; padding: 0; margin: 0;
+  color: rgba(255,255,255,.85); font-size: 15px;
+  font-family: inherit; cursor: pointer;
+  transition: color .2s, transform .2s;
   display: inline-block;
-  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+.f-pref-btn:hover { color: white; transform: translateX(3px); }
+
+/* ---- Bottom bar ---- */
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 32px;
+  font-size: 13px; color: rgba(255,255,255,.6);
+  position: relative;
+}
+.socials { display: flex; gap: 10px; }
+.socials a {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  display: grid; place-items: center;
+  color: white; text-decoration: none;
+  transition: background .2s, transform .2s;
+}
+.socials a:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
+.socials a svg { width: 16px; height: 16px; }
+
+/* ---- Mega wordmark ---- */
+.footer-mega {
+  margin-top: 60px;
+  font-family: "Sora", system-ui, sans-serif;
+  font-weight: 300; letter-spacing: .04em;
+  font-size: clamp(80px, 18vw, 280px);
+  line-height: .82; color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,.22);
+  text-align: center; white-space: nowrap; user-select: none;
 }
 
-.social-icon__link:hover {
-  transform: translateY(-8px) scale(1.1);
-  color: #a7d9f2;
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .footer-top { grid-template-columns: 1fr 1fr; }
 }
-
-.footer-text {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  font-weight: 300;
-  margin-top: 20px; /* Spazio tra le sezioni superiori e il copyright */
-  text-align: center;
-  width: 100%;
-  padding-top: 20px; /* Linea di divisione virtuale */
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Sottile linea di divisione */
-}
-
-/* --- Media Queries per la reattività --- */
-
-/* Tablet in modalità orizzontale e schermi medi (da 769px a 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .footer-links {
-    justify-content: space-around; /* Mantieni le sezioni distribuite */
-    max-width: 90%; /* Occupano più larghezza */
-  }
-
-  .footer-section {
-    min-width: unset; /* Rimuovi la larghezza minima */
-    width: 45%; /* Due colonne per riga */
-    margin: 15px 10px; /* Spazio leggermente più contenuto */
-    text-align: left; /* Mantieni allineamento a sinistra se preferisci */
-  }
-
-  .footer-section h3::after {
-    left: 0; /* Mantieni la sottolineatura a sinistra */
-    transform: none;
-  }
-
-  .social-icon {
-    justify-content: flex-start; /* Mantieni allineamento a sinistra */
-  }
-}
-
-/* Smartphone e tablet in modalità verticale (fino a 768px) */
-@media (max-width: 768px) {
-  .footer-links {
-    flex-direction: column; /* Impila le sezioni verticalmente */
-    align-items: center;
-  }
-
-  .footer-section {
-    min-width: unset; /* Rimuovi il vincolo di larghezza minima */
-    width: 90%; /* Occupa quasi tutta la larghezza disponibile */
-    text-align: center; /* Centra il testo */
-    margin: 15px 0;
-  }
-
-  .footer-section h3 {
-    text-align: center; /* Centra il titolo */
-  }
-
-  .footer-section h3::after {
-    left: 50%;
-    transform: translateX(-50%); /* Centra la sottolineatura */
-  }
-
-  .social-icon {
-    justify-content: center; /* Centra le icone su schermi piccoli */
-  }
+@media (max-width: 640px) {
+  .lp-footer { padding: 60px 0 28px; }
+  .footer-top { grid-template-columns: 1fr; gap: 28px; padding-bottom: 40px; }
+  .footer-bottom { flex-direction: column; gap: 20px; align-items: flex-start; }
+  .footer-mega { font-size: 64px; margin-top: 40px; }
 }

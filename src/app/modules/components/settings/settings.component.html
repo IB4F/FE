@@ -1,103 +1,117 @@
-<div class="profile-page-container">
-  <!-- Mobile Navigation Header -->
-  <div class="mobile-nav-header">
-    <h2 class="mobile-title">{{ settingsTitle }}</h2>
-    <div class="menu-toggle-container">
-      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()"
-              mat-icon-button
-              [attr.aria-label]="'Open navigation menu'"
-              title="Click to open navigation menu">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span class="menu-hint">Menu</span>
+<div class="s-page">
+  <!-- Page header -->
+  <div class="page-head">
+    <div>
+      <div class="crumb">Account · Settings</div>
+      <h1 class="page-title">Llogaria <em>ime</em></h1>
     </div>
   </div>
 
-  <!-- Mobile Navigation Overlay -->
-  <div class="mobile-nav-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()">
-    <div class="mobile-nav-content" (click)="$event.stopPropagation()">
-      <div class="mobile-nav-header">
-        <h3>{{ settingsTitle }}</h3>
-        <button class="mobile-close" (click)="closeMobileMenu()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-      <div class="mobile-nav-items">
-        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
-                (click)="selectTab(ProfileTabs.PersonalInfo); closeMobileMenu()">
-          <mat-icon>person</mat-icon>
-          <span>{{ settingsProfile }}</span>
-        </button>
-        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.ChangePassword"
-                (click)="selectTab(ProfileTabs.ChangePassword); closeMobileMenu()">
-          <mat-icon>lock</mat-icon>
-          <span>{{ settingsChangePassword }}</span>
-        </button>
-        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
-                (click)="selectTab(ProfileTabs.SubscriptionDashboard); closeMobileMenu()"
-                *ngIf="canAccessSubscriptionDashboard$ | async">
-          <mat-icon>card_membership</mat-icon>
-          <span>{{ settingsSubscription }}</span>
-        </button>
-        <button class="mobile-nav-item" [class.active]="selectedTab === ProfileTabs.Preferences"
-                (click)="selectTab(ProfileTabs.Preferences); closeMobileMenu()">
-          <mat-icon>settings</mat-icon>
-          <span>{{ settingsPreferences }}</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Desktop Sidebar -->
-  <div class="sidebar-navigation">
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
+  <!-- Mobile tab bar (sticky, shown on mobile, hidden on desktop) -->
+  <div class="mob-tabs" role="tablist">
+    <button class="mob-tab" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
             (click)="selectTab(ProfileTabs.PersonalInfo)">
-      <mat-icon>person</mat-icon>
-      <span>{{ settingsProfile }}</span>
+      <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke-linecap="round"/></svg></span>
+      {{ settingsProfile }}
     </button>
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.ChangePassword"
+    <button class="mob-tab" [class.active]="selectedTab === ProfileTabs.ChangePassword"
             (click)="selectTab(ProfileTabs.ChangePassword)">
-      <mat-icon>lock</mat-icon>
-      <span>{{ settingsChangePassword }}</span>
+      <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke-linecap="round"/></svg></span>
+      {{ settingsChangePassword }}
     </button>
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
+    <button class="mob-tab" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
             (click)="selectTab(ProfileTabs.SubscriptionDashboard)"
             *ngIf="canAccessSubscriptionDashboard$ | async">
-      <mat-icon>card_membership</mat-icon>
-      <span>{{ settingsSubscription }}</span>
+      <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg></span>
+      {{ settingsSubscription }}
     </button>
-    <button class="nav-item" [class.active]="selectedTab === ProfileTabs.Preferences"
+    <button class="mob-tab" [class.active]="selectedTab === ProfileTabs.Preferences"
             (click)="selectTab(ProfileTabs.Preferences)">
-      <mat-icon>settings</mat-icon>
-      <span>{{ settingsPreferences }}</span>
+      <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      {{ settingsPreferences }}
     </button>
   </div>
 
-  <div class="content-area">
-    <ng-container *ngIf="selectedTab === ProfileTabs.PersonalInfo">
-      <app-profile [profileFormGroup]="profileFormGroup"
-                   [userInitials]="(userInitials$ | async)"
-                   [fullName]="fullName"
-                   [classList]="classesList"
-                   [userRole]="userRole"
-                   [childrenCount]="childrenCount"
-                   [studentsCount]="studentsCount"
-                   (saveChanges)="saveProfileData()">
-      </app-profile>
-    </ng-container>
+  <!-- Account grid: sidebar + panels -->
+  <div class="account-grid">
 
-    <ng-container *ngIf="selectedTab === ProfileTabs.ChangePassword">
-      <app-change-password [changePasswordFormGroup]="changePasswordFormGroup"
-                           (passwordChangeRequest)="onChangePassword($event)">
-      </app-change-password>
-    </ng-container>
+    <!-- Desktop sidebar -->
+    <aside class="side">
+      <div class="user-card">
+        <div class="s-avatar">{{ userInitials$ | async }}</div>
+        <div class="who">
+          <p class="name">{{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}</p>
+          <div class="mail">{{ (user$ | async)?.email }}</div>
+        </div>
+      </div>
 
-    <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard && (canAccessSubscriptionDashboard$ | async)">
-      <app-subscription-dashboard></app-subscription-dashboard>
-    </ng-container>
+      <nav class="side-nav" role="tablist">
+        <button class="side-link" [class.active]="selectedTab === ProfileTabs.PersonalInfo"
+                (click)="selectTab(ProfileTabs.PersonalInfo)">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke-linecap="round"/></svg></span>
+          {{ settingsProfile }}
+        </button>
+        <button class="side-link" [class.active]="selectedTab === ProfileTabs.ChangePassword"
+                (click)="selectTab(ProfileTabs.ChangePassword)">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke-linecap="round"/></svg></span>
+          {{ settingsChangePassword }}
+        </button>
+        <button class="side-link" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard"
+                (click)="selectTab(ProfileTabs.SubscriptionDashboard)"
+                *ngIf="canAccessSubscriptionDashboard$ | async">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg></span>
+          {{ settingsSubscription }}
+        </button>
+        <button class="side-link" [class.active]="selectedTab === ProfileTabs.Preferences"
+                (click)="selectTab(ProfileTabs.Preferences)">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          {{ settingsPreferences }}
+        </button>
+      </nav>
 
-    <ng-container *ngIf="selectedTab === ProfileTabs.Preferences">
-      <app-preferences></app-preferences>
-    </ng-container>
+      <div class="side-foot">
+        <div class="stat-mini">
+          <div class="lbl">Plan</div>
+          <div class="val">Basic <small>· Monthly</small></div>
+        </div>
+        <div class="stat-mini">
+          <div class="lbl">Member</div>
+          <div class="val">Brain <small>· Gain</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Panels wrap -->
+    <section class="panels-wrap">
+
+      <div class="tab-pane" [class.active]="selectedTab === ProfileTabs.PersonalInfo">
+        <app-profile [profileFormGroup]="profileFormGroup"
+                     [userInitials]="(userInitials$ | async)"
+                     [fullName]="fullName"
+                     [classList]="classesList"
+                     [userRole]="userRole"
+                     [childrenCount]="childrenCount"
+                     [studentsCount]="studentsCount"
+                     (saveChanges)="saveProfileData()">
+        </app-profile>
+      </div>
+
+      <div class="tab-pane" [class.active]="selectedTab === ProfileTabs.ChangePassword">
+        <app-change-password [changePasswordFormGroup]="changePasswordFormGroup"
+                             (passwordChangeRequest)="onChangePassword($event)">
+        </app-change-password>
+      </div>
+
+      <div class="tab-pane" [class.active]="selectedTab === ProfileTabs.SubscriptionDashboard">
+        <ng-container *ngIf="selectedTab === ProfileTabs.SubscriptionDashboard && (canAccessSubscriptionDashboard$ | async)">
+          <app-subscription-dashboard></app-subscription-dashboard>
+        </ng-container>
+      </div>
+
+      <div class="tab-pane" [class.active]="selectedTab === ProfileTabs.Preferences">
+        <app-preferences></app-preferences>
+      </div>
+
+    </section>
   </div>
 </div>

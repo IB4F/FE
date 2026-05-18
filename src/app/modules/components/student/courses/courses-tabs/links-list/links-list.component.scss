@@ -1,278 +1,335 @@
-.course-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  margin-bottom: 25px;
+:host {
+  display: block;
+  min-width: 0;
+}
+
+/* Aurora horizontal media card */
+.topic-card {
+  background: #fff;
+  border: 1px solid #E6EDF5;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(14, 42, 71, 0.04);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  max-width: 100%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 24px rgba(14, 42, 71, 0.09);
+    transform: translateY(-2px);
+  }
+}
+
+/* ── Left panel ── */
+.topic-card__left {
+  padding: 22px;
+  position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-  border: 1px solid #e0e6ed;
+  justify-content: space-between;
+  border-right: 1px solid #EEF2F7;
+}
 
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+.topic-card__njesia {
+  font: 700 10.5px 'Poppins', sans-serif;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.topic-card__code {
+  font: 700 38px / 1 'Poppins', sans-serif;
+  margin-top: 6px;
+}
+
+.topic-card__ring-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.topic-card__ring-svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.topic-card__ring-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.topic-card__ring-pct {
+  font: 700 14px 'Poppins', sans-serif;
+  color: #0E2A47;
+}
+
+.topic-card__ring-sub {
+  font: 500 10.5px 'Poppins', sans-serif;
+  color: #5B7A99;
+  white-space: nowrap;
+}
+
+.topic-card__left-blob {
+  position: absolute;
+  right: -28px;
+  bottom: -28px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+/* ── Right panel ── */
+.topic-card__right {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.topic-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.topic-card__level {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #EEF2F7;
+  color: #5B7A99;
+  font: 600 10.5px 'Poppins', sans-serif;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.topic-card__dots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.topic-card__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.topic-card__diff-lbl {
+  font: 500 11px 'Poppins', sans-serif;
+  color: #5B7A99;
+}
+
+.topic-card__title {
+  margin: 0;
+  font: 600 17px 'Poppins', sans-serif;
+  color: #0E2A47;
+  line-height: 1.3;
+}
+
+.topic-card__desc {
+  margin: 0;
+  font: 500 13px / 1.55 'Poppins', sans-serif;
+  color: #5B7A99;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Resources ── */
+.topic-card__resources {
+  background: #F5FAFD;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 2px;
+}
+
+.topic-card__res-label {
+  font: 600 10.5px 'Poppins', sans-serif;
+  color: #9FB4CC;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.topic-card__res-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+
+  &.topic-card__res-row--sep {
+    border-top: 1px solid #E6EDF5;
+  }
+}
+
+.topic-card__res-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #E6EDF5;
+  color: #5B7A99;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 11px 'Poppins', sans-serif;
+  flex-shrink: 0;
+}
+
+.topic-card__res-name {
+  flex: 1;
+  font: 600 13px 'Poppins', sans-serif;
+  text-decoration: none;
+
+  &--link {
+    cursor: pointer;
+
+    &:hover { text-decoration: underline; }
   }
 
-  .card-header {
-    background-color: #f0f4f8;
-    padding: 18px 25px;
-    display: flex;
-    justify-content: space-between;
+  &--disabled {
+    color: #5B7A99;
+  }
+}
+
+.topic-card__quiz-count {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #E6EDF5;
+  font: 600 11px 'Poppins', sans-serif;
+  color: #0E2A47;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Status pill */
+.topic-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  font: 600 11px 'Poppins', sans-serif;
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  &--done {
+    background: #ECFDF5;
+    color: #065F46;
+
+    .topic-card__status-dot { background: #10B981; }
+  }
+
+  &--progress {
+    background: #E8F4FB;
+    color: #0E5A85;
+
+    .topic-card__status-dot { background: #1B9CD8; }
+  }
+
+  &--todo {
+    background: #EEF2F7;
+    color: #5B7A99;
+
+    .topic-card__status-dot { background: #9FB4CC; }
+  }
+}
+
+.topic-card__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.topic-card__arrow {
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .topic-card {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-card__left {
+    border-right: none;
+    border-bottom: 1px solid #EEF2F7;
+    flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid #d4dee8;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
 
-    .header-left {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex: 1;
-    }
-
-    .course-title {
-      margin: 0;
-      color: #2c3e50;
-      font-size: 1.4em;
-      font-weight: 700;
-    }
-
-    .course-subject {
-      background-color: #4a90e2;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.9em;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    .topic-card__code { font-size: 28px; }
+    .topic-card__left-blob { display: none; }
   }
 
-  .card-body {
-    padding: 25px;
-    flex-grow: 1;
+  .topic-card__right { padding: 16px 18px; }
 
-    .course-description {
-      color: #5b718b;
-      line-height: 1.7;
-      margin-bottom: 20px;
-      font-size: 1em;
-    }
+  .topic-card__quiz-count { display: none; }
+}
 
-    .course-links {
-      margin-top: 20px;
-
-      h4 {
-        color: #3f556a;
-        font-size: 1.05em;
-        margin-bottom: 10px;
-        font-weight: 600;
-      }
-
-      ol {
-        list-style: decimal; // Ora i numeri saranno visibili
-        padding: 0 0 0 20px; // Aggiunge padding a sinistra per i numeri
-        margin: 0;
-
-        li {
-          margin-bottom: 12px; // Increased spacing for better layout
-
-          .link-item {
-            width: 100%;
-          }
-
-          .link-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0;
-
-            // When no status badge is present, let the link title take full width
-            &:has(.link-title:only-child) {
-              justify-content: flex-start;
-            }
-          }
-
-          .link-title {
-            color: #007bff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1.05em;
-            line-height: 1.5;
-            flex: 1;
-            cursor: pointer;
-
-            &:hover {
-              text-decoration: underline;
-              color: #0056b3;
-            }
-
-            &.disabled-link {
-              color: #6c757d;
-              cursor: not-allowed;
-              opacity: 0.7;
-
-              &:hover {
-                text-decoration: none;
-                color: #6c757d;
-              }
-
-              .quiz-count {
-                background-color: #f8f9fa;
-                color: #adb5bd;
-              }
-            }
-
-            .quiz-count {
-              margin-left: 8px;
-              font-size: 0.85em;
-              color: #6c757d;
-              font-weight: 500;
-              background-color: #e9ecef;
-              padding: 3px 7px;
-              border-radius: 4px;
-            }
-          }
-
-          .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-
-            .status-icon {
-              font-size: 16px;
-              width: 16px;
-              height: 16px;
-            }
-
-            .status-text {
-              font-size: 0.8em;
-            }
-
-            // Status-specific styles
-            &.status-completed {
-              background-color: #d4edda;
-              color: #155724;
-              border: 1px solid #c3e6cb;
-
-              .status-icon {
-                color: #28a745;
-              }
-            }
-
-            &.status-not-started {
-              background-color: #f8d7da;
-              color: #721c24;
-              border: 1px solid #f5c6cb;
-
-              .status-icon {
-                color: #dc3545;
-              }
-            }
-
-            &.status-in-progress {
-              background-color: #fff3cd;
-              color: #856404;
-              border: 1px solid #ffeaa7;
-
-              .status-icon {
-                color: #ffc107;
-              }
-            }
-
-            &.status-unknown {
-              background-color: #e2e3e5;
-              color: #383d41;
-              border: 1px solid #d6d8db;
-
-              .status-icon {
-                color: #6c757d;
-              }
-            }
-          }
-        }
-      }
-    }
+@media (max-width: 480px) {
+  .topic-card {
+    border-radius: 14px;
   }
 
-  .card-footer {
-    background-color: #f8fafc;
-    padding: 15px 25px;
-    border-top: 1px solid #e0e6ed;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9em;
-    color: #7f92a9;
+  .topic-card__left {
+    padding: 14px 16px;
+    gap: 12px;
 
-    .course-class-type {
-      font-weight: 600;
-      color: #3f556a;
-    }
-
-    /* Classi per la difficoltà con stile simile a course-subject */
-    .difficulty-1, .difficulty-2, .difficulty-3, .difficulty-4, .difficulty-5,
-    .difficulty-6, .difficulty-7, .difficulty-8, .difficulty-9, .difficulty-10 {
-      color: white; // Testo bianco
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.9em;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .difficulty-1 {
-      background-color: #28a745;
-    }
-
-    // Verde (Molto Facile)
-    .difficulty-2 {
-      background-color: #218838;
-    }
-
-    .difficulty-3 {
-      background-color: #196f3d;
-    }
-
-    .difficulty-4 {
-      background-color: #ffc107;
-    }
-
-    // Giallo (Medio)
-    .difficulty-5 {
-      background-color: #e0a800;
-    }
-
-    .difficulty-6 {
-      background-color: #fd7e14;
-    }
-
-    // Arancione (Medio-Difficile)
-    .difficulty-7 {
-      background-color: #dc3545;
-    }
-
-    // Rosso (Difficile)
-    .difficulty-8 {
-      background-color: #c82333;
-    }
-
-    .difficulty-9 {
-      background-color: #b21f2d;
-    }
-
-    .difficulty-10 {
-      background-color: #6610f2;
-    }
-
-    // Viola (Molto Difficile)
+    .topic-card__njesia { font-size: 10px; }
+    .topic-card__code { font-size: 24px; }
   }
+
+  .topic-card__right { padding: 14px 16px; gap: 8px; }
+
+  .topic-card__title { font-size: 15px; }
+  .topic-card__desc  { font-size: 12.5px; -webkit-line-clamp: 2; }
+
+  /* Resource rows: semplifica */
+  .topic-card__res-row {
+    gap: 7px;
+    padding: 7px 4px;
+  }
+
+  .topic-card__res-name { font-size: 12px; }
+
+  /* Nascondi la status pill e mostra solo il dot colorato */
+  .topic-card__status {
+    padding: 0;
+    background: none;
+
+    .topic-card__status-dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    span:not(.topic-card__status-dot) { display: none; }
+  }
+
+  .topic-card__arrow { display: none; }
+
+  .topic-card__resources { padding: 10px 12px; }
+  .topic-card__res-label { font-size: 9.5px; }
+}
+
+@media (max-width: 360px) {
+  .topic-card__diff-lbl { display: none; }
+  .topic-card__level    { font-size: 9.5px; }
 }

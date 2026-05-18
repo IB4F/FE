@@ -12,6 +12,10 @@
       </div>
       <div class="bg-page-header__spacer"></div>
       <div class="bg-page-header__actions">
+        <button type="button" class="bg-btn bg-btn--ghost" (click)="openQuizPreview()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Pamje Paraprake
+        </button>
         <button type="button" class="bg-btn bg-btn--primary" [disabled]="!isFormValid()" (click)="handleButtonClick()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
           {{ isEditMode ? 'Ruaj ndryshimet' : 'Publiko Pyetjen' }}
@@ -20,178 +24,380 @@
     </header>
 
     <form [formGroup]="quizFormGroup">
-      <div class="bg-grid-main-side">
-        <div class="bg-stack-16">
+      <div class="bg-stack-16">
 
-          <!-- Step 1: Question & Config -->
+          <!-- Section 1: Question & Config -->
           <section class="bg-card bg-card--padded">
-            <div class="bg-section-h">
-              <span class="bg-section-h__num">1</span>
-              <div>
-                <h3>Pyetja &amp; Konfigurimi</h3>
-                <p>Tipi i kuizit, teksti i pyetjes dhe peshat</p>
+            <div class="qz-section-title">
+              <h3>Pyetja &amp; Konfigurimi</h3>
+              <p>Tipi i kuizit, teksti i pyetjes dhe pikët</p>
+            </div>
+
+            <div class="qz-type-points-row">
+              <label class="bg-field">
+                <span class="bg-field__label">Lloji i kuizit<span class="req">*</span></span>
+                <div class="bg-select-wrap">
+                  <select class="bg-select" formControlName="quizType">
+                    <option value="">Zgjidh tipin…</option>
+                    @for (type of quizTypes; track type.id) {
+                      <option [value]="type.id">{{ type.name }}</option>
+                    }
+                  </select>
+                </div>
+                @if (quizFormGroup.get('quizType')?.hasError('required') && quizFormGroup.get('quizType')?.touched) {
+                  <span class="field-error">Fusha është e detyrueshme</span>
+                }
+              </label>
+
+              <div class="bg-field">
+                <span class="bg-field__label">Pikët</span>
+                <div style="display:flex;align-items:center;gap:14px;margin-top:8px;">
+                  <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range"/>
+                  <span style="font:700 22px Poppins;color:var(--navy);min-width:32px;">{{ quizFormGroup.get('points')?.value }}</span>
+                  <span style="font:500 12px Poppins;color:var(--muted);">pikë</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
+                  <span>1</span><span>5</span><span>10</span>
+                </div>
               </div>
             </div>
 
-            <label class="bg-field" style="margin-top:14px;">
-              <span class="bg-field__label">Lloji i kuizit<span class="req">*</span></span>
-              <div class="bg-select-wrap">
-                <select class="bg-select" formControlName="quizType">
-                  <option value="">Zgjidh tipin…</option>
-                  @for (type of quizTypes; track type.id) {
-                    <option [value]="type.id">{{ type.name }}</option>
-                  }
-                </select>
-              </div>
-              @if (quizFormGroup.get('quizType')?.hasError('required') && quizFormGroup.get('quizType')?.touched) {
-                <span class="field-error">Fusha është e detyrueshme</span>
-              }
-            </label>
-
-            <label class="bg-field" style="margin-top:14px;">
+            <div class="bg-field" style="margin-top:14px;">
               <span class="bg-field__label">Teksti i pyetjes<span class="req">*</span></span>
-              <textarea class="bg-textarea" rows="3" formControlName="question" placeholder="Shkruani pyetjen këtu…"></textarea>
-              <span class="bg-field__hint">Formuloje qartë; përdor 1-2 fjali maksimum</span>
+              @if (isBrowser) {
+                <quill-editor
+                  formControlName="question"
+                  [modules]="quillModules"
+                  placeholder="Shkruani pyetjen këtu…"
+                  [styles]="{'min-height': '100px', 'font-family': 'Poppins, sans-serif'}">
+                </quill-editor>
+              } @else {
+                <textarea class="bg-textarea" rows="3" formControlName="question" placeholder="Shkruani pyetjen këtu…"></textarea>
+              }
               @if (quizFormGroup.get('question')?.hasError('required') && quizFormGroup.get('question')?.touched) {
                 <span class="field-error">Pyetja është e detyrueshme</span>
               }
-            </label>
-
-            <!-- Points -->
-            <div class="bg-field" style="margin-top:14px;">
-              <span class="bg-field__label">Pikët</span>
-              <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
-                <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range"/>
-                <span style="font:700 22px Poppins;color:var(--navy);min-width:32px;">{{ quizFormGroup.get('points')?.value }}</span>
-                <span style="font:500 12.5px Poppins;color:var(--muted);">pikë</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
-                <span>1</span><span>5</span><span>10</span>
-              </div>
             </div>
           </section>
 
-          <!-- Step 2: Audio for question -->
+          <!-- Section 2: Media for question -->
           <section class="bg-card bg-card--padded">
-            <div class="bg-section-h">
-              <span class="bg-section-h__num">2</span>
-              <div>
-                <h3>Audio për Pyetjen <span class="bg-section-h__opt">Opsionale</span></h3>
-                <p>Opsionale — për pyetje me dëgjim</p>
-              </div>
+            <div class="qz-section-title">
+              <h3>Media për Pyetjen <span class="qz-opt-badge">Opsionale</span></h3>
+              <p>Audio dhe imazh opsionale për pyetjen</p>
             </div>
+            <div class="qz-media-grid">
 
-            @if (existingQuestionAudio && !selectedQuestionAudio) {
-              <div class="audio-existing">
-                <audio controls style="width:100%;margin-top:14px;">
-                  <source [src]="existingQuestionAudio.url" type="audio/mpeg">
-                </audio>
-                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:10px;" (click)="removeQuestionAudio()">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                  Fshi audion
-                </button>
-              </div>
-            } @else {
-              <label class="bg-upload" style="margin-top:14px;cursor:pointer;">
-                <span class="bg-upload__icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                </span>
-                <div>
-                  <div class="bg-upload__title">{{ selectedQuestionAudio ? selectedQuestionAudio.name : 'Kliko për të ngarkuar audio' }}</div>
-                  <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+            <!-- Question audio -->
+            <div>
+              <div class="bg-kicker" style="margin-bottom:10px;">Audio pyetjes (opsionale)</div>
+              @if (existingQuestionAudio && !selectedQuestionAudio) {
+                <div class="audio-existing">
+                  <audio controls style="width:100%;">
+                    <source [src]="existingQuestionAudio.url" type="audio/mpeg">
+                  </audio>
+                  <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:10px;" (click)="removeQuestionAudio()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    Fshi audion
+                  </button>
                 </div>
-                <div class="bg-upload__spacer"></div>
-                <input #questionAudioInput type="file" accept="audio/*" (change)="onQuestionAudioSelected($event)" style="display:none;"/>
-                <span class="bg-btn bg-btn--soft">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  Ngarko
-                </span>
-              </label>
-              @if (selectedQuestionAudio) {
-                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="selectedQuestionAudio = null">Hiq skedarin</button>
-              }
-            }
-          </section>
-
-          <!-- Step 3: Options -->
-          <section class="bg-card bg-card--padded">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="bg-section-h">
-                <span class="bg-section-h__num">3</span>
-                <div>
-                  <h3>Opsionet e Përgjigjes</h3>
-                  <p>Shëno opsionet dhe zgjidh të saktat</p>
-                </div>
-              </div>
-              <div class="bg-page-header__spacer"></div>
-              <span class="bg-badge bg-badge--correct">{{ options.length }} opsione</span>
-            </div>
-
-            <div formArrayName="options" style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
-              @for (option of options.controls; track option; let i = $index) {
-                <div class="bg-opt-row" [class.is-correct]="option.get('isCorrect')?.value" [formGroupName]="i">
-                  <span class="bg-opt-row__check">
-                    @if (option.get('isCorrect')?.value) {
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    }
-                  </span>
-                  <div class="bg-link-row__field">
-                    <div class="bg-link-row__label">Opsioni {{ i + 1 }}</div>
-                    <textarea class="opt-textarea" formControlName="optionText" rows="2" placeholder="Shkruani opsionin këtu…"></textarea>
-                  </div>
-                  <label style="display:inline-flex;align-items:center;gap:6px;font:500 12.5px Poppins;flex-shrink:0;" [style.color]="option.get('isCorrect')?.value ? '#065F46' : 'var(--muted)'">
-                    <input type="checkbox" formControlName="isCorrect"/> E saktë
+              } @else {
+                @if (selectedQuestionAudio && selectedQuestionAudioPreviewUrl) {
+                  <audio controls style="width:100%;">
+                    <source [src]="selectedQuestionAudioPreviewUrl" type="audio/mpeg">
+                  </audio>
+                  <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="removeQuestionAudio()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    Hiq skedarin
+                  </button>
+                } @else {
+                  <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                    <span class="bg-upload__icon" style="width:34px;height:34px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </span>
+                    <div>
+                      <div class="bg-upload__title">Ngarko audio pyetjes</div>
+                      <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                    </div>
+                    <input #questionAudioInput type="file" accept="audio/*" (change)="onQuestionAudioSelected($event)" style="display:none;"/>
                   </label>
-                  @if (options.length > 2) {
-                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOption(i)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                    </button>
-                  }
-                </div>
-
-                <!-- Option image (for image quiz types) -->
-                @if (shouldShowImageFields()) {
-                  <div style="padding:0 0 8px 0;">
-                    @if (existingOptionImages[i] && !selectedOptionImages[i]) {
-                      <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
-                        <img [src]="existingOptionImages[i]?.url" alt="Opsioni {{ i+1 }}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewOptionImage(i)"/>
-                        <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOptionImage(i)">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                        </button>
-                      </div>
-                    } @else {
-                      <label class="bg-upload bg-upload--small" style="margin-top:6px;cursor:pointer;">
-                        <span class="bg-upload__icon" style="width:34px;height:34px;">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        </span>
-                        <div>
-                          <div class="bg-upload__title" style="font-size:12.5px;">{{ selectedOptionImages[i] ? selectedOptionImages[i]?.name : 'Ngarko imazh opsioni ' + (i+1) }}</div>
-                          <div class="bg-upload__hint">PNG, JPG</div>
-                        </div>
-                        <input type="file" accept="image/*" (change)="onOptionImageSelected($event, i)" style="display:none;"/>
-                      </label>
-                    }
-                  </div>
                 }
               }
             </div>
 
-            @if (options.length < 4) {
-              <button type="button" class="bg-add-dashed" style="margin-top:12px;" (click)="addOption()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-                Shto Opsion
-              </button>
-            }
+            <!-- Question image -->
+            <div>
+              <div class="bg-kicker" style="margin-bottom:10px;">Imazh pyetjes (opsionale)</div>
+              @if (existingQuestionImage && !selectedQuestionImage) {
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <img [src]="existingQuestionImage.url" alt="Imazh pyetjes" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(existingQuestionImage.url, 'Imazh Pyetjes')"/>
+                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeQuestionImage()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  </button>
+                </div>
+              } @else {
+                @if (selectedQuestionImage && selectedQuestionImagePreviewUrl) {
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <img [src]="selectedQuestionImagePreviewUrl" alt="Preview" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(selectedQuestionImagePreviewUrl, 'Imazh Pyetjes')"/>
+                    <div>
+                      <div style="font:500 12px 'Poppins';color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ selectedQuestionImage.name }}</div>
+                      <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:6px;" (click)="removeQuestionImage()">Hiq skedarin</button>
+                    </div>
+                  </div>
+                } @else {
+                  <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                    <span class="bg-upload__icon" style="width:34px;height:34px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </span>
+                    <div>
+                      <div class="bg-upload__title">Ngarko imazh pyetjes</div>
+                      <div class="bg-upload__hint">PNG, JPG</div>
+                    </div>
+                    <input type="file" accept="image/*" (change)="onQuestionImageSelected($event)" style="display:none;"/>
+                  </label>
+                }
+              }
+            </div>
+            </div><!-- /qz-media-grid -->
           </section>
 
-          <!-- Step 4: Explanation -->
-          <section class="bg-card bg-card--padded">
-            <div class="bg-section-h">
-              <span class="bg-section-h__num">4</span>
-              <div>
-                <h3>Shpjegimi</h3>
-                <p>Sqaro përgjigjen e saktë për nxënësit</p>
+          <!-- Section 3: Options (standard quiz types only) -->
+          @if (!isDragType()) {
+            <section class="bg-card bg-card--padded">
+              <div class="qz-section-title" style="display:flex;align-items:center;">
+                <div>
+                  <h3>Opsionet e Përgjigjes</h3>
+                  <p>Shëno opsionet dhe zgjidh të saktat</p>
+                </div>
+                <div class="bg-page-header__spacer"></div>
+                <span class="bg-badge bg-badge--correct">{{ options.length }} opsione</span>
               </div>
+
+              <div formArrayName="options" style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+                @for (option of options.controls; track option; let i = $index) {
+                  <div class="bg-opt-row" [class.is-correct]="option.get('isCorrect')?.value" [formGroupName]="i">
+                    <span class="bg-opt-row__check">
+                      @if (option.get('isCorrect')?.value) {
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                      }
+                    </span>
+                    <div class="bg-link-row__field">
+                      <div class="bg-link-row__label">Opsioni {{ i + 1 }}</div>
+                      <textarea class="opt-textarea" formControlName="optionText" rows="2" placeholder="Shkruani opsionin këtu…"></textarea>
+                    </div>
+                    <label style="display:inline-flex;align-items:center;gap:6px;font:500 12.5px Poppins;flex-shrink:0;" [style.color]="option.get('isCorrect')?.value ? '#065F46' : 'var(--muted)'">
+                      <input type="checkbox" formControlName="isCorrect"/> E saktë
+                    </label>
+                    @if (options.length > 2) {
+                      <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOption(i)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                      </button>
+                    }
+                  </div>
+
+                  <!-- Option image (for image quiz types) -->
+                  @if (shouldShowImageFields()) {
+                    <div style="padding:0 0 8px 0;">
+                      @if (existingOptionImages[i] && !selectedOptionImages[i]) {
+                        <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
+                          <img [src]="existingOptionImages[i]?.url" alt="Opsioni {{ i+1 }}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewOptionImage(i)"/>
+                          <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOptionImage(i)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                          </button>
+                        </div>
+                      } @else {
+                        @if (selectedOptionImages[i] && selectedOptionImagePreviewUrls[i]) {
+                          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+                            <img [src]="selectedOptionImagePreviewUrls[i]" [alt]="'Opsioni ' + (i+1)" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(selectedOptionImagePreviewUrls[i]!, 'Opsioni ' + (i+1))"/>
+                            <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeOptionImage(i)">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                            </button>
+                          </div>
+                        } @else {
+                          <label class="bg-upload bg-upload--small" style="margin-top:6px;cursor:pointer;">
+                            <span class="bg-upload__icon" style="width:34px;height:34px;">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </span>
+                            <div>
+                              <div class="bg-upload__title" style="font-size:12.5px;">Ngarko imazh opsioni {{ i+1 }}</div>
+                              <div class="bg-upload__hint">PNG, JPG</div>
+                            </div>
+                            <input type="file" accept="image/*" (change)="onOptionImageSelected($event, i)" style="display:none;"/>
+                          </label>
+                        }
+                      }
+                    </div>
+                  }
+                }
+              </div>
+
+              @if (options.length < 4) {
+                <button type="button" class="bg-add-dashed" style="margin-top:12px;" (click)="addOption()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                  Shto Opsion
+                </button>
+              }
+            </section>
+          }
+
+          <!-- Section 3: DragSpell -->
+          @if (isDragSpell()) {
+            <section class="bg-card bg-card--padded">
+              <div class="qz-section-title">
+                <h3>Konfigurimi DragSpell</h3>
+                <p>Shkruaj fjalën e saktë, shkronjat e çrregullta dhe sugjerimin</p>
+              </div>
+
+              <label class="bg-field" style="margin-top:14px;">
+                <span class="bg-field__label">Fjala e saktë<span class="req">*</span></span>
+                <input class="bg-input" type="text" formControlName="dndSpellWord" placeholder="p.sh. FLUTUR"/>
+                <span class="bg-field__hint">Të madhe ose të vogla — siç do ta shohë nxënësi si rezultat</span>
+              </label>
+
+              <label class="bg-field" style="margin-top:14px;">
+                <span class="bg-field__label">Shkronjat (të ndara me presje)<span class="req">*</span></span>
+                <input class="bg-input" type="text" formControlName="dndSpellLetters" placeholder="p.sh. F,L,U,T,U,R"/>
+                <span class="bg-field__hint">Vendos shkronjat në çfarëdo rendi — nxënësi do t'i rregullojë</span>
+              </label>
+
+              <label class="bg-field" style="margin-top:14px;">
+                <span class="bg-field__label">Sugjerim<span class="req">*</span></span>
+                <input class="bg-input" type="text" formControlName="dndSpellHint" placeholder="p.sh. Kafshë fluturuese"/>
+              </label>
+
+              <div style="margin-top:16px;">
+                <div class="bg-kicker" style="margin-bottom:10px;">Imazh ilustrues (opsionale)</div>
+                @if (existingDndSpellImageUrl && !dndSpellImageFile) {
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <img [src]="existingDndSpellImageUrl" alt="Imazh DragSpell" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(existingDndSpellImageUrl, 'Imazh DragSpell')"/>
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeDndSpellImage()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  </div>
+                } @else {
+                  @if (dndSpellImageFile && dndSpellImagePreviewUrl) {
+                    <div style="display:flex;align-items:center;gap:12px;">
+                      <img [src]="dndSpellImagePreviewUrl" alt="Preview" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(dndSpellImagePreviewUrl, 'Imazh DragSpell')"/>
+                      <div>
+                        <div style="font:500 12px 'Poppins';color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ dndSpellImageFile.name }}</div>
+                        <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:6px;" (click)="removeDndSpellImage()">Hiq skedarin</button>
+                      </div>
+                    </div>
+                  } @else {
+                    <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                      <span class="bg-upload__icon" style="width:34px;height:34px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </span>
+                      <div>
+                        <div class="bg-upload__title">Ngarko imazh ilustrues</div>
+                        <div class="bg-upload__hint">PNG, JPG</div>
+                      </div>
+                      <input type="file" accept="image/*" (change)="onDndSpellImageSelected($event)" style="display:none;"/>
+                    </label>
+                  }
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Section 3: DragOrder -->
+          @if (isDragOrder()) {
+            <section class="bg-card bg-card--padded">
+              <div class="qz-section-title">
+                <h3>Konfigurimi DragOrder</h3>
+                <p>Shto fjalët dhe përcakto renditjen e saktë</p>
+              </div>
+
+              <div formArrayName="dndOrderTiles" style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+                @for (tile of dndOrderTiles.controls; track tile; let i = $index) {
+                  <div [formGroupName]="i" style="display:flex;align-items:center;gap:10px;">
+                    <span style="font:600 12px Poppins;color:var(--muted);min-width:20px;">{{ i + 1 }}</span>
+                    <input class="bg-input" type="text" formControlName="text" [placeholder]="'Tile ' + (i + 1) + ' (p.sh. unë)'"/>
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeDndOrderTile(i)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <button type="button" class="bg-add-dashed" style="margin-top:12px;" (click)="addDndOrderTile()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                Shto fjalë
+              </button>
+
+              <label class="bg-field" style="margin-top:16px;">
+                <span class="bg-field__label">Renditja e saktë (indekse 0-based të ndara me presje)<span class="req">*</span></span>
+                <input class="bg-input" type="text" formControlName="dndOrderCorrectOrder" placeholder="p.sh. 0,2,1"/>
+                <span class="bg-field__hint">Nëse tiles janë: unë(0), futboll(1), luaj(2) — fjalia e saktë "unë luaj futboll" → 0,2,1</span>
+              </label>
+            </section>
+          }
+
+          <!-- Section 3: DragMatch -->
+          @if (isDragMatch()) {
+            <section class="bg-card bg-card--padded">
+              <div class="qz-section-title">
+                <h3>Konfigurimi DragMatch</h3>
+                <p>Shto çiftet fjalë–imazh për të përputhur</p>
+              </div>
+
+              <div formArrayName="dndMatchPairs" style="margin-top:16px;display:flex;flex-direction:column;gap:14px;">
+                @for (pair of dndMatchPairs.controls; track pair; let i = $index) {
+                  <div [formGroupName]="i" class="bg-card" style="padding:14px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:flex-start;gap:14px;">
+                    <span style="font:600 12px Poppins;color:var(--muted);min-width:20px;padding-top:10px;">{{ i + 1 }}</span>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+                      <input class="bg-input" type="text" formControlName="word" placeholder="Fjala (p.sh. mace)"/>
+                      <div>
+                        <div class="bg-kicker" style="margin-bottom:8px;">Imazh për këtë çift</div>
+                        @if (pair.get('existingImageUrl')?.value && !pair.get('imageFile')?.value) {
+                          <div style="display:flex;align-items:center;gap:12px;">
+                            <img [src]="pair.get('existingImageUrl')?.value" [alt]="pair.get('word')?.value" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(pair.get('existingImageUrl')?.value, 'Imazh çift ' + (i+1))"/>
+                            <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeDndMatchPairImage(i)">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                            </button>
+                          </div>
+                        } @else {
+                          @if (pair.get('imageFile')?.value && dndMatchPairPreviewUrls[i]) {
+                            <div style="display:flex;align-items:center;gap:12px;">
+                              <img [src]="dndMatchPairPreviewUrls[i]" [alt]="pair.get('word')?.value" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(dndMatchPairPreviewUrls[i]!, 'Imazh çift ' + (i+1))"/>
+                              <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeDndMatchPairImage(i)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                              </button>
+                            </div>
+                          } @else {
+                            <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                              <span class="bg-upload__icon" style="width:34px;height:34px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                              </span>
+                              <div>
+                                <div class="bg-upload__title" style="font-size:12.5px;">Ngarko imazh</div>
+                                <div class="bg-upload__hint">PNG, JPG</div>
+                              </div>
+                              <input type="file" accept="image/*" (change)="onDndMatchPairImageSelected($event, i)" style="display:none;"/>
+                            </label>
+                          }
+                        }
+                      </div>
+                    </div>
+                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="removeDndMatchPair(i)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <button type="button" class="bg-add-dashed" style="margin-top:12px;" (click)="addDndMatchPair()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                Shto çift
+              </button>
+            </section>
+          }
+
+          <!-- Section 4: Explanation -->
+          <section class="bg-card bg-card--padded">
+            <div class="qz-section-title">
+              <h3>Shpjegimi</h3>
+              <p>Sqaro përgjigjen e saktë për nxënësit</p>
             </div>
 
             <div style="margin-top:14px;">
@@ -221,16 +427,26 @@
                   </button>
                 </div>
               } @else {
-                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
-                  <span class="bg-upload__icon" style="width:34px;height:34px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  </span>
-                  <div>
-                    <div class="bg-upload__title">{{ selectedExplanationImage ? selectedExplanationImage.name : 'Ngarko imazh shpjegimi' }}</div>
-                    <div class="bg-upload__hint">PNG, JPG</div>
+                @if (selectedExplanationImage && selectedExplanationImagePreviewUrl) {
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <img [src]="selectedExplanationImagePreviewUrl" alt="Preview" style="width:80px;height:80px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(selectedExplanationImagePreviewUrl, 'Imazh Shpjegimi')"/>
+                    <div>
+                      <div style="font:500 12px 'Poppins';color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ selectedExplanationImage.name }}</div>
+                      <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:6px;" (click)="removeExplanationImage()">Hiq skedarin</button>
+                    </div>
                   </div>
-                  <input type="file" accept="image/*" (change)="onExplanationImageSelected($event)" style="display:none;"/>
-                </label>
+                } @else {
+                  <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                    <span class="bg-upload__icon" style="width:34px;height:34px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </span>
+                    <div>
+                      <div class="bg-upload__title">Ngarko imazh shpjegimi</div>
+                      <div class="bg-upload__hint">PNG, JPG</div>
+                    </div>
+                    <input type="file" accept="image/*" (change)="onExplanationImageSelected($event)" style="display:none;"/>
+                  </label>
+                }
               }
             </div>
 
@@ -245,128 +461,785 @@
                   <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="removeExplanationAudio()">Fshi audion</button>
                 </div>
               } @else {
-                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
-                  <span class="bg-upload__icon" style="width:34px;height:34px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                  </span>
-                  <div>
-                    <div class="bg-upload__title">{{ selectedExplanationAudio ? selectedExplanationAudio.name : 'Ngarko audio shpjegimi' }}</div>
-                    <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
-                  </div>
-                  <input #explanationAudioInput type="file" accept="audio/*" (change)="onExplanationAudioSelected($event)" style="display:none;"/>
-                </label>
+                @if (selectedExplanationAudio && selectedExplanationAudioPreviewUrl) {
+                  <audio controls style="width:100%;">
+                    <source [src]="selectedExplanationAudioPreviewUrl" type="audio/mpeg">
+                  </audio>
+                  <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="removeExplanationAudio()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    Hiq skedarin
+                  </button>
+                } @else {
+                  <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                    <span class="bg-upload__icon" style="width:34px;height:34px;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </span>
+                    <div>
+                      <div class="bg-upload__title">Ngarko audio shpjegimi</div>
+                      <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                    </div>
+                    <input #explanationAudioInput type="file" accept="audio/*" (change)="onExplanationAudioSelected($event)" style="display:none;"/>
+                  </label>
+                }
               }
             </div>
           </section>
 
           <!-- Child quizzes section -->
           @if (showChildQuizzesSection) {
-            <section class="bg-card bg-card--padded">
+            <section class="bg-card bg-card--padded section--child-quiz">
+
+              <!-- Section header -->
               <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
                 <div>
                   <h3 style="margin:0;font:600 15px Poppins;">Nën-Kuizet</h3>
                   <p style="margin:3px 0 0;font:500 12.5px Poppins;color:var(--muted);">Nën-pyetje të lidhura me këtë pyetje kryesore</p>
                 </div>
                 <div class="bg-page-header__spacer"></div>
-                <button type="button" class="bg-btn bg-btn--soft" [disabled]="!canAddChildQuizzes()" (click)="openAddChildQuizModal()">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-                  Shto nën-kuiz
-                </button>
+                @if (!showChildQuizForm) {
+                  <button type="button" class="bg-btn bg-btn--soft" [disabled]="!canAddChildQuizzes()" (click)="openChildQuizForm()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                    Shto nën-kuiz
+                  </button>
+                }
               </div>
 
-              @if (!canAddChildQuizzes() && isEditMode) {
-                <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--surface-2);border-radius:10px;font:500 13px Poppins;color:var(--muted);">
+              @if (!canAddChildQuizzes() && isEditMode && !showChildQuizForm) {
+                <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--surface-2);border-radius:10px;font:500 13px Poppins;color:var(--muted);margin-bottom:12px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                   {{ getChildQuizzesDisabledReason() }}
                 </div>
               }
 
-              <div style="display:flex;flex-direction:column;gap:10px;">
+              <!-- Existing child quiz rows -->
+              <div style="display:flex;flex-direction:column;gap:8px;">
                 @for (cq of childQuizzes; track cq.id; let i = $index) {
-                  <div class="bg-link-row">
+                  <div class="cq-row" [class.cq-row--active]="editingChildQuizId === cq.id && showChildQuizForm">
                     <span class="bg-link-row__icon">{{ i + 1 }}</span>
                     <div class="bg-link-row__field">
                       <div class="bg-link-row__label">{{ getQuizTypeName(cq.quizType) }}</div>
-                      <div style="font:500 13.5px Poppins;color:var(--navy);margin-top:2px;">{{ cq.question }}</div>
+                      <div style="font:500 13px Poppins;color:var(--navy);margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">{{ stripHtml(cq.question) }}</div>
                     </div>
-                    <span style="font:500 12px Poppins;color:var(--muted);">{{ cq.points }} pikë</span>
-                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--primary" (click)="editChildQuiz(cq)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="deleteChildQuiz(cq)">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-                    </button>
+                    <span style="font:600 12px Poppins;color:var(--muted);white-space:nowrap;">{{ cq.points }} pikë</span>
+                    @if (editingChildQuizId === cq.id && showChildQuizForm) {
+                      <span class="cq-editing-tag">Duke modifikuar</span>
+                    } @else {
+                      <button type="button" class="bg-iconbtn bg-iconbtn--small" (click)="openChildQuizPreview(cq)" [disabled]="showChildQuizForm" title="Pamje paraprake">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                      <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--primary" (click)="openEditChildQuizInline(cq)" [disabled]="showChildQuizForm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      </button>
+                      <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="deleteChildQuiz(cq)" [disabled]="showChildQuizForm">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                      </button>
+                    }
                   </div>
                 }
               </div>
+
+              <!-- ── Inline child quiz form ── -->
+              @if (showChildQuizForm) {
+                <div class="cq-form-wrap">
+                  <form [formGroup]="childQuizFormGroup">
+
+                    <!-- Form header -->
+                    <div class="cq-form-header">
+                      <div>
+                        <div class="bg-kicker" style="margin-bottom:2px;">
+                          {{ editingChildQuizId ? 'Modifiko Nën-Kuizin' : 'Nën-Kuiz i Ri' }}
+                        </div>
+                        <p style="font:500 12px Poppins;color:var(--muted);margin:0;">Plotëso pyetjen, opsionet dhe shpjegimin</p>
+                      </div>
+                      <div class="bg-page-header__spacer"></div>
+                      <button type="button" class="bg-btn bg-btn--ghost" (click)="closeChildQuizForm()">Anulo</button>
+                      <button type="button" class="bg-btn bg-btn--primary" [disabled]="!cqIsFormValid()" (click)="cqHandleSave()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                        {{ editingChildQuizId ? 'Ruaj ndryshimet' : 'Shto Nën-Kuizin' }}
+                      </button>
+                    </div>
+
+                    <!-- Grid: main fields + points sidebar -->
+                    <div class="cq-form-grid">
+                      <div class="bg-stack-16">
+
+                        <!-- Quiz type + question -->
+                        <div class="cq-card">
+                          <label class="bg-field">
+                            <span class="bg-field__label">Lloji i kuizit<span class="req">*</span></span>
+                            <div class="bg-select-wrap">
+                              <select class="bg-select" formControlName="quizType">
+                                <option value="">Zgjidh tipin…</option>
+                                @for (type of quizTypes; track type.id) {
+                                  <option [value]="type.id">{{ type.name }}</option>
+                                }
+                              </select>
+                            </div>
+                          </label>
+
+                          <div class="bg-field" style="margin-top:12px;">
+                            <span class="bg-field__label">Teksti i pyetjes<span class="req">*</span></span>
+                            @if (isBrowser) {
+                              <quill-editor formControlName="question" [modules]="quillModules"
+                                placeholder="Shkruani pyetjen…"
+                                [styles]="{'min-height':'90px','font-family':'Poppins,sans-serif'}">
+                              </quill-editor>
+                            } @else {
+                              <textarea class="bg-textarea" rows="3" formControlName="question"></textarea>
+                            }
+                          </div>
+
+                          <!-- Question audio -->
+                          <div style="margin-top:12px;">
+                            <div class="bg-kicker" style="margin-bottom:8px;">Audio pyetjes (opsionale)</div>
+                            @if (cqExistingQuestionAudio && !cqSelectedQuestionAudio) {
+                              <audio controls style="width:100%;"><source [src]="cqExistingQuestionAudio.url" type="audio/mpeg"></audio>
+                              <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="cqRemoveQuestionAudio()">Fshi audion</button>
+                            } @else {
+                              @if (cqSelectedQuestionAudio && cqSelectedQuestionAudioPreviewUrl) {
+                                <audio controls style="width:100%;">
+                                  <source [src]="cqSelectedQuestionAudioPreviewUrl" type="audio/mpeg">
+                                </audio>
+                                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:6px;" (click)="cqRemoveQuestionAudio()">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                  Hiq skedarin
+                                </button>
+                              } @else {
+                                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                  <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                  </span>
+                                  <div>
+                                    <div class="bg-upload__title">Ngarko audio</div>
+                                    <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                                  </div>
+                                  <input type="file" accept="audio/*" (change)="cqOnQuestionAudioSelected($event)" style="display:none;"/>
+                                </label>
+                              }
+                            }
+                          </div>
+
+                          <!-- Question image -->
+                          <div style="margin-top:12px;">
+                            <div class="bg-kicker" style="margin-bottom:8px;">Imazh pyetjes (opsionale)</div>
+                            @if (cqExistingQuestionImage && !cqSelectedQuestionImage) {
+                              <div style="display:flex;align-items:center;gap:10px;">
+                                <img [src]="cqExistingQuestionImage.url" alt="Imazh pyetjes" style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:pointer;" (click)="previewImage(cqExistingQuestionImage.url, 'Imazh Pyetjes')"/>
+                                <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveQuestionImage()">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                </button>
+                              </div>
+                            } @else {
+                              @if (cqSelectedQuestionImage && cqSelectedQuestionImagePreviewUrl) {
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                  <img [src]="cqSelectedQuestionImagePreviewUrl" alt="Preview" style="width:72px;height:72px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(cqSelectedQuestionImagePreviewUrl, 'Imazh Pyetjes')"/>
+                                  <div>
+                                    <div style="font:500 12px 'Poppins';color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ cqSelectedQuestionImage.name }}</div>
+                                    <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:4px;" (click)="cqRemoveQuestionImage()">Hiq skedarin</button>
+                                  </div>
+                                </div>
+                              } @else {
+                                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                  <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                  </span>
+                                  <div>
+                                    <div class="bg-upload__title">Ngarko imazh pyetjes</div>
+                                    <div class="bg-upload__hint">PNG, JPG</div>
+                                  </div>
+                                  <input type="file" accept="image/*" (change)="cqOnQuestionImageSelected($event)" style="display:none;"/>
+                                </label>
+                              }
+                            }
+                          </div>
+                        </div>
+
+                        <!-- ── Standard options ── -->
+                        @if (!cqIsDragType()) {
+                          <div class="cq-card">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                              <span style="font:600 13.5px Poppins;color:var(--navy);">Opsionet e Përgjigjes</span>
+                              <div class="bg-page-header__spacer"></div>
+                              <span class="bg-badge bg-badge--correct">{{ cqOptions.length }} opsione</span>
+                            </div>
+                            <div formArrayName="options" style="display:flex;flex-direction:column;gap:8px;">
+                              @for (opt of cqOptions.controls; track opt; let i = $index) {
+                                <div class="bg-opt-row" [class.is-correct]="opt.get('isCorrect')?.value" [formGroupName]="i">
+                                  <span class="bg-opt-row__check">
+                                    @if (opt.get('isCorrect')?.value) {
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                                    }
+                                  </span>
+                                  <div class="bg-link-row__field">
+                                    <div class="bg-link-row__label">Opsioni {{ i + 1 }}</div>
+                                    <textarea class="opt-textarea" formControlName="optionText" rows="2" placeholder="Shkruani opsionin…"></textarea>
+                                  </div>
+                                  <label style="display:inline-flex;align-items:center;gap:5px;font:500 12px Poppins;flex-shrink:0;" [style.color]="opt.get('isCorrect')?.value ? '#065F46' : 'var(--muted)'">
+                                    <input type="checkbox" formControlName="isCorrect"/> E saktë
+                                  </label>
+                                  @if (cqOptions.length > 2) {
+                                    <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveOption(i)">
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                    </button>
+                                  }
+                                </div>
+                                @if (cqShouldShowImageFields()) {
+                                  <div style="padding:0 0 6px 0;">
+                                    @if (cqExistingOptionImages[i] && !cqSelectedOptionImages[i]) {
+                                      <div style="display:flex;align-items:center;gap:10px;">
+                                        <img [src]="cqExistingOptionImages[i]?.url" [alt]="'Opsioni '+(i+1)" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;" (click)="previewImage(cqExistingOptionImages[i]!.url, 'Opsioni ' + (i+1))"/>
+                                        <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveOptionImage(i)">
+                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                        </button>
+                                      </div>
+                                    } @else {
+                                      @if (cqSelectedOptionImages[i] && cqSelectedOptionImagePreviewUrls[i]) {
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                          <img [src]="cqSelectedOptionImagePreviewUrls[i]" [alt]="'Opsioni '+(i+1)" style="width:56px;height:56px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(cqSelectedOptionImagePreviewUrls[i]!, 'Opsioni ' + (i+1))"/>
+                                          <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveOptionImage(i)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                          </button>
+                                        </div>
+                                      } @else {
+                                        <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                          <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                          </span>
+                                          <div>
+                                            <div class="bg-upload__title" style="font-size:12px;">Ngarko imazh opsioni {{ i+1 }}</div>
+                                            <div class="bg-upload__hint">PNG, JPG</div>
+                                          </div>
+                                          <input type="file" accept="image/*" (change)="cqOnOptionImageSelected($event, i)" style="display:none;"/>
+                                        </label>
+                                      }
+                                    }
+                                  </div>
+                                }
+                              }
+                            </div>
+                            @if (cqOptions.length < 4) {
+                              <button type="button" class="bg-add-dashed" style="margin-top:10px;" (click)="cqAddOption()">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                                Shto Opsion
+                              </button>
+                            }
+                          </div>
+                        }
+
+                        <!-- ── DragSpell ── -->
+                        @if (cqIsDragSpell()) {
+                          <div class="cq-card">
+                            <div style="font:600 13.5px Poppins;color:var(--navy);margin-bottom:12px;">Konfigurimi DragSpell</div>
+                            <label class="bg-field">
+                              <span class="bg-field__label">Fjala e saktë<span class="req">*</span></span>
+                              <input class="bg-input" type="text" formControlName="dndSpellWord" placeholder="p.sh. FLUTUR"/>
+                            </label>
+                            <label class="bg-field" style="margin-top:10px;">
+                              <span class="bg-field__label">Shkronjat (të ndara me presje)<span class="req">*</span></span>
+                              <input class="bg-input" type="text" formControlName="dndSpellLetters" placeholder="p.sh. F,L,U,T,U,R"/>
+                              <span class="bg-field__hint">Nxënësi do t'i rregullojë</span>
+                            </label>
+                            <label class="bg-field" style="margin-top:10px;">
+                              <span class="bg-field__label">Sugjerim<span class="req">*</span></span>
+                              <input class="bg-input" type="text" formControlName="dndSpellHint" placeholder="p.sh. Kafshë fluturuese"/>
+                            </label>
+                            <div style="margin-top:12px;">
+                              <div class="bg-kicker" style="margin-bottom:8px;">Imazh ilustrues (opsionale)</div>
+                              @if (cqExistingDndSpellImageUrl && !cqDndSpellImageFile) {
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                  <img [src]="cqExistingDndSpellImageUrl" alt="DragSpell" style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:pointer;" (click)="previewImage(cqExistingDndSpellImageUrl, 'Imazh DragSpell')"/>
+                                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveDndSpellImage()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                  </button>
+                                </div>
+                              } @else {
+                                @if (cqDndSpellImageFile && cqDndSpellImagePreviewUrl) {
+                                  <div style="display:flex;align-items:center;gap:10px;">
+                                    <img [src]="cqDndSpellImagePreviewUrl" alt="Preview" style="width:72px;height:72px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(cqDndSpellImagePreviewUrl, 'Imazh DragSpell')"/>
+                                    <div>
+                                      <div style="font:500 12px 'Poppins';color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ cqDndSpellImageFile.name }}</div>
+                                      <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:4px;" (click)="cqRemoveDndSpellImage()">Hiq skedarin</button>
+                                    </div>
+                                  </div>
+                                } @else {
+                                  <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                    <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    </span>
+                                    <div>
+                                      <div class="bg-upload__title">Ngarko imazh</div>
+                                      <div class="bg-upload__hint">PNG, JPG</div>
+                                    </div>
+                                    <input type="file" accept="image/*" (change)="cqOnDndSpellImageSelected($event)" style="display:none;"/>
+                                  </label>
+                                }
+                              }
+                            </div>
+                          </div>
+                        }
+
+                        <!-- ── DragOrder ── -->
+                        @if (cqIsDragOrder()) {
+                          <div class="cq-card">
+                            <div style="font:600 13.5px Poppins;color:var(--navy);margin-bottom:12px;">Konfigurimi DragOrder</div>
+                            <div formArrayName="dndOrderTiles" style="display:flex;flex-direction:column;gap:8px;">
+                              @for (tile of cqDndOrderTiles.controls; track tile; let i = $index) {
+                                <div [formGroupName]="i" style="display:flex;align-items:center;gap:8px;">
+                                  <span style="font:600 12px Poppins;color:var(--muted);min-width:18px;">{{ i + 1 }}</span>
+                                  <input class="bg-input" type="text" formControlName="text" [placeholder]="'Tile ' + (i+1) + ' (p.sh. unë)'"/>
+                                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveDndOrderTile(i)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                            <button type="button" class="bg-add-dashed" style="margin-top:10px;" (click)="cqAddDndOrderTile()">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                              Shto fjalë
+                            </button>
+                            <label class="bg-field" style="margin-top:12px;">
+                              <span class="bg-field__label">Renditja e saktë (indekse 0-based)<span class="req">*</span></span>
+                              <input class="bg-input" type="text" formControlName="dndOrderCorrectOrder" placeholder="p.sh. 0,2,1"/>
+                              <span class="bg-field__hint">Tiles: unë(0) luaj(1) futboll(2) → rendi i saktë: 0,2,1 → "unë luaj futboll" → 0,1,2</span>
+                            </label>
+                          </div>
+                        }
+
+                        <!-- ── DragMatch ── -->
+                        @if (cqIsDragMatch()) {
+                          <div class="cq-card">
+                            <div style="font:600 13.5px Poppins;color:var(--navy);margin-bottom:12px;">Konfigurimi DragMatch</div>
+                            <div formArrayName="dndMatchPairs" style="display:flex;flex-direction:column;gap:10px;">
+                              @for (pair of cqDndMatchPairs.controls; track pair; let i = $index) {
+                                <div [formGroupName]="i" style="display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px;">
+                                  <span style="font:600 12px Poppins;color:var(--muted);padding-top:10px;min-width:18px;">{{ i + 1 }}</span>
+                                  <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                                    <input class="bg-input" type="text" formControlName="word" placeholder="Fjala (p.sh. mace)"/>
+                                    <div>
+                                      <div class="bg-kicker" style="margin-bottom:6px;">Imazh për çiftin</div>
+                                      @if (pair.get('existingImageUrl')?.value && !pair.get('imageFile')?.value) {
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                          <img [src]="pair.get('existingImageUrl')?.value" [alt]="pair.get('word')?.value" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;" (click)="previewImage(pair.get('existingImageUrl')?.value, 'Imazh çift ' + (i+1))"/>
+                                          <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveDndMatchPairImage(i)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                          </button>
+                                        </div>
+                                      } @else {
+                                        @if (pair.get('imageFile')?.value && cqDndMatchPairPreviewUrls[i]) {
+                                          <div style="display:flex;align-items:center;gap:10px;">
+                                            <img [src]="cqDndMatchPairPreviewUrls[i]" [alt]="pair.get('word')?.value" style="width:56px;height:56px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(cqDndMatchPairPreviewUrls[i]!, 'Imazh çift ' + (i+1))"/>
+                                            <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveDndMatchPairImage(i)">
+                                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                            </button>
+                                          </div>
+                                        } @else {
+                                          <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                            <span class="bg-upload__icon" style="width:30px;height:30px;">
+                                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                            </span>
+                                            <div>
+                                              <div class="bg-upload__title" style="font-size:12px;">Ngarko imazh</div>
+                                              <div class="bg-upload__hint">PNG, JPG</div>
+                                            </div>
+                                            <input type="file" accept="image/*" (change)="cqOnDndMatchPairImageSelected($event, i)" style="display:none;"/>
+                                          </label>
+                                        }
+                                      }
+                                    </div>
+                                  </div>
+                                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveDndMatchPair(i)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                            <button type="button" class="bg-add-dashed" style="margin-top:10px;" (click)="cqAddDndMatchPair()">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                              Shto çift
+                            </button>
+                          </div>
+                        }
+
+                        <!-- Explanation -->
+                        <div class="cq-card">
+                          <div style="font:600 13.5px Poppins;color:var(--navy);margin-bottom:10px;">Shpjegimi<span class="req">*</span></div>
+                          @if (isBrowser) {
+                            <quill-editor formControlName="explanation" [modules]="quillModules"
+                              placeholder="Shpjegoni përgjigjen e saktë…"
+                              [styles]="{'min-height':'120px','font-family':'Poppins,sans-serif'}">
+                            </quill-editor>
+                          } @else {
+                            <textarea class="bg-textarea" rows="5" formControlName="explanation"></textarea>
+                          }
+
+                          <!-- Explanation image -->
+                          <div style="margin-top:12px;">
+                            <div class="bg-kicker" style="margin-bottom:8px;">Imazh shpjegimi (opsionale)</div>
+                            @if (cqExistingExplanationImage && !cqSelectedExplanationImage) {
+                              <div style="display:flex;align-items:center;gap:10px;">
+                                <img [src]="cqExistingExplanationImage.url" alt="Imazh shpjegimi" style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:pointer;" (click)="previewImage(cqExistingExplanationImage.url, 'Imazh Shpjegimi')"/>
+                                <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="cqRemoveExplanationImage()">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                </button>
+                              </div>
+                            } @else {
+                              @if (cqSelectedExplanationImage && cqSelectedExplanationImagePreviewUrl) {
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                  <img [src]="cqSelectedExplanationImagePreviewUrl" alt="Preview" style="width:72px;height:72px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border);" (click)="previewImage(cqSelectedExplanationImagePreviewUrl, 'Imazh Shpjegimi')"/>
+                                  <div>
+                                    <div style="font:500 12px 'Poppins';color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ cqSelectedExplanationImage.name }}</div>
+                                    <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:4px;" (click)="cqRemoveExplanationImage()">Hiq skedarin</button>
+                                  </div>
+                                </div>
+                              } @else {
+                                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                  <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                  </span>
+                                  <div>
+                                    <div class="bg-upload__title">Ngarko imazh shpjegimi</div>
+                                    <div class="bg-upload__hint">PNG, JPG</div>
+                                  </div>
+                                  <input type="file" accept="image/*" (change)="cqOnExplanationImageSelected($event)" style="display:none;"/>
+                                </label>
+                              }
+                            }
+                          </div>
+
+                          <!-- Explanation audio -->
+                          <div style="margin-top:12px;">
+                            <div class="bg-kicker" style="margin-bottom:8px;">Audio shpjegimi (opsionale)</div>
+                            @if (cqExistingExplanationAudio && !cqSelectedExplanationAudio) {
+                              <audio controls style="width:100%;"><source [src]="cqExistingExplanationAudio.url" type="audio/mpeg"></audio>
+                              <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:8px;" (click)="cqRemoveExplanationAudio()">Fshi audion</button>
+                            } @else {
+                              @if (cqSelectedExplanationAudio && cqSelectedExplanationAudioPreviewUrl) {
+                                <audio controls style="width:100%;">
+                                  <source [src]="cqSelectedExplanationAudioPreviewUrl" type="audio/mpeg">
+                                </audio>
+                                <button type="button" class="bg-btn bg-btn--ghost" style="margin-top:6px;" (click)="cqRemoveExplanationAudio()">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                  Hiq skedarin
+                                </button>
+                              } @else {
+                                <label class="bg-upload bg-upload--small" style="cursor:pointer;">
+                                  <span class="bg-upload__icon" style="width:32px;height:32px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                  </span>
+                                  <div>
+                                    <div class="bg-upload__title">Ngarko audio shpjegimi</div>
+                                    <div class="bg-upload__hint">MP3, WAV — max 10MB</div>
+                                  </div>
+                                  <input type="file" accept="audio/*" (change)="cqOnExplanationAudioSelected($event)" style="display:none;"/>
+                                </label>
+                              }
+                            }
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <!-- Points sidebar -->
+                      <div class="cq-points-aside">
+                        <div class="bg-kicker" style="margin-bottom:10px;">Pikët</div>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                          <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range" style="flex:1;"/>
+                          <span style="font:700 20px Poppins;color:var(--navy);min-width:28px;">{{ childQuizFormGroup.get('points')?.value }}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
+                          <span>1</span><span>5</span><span>10</span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+              }
+
             </section>
           }
 
-        </div>
-
-        <!-- Stepper sidebar -->
-        <aside>
-          <div class="bg-card bg-card--padded" style="position:sticky;top:20px;">
-            <div class="bg-kicker" style="margin-bottom:14px;">Hapat</div>
-            <div class="bg-stepper">
-              <div class="bg-stepper__row">
-                <div class="bg-stepper__col">
-                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid" [class.bg-stepper__circle--current]="!(quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid)">
-                    @if (quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid) {
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    } @else { 1 }
-                  </span>
-                  <span class="bg-stepper__line" [class.bg-stepper__line--done]="quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid"></span>
-                </div>
-                <div style="padding-bottom:18px;padding-top:4px;">
-                  <div class="bg-stepper__title">Pyetja &amp; konfigurimi</div>
-                  <div class="bg-stepper__sub">{{ (quizFormGroup.get('question')?.valid && quizFormGroup.get('quizType')?.valid) ? 'Përfunduar' : 'Plotëso' }}</div>
-                </div>
-              </div>
-              <div class="bg-stepper__row">
-                <div class="bg-stepper__col">
-                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="true">2</span>
-                  <span class="bg-stepper__line bg-stepper__line--done"></span>
-                </div>
-                <div style="padding-bottom:18px;padding-top:4px;">
-                  <div class="bg-stepper__title">Audio (opsionale)</div>
-                  <div class="bg-stepper__sub">{{ (existingQuestionAudio || selectedQuestionAudio) ? 'Me audio' : 'Pa audio' }}</div>
-                </div>
-              </div>
-              <div class="bg-stepper__row">
-                <div class="bg-stepper__col">
-                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="options.valid" [class.bg-stepper__circle--current]="!options.valid">
-                    @if (options.valid) {
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    } @else { 3 }
-                  </span>
-                  <span class="bg-stepper__line" [class.bg-stepper__line--done]="options.valid"></span>
-                </div>
-                <div style="padding-bottom:18px;padding-top:4px;">
-                  <div class="bg-stepper__title">Opsionet</div>
-                  <div class="bg-stepper__sub">{{ options.length }} opsione</div>
-                </div>
-              </div>
-              <div class="bg-stepper__row">
-                <div class="bg-stepper__col">
-                  <span class="bg-stepper__circle" [class.bg-stepper__circle--done]="quizFormGroup.get('explanation')?.valid" [class.bg-stepper__circle--current]="!quizFormGroup.get('explanation')?.valid">
-                    @if (quizFormGroup.get('explanation')?.valid) {
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    } @else { 4 }
-                  </span>
-                </div>
-                <div style="padding-top:4px;">
-                  <div class="bg-stepper__title" [class.bg-stepper__title--todo]="!quizFormGroup.get('explanation')?.valid">Shpjegimi</div>
-                  <div class="bg-stepper__sub">{{ quizFormGroup.get('explanation')?.valid ? 'Përfunduar' : 'Pritshëm' }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
       </div>
     </form>
   </div>
 </div>
+
+<!-- Quiz Student Preview Modal -->
+@if (showQuizPreview) {
+  <div class="quiz-preview-backdrop" (click)="closeQuizPreview()">
+    <div class="quiz-preview-modal" (click)="$event.stopPropagation()">
+
+      <!-- Modal header -->
+      <div class="quiz-preview-modal__header">
+        <div class="quiz-preview-modal__label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Pamje e Nxënësit
+        </div>
+        <span style="flex:1"></span>
+        <button type="button" class="bg-iconbtn" (click)="closeQuizPreview()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Student card -->
+      <div class="quiz-preview-card">
+
+        <!-- Top meta row -->
+        <div class="quiz-preview-meta">
+          <span class="quiz-preview-type-badge">{{ getSelectedQuizTypeName() || 'Pa tip' }}</span>
+          <span class="quiz-preview-points-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {{ quizFormGroup.get('points')?.value }} pikë
+          </span>
+        </div>
+
+        <!-- Question image -->
+        @if (getPreviewQuestionImageUrl()) {
+          <div class="quiz-preview-question-img-wrap">
+            <img class="quiz-preview-question-img" [src]="getPreviewQuestionImageUrl()" alt="Imazh pyetjes"/>
+          </div>
+        }
+
+        <!-- Question audio -->
+        @if (existingQuestionAudio) {
+          <audio class="quiz-preview-audio" controls>
+            <source [src]="existingQuestionAudio.url" type="audio/mpeg">
+          </audio>
+        }
+
+        <!-- Question text -->
+        <div class="quiz-preview-question-text" [innerHTML]="safeHtml(quizFormGroup.get('question')?.value)"></div>
+
+        <!-- ── Standard options ── -->
+        @if (!isDragType()) {
+          <div class="quiz-preview-options">
+            @for (option of options.controls; track option; let i = $index) {
+              <div class="quiz-preview-option">
+                @if (shouldShowImageFields()) {
+                  <div class="quiz-preview-option-img-wrap">
+                    @if (getPreviewOptionImageUrl(i)) {
+                      <img [src]="getPreviewOptionImageUrl(i)" [alt]="'Opsioni ' + (i+1)" class="quiz-preview-option-img"/>
+                    } @else {
+                      <div class="quiz-preview-option-img-placeholder">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                    }
+                  </div>
+                }
+                <span class="quiz-preview-option__letter">{{ 'ABCD'[i] }}</span>
+                <span class="quiz-preview-option__text">{{ option.get('optionText')?.value || '…' }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ── DragSpell ── -->
+        @if (isDragSpell()) {
+          <div class="quiz-preview-dragspell">
+            @if (existingDndSpellImageUrl) {
+              <img class="quiz-preview-dragspell-img" [src]="existingDndSpellImageUrl" alt="Imazh DragSpell"/>
+            }
+            @if (quizFormGroup.get('dndSpellHint')?.value) {
+              <div class="quiz-preview-hint">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {{ quizFormGroup.get('dndSpellHint')?.value }}
+              </div>
+            }
+            <!-- Answer blanks -->
+            <div class="quiz-preview-blanks">
+              @for (letter of (quizFormGroup.get('dndSpellWord')?.value || '').split(''); track letter; let i = $index) {
+                <div class="quiz-preview-blank"></div>
+              }
+            </div>
+            <!-- Letter tiles -->
+            <div class="quiz-preview-letter-tiles">
+              @for (letter of getPreviewDragSpellLetters(); track letter + $index) {
+                <div class="quiz-preview-letter-tile">{{ letter }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- ── DragOrder ── -->
+        @if (isDragOrder()) {
+          <div class="quiz-preview-dragorder">
+            <div class="quiz-preview-dragorder__label">Rregullos fjalët në rend të saktë:</div>
+            <div class="quiz-preview-word-tiles">
+              @for (tile of dndOrderTiles.controls; track tile; let i = $index) {
+                <div class="quiz-preview-word-tile">{{ tile.get('text')?.value || '…' }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- ── DragMatch ── -->
+        @if (isDragMatch()) {
+          <div class="quiz-preview-dragmatch">
+            <div class="quiz-preview-dragmatch__label">Përputh fjalët me imazhet:</div>
+            <div class="quiz-preview-match-grid">
+              <div class="quiz-preview-match-col">
+                @for (pair of dndMatchPairs.controls; track pair; let i = $index) {
+                  <div class="quiz-preview-match-word">{{ pair.get('word')?.value || '…' }}</div>
+                }
+              </div>
+              <div class="quiz-preview-match-col">
+                @for (pair of dndMatchPairs.controls; track pair; let i = $index) {
+                  <div class="quiz-preview-match-img-cell">
+                    @if (pair.get('existingImageUrl')?.value) {
+                      <img [src]="pair.get('existingImageUrl')?.value" [alt]="pair.get('word')?.value" class="quiz-preview-match-img"/>
+                    } @else {
+                      <div class="quiz-preview-option-img-placeholder" style="width:56px;height:56px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- Note -->
+      <p class="quiz-preview-note">Kjo është vetëm një pamje paraprake — ndërveprimet nuk janë aktive.</p>
+    </div>
+  </div>
+}
+
+<!-- Child Quiz Preview Modal -->
+@if (showChildQuizPreview && previewingChildQuiz) {
+  <div class="quiz-preview-backdrop" (click)="closeChildQuizPreview()">
+    <div class="quiz-preview-modal" (click)="$event.stopPropagation()">
+
+      <div class="quiz-preview-modal__header">
+        <div class="quiz-preview-modal__label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Pamje Nën-Kuizi
+        </div>
+        <span style="flex:1"></span>
+        <button type="button" class="bg-iconbtn" (click)="closeChildQuizPreview()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="quiz-preview-card">
+
+        <div class="quiz-preview-meta">
+          <span class="quiz-preview-type-badge">{{ cqPreviewTypeName() || 'Pa tip' }}</span>
+          <span class="quiz-preview-points-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {{ previewingChildQuiz.points }} pikë
+          </span>
+        </div>
+
+        @if (previewingChildQuiz.questionImageUrl) {
+          <div class="quiz-preview-question-img-wrap">
+            <img class="quiz-preview-question-img" [src]="previewingChildQuiz.questionImageUrl" alt="Imazh pyetjes"/>
+          </div>
+        }
+
+        @if (previewingChildQuiz.questionAudioUrl) {
+          <audio class="quiz-preview-audio" controls>
+            <source [src]="previewingChildQuiz.questionAudioUrl" type="audio/mpeg">
+          </audio>
+        }
+
+        <div class="quiz-preview-question-text" [innerHTML]="safeHtml(previewingChildQuiz.question)"></div>
+
+        <!-- Standard options -->
+        @if (!previewingChildQuiz.dndSpell && !previewingChildQuiz.dndOrder && !previewingChildQuiz.dndMatch) {
+          <div class="quiz-preview-options">
+            @for (opt of previewingChildQuiz.options; track opt; let i = $index) {
+              <div class="quiz-preview-option">
+                @if (cqPreviewShouldShowImages()) {
+                  <div class="quiz-preview-option-img-wrap">
+                    @if (opt.optionImageUrl) {
+                      <img [src]="opt.optionImageUrl" [alt]="'Opsioni ' + (i+1)" class="quiz-preview-option-img"/>
+                    } @else {
+                      <div class="quiz-preview-option-img-placeholder">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                    }
+                  </div>
+                }
+                <span class="quiz-preview-option__letter">{{ 'ABCD'[i] }}</span>
+                <span class="quiz-preview-option__text">{{ opt.optionText || '…' }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- DragSpell -->
+        @if (previewingChildQuiz.dndSpell) {
+          <div class="quiz-preview-dragspell">
+            @if (previewingChildQuiz.dndSpell.imageUrl) {
+              <img class="quiz-preview-dragspell-img" [src]="previewingChildQuiz.dndSpell.imageUrl" alt="Imazh DragSpell"/>
+            }
+            @if (previewingChildQuiz.dndSpell.hint) {
+              <div class="quiz-preview-hint">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {{ previewingChildQuiz.dndSpell.hint }}
+              </div>
+            }
+            <div class="quiz-preview-blanks">
+              @for (letter of (previewingChildQuiz.dndSpell.word || '').split(''); track $index) {
+                <div class="quiz-preview-blank"></div>
+              }
+            </div>
+            <div class="quiz-preview-letter-tiles">
+              @for (letter of previewingChildQuiz.dndSpell.letters; track letter + $index) {
+                <div class="quiz-preview-letter-tile">{{ letter }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- DragOrder -->
+        @if (previewingChildQuiz.dndOrder) {
+          <div class="quiz-preview-dragorder">
+            <div class="quiz-preview-dragorder__label">Rregullos fjalët në rend të saktë:</div>
+            <div class="quiz-preview-word-tiles">
+              @for (tile of previewingChildQuiz.dndOrder.tiles; track tile; let i = $index) {
+                <div class="quiz-preview-word-tile">{{ tile.text || '…' }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- DragMatch -->
+        @if (previewingChildQuiz.dndMatch) {
+          <div class="quiz-preview-dragmatch">
+            <div class="quiz-preview-dragmatch__label">Përputh fjalët me imazhet:</div>
+            <div class="quiz-preview-match-grid">
+              <div class="quiz-preview-match-col">
+                @for (pair of previewingChildQuiz.dndMatch.pairs; track pair; let i = $index) {
+                  <div class="quiz-preview-match-word">{{ pair.word || '…' }}</div>
+                }
+              </div>
+              <div class="quiz-preview-match-col">
+                @for (pair of previewingChildQuiz.dndMatch.pairs; track pair; let i = $index) {
+                  <div class="quiz-preview-match-img-cell">
+                    @if (pair.imageUrl) {
+                      <img [src]="pair.imageUrl" [alt]="pair.word" class="quiz-preview-match-img"/>
+                    } @else {
+                      <div class="quiz-preview-option-img-placeholder" style="width:56px;height:56px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <p class="quiz-preview-note">Kjo është vetëm një pamje paraprake — ndërveprimet nuk janë aktive.</p>
+    </div>
+  </div>
+}
 
 <!-- Image Preview Modal -->
 @if (showImagePreview) {

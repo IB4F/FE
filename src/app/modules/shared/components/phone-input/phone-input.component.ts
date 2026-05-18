@@ -5,9 +5,6 @@ import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
 
 interface Country {
   iso2: string;
@@ -67,39 +64,28 @@ const COUNTRIES: Country[] = [
 @Component({
   selector: 'app-phone-input',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSelectModule, MatOptionModule, MatInputModule],
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="phone-input-container" [class.phone-input-focused]="focused" [class.phone-input-disabled]="disabled">
-      <mat-select
-        class="country-select"
-        [value]="selectedCountry"
-        (selectionChange)="onCountryChange($event.value)"
-        [disabled]="disabled"
-        panelClass="phone-country-panel"
-        (openedChange)="onSelectOpenedChange($event)">
-        <mat-select-trigger>
-          <span class="flag-icon">{{ getCountry(selectedCountry)?.flag }}</span>
-          <span class="dial-code">{{ getCountry(selectedCountry)?.dialCode }}</span>
-        </mat-select-trigger>
-        <div class="country-search-wrapper" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-          <input
-            #searchInput
-            class="country-search-input"
-            type="text"
-            placeholder="Kërko shtetin..."
-            [formControl]="searchControl"
-            autocomplete="off">
-        </div>
-        <mat-option *ngFor="let country of filteredCountries" [value]="country.iso2">
-          <span class="flag-icon">{{ country.flag }}</span>
-          <span class="country-name">{{ country.name }}</span>
-          <span class="dial-code-option">{{ country.dialCode }}</span>
-        </mat-option>
-      </mat-select>
-
+    <div class="phone-wrap" [class.focused]="focused" [class.disabled]="disabled">
+      <div class="country-btn">
+        <span class="flag">{{ getCountry(selectedCountry)?.flag }}</span>
+        <span class="code">{{ getCountry(selectedCountry)?.dialCode }}</span>
+        <svg class="chevron" width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M1 1.5l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <select
+          class="country-native"
+          [value]="selectedCountry"
+          (change)="onCountryChange($any($event.target).value)"
+          [disabled]="disabled">
+          <option *ngFor="let country of countries" [value]="country.iso2">
+            {{ country.flag }} {{ country.dialCode }} – {{ country.name }}
+          </option>
+        </select>
+      </div>
+      <span class="sep"></span>
       <input
-        #phoneInput
-        class="phone-number-input"
+        class="number-input"
         type="tel"
         [placeholder]="placeholder || 'Nr. Telefonit'"
         [value]="phoneNumber"
@@ -124,6 +110,8 @@ const COUNTRIES: Country[] = [
 export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldControl<PhoneNumber>, OnInit, OnDestroy {
   static nextId = 0;
 
+  readonly countries = COUNTRIES;
+
   stateChanges = new Subject<void>();
   id = `phone-input-${PhoneInputComponent.nextId++}`;
   describedBy = '';
@@ -137,8 +125,6 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
 
   selectedCountry = 'al';
   phoneNumber = '';
-  searchControl = new FormControl('');
-  filteredCountries: Country[] = [...COUNTRIES];
 
   private onChange = (_: PhoneNumber | null) => {};
   private onTouched = () => {};
@@ -160,16 +146,7 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
     });
   }
 
-  ngOnInit() {
-    this.searchControl.valueChanges.subscribe(query => {
-      const q = (query || '').toLowerCase();
-      this.filteredCountries = COUNTRIES.filter(c =>
-        c.name.toLowerCase().includes(q) ||
-        c.dialCode.includes(q) ||
-        c.iso2.includes(q)
-      );
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy() {
     this.stateChanges.complete();
@@ -212,7 +189,7 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   onContainerClick(): void {
-    this.elementRef.nativeElement.querySelector<HTMLInputElement>('.phone-number-input')?.focus();
+    this.elementRef.nativeElement.querySelector<HTMLInputElement>('.number-input')?.focus();
   }
 
   writeValue(value: PhoneNumber | null): void {
@@ -267,12 +244,6 @@ export class PhoneInputComponent implements ControlValueAccessor, MatFormFieldCo
       this.focused = false;
       this.onTouched();
       this.stateChanges.next();
-    }
-  }
-
-  onSelectOpenedChange(opened: boolean): void {
-    if (!opened) {
-      this.searchControl.setValue('');
     }
   }
 

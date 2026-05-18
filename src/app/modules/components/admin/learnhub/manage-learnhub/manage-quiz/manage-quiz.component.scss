@@ -4,3 +4,15 @@
   margin-top: 4px;
   display: block;
 }
+
+/* Allow dropdown menus to overflow the card boundary */
+.bg-card { overflow: visible; }
+
+/* Action column: compact padding so the 34px button fits */
+.bg-table thead th:last-child,
+.bg-table tbody td:last-child {
+  padding-left: 8px;
+  padding-right: 16px;
+  width: 66px;
+  white-space: nowrap;
+}

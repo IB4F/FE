@@ -1,52 +1,96 @@
-<!-- Class restriction message -->
-<div *ngIf="!canNavigateAllTabs && userTypeClass" class="class-restriction-message">
-  <p>{{ ('courses.restriction' | translate).replace('{{class}}', userTypeClass ?? '') }}</p>
+<!-- Class restriction notice -->
+<div *ngIf="!canNavigateAllTabs && userTypeClass" class="ct-restriction">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="11" width="16" height="10" rx="2"/>
+    <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+  </svg>
+  <span>{{ ('courses.restriction' | translate).replace('{{class}}', userTypeClassLabel) }}</span>
 </div>
 
-<div class="tabs">
-  <button *ngFor="let typeClass of typeClasses"
-          (click)="selectTab(typeClass)"
-          [class.active]="selectedTab === typeClass"
-          [class.disabled]="isTabDisabled(typeClass)"
-          [disabled]="isTabDisabled(typeClass)">
-    <ng-container [ngSwitch]="typeClass">
-      <app-first-svg *ngSwitchCase="TypeClass.First"></app-first-svg>
-      <app-second-svg *ngSwitchCase="TypeClass.Second"></app-second-svg>
-      <app-third-svg *ngSwitchCase="TypeClass.Third"></app-third-svg>
-      <app-fourth-svg *ngSwitchCase="TypeClass.Fourth"></app-fourth-svg>
-      <app-fifth-svg *ngSwitchCase="TypeClass.Fifth"></app-fifth-svg>
-      <app-sixth-svg *ngSwitchCase="TypeClass.Sixth"></app-sixth-svg>
-      <app-seventh-svg *ngSwitchCase="TypeClass.Seventh"></app-seventh-svg>
-      <app-eighth-svg *ngSwitchCase="TypeClass.Eighth"></app-eighth-svg>
-      <app-nineth-svg *ngSwitchCase="TypeClass.Nineth"></app-nineth-svg>
-      <app-tenth-svg *ngSwitchCase="TypeClass.Tenth"></app-tenth-svg>
-      <app-eleventh-svg *ngSwitchCase="TypeClass.Eleventh"></app-eleventh-svg>
-      <app-twelveth-svg *ngSwitchCase="TypeClass.Twelveth"></app-twelveth-svg>
-    </ng-container>
-  </button>
-</div>
+<div class="ct-layout">
 
-<div class="category-tabs">
-  <button *ngFor="let subject of subjects" (click)="selectSubject(subject)"
-          [class.active]="selectedSubject === subject">
-    <span>{{ subjectLabels[subject] }}</span>
-    <ng-container [ngSwitch]="subject">
-      <albanian-svg *ngSwitchCase="Subject.AlbanianLanguage"></albanian-svg>
-      <letersi-svg *ngSwitchCase="Subject.Literature"></letersi-svg>
-      <matematik-svg *ngSwitchCase="Subject.Mathematics"></matematik-svg>
-      <gjeografi-svg *ngSwitchCase="Subject.Geography"></gjeografi-svg>
-      <shkenc-svg *ngSwitchCase="Subject.Science"></shkenc-svg>
-      <anglisht-svg *ngSwitchCase="Subject.English"></anglisht-svg>
-      <histori-svg *ngSwitchCase="Subject.History"></histori-svg>
-    </ng-container>
-  </button>
-</div>
+  <!-- ── Sidebar: class rail ── -->
+  <aside class="ct-class-rail">
+    <div class="ct-class-rail__header">Klasat 1–12</div>
 
-<div class="courses-list">
-  <ng-container *ngIf="courses.length > 0; else noCourses">
-    <app-links-list *ngFor="let course of courses" [course]="course"></app-links-list>
-  </ng-container>
-  <ng-template #noCourses>
-    <p class="no-courses-message">{{ 'courses.empty' | translate }}</p>
-  </ng-template>
+    <button *ngFor="let typeClass of typeClasses"
+            (click)="selectTab(typeClass)"
+            [class.ct-class-rail__btn--active]="selectedTab === typeClass"
+            [class.ct-class-rail__btn--locked]="isTabDisabled(typeClass)"
+            [disabled]="isTabDisabled(typeClass)"
+            class="ct-class-rail__btn">
+      <span class="ct-class-rail__num">{{ getClassNumber(typeClass) }}</span>
+      <span class="ct-class-rail__lbl">{{ typeClass }}</span>
+      <svg *ngIf="isTabDisabled(typeClass)" class="ct-class-rail__icon"
+           viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="10" rx="2"/>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+      </svg>
+      <svg *ngIf="selectedTab === typeClass" class="ct-class-rail__icon"
+           viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+        <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+      </svg>
+    </button>
+  </aside>
+
+  <!-- ── Main content ── -->
+  <div class="ct-main">
+
+    <!-- Subject bar -->
+    <div class="ct-subjects-bar">
+      <div class="ct-subjects-bar__top">
+        <h2 class="ct-subjects-bar__title">Lëndët e {{ selectedTab }}</h2>
+        <span class="ct-subjects-bar__count">{{ subjects.length }} lëndë</span>
+      </div>
+      <div class="ct-subjects-scroll">
+        <button *ngFor="let subject of subjects"
+                (click)="selectSubject(subject)"
+                [class.active]="selectedSubject === subject"
+                class="ct-subject-chip"
+                [style.border-color]="selectedSubject === subject ? subjectColors[subject].tone : '#E6EDF5'">
+          <span class="ct-subject-chip__glyph"
+                [style.background]="subjectColors[subject].soft"
+                [style.color]="subjectColors[subject].tone">
+            <ng-container [ngSwitch]="subject">
+              <albanian-svg *ngSwitchCase="Subject.AlbanianLanguage"></albanian-svg>
+              <letersi-svg  *ngSwitchCase="Subject.Literature"></letersi-svg>
+              <matematik-svg *ngSwitchCase="Subject.Mathematics"></matematik-svg>
+              <anglisht-svg *ngSwitchCase="Subject.English"></anglisht-svg>
+              <histori-svg  *ngSwitchCase="Subject.History"></histori-svg>
+              <gjeografi-svg *ngSwitchCase="Subject.Geography"></gjeografi-svg>
+              <shkenc-svg   *ngSwitchCase="Subject.Science"></shkenc-svg>
+            </ng-container>
+          </span>
+          <span class="ct-subject-chip__name"
+                [style.color]="selectedSubject === subject ? '#0E2A47' : '#2A4A6B'">
+            {{ subjectLabels[subject] }}
+          </span>
+          <span *ngIf="selectedSubject === subject"
+                class="ct-subject-chip__badge"
+                [style.color]="subjectColors[subject].tone"
+                [style.background]="subjectColors[subject].soft">
+            Aktiv
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Courses list -->
+    <div class="ct-courses-list">
+      <ng-container *ngIf="courses.length > 0; else noCourses">
+        <app-links-list *ngFor="let course of courses; let i = index"
+                        [course]="course"
+                        [courseIndex]="i"
+                        [subjectToneColor]="subjectColors[selectedSubject].tone"
+                        [subjectSoftColor]="subjectColors[selectedSubject].soft">
+        </app-links-list>
+      </ng-container>
+      <ng-template #noCourses>
+        <p class="ct-no-courses">{{ 'courses.empty' | translate }}</p>
+      </ng-template>
+    </div>
+
+  </div>
 </div>

@@ -1,43 +1,88 @@
-<div class="header">
-  <div class="container">
-    <div class="h-left">
-      <button mat-icon-button
-              *ngIf="showPanel()"
-              class="sidenav-toggle-btn"
-              (click)="onToggleSidenavClick()"
-              [matTooltip]="isSideNavOpen ? labelCloseMenu : labelOpenMenu">
-        <mat-icon>{{ isSideNavOpen ? 'chevron_left' : 'menu' }}</mat-icon>
-      </button>
+<nav class="nav" [class.scrolled]="navScrolled" [class.landing]="isLandingPage && !isLogged" [class.menu-open]="isMobileMenuOpen">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a class="logo" (click)="onLogoClick()" style="cursor: pointer;">
+      <img src="assets/svgImages/logo.svg" alt="Brain Gain" class="logo-img">
+    </a>
 
-      <div class="logo">
-        <a (click)="onLogoClick()" style="cursor: pointer;">
-          <img src="assets/svgImages/logo.svg" alt="brainGain-logo">
-        </a>
+    <!-- Centre nav links (landing page only, not logged in) -->
+    @if (!isLogged && isLandingPage) {
+      <div class="nav-links">
+        <a href="#classes">Klasat</a>
+        <a href="#how">Si funksionon</a>
+        <a href="#voices">Komuniteti</a>
       </div>
-    </div>
-    <div class="h-right" *ngIf="isLogged; else notLoggedIn">
-      <button *ngIf="showDashboard()" mat-button routerLink="/student/dashboard">{{ labelDashboard }}</button>
-      <button *ngIf="showPanel()" mat-button routerLink="/admin/panel">{{ labelPanel }}</button>
-      <div class="user-menu mat-menu-trigger" [matMenuTriggerFor]="userMenu"
-           [matTooltip]="(user$ | async)?.firstName + ' ' + (user$ | async)?.lastName">
-        {{ initials$ | async }}
-      </div>
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="settings">
-          <mat-icon>person</mat-icon>
-          {{ labelProfile }}
+    }
+
+    <!-- Right side -->
+    <div class="nav-cta">
+      @if (isLogged) {
+        @if (showDashboard()) {
+          <button class="nav-btn nav-btn-ghost" routerLink="/student/dashboard">{{ labelDashboard }}</button>
+        }
+        @if (showPanel()) {
+          <button class="nav-btn nav-btn-ghost" routerLink="/admin/panel">{{ labelPanel }}</button>
+        }
+        <div class="hdr-user" (click)="$event.stopPropagation()">
+          <div class="user-avatar" (click)="toggleUserMenu()">
+            {{ initials$ | async }}
+          </div>
+
+          <div class="hdr-user-menu" [class.open]="isUserMenuOpen">
+            <!-- User info -->
+            <div class="hdr-menu-top">
+              <div class="hdr-menu-avatar">{{ initials$ | async }}</div>
+              <div class="hdr-menu-info">
+                <div class="hdr-menu-name">
+                  {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
+                </div>
+                <span class="hdr-menu-role">{{ userRoleLabel }}</span>
+              </div>
+            </div>
+
+            <div class="hdr-menu-divider"></div>
+
+            <a class="hdr-menu-item" routerLink="settings" (click)="closeUserMenu()">
+              <span class="hdr-menu-item__icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+              </span>
+              {{ labelProfile }}
+            </a>
+
+            <div class="hdr-menu-divider"></div>
+
+            <button class="hdr-menu-item hdr-menu-item--logout" (click)="logout()">
+              <span class="hdr-menu-item__icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+              </span>
+              {{ labelLogout }}
+            </button>
+          </div>
+        </div>
+      } @else {
+        <a class="nav-btn nav-btn-ghost nav-login" routerLink="/hyr">{{ labelLogin }}</a>
+        <a class="nav-btn nav-btn-primary" routerLink="/membership">{{ labelRegister }}</a>
+        <button class="hamburger" [class.open]="isMobileMenuOpen" (click)="toggleMobileMenu()" aria-label="Hap/mbyll menunë">
+          <span></span><span></span><span></span>
         </button>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
-          {{ labelLogout }}
-        </button>
-      </mat-menu>
+      }
     </div>
-    <ng-template #notLoggedIn>
-      <div class="h-right">
-        <button mat-button routerLink="/hyr">{{ labelLogin }}</button>
-        <button mat-button routerLink="/membership">{{ labelRegister }}</button>
-      </div>
-    </ng-template>
   </div>
-</div>
+
+  <!-- Mobile dropdown menu -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-inner">
+      <a href="#classes" (click)="closeMobileMenu()">Klasat</a>
+      <a href="#how" (click)="closeMobileMenu()">Si funksionon</a>
+      <a href="#voices" (click)="closeMobileMenu()">Komuniteti</a>
+      <div class="mobile-cta">
+        <a class="nav-btn nav-btn-ghost" routerLink="/hyr" (click)="closeMobileMenu()">{{ labelLogin }}</a>
+        <a class="nav-btn nav-btn-primary" routerLink="/membership" (click)="closeMobileMenu()">{{ labelRegister }}</a>
+      </div>
+    </div>
+  </div>
+</nav>

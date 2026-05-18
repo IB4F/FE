@@ -61,7 +61,7 @@
         <!-- Remember me + forgot password -->
         <div class="lg-row">
           <label class="lg-check">
-            <input type="checkbox" [(ngModel)]="rememberMe"> Qëndro i kyçur
+            <input type="checkbox" [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}"> Qëndro i kyçur
           </label>
           <span class="lg-forgot" (click)="openDialog()">
             {{ 'auth.login.forgotPassword' | translate }}

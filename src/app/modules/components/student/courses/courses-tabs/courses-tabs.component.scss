@@ -1,321 +1,340 @@
-$font-family: 'Lufga-Regular';
-$primary-color: white;
-$active-color: #f0f0f0;
-$inactive-opacity: 0.5;
-$active-opacity: 1;
-$transition-duration: 0.3s;
-$hover-color: blue;
-$button-padding: 0.5rem 1rem; // Questo non sarà usato direttamente sui bottoni delle tab, ma è una variabile generale
+:host {
+  display: block;
+  min-width: 0;
+}
 
-.class-restriction-message {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 8px;
+.ct-restriction {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFF3CD;
+  border: 1px solid #FFEAA7;
+  border-radius: 12px;
   padding: 12px 16px;
-  margin-bottom: 15px;
-  text-align: center;
-  
-  p {
-    margin: 0;
-    color: #856404;
-    font-family: $font-family;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
+  margin-bottom: 16px;
+  font: 500 13px 'Poppins', sans-serif;
+  color: #856404;
+
+  svg { flex-shrink: 0; }
 }
 
-.tabs {
+/* ── Aurora layout ── */
+.ct-layout {
   display: grid;
-  // Per schermi desktop e grandi tablet: tenta di mostrare tutti e 12 su una riga
-  grid-template-columns: repeat(12, 1fr);
-  gap: 5px; // Piccolo spazio tra i pulsanti
-  padding: 10px; // Padding interno al contenitore delle tab
-  border-radius: 40px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  overflow-x: auto; // Permette lo scorrimento orizzontale se non c'è spazio
-  white-space: nowrap; // Impedisce ai pulsanti di andare a capo
+  grid-template-columns: 240px 1fr;
+  gap: 20px;
+  align-items: start;
+}
 
-  // Nasconde la scrollbar pur mantenendo la funzionalità di scorrimento
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+/* ── Class Rail ── */
+.ct-class-rail {
+  background: #fff;
+  border: 1px solid #E6EDF5;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(14, 42, 71, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 80px;
+}
+
+.ct-class-rail__header {
+  font: 600 10.5px 'Poppins', sans-serif;
+  color: #9FB4CC;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 0 8px 10px;
+}
+
+.ct-class-rail__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  color: #0E2A47;
+  border-radius: 12px;
+  cursor: pointer;
+  font: 600 13px 'Poppins', sans-serif;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+
+  &:hover:not(.ct-class-rail__btn--active):not(.ct-class-rail__btn--locked) {
+    background: #F5FAFD;
   }
 
-  button {
-    background: none;
-    border: none;
-    color: $primary-color;
-    padding: 0; // Rimuovi il padding sui singoli bottoni per un controllo migliore
-    cursor: pointer;
-    font-size: 1rem;
-    font-family: $font-family;
-    transition: transform $transition-duration, opacity $transition-duration;
-    display: flex; // Usa flexbox per centrare l'SVG
-    justify-content: center;
-    align-items: center;
-    min-width: 40px; // Larghezza minima per contenere l'SVG
+  &.ct-class-rail__btn--active {
+    background: linear-gradient(135deg, #1B9CD8, #1A6FB8);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(27, 156, 216, 0.32);
 
-    // Stili per l'SVG all'interno del pulsante
-    ::ng-deep svg {
-      max-width: 100%;
-      height: auto;
-      display: block;
+    .ct-class-rail__num {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
     }
+  }
 
-    &.active {
-      transform: scale(1.5); // Inggrandisce l'SVG attivo
-      opacity: $active-opacity;
-      z-index: 1; // Assicura che l'SVG attivo sia sopra gli altri
-    }
+  &.ct-class-rail__btn--locked {
+    color: #9FB4CC;
+    cursor: not-allowed;
 
-    &:not(.active) {
-      opacity: $inactive-opacity; // Rende gli SVG inattivi meno visibili
-    }
-
-    &.disabled {
-      opacity: 0.3; // Rende i tab disabilitati molto meno visibili
-      cursor: not-allowed; // Cambia il cursore per indicare che non è cliccabile
-      pointer-events: none; // Disabilita completamente gli eventi del mouse
-      
-      // Stili per l'SVG all'interno del pulsante disabilitato
-      ::ng-deep svg {
-        filter: grayscale(100%); // Rende l'SVG in scala di grigi
-      }
+    .ct-class-rail__num {
+      background: #EEF2F7;
+      color: #9FB4CC;
     }
   }
 }
 
-.category-tabs {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  margin-top: 20px;
-  padding: 1rem;
-
-  button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: $button-padding;
-    font-size: 0.875rem;
-    font-family: $font-family;
-    color: black;
-    transition: transform $transition-duration, opacity $transition-duration;
-
-    &.active {
-      background-color: $active-color;
-      transform: scale(1.2);
-      border-radius: 25px;
-      opacity: $active-opacity;
-    }
-
-    &:not(.active) {
-      opacity: 0.7;
-    }
-  }
-}
-
-.tab-content {
-  padding: 2rem;
-  color: black;
-  margin-top: 20px;
-
-  h3,
-  p {
-    font-family: $font-family;
-  }
-
-  h3 {
-    display: flex;
-    justify-content: center;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
-
-  .quiz-content {
-    display: flex;
-    flex-direction: row;
-    margin: 10px 0;
-
-    .icon {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-left: 15px;
-
-      mat-icon {
-        margin-left: 15px;
-        cursor: pointer;
-
-        &:nth-child(1) {
-          margin: 0;
-          color: #f9890e;
-        }
-
-        &:nth-child(2) {
-          margin-left: 10px;
-          color: #c70000;
-        }
-      }
-    }
-  }
-
-  .quiz-question {
-    margin: 0;
-    text-decoration: none;
-    color: initial;
-    transition: color $transition-duration, text-decoration $transition-duration;
-
-    &.quiz-answered {
-      color: green;
-    }
-
-    &.quiz-enrolled {
-      color: orange;
-    }
-
-    &:hover {
-      cursor: pointer;
-      color: $hover-color;
-      text-decoration: underline;
-    }
-  }
-
-}
-
-.courses-list {
-  display: grid; /* Change from flex to grid */
-  grid-template-columns: repeat(2, 1fr); /* Two columns, each taking equal space */
-  gap: 25px;
-  padding: 20px;
-  background-color: #f4f7f6;
+.ct-class-rail__num {
+  width: 26px;
+  height: 26px;
   border-radius: 8px;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  background: #E8F4FB;
+  color: #1B9CD8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 12px 'Poppins', sans-serif;
+  flex-shrink: 0;
 }
 
-.courses-list .no-courses-message { /* Moved out of .courses-list nesting for clarity but functionally the same */
-  grid-column: 1 / -1; /* Spans across all columns */
+.ct-class-rail__lbl {
+  flex: 1;
+  font: 600 13px 'Poppins', sans-serif;
+}
+
+.ct-class-rail__icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+/* ── Main ── */
+.ct-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* ── Subjects bar ── */
+.ct-subjects-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ct-subjects-bar__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ct-subjects-bar__title {
+  margin: 0;
+  font: 700 22px 'Poppins', sans-serif;
+  color: #0E2A47;
+  letter-spacing: -0.3px;
+}
+
+.ct-subjects-bar__count {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #E8F4FB;
+  color: #1B9CD8;
+  font: 600 11.5px 'Poppins', sans-serif;
+}
+
+.ct-subjects-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.ct-subject-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1.5px solid #E6EDF5;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.active {
+    box-shadow: 0 6px 18px rgba(14, 42, 71, 0.07);
+  }
+
+  &:hover:not(.active) {
+    border-color: #9FB4CC;
+  }
+}
+
+.ct-subject-chip__glyph {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  ::ng-deep svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+}
+
+.ct-subject-chip__name {
+  font: 600 13.5px 'Poppins', sans-serif;
+}
+
+.ct-subject-chip__badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 600 11px 'Poppins', sans-serif;
+}
+
+/* ── Courses list ── */
+.ct-courses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ct-no-courses {
   text-align: center;
-  color: #6c757d;
-  font-size: 1.1em;
-  padding: 30px;
-  background-color: #e9ecef;
-  border-radius: 8px;
-  margin-top: 20px;
+  color: #5B7A99;
+  font: 500 14px 'Poppins', sans-serif;
+  padding: 40px 30px;
+  background: #fff;
+  border: 1px solid #E6EDF5;
+  border-radius: 16px;
 }
 
-// Media Queries for different screen sizes
-// For tablets (768px - 1024px)
-@media (max-width: 1024px) {
-  .tabs {
-    grid-template-columns: repeat(6, 1fr); // 6 elementi per riga, su 2 righe
-    gap: 8px;
-    padding: 8px;
-    button {
-      font-size: 0.9rem;
-      &.active {
-        transform: scale(1.4); // Scala leggermente meno su tablet
-      }
-    }
-  }
+/* ── Responsive ── */
 
-  .category-tabs button {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-
-    &.active {
-      transform: scale(1.15);
-    }
-  }
-
-  .tab-content {
-    padding: 1.5rem;
-
-    h3 {
-      font-size: 1.2rem;
-    }
+/* Tablet wide — slim sidebar */
+@media (max-width: 1100px) {
+  .ct-layout {
+    grid-template-columns: 200px 1fr;
   }
 }
 
-// For mobile screens (480px - 768px)
-@media (max-width: 768px) {
-  .tabs {
-    grid-template-columns: repeat(4, 1fr); // 4 elementi per riga, su 3 righe
-    gap: 5px;
-    padding: 5px;
-    button {
-      font-size: 0.85rem;
-      &.active {
-        transform: scale(1.3); // Scala ancora meno
-      }
-    }
-  }
-
-  .category-tabs {
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: space-around;
-
-    button {
-      padding: 0.3rem 0.6rem;
-      font-size: 0.75rem;
-
-      &.active {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  .tab-content {
-    padding: 1rem;
-
-    h3 {
-      font-size: 1.1rem;
-    }
-  }
-}
-
-// For very small screens (below 480px)
-@media (max-width: 480px) {
-  .courses-list {
+/* Tablet — sidebar diventa strip orizzontale */
+@media (max-width: 960px) {
+  .ct-layout {
     grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 12px;
+    gap: 16px;
   }
 
-  .tabs {
-    grid-template-columns: repeat(3, 1fr); // 3 elementi per riga, su 4 righe
-    gap: 3px;
-    padding: 3px;
-    button {
-      font-size: 0.75rem;
-      &.active {
-        transform: scale(1.2); // Minore scala per non sovrapporsi
-      }
+  .ct-class-rail {
+    position: static;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+
+    .ct-class-rail__header { display: none; }
+
+    .ct-class-rail__btn {
+      flex-shrink: 0;
+      width: auto;
+      padding: 0;
+      /* reset gradient che arriva dal base --active */
+      background: transparent !important;
+      box-shadow: none !important;
+      color: #0E2A47 !important;
+
+      .ct-class-rail__lbl,
+      .ct-class-rail__icon { display: none; }
+    }
+
+    .ct-class-rail__btn--active .ct-class-rail__num {
+      background: linear-gradient(135deg, #1B9CD8, #1A6FB8) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 12px rgba(27, 156, 216, 0.36);
+    }
+
+    .ct-class-rail__btn--locked .ct-class-rail__num {
+      background: #EEF2F7 !important;
+      color: #9FB4CC !important;
+    }
+
+    .ct-class-rail__num {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      font-size: 14px;
     }
   }
+}
 
-  .category-tabs {
-    justify-content: space-evenly;
-    grid-template-columns: repeat(3, 1fr);
+/* Mobile */
+@media (max-width: 600px) {
+  .ct-subjects-bar__title { font-size: 18px; }
 
-    button {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.7rem;
-
-      &.active {
-        transform: scale(1.05);
-      }
-    }
+  .ct-subject-chip {
+    padding: 8px 12px;
+    gap: 8px;
   }
 
-  .tab-content {
-    padding: 0.75rem;
+  .ct-subject-chip__name { font-size: 12.5px; }
+}
 
-    h3 {
-      font-size: 1rem;
+/* Mobile small */
+@media (max-width: 480px) {
+  .ct-subjects-bar__title { font-size: 16px; }
+
+  .ct-subject-chip__badge { display: none; }
+
+  .ct-no-courses { padding: 28px 16px; }
+
+  .ct-class-rail {
+    padding: 8px 10px;
+
+    .ct-class-rail__num {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+  }
+}
+
+/* Mobile extra small */
+@media (max-width: 360px) {
+  .ct-class-rail {
+    gap: 2px;
+    padding: 6px 8px;
+
+    .ct-class-rail__num {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      font-size: 12px;
     }
   }
 }
