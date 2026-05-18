@@ -1,0 +1,109 @@
+<div class="dnd-card" cdkDropListGroup>
+  <div class="dnd-card__accent"></div>
+
+  <!-- Meta row -->
+  <div class="dnd-meta">
+    <span class="dnd-meta__badge dnd-meta__badge--sky">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+        <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+      </svg>
+      Rendit fjalët
+    </span>
+    <span class="dnd-meta__badge dnd-meta__badge--ok">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+      {{ points }} pikë
+    </span>
+    <span class="dnd-meta__badge dnd-meta__badge--purple">Drag &amp; Drop</span>
+    <span class="dnd-meta__spacer"></span>
+    <button *ngIf="questionAudioUrl"
+            class="dnd-audio-btn"
+            [class.dnd-audio-btn--playing]="isPlaying"
+            (click)="toggleAudio()"
+            type="button">
+      <span class="dnd-audio-btn__circle">
+        <svg *ngIf="!isPlaying" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <path d="M15.5 8.5a4 4 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M18.5 5.5a8 8 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg *ngIf="isPlaying" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+      </span>
+      Dëgjo fjalinë
+    </button>
+  </div>
+
+  <!-- Prompt -->
+  <div class="dnd-prompt" [innerHTML]="safeQuestion"></div>
+
+  <!-- Sentence drop zone -->
+  <div>
+    <div class="dnd-label">Fjalia jote</div>
+    <div class="dnd-sentence">
+      <div *ngFor="let slot of sentence; let i = index"
+           class="dnd-slot"
+           [class.dnd-slot--filled]="slot.length > 0"
+           [style.min-width.px]="slotMinWidth(i)"
+           style="height:56px"
+           [id]="'order-slot-' + i"
+           cdkDropList
+           cdkDropListSortingDisabled
+           [cdkDropListConnectedTo]="allConnectedIds"
+           [cdkDropListData]="slot"
+           (cdkDropListDropped)="onDropToSlot($event, i)">
+        <span *ngIf="slot.length === 0"
+              style="color:#9FB4CC;font:600 11px 'JetBrains Mono',monospace">
+          pos {{ i + 1 }}
+        </span>
+        <span *ngFor="let tile of slot"
+              class="dnd-tile dnd-tile--md"
+              [class.dnd-tile--ok]="isCorrect"
+              cdkDrag
+              [cdkDragData]="tile">
+          {{ tile.text }}
+          <span *cdkDragPlaceholder class="dnd-tile dnd-tile--md" style="opacity:0.35">{{ tile.text }}</span>
+        </span>
+      </div>
+      <div class="dnd-sentence__baseline"></div>
+    </div>
+  </div>
+
+  <!-- Word bank -->
+  <div>
+    <div class="dnd-label">Fjalët e disponueshme</div>
+    <div class="dnd-bank dnd-bank--dashed"
+         id="order-bank"
+         cdkDropList
+         cdkDropListOrientation="horizontal"
+         [cdkDropListConnectedTo]="allConnectedIds"
+         [cdkDropListData]="bank"
+         (cdkDropListDropped)="onDropToBank($event)">
+      <span *ngIf="bank.length === 0" class="dnd-bank__empty">(të gjitha fjalët u përdorën)</span>
+      <span *ngFor="let tile of bank"
+            class="dnd-tile dnd-tile--md"
+            cdkDrag
+            [cdkDragData]="tile">
+        {{ tile.text }}
+        <span *cdkDragPlaceholder class="dnd-tile dnd-tile--md" style="opacity:0.35">{{ tile.text }}</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <div *ngIf="allFilled" class="dnd-feedback" [class.dnd-feedback--ok]="isCorrect" [class.dnd-feedback--hint]="!isCorrect">
+    <span class="dnd-feedback__icon" [class.dnd-feedback__icon--ok]="isCorrect" [class.dnd-feedback__icon--sky]="!isCorrect">
+      <svg *ngIf="isCorrect" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      <svg *ngIf="!isCorrect" viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/></svg>
+    </span>
+    {{ isCorrect ? 'Fjalia është gramatikisht e plotë.' : 'Lexoje me zë — a tingëllon natyrshëm?' }}
+  </div>
+
+  <!-- Submit -->
+  <button class="dnd-submit" [disabled]="!allFilled" (click)="submit()" type="button">
+    Dërgo përgjigjen
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 5l7 7-7 7"/>
+    </svg>
+  </button>
+</div>

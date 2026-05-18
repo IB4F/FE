@@ -30,9 +30,6 @@ export class TranslationService {
 
   constructor(private http: HttpClient, private ngZone: NgZone, private appRef: ApplicationRef) {
     this.loadLanguage(this.currentLanguageSubject.value).subscribe();
-    this.ngZone.onMicrotaskEmpty.subscribe(() => {
-      console.log('[Zone] onMicrotaskEmpty fired - tick will run, currentLang:', this.currentLanguageSubject.value);
-    });
   }
 
   getCurrentLanguage(): Language {
@@ -40,15 +37,10 @@ export class TranslationService {
   }
 
   setLanguage(language: Language): void {
-    console.log('[TranslationService] setLanguage called:', language);
     this.loadLanguage(language).subscribe(() => {
-      console.log('[TranslationService] loadLanguage completed, cache hit:', !!this.cache[language]);
       this.ngZone.run(() => {
-        console.log('[TranslationService] inside ngZone.run');
         Promise.resolve().then(() => {
-          console.log('[TranslationService] Promise.then - calling next:', language);
           this.currentLanguageSubject.next(language);
-          console.log('[TranslationService] next() called, currentValue:', this.currentLanguageSubject.value);
           this.saveToStorage(language);
           this.applyLanguage();
         });
@@ -57,11 +49,7 @@ export class TranslationService {
   }
 
   translate(key: string): string {
-    const val = this.translations[key] ?? key;
-    if (key === 'header.login' || key === 'preferences.title') {
-      console.log(`[translate] key="${key}" → "${val}" (lang: ${this.currentLanguageSubject.value})`);
-    }
-    return val;
+    return this.translations[key] ?? key;
   }
 
   translateAsync(key: string): Observable<string> {

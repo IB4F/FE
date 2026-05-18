@@ -1,66 +1,84 @@
-<div>
-  <div class="profile-header-modern">
-    <div class="profile-avatar-modern">
-      <span>{{ userInitials | uppercase }}</span>
+<div class="panel">
+  <div class="panel-head">
+    <div class="profile-hero">
+      <div class="avatar">{{ userInitials | uppercase }}</div>
+      <div>
+        <h2>{{ fullName }}</h2>
+        <p>{{ 'settings.profile.subtitle' | translate }}</p>
+      </div>
     </div>
-    <div class="profile-info-modern">
-      <h2>{{ fullName }}</h2>
-      <p>{{ 'settings.profile.subtitle' | translate }}</p>
-    </div>
+    <span class="pill">Active</span>
   </div>
 
-  <form [formGroup]="profileFormGroup" class="modern-form">
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'common.firstName' | translate }}</mat-label>
-        <input matInput formControlName="firstName">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'common.lastName' | translate }}</mat-label>
-        <input matInput formControlName="lastName">
-      </mat-form-field>
-    </div>
-    <mat-form-field appearance="outline" *ngIf="showClassField()">
-      <mat-label>{{ 'common.currentClass' | translate }}</mat-label>
-      <mat-select [placeholder]="'common.currentClass' | translate" formControlName="currentClass">
-        <mat-option *ngFor="let class of classList" [value]="class.id">
-          {{ class.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'common.email' | translate }}</mat-label>
-      <input matInput [placeholder]="'common.email' | translate" formControlName="email">
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <app-phone-input
-        formControlName="phoneNumber"
-        placeholder="">
-      </app-phone-input>
-      <mat-error *ngIf="profileFormGroup.get('phoneNumber')?.hasError('invalidPhone')">
-        {{ 'common.phoneInvalid' | translate }}
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'common.school' | translate }}</mat-label>
-      <input matInput [placeholder]="'common.school' | translate" formControlName="school">
-    </mat-form-field>
+  <form class="panel-body" [formGroup]="profileFormGroup">
+    <div class="form">
+      <div class="row">
+        <div class="field">
+          <label>{{ 'common.firstName' | translate }}</label>
+          <input class="input" type="text" formControlName="firstName" />
+        </div>
+        <div class="field">
+          <label>{{ 'common.lastName' | translate }}</label>
+          <input class="input" type="text" formControlName="lastName" />
+        </div>
+      </div>
 
-    <!-- Display count information for supervisors and families -->
-    <div class="count-info" *ngIf="shouldShowCount()">
-      <div class="count-display">
-        <mat-icon>people</mat-icon>
-        <div class="count-content">
-          <span class="count-label">{{ getCountLabel() }}</span>
-          <span class="count-value">{{ getCountValue() || 0 }}</span>
+      <div class="field" *ngIf="showClassField()">
+        <label>{{ 'common.currentClass' | translate }}</label>
+        <select class="select" formControlName="currentClass">
+          <option value="">{{ 'common.currentClass' | translate }}</option>
+          <option *ngFor="let class of classList" [value]="class.id">{{ class.name }}</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>{{ 'common.email' | translate }}</label>
+        <div class="input-wrap has-left">
+          <span class="ico-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6" stroke-linecap="round"/></svg>
+          </span>
+          <input class="input" type="email" formControlName="email" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>{{ 'common.phone' | translate }}</label>
+        <app-phone-input formControlName="phoneNumber" placeholder=""></app-phone-input>
+        <span class="field-error" *ngIf="profileFormGroup.get('phoneNumber')?.hasError('invalidPhone')">
+          {{ 'common.phoneInvalid' | translate }}
+        </span>
+      </div>
+
+      <div class="field">
+        <label>{{ 'common.school' | translate }}</label>
+        <div class="input-wrap has-left">
+          <span class="ico-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-5 9 5-9 5-9-5z" stroke-linejoin="round"/><path d="M7 11v4c0 1.6 2.2 3 5 3s5-1.4 5-3v-4" stroke-linecap="round"/></svg>
+          </span>
+          <input class="input" type="text" formControlName="school" />
+        </div>
+      </div>
+
+      <div class="count-info" *ngIf="shouldShowCount()">
+        <div class="count-display">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg>
+          <div>
+            <span class="count-label">{{ getCountLabel() }}</span>
+            <span class="count-value">{{ getCountValue() || 0 }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-actions">
-      <button mat-flat-button color="primary"
-              (click)="onSaveChanges()"
-      >{{ 'settings.profile.save' | translate }}
+  </form>
+
+  <div class="panel-foot">
+    <span class="hint">{{ 'settings.profile.lastUpdate' | translate }}</span>
+    <div class="actions">
+      <button class="btn btn-soft" type="button">{{ 'common.cancel' | translate }}</button>
+      <button class="btn btn-primary" type="button" (click)="onSaveChanges()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {{ 'settings.profile.save' | translate }}
       </button>
     </div>
-  </form>
+  </div>
 </div>

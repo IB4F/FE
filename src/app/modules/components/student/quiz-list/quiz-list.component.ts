@@ -1,10 +1,16 @@
-import { Component, DestroyRef, inject, OnInit, OnDestroy, Renderer2, ElementRef } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, OnDestroy, Renderer2, ElementRef, NgZone } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { StudentService } from '../../../../api-client';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { environment } from '@env';
 import { NgToastService } from 'ng-angular-popup';
 import {QuizComponent} from "./quiz/quiz.component";
+import {SpellQuizComponent} from "./dnd/spell-quiz/spell-quiz.component";
+import {OrderQuizComponent} from "./dnd/order-quiz/order-quiz.component";
+import {MatchQuizComponent} from "./dnd/match-quiz/match-quiz.component";
 import confetti from 'canvas-confetti';
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
@@ -17,6 +23,13 @@ interface QuizProgress {
   lastCompletedQuizId: string | null;
   lastCompletedAt: string | null;
   correctAnswerQuiz: number;
+}
+
+interface QuizResult {
+  question: string;
+  isCorrect: boolean;
+  pointsDelta: number;
+  hasChildQuiz: boolean;
 }
 
 interface QuizData {
@@ -33,13 +46,16 @@ interface QuizData {
   quizzTypeName: string;
   parentQuizId: string | null;
   multipleAnswer: boolean;
+  // DnD-specific payloads (populated only for the respective type)
+  dndSpell?: { wordLength: number; letters: string[]; hint: string; imageUrl: string | null };
+  dndOrder?: { tiles: { id: string; text: string }[] };
+  dndMatch?: { words: { wordId: string; text: string }[]; images: { imageId: string; imageUrl: string | null }[] };
 }
 
 @Component({
   selector: 'app-quiz-list',
   standalone: true,
-  imports: [CommonModule, QuizComponent,
-    TranslatePipe], // Aggiungi QuizComponent qui
+  imports: [CommonModule, QuizComponent, SpellQuizComponent, OrderQuizComponent, MatchQuizComponent, TranslatePipe],
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss'],
 })
@@ -52,6 +68,9 @@ export class QuizListComponent implements OnInit, OnDestroy {
   isChildQuiz: boolean = false;
   currentParentQuizId: string | null = null;
   showExplanation: boolean = false;
+  showCorrectFlash = false;
+  correctFlashPoints = 0;
+  wrongAnswerText: string | null = null;
   explanation: string | null = null;
   explanationAudioUrl: string | null = null;
   nextChildQuizId: string | null = null;
@@ -60,11 +79,33 @@ export class QuizListComponent implements OnInit, OnDestroy {
   dataLoaded: boolean = false;
   isExplanationAudioPlaying: boolean = false;
   explanationAudio: HTMLAudioElement | null = null;
+  isComplete: boolean = false;
+  quizResults: QuizResult[] = [];
+
+  get scoreRingC(): number { return 2 * Math.PI * 56; }
+  get scoreRingOffset(): number { return this.scoreRingC * (1 - this.getProgressPercentage() / 100); }
+
+  get quizTypeName(): string { return this.currentQuiz?.quizzTypeName ?? ''; }
+  get isStandardQuiz(): boolean {
+    const t = this.quizTypeName;
+    return !!this.currentQuiz && t !== 'DragSpell' && t !== 'DragOrder' && t !== 'DragMatch';
+  }
 
   private destroyRef = inject(DestroyRef);
+  private sanitizer = inject(DomSanitizer);
+  private ngZone = inject(NgZone);
+
+  get safeExplanation(): SafeHtml | null {
+    return this.explanation ? this.sanitizer.bypassSecurityTrustHtml(this.explanation) : null;
+  }
+
+  get safeCurrentQuestion(): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(this.currentQuiz?.question || '');
+  }
 
   constructor(
     private studentService: StudentService,
+    private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
     private toast: NgToastService,
@@ -86,8 +127,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
       next: (result) => {
         this.parentQuizIds = result.parentQuizIds || [];
         this.progress = result.progress || null;
-        this.currentQuizIndex = this.progress?.currentQuizIndex || 0;
-        
+        this.currentQuizIndex = this.progress?.currentQuizIndex ?? 0;
+
         if (this.parentQuizIds.length > 0 && this.currentQuizIndex < this.parentQuizIds.length) {
           this.loadCurrentQuiz();
         } else if (this.progress && this.progress.completedQuizzes === this.progress.totalQuizzes) {
@@ -128,9 +169,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       next: (result) => {
         this.quizStartedAt = result.startedAt;
       },
-      error: (err) => {
-        console.warn('Could not start quiz timer:', err);
-      },
+      error: () => {},
     });
   }
 
@@ -149,10 +188,9 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.studentService.apiStudentQuizzesSubmitPost(submission).subscribe({
       next: (result) => {
         if (result.answer) {
-          // Correct answer
-          this.handleCorrectAnswer();
+          this.handleCorrectAnswer(result.progress);
         } else {
-          // Incorrect answer
+          this.wrongAnswerText = selectedOption?.optionText ?? null;
           this.handleIncorrectAnswer(result);
         }
       },
@@ -172,7 +210,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
 
     const selectedOptions = this.currentQuiz.options.filter(opt => selectedOptionIds.includes(opt.id));
     if (selectedOptions.length === 0) return;
-    
+
     const submission = {
       quizId: this.currentQuiz.id,
       answerIds: selectedOptionIds,
@@ -182,10 +220,9 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.studentService.apiStudentQuizzesSubmitPost(submission).subscribe({
       next: (result) => {
         if (result.answer) {
-          // Correct answer
-          this.handleCorrectAnswer();
+          this.handleCorrectAnswer(result.progress);
         } else {
-          // Incorrect answer
+          this.wrongAnswerText = selectedOptions.map(o => o.optionText).join(', ');
           this.handleIncorrectAnswer(result);
         }
       },
@@ -200,27 +237,59 @@ export class QuizListComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleCorrectAnswer() {
-    // Add points and increment correct answer count
-    if (this.progress) {
-      this.progress.totalPointsEarned += this.currentQuiz!.points;
-      this.progress.correctAnswerQuiz++;
-      this.progress.completedQuizzes++;
+  handleCorrectAnswer(updatedProgress?: QuizProgress) {
+    if (updatedProgress) {
+      this.progress = updatedProgress;
     }
-    
+    if (!this.isChildQuiz && this.currentQuiz) {
+      this.quizResults.push({
+        question: this.stripHtml(this.currentQuiz.question),
+        isCorrect: true,
+        pointsDelta: this.currentQuiz.points,
+        hasChildQuiz: false
+      });
+    }
+    this.correctFlashPoints = this.currentQuiz!.points;
+    this.showCorrectFlash = true;
     this.triggerConfetti();
-    this.toast.success("Përgjigje e saktë!", "Bravissimo!", 2000);
-    
-    // Move to next parent quiz
-    this.moveToNextParentQuiz();
+
+    setTimeout(() => {
+      this.showCorrectFlash = false;
+      this.moveToNextParentQuiz();
+    }, 1800);
+  }
+
+  handleDndAnswer(dndPayload: Record<string, unknown>) {
+    if (!this.currentQuiz || !this.quizStartedAt) return;
+    const submission = { quizId: this.currentQuiz.id, startedAt: this.quizStartedAt, ...dndPayload };
+    this.studentService.apiStudentQuizzesSubmitPost(submission as any).subscribe({
+      next: (result) => {
+        if (result.answer) { this.handleCorrectAnswer(result.progress); }
+        else { this.handleIncorrectAnswer(result); }
+      },
+      error: (err) => {
+        console.error('DnD quiz submission error:', err);
+        this.toast.danger(
+          err?.error?.message || 'Gabim në dërgimin e përgjigjes. Ju lutem provoni përsëri.',
+          'GABIM', 4000
+        );
+      },
+    });
   }
 
   handleIncorrectAnswer(result: any) {
-    // Deduct 2 points for incorrect answer
-    if (this.progress) {
-      this.progress.totalPointsEarned = Math.max(0, this.progress.totalPointsEarned - 2);
+    if (result.progress) {
+      this.progress = result.progress;
     }
-    
+    if (!this.isChildQuiz && this.currentQuiz) {
+      this.quizResults.push({
+        question: this.stripHtml(this.currentQuiz.question),
+        isCorrect: false,
+        pointsDelta: -2,
+        hasChildQuiz: !!result.childQuizId
+      });
+    }
+
     this.explanation = result.explanation;
     this.explanationAudioUrl = result.explanationAudioUrl;
     this.nextChildQuizId = result.childQuizId;
@@ -262,7 +331,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   moveToNextParentQuiz() {
     this.currentQuizIndex++;
     this.isChildQuiz = false;
-    
+
     if (this.currentQuizIndex < this.parentQuizIds.length) {
       this.loadCurrentQuiz();
     } else {
@@ -272,26 +341,48 @@ export class QuizListComponent implements OnInit, OnDestroy {
 
   showCompletionMessage() {
     this.currentQuiz = null;
-    this.toast.success(
-      "Urime! Ke përfunduar të gjitha kuizet!",
-      "Përfunduar",
-      5000
-    );
+    this.showExplanation = false;
+    this.showCorrectFlash = false;
+    this.isComplete = true;
+    this.loadQuizResults();
+  }
+
+  private loadQuizResults(): void {
+    if (this.quizResults.length > 0) return;
+    this.http
+      .get<QuizResult[]>(`${environment.apiUrl}/api/Student/quizzes/${this.linkId}/results`)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (results) => {
+          this.quizResults = (results || []).map(r => ({
+            ...r,
+            question: this.stripHtml(r.question)
+          }));
+        },
+        error: () => {}
+      });
   }
 
 
   triggerConfetti() {
-    const duration = 3000;
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
+    this.ngZone.runOutsideAngular(() => {
+      const instance = confetti.create(undefined, { resize: true, useWorker: false });
+      instance({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      setTimeout(() => instance.reset(), 3000);
     });
-    setTimeout(() => confetti.reset(), duration);
   }
 
   goBack() {
     this.router.navigate(['/student/kurset']);
+  }
+
+  private stripHtml(html: string): string {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return (tmp.textContent || tmp.innerText || '')
+      .replace(/ /g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   getProgressPercentage(): number {

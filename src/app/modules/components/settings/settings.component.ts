@@ -1,6 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
+
+function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+  const newPass = group.get('newPassword')?.value;
+  const confirm = group.get('confirmPassword')?.value;
+  return newPass && confirm && newPass !== confirm ? { passwordsMismatch: true } : null;
+}
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {passwordValidator} from "../../../helpers/customValidators/check-password.validator";
@@ -114,8 +120,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     this.changePasswordFormGroup = this.formBuilder.group({
       currentPassword: ['', [passwordValidator]],
-      newPassword: ['', [passwordValidator]]
-    });
+      newPassword: ['', [passwordValidator]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: passwordsMatchValidator });
   }
 
   loadUserData() {

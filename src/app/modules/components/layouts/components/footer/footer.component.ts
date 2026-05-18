@@ -1,29 +1,21 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { PreferencesDialogComponent } from '../preferences-dialog/preferences-dialog.component';
-import { TranslationService } from '../../../../../services/translation.service';
-import {TranslatePipe} from '../../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, MatButtonModule,
-    TranslatePipe],
+  imports: [CommonModule, MatButtonModule, RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  
-  get preferencesText(): string {
-    return this.translationService.translate('preferences.title');
-  }
+  readonly currentYear = new Date().getFullYear();
 
-  constructor(
-    private dialog: MatDialog,
-    private translationService: TranslationService
-  ) {}
+  constructor(private dialog: MatDialog) {}
 
   openPreferences(): void {
     (document.activeElement as HTMLElement)?.blur();

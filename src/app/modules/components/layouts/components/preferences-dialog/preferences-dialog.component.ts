@@ -82,7 +82,6 @@ export class PreferencesDialogComponent {
     this.translationService.currentLanguage$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(lang => {
-        console.log('[PreferencesDialog] currentLanguage$ emitted:', lang);
         this.selectedLanguage = lang;
       });
   }
@@ -92,7 +91,6 @@ export class PreferencesDialogComponent {
   }
 
   onLanguageChange(language: Language): void {
-    console.log('[PreferencesDialog] onLanguageChange called:', language);
     this.translationService.setLanguage(language);
   }
 

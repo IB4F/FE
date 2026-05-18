@@ -1,44 +1,64 @@
-<footer class="footer">
-  <div class="footer-content">
-    <div class="footer-links">
-      <div class="footer-section">
-        <h3>{{ 'footer.contact.title' | translate }}</h3>
-        <p><i class="fas fa-map-marker-alt"></i> {{ 'footer.contact.address' | translate }}</p>
-        <p><i class="fas fa-phone"></i> {{ 'footer.contact.phone' | translate }}</p>
-        <p><i class="fas fa-envelope"></i> {{ 'footer.contact.email' | translate }}</p>
+<footer class="lp-footer">
+  <div class="f-container">
+    <div class="footer-top">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="f-logo">
+          <img src="assets/svgImages/logo.svg" alt="Brain Gain" class="f-logo-img">
+        </a>
+        <p class="footer-tagline">Platforma digjitale e edukimit për fëmijët shqiptarë në mbarë botën. Asnjëherë mos ndalo së mësuari.</p>
       </div>
-      <div class="footer-section">
-        <h3>{{ 'footer.follow.title' | translate }}</h3>
-        <ul class="social-icon">
-          <li class="social-icon__item">
-            <a class="social-icon__link" href="#" aria-label="Facebook">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-          </li>
-          <li class="social-icon__item">
-            <a class="social-icon__link" href="#" aria-label="Twitter">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li class="social-icon__item">
-            <a class="social-icon__link" href="#" aria-label="LinkedIn">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-          </li>
-          <li class="social-icon__item">
-            <a class="social-icon__link" href="#" aria-label="Instagram">
-              <i class="fab fa-instagram"></i>
-            </a>
-          </li>
+
+      <!-- Contacts -->
+      <div class="footer-col">
+        <h5>Kontaktet</h5>
+        <ul>
+          <li>Rruga e Durrësit, 10<br/>1001 Tiranë, AL</li>
+          <li><a href="tel:+35542223344">+355 4 222 33 44</a></li>
+          <li><a href="mailto:info@braingainalbania.al">info&#64;braingainalbania.al</a></li>
         </ul>
       </div>
-      <div class="footer-section">
-        <h3>{{ 'footer.preferences.title' | translate }}</h3>
-        <button class="preferences-link" (click)="openPreferences()" aria-label="Open preferences">
-          <i class="fas fa-cog"></i> {{ preferencesText }}
-        </button>
+
+      <!-- Platform -->
+      <div class="footer-col">
+        <h5>Platforma</h5>
+        <ul>
+          <li><a href="/#classes">Klasat 1–12</a></li>
+          <li><a href="/#how">Si funksionon</a></li>
+          <li><a routerLink="/membership">Çmimi</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div class="footer-col">
+        <h5>Kompania</h5>
+        <ul>
+          <li><a href="#">Rreth nesh</a></li>
+          <li><a href="#">Karriera</a></li>
+          <li><a href="#">Privatësia</a></li>
+          <li><button class="f-pref-btn" (click)="openPreferences()">Preferencat</button></li>
+        </ul>
       </div>
     </div>
-    <p class="footer-text">&copy; {{ 'footer.copyright' | translate }}</p>
+
+    <div class="footer-bottom">
+      <span>© {{ currentYear }} Brain Gain Albania · Të gjitha të drejtat e rezervuara</span>
+      <div class="socials">
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-4H13V7.5c0-1.1.3-1.9 1.9-1.9H17V2.2C16.6 2.1 15.4 2 14 2c-2.9 0-4.9 1.8-4.9 5v3H6v4h3v8h4z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8h5v16H0V8zm7.5 0H12v2.2c.6-1 2.1-2.5 4.5-2.5 4.8 0 5.5 3 5.5 7v9.3H17v-8c0-2-.7-3.4-2.5-3.4-1.9 0-2.7 1.3-2.7 3.4v8H7.5V8z"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-mega" aria-hidden="true">brain&nbsp;gain</div>
   </div>
 </footer>

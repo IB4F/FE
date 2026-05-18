@@ -1,52 +1,119 @@
-.container {
-  padding: 40px 30px;
-  .title {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin: 50px 0;
-
-    h1,
-    p {
-      text-align: center;
-    }
-
-    p {
-      margin: 20px 0;
-      opacity: 0.75;
-    }
-  }
+.lh-page {
+  padding: 28px 32px 48px;
+  background: #F5F7FB;
+  min-height: 100%;
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 24px 16px;
-
-    .title {
-      margin: 30px 0;
-
-      h1 {
-        font-size: 1.5rem;
-      }
-    }
-  }
+/* ── Hero ── */
+.lh-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, #1A6FB8 0%, #1B9CD8 60%, #2BB5E0 100%);
+  border-radius: 24px;
+  padding: 36px 44px;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 16px 12px;
+.lh-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font: 600 11px 'Poppins', sans-serif;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  margin-bottom: 14px;
+}
 
-    .title {
-      margin: 20px 0;
+.lh-hero__title {
+  margin: 0 0 6px;
+  font: 700 34px / 1.15 'Poppins', sans-serif;
+  letter-spacing: -0.5px;
+  color: #fff;
+  max-width: 560px;
+}
 
-      h1 {
-        font-size: 1.25rem;
-      }
+.lh-hero__sub {
+  margin: 0;
+  font: 500 14px / 1.55 'Poppins', sans-serif;
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 520px;
+}
 
-      p {
-        font-size: 0.9rem;
-        margin: 12px 0;
-      }
-    }
+/* Glyph cluster */
+.lh-hero__glyphs {
+  position: relative;
+  width: 230px;
+  height: 190px;
+  flex-shrink: 0;
+}
+
+.lh-glyph {
+  position: absolute;
+  border-radius: 16px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.lh-glyph--1 { width: 84px; height: 84px; left: 0; top: 0; color: #7C3AED; transform: rotate(-8deg); font-size: 36px; }
+.lh-glyph--2 { width: 70px; height: 70px; left: 108px; top: 24px; color: #1B9CD8; transform: rotate(6deg); font-size: 28px; }
+.lh-glyph--3 { width: 68px; height: 68px; left: 46px; top: 108px; color: #F59E0B; transform: rotate(-4deg); font-size: 28px; }
+.lh-glyph--4 { width: 58px; height: 58px; left: 154px; top: 120px; color: #EC4899; transform: rotate(10deg); font-size: 24px; }
+
+/* bg blobs */
+.lh-hero__blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.lh-hero__blob--1 { width: 210px; height: 210px; top: -65px; right: -65px; background: rgba(255, 255, 255, 0.08); }
+.lh-hero__blob--2 { width: 250px; height: 250px; bottom: -95px; left: 38%; background: rgba(255, 255, 255, 0.06); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .lh-page { padding: 20px 20px 40px; }
+
+  .lh-hero {
+    padding: 28px 32px;
+    grid-template-columns: 1fr;
   }
+
+  .lh-hero__glyphs { display: none; }
+  .lh-hero__title  { font-size: 26px; }
+}
+
+@media (max-width: 600px) {
+  .lh-page { padding: 14px 14px 32px; }
+
+  .lh-hero {
+    padding: 20px 20px;
+    border-radius: 18px;
+    margin-bottom: 16px;
+  }
+
+  .lh-hero__badge  { font-size: 10px; padding: 4px 11px; }
+  .lh-hero__title  { font-size: 20px; margin-bottom: 4px; }
+  .lh-hero__sub    { font-size: 13px; }
+}
+
+@media (max-width: 400px) {
+  .lh-page { padding: 10px 10px 28px; }
+
+  .lh-hero { padding: 16px 16px; }
+  .lh-hero__title { font-size: 18px; }
+  .lh-hero__badge { display: none; }
 }

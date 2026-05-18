@@ -1,55 +1,110 @@
-<div class="quiz-container">
-  <div class="quiz-box question">
-    <div class="box-content">
-      <div class="question-header">
-        <div class="icon">?</div>
-        <div class="text">{{ question }}</div>
-        <div class="audio-control" *ngIf="hasQuestionAudio()">
-          <button
-            class="audio-button"
+<div class="qp-card" [class.qp-card--child]="isChildQuiz">
+
+  <!-- accent bar -->
+  <div class="qp-card__bar"></div>
+
+  <!-- child helper banner -->
+  <div class="qp-child-banner" *ngIf="isChildQuiz">
+    <span class="qp-child-banner__icon">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2.5-2.5 4"/>
+        <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+      </svg>
+    </span>
+    <div>
+      <div class="qp-child-banner__title">Pyetje ndihmëse — kthehu te koncepti bazë</div>
+      <div class="qp-child-banner__sub">Po e ndajmë në hapa më të vegjël që të arrish te përgjigjja kryesore.</div>
+    </div>
+  </div>
+
+  <!-- meta row -->
+  <div class="qp-card__meta">
+    <span class="qp-badge" [class.qp-badge--child]="isChildQuiz">
+      <svg *ngIf="!isChildQuiz" viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+        <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+      </svg>
+      <svg *ngIf="isChildQuiz" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2.5-2.5 4"/>
+        <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+      </svg>
+      {{ isChildQuiz ? 'Ndihmëse' : 'Kuiz' }}
+    </span>
+
+    <span class="qp-points-badge">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+      {{ points }} pikë
+    </span>
+
+    <span class="qp-multi-badge" *ngIf="multipleAnswer">Disa përgjigje</span>
+
+    <span class="qp-card__spacer"></span>
+
+    <!-- question audio button -->
+    <button class="qp-audio-btn"
+            [class.qp-audio-btn--playing]="isPlaying"
+            [class.qp-audio-btn--child]="isChildQuiz"
+            *ngIf="hasQuestionAudio()"
             (click)="toggleAudio()"
-            [class.playing]="isPlaying"
+            type="button">
+      <span class="qp-audio-btn__pulse" *ngIf="isPlaying"></span>
+      <span class="qp-audio-btn__circle">
+        <svg *ngIf="!isPlaying" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <path d="M15.5 8.5a4 4 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M18.5 5.5a8 8 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg *ngIf="isPlaying" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <rect x="6" y="5" width="4" height="14" rx="1"/>
+          <rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+      </span>
+      Dëgjo pyetjen
+    </button>
+  </div>
+
+  <!-- multiple answer hint -->
+  <div class="qp-multi-hint" *ngIf="multipleAnswer">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+      <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+    </svg>
+    Zgjidh të gjitha përgjigjet e sakta — mund të jenë më shumë se një.
+  </div>
+
+  <!-- question -->
+  <div class="qp-question" [innerHTML]="safeQuestion"></div>
+
+  <!-- options -->
+  <div class="qp-options" [class.qp-options--1col]="hasAnyImage">
+    <button *ngFor="let option of options; let i = index"
+            class="qp-option"
+            [class.qp-option--selected]="isOptionSelected(option.id)"
+            [class.qp-option--child]="isChildQuiz"
             type="button"
-          >
-            <span class="audio-icon" [class.playing]="isPlaying">
-              {{ isPlaying ? '⏸️' : '🔊' }}
-            </span>
-          </button>
-        </div>
+            (click)="setSelectedOption(option.id)">
+      <div class="qp-option__row">
+        <span class="qp-option__badge"
+              [class.qp-option__badge--square]="multipleAnswer"
+              [class.qp-option__badge--sel]="isOptionSelected(option.id)">
+          {{ getOptionLetter(i) }}
+        </span>
+        <span class="qp-option__text">{{ option.optionText }}</span>
       </div>
-      <!-- Multiple answer instruction -->
-      <div class="multiple-answer-instruction" *ngIf="multipleAnswer">
-        <div class="instruction-icon">ℹ️</div>
-        <div class="instruction-text">{{ 'quiz.multipleAnswer' | translate }}</div>
+      <div class="qp-option__img" *ngIf="hasImage(option)">
+        <img [src]="option.optionImageUrl!" [alt]="option.optionText"/>
       </div>
-    </div>
+    </button>
   </div>
 
-  <div class="options-grid">
-    <div
-      *ngFor="let option of options; let i = index"
-      class="quiz-box option"
-      [class.selected]="isOptionSelected(option.id)"
-      (click)="setSelectedOption(option.id)"
-    >
-      <div class="box-content">
-        <div class="option-header">
-          <div class="icon">{{ getOptionLetter(i) }}</div>
-          <div class="text">{{ option.optionText }}</div>
-        </div>
-
-        <div class="option-image" *ngIf="hasImage(option)">
-          <img [src]="option.optionImageUrl!" [alt]="option.optionText" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <button
-    class="submit-button"
-    (click)="submitAnswer()"
-    [disabled]="multipleAnswer ? selectedOptionIds.length === 0 : !selectedOptionId"
-  >
-    {{ 'quiz.submit' | translate }}
+  <!-- submit -->
+  <button class="qp-submit"
+          [class.qp-submit--child]="isChildQuiz"
+          [disabled]="multipleAnswer ? selectedOptionIds.length === 0 : !selectedOptionId"
+          type="button"
+          (click)="submitAnswer()">
+    Dërgo përgjigjen
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 5l7 7-7 7"/>
+    </svg>
   </button>
+
 </div>

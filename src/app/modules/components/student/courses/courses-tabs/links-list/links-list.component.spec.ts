@@ -18,7 +18,7 @@ describe('LinksListComponent', () => {
       ]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(LinksListComponent);
     component = fixture.componentInstance;
     mockRouter = TestBed.inject(Router) as jasmine.SpyObj<Router>;
@@ -30,20 +30,20 @@ describe('LinksListComponent', () => {
   });
 
   describe('Status Methods', () => {
-    it('should return correct status class for Completed', () => {
-      expect(component.getStatusClass('Completed')).toBe('status-completed');
+    it('should return "done" class for Completed', () => {
+      expect(component.getStatusClass('Completed')).toBe('done');
     });
 
-    it('should return correct status class for Not Started', () => {
-      expect(component.getStatusClass('Not Started')).toBe('status-not-started');
+    it('should return "todo" class for Not Started', () => {
+      expect(component.getStatusClass('Not Started')).toBe('todo');
     });
 
-    it('should return correct status class for In Progress', () => {
-      expect(component.getStatusClass('In Progress')).toBe('status-in-progress');
+    it('should return "progress" class for In Progress', () => {
+      expect(component.getStatusClass('In Progress')).toBe('progress');
     });
 
-    it('should return correct status class for unknown status', () => {
-      expect(component.getStatusClass('Unknown')).toBe('status-unknown');
+    it('should return "todo" class for unknown status', () => {
+      expect(component.getStatusClass('Unknown')).toBe('todo');
     });
 
     it('should return correct status text for Completed', () => {
@@ -51,23 +51,11 @@ describe('LinksListComponent', () => {
     });
 
     it('should return correct status text for Not Started', () => {
-      expect(component.getStatusText('Not Started')).toBe('Nuk është filluar');
+      expect(component.getStatusText('Not Started')).toBe('I pastartuar');
     });
 
     it('should return correct status text for In Progress', () => {
-      expect(component.getStatusText('In Progress')).toBe('Në progres');
-    });
-
-    it('should return correct status icon for Completed', () => {
-      expect(component.getStatusIcon('Completed')).toBe('check_circle');
-    });
-
-    it('should return correct status icon for Not Started', () => {
-      expect(component.getStatusIcon('Not Started')).toBe('radio_button_unchecked');
-    });
-
-    it('should return correct status icon for In Progress', () => {
-      expect(component.getStatusIcon('In Progress')).toBe('play_circle');
+      expect(component.getStatusText('In Progress')).toBe('Në vazhdim');
     });
   });
 
@@ -79,15 +67,18 @@ describe('LinksListComponent', () => {
     });
   });
 
-  describe('Status Display Logic', () => {
-    it('should handle missing status property gracefully', () => {
-      // Test that methods handle undefined/null status
-      expect(component.getStatusClass(undefined as any)).toBe('status-unknown');
-      expect(component.getStatusClass(null as any)).toBe('status-unknown');
-      expect(component.getStatusText(undefined as any)).toBe('E panjohur');
-      expect(component.getStatusText(null as any)).toBe('E panjohur');
-      expect(component.getStatusIcon(undefined as any)).toBe('help');
-      expect(component.getStatusIcon(null as any)).toBe('help');
+  describe('Progress', () => {
+    it('should return 0 progress when course has no links', () => {
+      component.course = { links: [] };
+      expect(component.progressPct).toBe(0);
+      expect(component.progressPctDisplay).toBe(0);
+    });
+
+    it('should compute courseCode from courseIndex', () => {
+      component.courseIndex = 0;
+      expect(component.courseCode).toBe('A');
+      component.courseIndex = 1;
+      expect(component.courseCode).toBe('B');
     });
   });
 });

@@ -9,10 +9,12 @@
  */
 import { DashboardStatsDTO } from './dashboardStatsDTO';
 import { LearnHubProgressDTO } from './learnHubProgressDTO';
+import { WeeklyActivityDayDTO } from './weeklyActivityDayDTO';
 
 
-export interface DashboardDTO { 
+export interface DashboardDTO {
     stats?: DashboardStatsDTO;
     latestLearnHubs?: Array<LearnHubProgressDTO> | null;
+    weeklyActivity?: Array<WeeklyActivityDayDTO> | null;
 }
 

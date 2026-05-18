@@ -1,57 +1,96 @@
-<div class="preferences-container" *ngIf="currentLanguage$ | async as currentLang">
-  <h2 class="section-title">{{ title }}</h2>
-  <p class="section-description">{{ description }}</p>
-
-  <div class="preference-section">
-    <!-- Language Selection -->
-    <div class="preference-item">
-      <div class="preference-info">
-        <div class="preference-header">
-          <mat-icon class="preference-icon">language</mat-icon>
-          <div class="preference-title-group">
-            <h3 class="preference-title">{{ languageLabel }}</h3>
-            <p class="preference-subtitle">{{ languageSubtitle }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="preference-action">
-        <mat-form-field appearance="outline" class="language-select">
-          <mat-select [value]="currentLang" (selectionChange)="onLanguageChange($event.value)">
-            <mat-option *ngFor="let lang of availableLanguages" [value]="lang.code">
-              {{ lang.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Dyslexic Font Toggle -->
-    <div class="preference-item">
-      <div class="preference-info">
-        <div class="preference-header">
-          <mat-icon class="preference-icon">text_fields</mat-icon>
-          <div class="preference-title-group">
-            <h3 class="preference-title">{{ dyslexicFontTitle }}</h3>
-            <p class="preference-subtitle">{{ dyslexicFontSubtitle }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="preference-action">
-        <mat-slide-toggle
-          [checked]="isDyslexicFontEnabled$ | async"
-          (change)="toggleDyslexicFont()"
-          color="primary">
-        </mat-slide-toggle>
-      </div>
-    </div>
-
-    <div class="preference-description-box">
-      <mat-icon class="info-icon">info</mat-icon>
-      <div class="info-content">
-        <p><strong>{{ dyslexicFontInfoTitle }}</strong></p>
-        <p>{{ dyslexicFontInfoDescription }}</p>
-      </div>
+<div class="panel" *ngIf="currentLanguage$ | async as currentLang">
+  <div class="panel-head">
+    <div>
+      <h2>{{ title }}</h2>
+      <p>{{ description }}</p>
     </div>
   </div>
-</div>
 
+  <div class="panel-body">
+    <div class="pref-list">
+
+      <!-- Language -->
+      <div class="pref-row">
+        <div class="pi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <p class="ph">{{ languageLabel }}</p>
+          <div class="pd">{{ languageSubtitle }}</div>
+        </div>
+        <div class="pf">
+          <select class="select-mini" [value]="currentLang" (change)="onLanguageChange($any($event.target).value)">
+            <option *ngFor="let lang of availableLanguages" [value]="lang.code">{{ lang.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dyslexic font -->
+      <div class="pref-row success">
+        <div class="pi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" stroke-linecap="round"/><path d="M9 4v16M15 4v16" stroke-linecap="round"/><path d="M3 20h18" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <p class="ph">{{ dyslexicFontTitle }}</p>
+          <div class="pd">{{ dyslexicFontSubtitle }}</div>
+        </div>
+        <div class="pf">
+          <button class="toggle" [class.on]="isDyslexicFontEnabled$ | async" (click)="toggleDyslexicFont()" type="button" [attr.aria-pressed]="isDyslexicFontEnabled$ | async"></button>
+        </div>
+      </div>
+
+      <!-- Dark mode -->
+      <div class="pref-row purple">
+        <div class="pi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M21 12.8A9 9 0 1 1 11.2 3" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <p class="ph">Dark mode</p>
+          <div class="pd">Kalo në një temë të errët të rehatshme.</div>
+        </div>
+        <div class="pf">
+          <button class="toggle" [class.on]="darkMode" (click)="toggleDarkMode()" type="button" [attr.aria-pressed]="darkMode"></button>
+        </div>
+      </div>
+
+      <!-- Email notifications -->
+      <div class="pref-row warn">
+        <div class="pi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <p class="ph">Njoftime me email</p>
+          <div class="pd">Merr raporte javore të progresit dhe këshilla me email.</div>
+        </div>
+        <div class="pf">
+          <button class="toggle" [class.on]="emailNotifications" (click)="toggleEmailNotifications()" type="button" [attr.aria-pressed]="emailNotifications"></button>
+        </div>
+      </div>
+
+      <!-- Sound effects -->
+      <div class="pref-row">
+        <div class="pi">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3-9 4 18 3-9h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <p class="ph">Efekte zanore</p>
+          <div class="pd">Luaj tingull gjatë feedbackut të kuizit dhe arritjeve.</div>
+        </div>
+        <div class="pf">
+          <button class="toggle" [class.on]="sounds" (click)="toggleSounds()" type="button" [attr.aria-pressed]="sounds"></button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dyslexic font info card -->
+    <div class="info-card" *ngIf="isDyslexicFontEnabled$ | async">
+      <div class="ii">i</div>
+      <div>
+        <strong>{{ dyslexicFontInfoTitle }}</strong>
+        {{ dyslexicFontInfoDescription }}
+      </div>
+    </div>
+
+  </div>
+</div>

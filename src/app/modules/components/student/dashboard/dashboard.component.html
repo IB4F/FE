@@ -1,97 +1,353 @@
-<div class="dashboard-container">
+<div class="pulse-page">
 
-  <section class="welcome-banner">
-    <div class="welcome-content">
-      <h2>{{ 'dashboard.welcome' | translate }} {{ name }}!</h2>
-      <p class="motivation-quote">{{ 'dashboard.quote' | translate }}</p>
-      <button class="cta-button" routerLink="/student/kurset">{{ 'dashboard.explore' | translate }}</button>
+  <!-- ── Greeting strip ── -->
+  <div class="pulse-greeting">
+    <div>
+      <div class="pulse-greeting__date">{{ today }}</div>
+      <h1 class="pulse-greeting__name">Mirësevjen, {{ name }} ✨</h1>
     </div>
-    <img src="assets/svgImages/banner/exam-submit.svg"
-         alt="Illustrazione di benvenuto."
-         class="banner-illustration">
-  </section>
-
-  <!-- Loading state -->
-  <div *ngIf="loading" class="loading-container">
-    <p>{{ 'dashboard.loading' | translate }}</p>
   </div>
 
-  <!-- Error state -->
-  <div *ngIf="error" class="error-container">
+  <!-- ── Loading ── -->
+  <div *ngIf="loading" class="pulse-loading">
+    <div class="pulse-loading__spinner"></div>
+    <p>Duke ngarkuar të dhënat…</p>
+  </div>
+
+  <!-- ── Error ── -->
+  <div *ngIf="error && !loading" class="pulse-error">
     <p>{{ error }}</p>
-    <button (click)="loadDashboardData()" class="retry-button">{{ 'common.retry' | translate }}</button>
+    <button (click)="loadDashboardData()" class="pulse-error__retry">Provo sërish</button>
   </div>
 
-  <section class="metrics-summary" *ngIf="dashboardData && !loading && !error">
-    <div class="metric-card">
-      <div class="metric-icon">
-        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"></path>
-        </svg>
-      </div>
-      <div class="metric-value">{{ dashboardData.stats?.totalProgress || 0 }}%</div>
-      <div class="metric-label">{{ 'dashboard.stats.totalProgress' | translate }}</div>
-      <div class="progress-bar-overall" [style.width.%]="dashboardData.stats?.totalProgress || 0"></div>
-    </div>
+  <!-- ─────────────────────────────────────────── -->
+  <ng-container *ngIf="dashboardData && !loading && !error">
 
-    <div class="metric-card">
-      <div class="metric-icon">
-        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M11 3a1 1 0 100 2h2a1 1 0 100-2h-2z"></path>
-          <path fill-rule="evenodd"
-                d="M4 10a4 4 0 014-4h4a4 4 0 110 8H8a4 4 0 01-4-4zm2 0a2 2 0 114 0 2 2 0 01-4 0zm10 0a2 2 0 10-4 0 2 2 0 004 0z"
-                clip-rule="evenodd"></path>
-        </svg>
-      </div>
-      <div class="metric-value">{{ dashboardData.stats?.pointsCollected || 0 }}</div>
-      <div class="metric-label">{{ 'dashboard.stats.points' | translate }}</div>
-    </div>
+    <!-- ── Hero — continue learning ── -->
+    <div class="pulse-hero">
+      <div class="pulse-hero__content">
+        <span class="pulse-hero__badge">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+            <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+          </svg>
+          {{ latestLearnHub ? 'Vazhdo aty ku le' : (allLearnHubsComplete ? 'Të gjitha të përfunduara!' : 'Fillo të mësuarit') }}
+        </span>
 
-    <div class="metric-card">
-      <div class="metric-icon">
-        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-          <path fill-rule="evenodd"
-                d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 6.293A1 1 0 015.586 7H4zm0 10v-5h12v5H4z"
-                clip-rule="evenodd"></path>
-        </svg>
-      </div>
-      <div class="metric-value">{{ dashboardData.stats?.completedLearnHubs || 0 }}/{{ dashboardData.stats?.totalLearnHubs || 0 }}</div>
-      <div class="metric-label">{{ 'dashboard.stats.learnHubs' | translate }}</div>
-    </div>
-  </section>
-
-  <section class="recent-learnhubs" *ngIf="dashboardData && !loading && !error">
-    <h3>{{ 'dashboard.recent.title' | translate }}</h3>
-    <div class="learnhub-cards-container">
-      <div *ngIf="!dashboardData.latestLearnHubs || dashboardData.latestLearnHubs.length === 0" class="no-learnhubs">
-        <p>{{ 'dashboard.recent.empty' | translate }}</p>
-      </div>
-
-      <div *ngFor="let learnHub of dashboardData.latestLearnHubs" class="learnhub-dashboard-card">
-        <div class="card-header">
-          <h4>{{ learnHub.title || ('dashboard.recent.noTitle' | translate) }}</h4>
-          <span class="hub-progress-percent">{{ learnHub.progressPercentage || 0 }}%</span>
-        </div>
-        <div class="card-body">
-          <div class="progress-bar-hub">
-            <div class="progress-fill" [style.width.%]="learnHub.progressPercentage || 0"></div>
-          </div>
-          <p class="last-activity" *ngIf="learnHub.lastExercise">
-            {{ 'dashboard.recent.lastExercise' | translate }} {{ learnHub.lastExercise }}
+        <ng-container *ngIf="latestLearnHub; else noHub">
+          <h2 class="pulse-hero__title">{{ latestLearnHub.title }}</h2>
+          <p class="pulse-hero__sub" *ngIf="latestLearnHub.lastExercise">
+            Ushtrimi i fundit:
+            <strong>{{ latestLearnHub.lastExercise }}</strong>
+            <ng-container *ngIf="latestLearnHub.pointsEarned !== undefined">
+              · {{ latestLearnHub.pointsEarned }}/{{ latestLearnHub.totalPossiblePoints }} pikë
+            </ng-container>
           </p>
-          <p class="last-activity" *ngIf="learnHub.lastActivityAt">
-            {{ 'dashboard.recent.lastActivity' | translate }} {{ learnHub.lastActivityAt | date:'dd/MM/yyyy HH:mm' }}
-          </p>
-          <div class="points-info">
-            <span class="points-earned">{{ learnHub.pointsEarned || 0 }}/{{ learnHub.totalPossiblePoints || 0 }} {{ 'common.points' | translate }}</span>
-          </div>
-          <button class="continue-hub-button" [routerLink]="['/student/quiz-list', learnHub.lastExerciseLinkId]">{{ 'dashboard.recent.continue' | translate }}</button>
+        </ng-container>
+
+        <ng-template #noHub>
+          <ng-container *ngIf="allLearnHubsComplete; else neverStarted">
+            <h2 class="pulse-hero__title">Ke përfunduar të gjitha LearnHub-et!</h2>
+            <p class="pulse-hero__sub">Punë e shkëlqyer. Eksploro kurse të reja për të vazhduar të mësuarit.</p>
+          </ng-container>
+          <ng-template #neverStarted>
+            <h2 class="pulse-hero__title">Fillo mësimet e tua sot.</h2>
+            <p class="pulse-hero__sub">Eksploro kurset e disponueshme dhe fillo ushtrimin e parë.</p>
+          </ng-template>
+        </ng-template>
+
+        <div class="pulse-hero__ctas">
+          <button *ngIf="latestLearnHub?.lastExerciseLinkId"
+                  class="pulse-hero__cta pulse-hero__cta--primary"
+                  [routerLink]="['/student/quiz-list', latestLearnHub!.lastExerciseLinkId]">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            Vazhdo ushtrimin
+          </button>
+          <a class="pulse-hero__cta pulse-hero__cta--ghost" routerLink="/student/kurset">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/><polygon points="16.2 7.8 13.4 13.4 7.8 16.2 10.6 10.6 16.2 7.8"/>
+            </svg>
+            Eksploro kurse të reja
+          </a>
         </div>
       </div>
+
+      <!-- Progress ring -->
+      <div class="pulse-hero__ring-wrap">
+        <svg [attr.width]="heroRingSize" [attr.height]="heroRingSize">
+          <circle [attr.cx]="heroRingSize/2" [attr.cy]="heroRingSize/2" [attr.r]="heroRingR"
+                  fill="none" stroke="rgba(255,255,255,0.22)" [attr.stroke-width]="heroRingStroke"/>
+          <circle [attr.cx]="heroRingSize/2" [attr.cy]="heroRingSize/2" [attr.r]="heroRingR"
+                  fill="none" stroke="#fff" [attr.stroke-width]="heroRingStroke"
+                  [attr.stroke-dasharray]="heroRingC"
+                  [attr.stroke-dashoffset]="heroRingOffset"
+                  stroke-linecap="round"
+                  [attr.transform]="'rotate(-90 ' + heroRingSize/2 + ' ' + heroRingSize/2 + ')'"/>
+        </svg>
+        <div class="pulse-hero__ring-label">
+          <div class="pulse-hero__ring-pct">{{ heroRingPct }}%</div>
+          <div class="pulse-hero__ring-sub">{{ allLearnHubsComplete ? 'Total' : 'Përfunduar' }}</div>
+        </div>
+      </div>
+
+      <!-- bg blobs -->
+      <div class="pulse-hero__blob pulse-hero__blob--1"></div>
+      <div class="pulse-hero__blob pulse-hero__blob--2"></div>
     </div>
-  </section>
+
+    <!-- ── Stat ribbon ── -->
+    <div class="pulse-ribbon">
+
+      <!-- Total progress -->
+      <div class="pulse-stat">
+        <div class="pulse-stat__top">
+          <span class="pulse-stat__icon pulse-stat__icon--green">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+          </span>
+          <span class="pulse-stat__label">Progres total</span>
+        </div>
+        <div class="pulse-stat__value">{{ dashboardData!.stats?.totalProgress || 0 }}%</div>
+        <div class="pulse-stat__sub pulse-stat__sub--green">total i përgjithshëm</div>
+      </div>
+
+      <!-- Points -->
+      <div class="pulse-stat">
+        <div class="pulse-stat__top">
+          <span class="pulse-stat__icon pulse-stat__icon--sky">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
+            </svg>
+          </span>
+          <span class="pulse-stat__label">Pikë të grumbulluara</span>
+        </div>
+        <div class="pulse-stat__value">{{ dashboardData!.stats?.pointsCollected || 0 }}</div>
+        <div class="pulse-stat__sub pulse-stat__sub--sky">të fituara deri tani</div>
+      </div>
+
+      <!-- LearnHubs -->
+      <div class="pulse-stat">
+        <div class="pulse-stat__top">
+          <span class="pulse-stat__icon pulse-stat__icon--amber">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 4h12v4a6 6 0 0 1-12 0V4z"/>
+              <path d="M4 6H2v2a3 3 0 0 0 3 3"/><path d="M20 6h2v2a3 3 0 0 1-3 3"/>
+              <path d="M9 18h6v3H9z"/>
+            </svg>
+          </span>
+          <span class="pulse-stat__label">LearnHubs</span>
+        </div>
+        <div class="pulse-stat__value">
+          {{ dashboardData!.stats?.completedLearnHubs || 0 }}/{{ dashboardData!.stats?.totalLearnHubs || 0 }}
+        </div>
+        <div class="pulse-stat__sub pulse-stat__sub--amber">të përfunduara</div>
+      </div>
+
+      <!-- Accuracy -->
+      <div class="pulse-stat" [class.pulse-stat--muted]="dashboardData!.stats?.averageAccuracy == null">
+        <div class="pulse-stat__top">
+          <span class="pulse-stat__icon pulse-stat__icon--purple">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="12" r="5"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="pulse-stat__label">Saktësi mesatare</span>
+        </div>
+        <div class="pulse-stat__value">{{ averageAccuracy }}</div>
+        <div class="pulse-stat__sub" [class.pulse-stat__sub--purple]="dashboardData!.stats?.averageAccuracy != null">
+          {{ dashboardData!.stats?.averageAccuracy != null ? 'mesatare e përgjigjeve' : 'nuk ka të dhëna ende' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Body grid ── -->
+    <div class="pulse-body">
+
+      <!-- Left column -->
+      <div class="pulse-body__main">
+
+        <!-- LearnHub cards -->
+        <div class="pulse-section-header">
+          <h3 class="pulse-section-header__title">LearnHub-et e tua të fundit</h3>
+          <span class="pulse-section-header__badge">
+            {{ (dashboardData!.latestLearnHubs || []).length }} aktive
+          </span>
+          <div class="pulse-section-header__spacer"></div>
+          <a routerLink="/student/kurset" class="pulse-section-header__link">
+            Shiko të gjitha
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="pulse-learnhub-grid">
+          <ng-container *ngIf="dashboardData!.latestLearnHubs?.length; else noLearnHubs">
+            <div *ngFor="let hub of dashboardData!.latestLearnHubs" class="pulse-lh-card">
+              <div class="pulse-lh-card__head"
+                   [class.pulse-lh-card__head--done]="learnHubIsComplete(hub.progressPercentage)">
+                <span class="pulse-lh-card__code">
+                  {{ hub.title?.charAt(0) || '?' }}
+                </span>
+                <div class="pulse-lh-card__meta">
+                  <div class="pulse-lh-card__title">{{ hub.title }}</div>
+                  <div class="pulse-lh-card__date" *ngIf="hub.lastActivityAt">
+                    {{ hub.lastActivityAt | date:'dd/MM/yyyy · HH:mm' }}
+                  </div>
+                </div>
+                <span class="pulse-lh-card__pct"
+                      [class.pulse-lh-card__pct--done]="learnHubIsComplete(hub.progressPercentage)">
+                  {{ hub.progressPercentage || 0 }}%
+                </span>
+              </div>
+              <div class="pulse-lh-card__body">
+                <div class="pulse-lh-card__bar">
+                  <div class="pulse-lh-card__bar-fill"
+                       [class.pulse-lh-card__bar-fill--done]="learnHubIsComplete(hub.progressPercentage)"
+                       [style.width.%]="hub.progressPercentage || 0">
+                  </div>
+                </div>
+                <div class="pulse-lh-card__info">
+                  <div class="pulse-lh-card__info-row" *ngIf="hub.lastExercise">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+                    </svg>
+                    Ushtrimi i fundit: <strong>{{ hub.lastExercise }}</strong>
+                  </div>
+                  <div class="pulse-lh-card__info-row" *ngIf="hub.pointsEarned !== undefined">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
+                    </svg>
+                    {{ hub.pointsEarned }}/{{ hub.totalPossiblePoints }} pikë
+                  </div>
+                </div>
+                <div class="pulse-lh-card__actions">
+                  <button *ngIf="hub.lastExerciseLinkId"
+                          class="pulse-lh-card__btn"
+                          [class.pulse-lh-card__btn--done]="learnHubIsComplete(hub.progressPercentage)"
+                          [routerLink]="['/student/quiz-list', hub.lastExerciseLinkId]">
+                    {{ learnHubIsComplete(hub.progressPercentage) ? 'Rishiko' : 'Vazhdo' }}
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14M13 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noLearnHubs>
+            <div class="pulse-empty">
+              <p>Nuk ka LearnHub të fundit. <a routerLink="/student/kurset">Eksploro kurset →</a></p>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Weekly activity -->
+        <div class="pulse-activity">
+          <div class="pulse-activity__header">
+            <h3 class="pulse-activity__title">Aktiviteti javor</h3>
+            <span class="pulse-activity__total" *ngIf="weeklyHasData">
+              {{ weeklyTotalExercises }} ushtrime këtë javë
+            </span>
+          </div>
+          <div class="pulse-activity__bars">
+            <div *ngFor="let day of weeklyActivity" class="pulse-activity__col">
+              <div class="pulse-activity__bar-wrap"
+                   [title]="(day.exercisesCompleted || 0) + ' ushtrime · ' + (day.pointsEarned || 0) + ' pikë'">
+                <div class="pulse-activity__bar"
+                     [class.pulse-activity__bar--empty]="!(day.exercisesCompleted)"
+                     [class.pulse-activity__bar--active]="!!day.exercisesCompleted"
+                     [style.height.%]="weeklyBarHeight(day)">
+                </div>
+              </div>
+              <div class="pulse-activity__day">{{ weekLetters[day.dayIndex ?? 0] }}</div>
+            </div>
+          </div>
+          <p class="pulse-activity__note" *ngIf="!weeklyHasData">
+            Nuk ka aktivitet këtë javë. Fillo një ushtrim sot!
+          </p>
+        </div>
+      </div>
+
+      <!-- Right sidebar -->
+      <aside class="pulse-sidebar">
+
+        <!-- Daily goal -->
+        <div class="pulse-goal" [class.pulse-goal--complete]="goalComplete">
+          <svg [attr.width]="goalRingSize" [attr.height]="goalRingSize">
+            <circle [attr.cx]="goalRingSize/2" [attr.cy]="goalRingSize/2" [attr.r]="goalRingR"
+                    fill="none" stroke="rgba(255,255,255,0.16)" [attr.stroke-width]="goalRingStroke"/>
+            <circle [attr.cx]="goalRingSize/2" [attr.cy]="goalRingSize/2" [attr.r]="goalRingR"
+                    fill="none"
+                    [attr.stroke]="goalComplete ? '#22c55e' : '#1B9CD8'"
+                    [attr.stroke-width]="goalRingStroke"
+                    [attr.stroke-dasharray]="goalRingC"
+                    [attr.stroke-dashoffset]="goalRingOffset"
+                    stroke-linecap="round"
+                    [attr.transform]="'rotate(-90 ' + goalRingSize/2 + ' ' + goalRingSize/2 + ')'"/>
+          </svg>
+          <div class="pulse-goal__center">
+            <div class="pulse-goal__val">{{ goalDone }}</div>
+            <div class="pulse-goal__of">nga {{ goalTotal }}</div>
+          </div>
+          <div class="pulse-goal__text">
+            <div class="pulse-goal__eyebrow">Objektivi i ditës</div>
+            <ng-container *ngIf="goalComplete; else goalPending">
+              <div class="pulse-goal__headline pulse-goal__headline--done">Objektiv i arritur!</div>
+              <div class="pulse-goal__sub">Punë e shkëlqyer sot!</div>
+            </ng-container>
+            <ng-template #goalPending>
+              <div class="pulse-goal__headline">{{ goalTotal - goalDone }} ushtrime për të mbaruar</div>
+              <div class="pulse-goal__sub">{{ goalDone === 0 ? 'Fillo ushtrimin e parë!' : 'Vazhdo kështu!' }}</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Up next -->
+        <div class="pulse-upnext" *ngIf="upNextLearnHubs.length">
+          <div class="pulse-upnext__header">
+            <h3 class="pulse-upnext__title">Vijon me radhë</h3>
+            <span class="pulse-upnext__count">{{ upNextLearnHubs.length }}</span>
+          </div>
+          <div class="pulse-upnext__list">
+            <div *ngFor="let hub of upNextLearnHubs; let i = index"
+                 class="pulse-upnext__item"
+                 [routerLink]="hub.lastExerciseLinkId ? ['/student/quiz-list', hub.lastExerciseLinkId] : null">
+              <span class="pulse-upnext__num">{{ i + 1 }}</span>
+              <div class="pulse-upnext__info">
+                <div class="pulse-upnext__name">{{ hub.title }}</div>
+                <div class="pulse-upnext__prog">{{ hub.progressPercentage || 0 }}% përfunduar</div>
+              </div>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#9FB4CC"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explore CTA when nothing up next -->
+        <div class="pulse-explore" *ngIf="!upNextLearnHubs.length">
+          <div class="pulse-explore__icon">🎯</div>
+          <p class="pulse-explore__text">Ke përfunduar të gjitha aktivitetet aktuale!</p>
+          <a routerLink="/student/kurset" class="pulse-explore__btn">Eksploro kurse të reja</a>
+        </div>
+
+      </aside>
+    </div>
+
+  </ng-container>
 
 </div>

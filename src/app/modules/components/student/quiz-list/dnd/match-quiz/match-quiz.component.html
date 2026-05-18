@@ -1,0 +1,120 @@
+<div class="dnd-card" cdkDropListGroup>
+  <div class="dnd-card__accent"></div>
+
+  <!-- Meta row -->
+  <div class="dnd-meta">
+    <span class="dnd-meta__badge dnd-meta__badge--sky">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+        <path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/>
+      </svg>
+      Përputh figurat
+    </span>
+    <span class="dnd-meta__badge dnd-meta__badge--ok">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+      {{ points }} pikë
+    </span>
+    <span class="dnd-meta__badge dnd-meta__badge--purple">Drag &amp; Drop</span>
+    <span class="dnd-meta__spacer"></span>
+    <button *ngIf="questionAudioUrl"
+            class="dnd-audio-btn"
+            [class.dnd-audio-btn--playing]="isPlaying"
+            (click)="toggleAudio()"
+            type="button">
+      <span class="dnd-audio-btn__circle">
+        <svg *ngIf="!isPlaying" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <path d="M15.5 8.5a4 4 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M18.5 5.5a8 8 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg *ngIf="isPlaying" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+      </span>
+      Dëgjo fjalët
+    </button>
+  </div>
+
+  <!-- Prompt -->
+  <div class="dnd-prompt" [innerHTML]="safeQuestion"></div>
+
+  <!-- Word bank (top) -->
+  <div class="dnd-bank dnd-bank--dashed"
+       id="match-bank"
+       cdkDropList
+       cdkDropListOrientation="horizontal"
+       [cdkDropListConnectedTo]="allConnectedIds"
+       [cdkDropListData]="bank"
+       (cdkDropListDropped)="onDropToBank($event)">
+    <span style="font:600 11px 'Poppins',sans-serif;color:#5B7A99;text-transform:uppercase;letter-spacing:0.6px;margin-right:8px;flex-shrink:0">Fjalët:</span>
+    <span *ngIf="bank.length === 0" class="dnd-bank__empty">(të gjitha të caktuara)</span>
+    <span *ngFor="let tile of bank"
+          class="dnd-tile dnd-tile--md"
+          cdkDrag
+          [cdkDragData]="tile">
+      {{ tile.text }}
+      <span *cdkDragPlaceholder class="dnd-tile dnd-tile--md" style="opacity:0.35">{{ tile.text }}</span>
+    </span>
+  </div>
+
+  <!-- Image cards grid -->
+  <div class="dnd-match-grid">
+    <div *ngFor="let card of cards" class="dnd-match-card">
+
+      <!-- Image area -->
+      <div class="dnd-match-card__img">
+        <img *ngIf="card.imageUrl" [src]="card.imageUrl" alt="" loading="lazy"/>
+        <div *ngIf="!card.imageUrl"
+             style="width:100%;height:100%;background:linear-gradient(135deg,#E8F4FB 0%,#F5FAFD 100%);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#9FB4CC" stroke-width="1.5" stroke-linecap="round">
+            <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="#9FB4CC"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Drop footer -->
+      <div class="dnd-match-card__footer"
+           [id]="'match-card-' + card.imageId"
+           cdkDropList
+           cdkDropListSortingDisabled
+           [cdkDropListConnectedTo]="allConnectedIds"
+           [cdkDropListData]="card.placed"
+           (cdkDropListDropped)="onDropToCard($event, card)">
+
+        <!-- Empty: show drop hint -->
+        <div *ngIf="card.placed.length === 0"
+             class="dnd-slot"
+             style="min-width:140px;height:50px">
+          lësho fjalën këtu
+        </div>
+
+        <!-- Filled: show tile -->
+        <div *ngIf="card.placed.length > 0" class="dnd-match-placed">
+          <span *ngFor="let tile of card.placed"
+                class="dnd-tile dnd-tile--md"
+                cdkDrag
+                [cdkDragData]="tile">
+            {{ tile.text }}
+            <span *cdkDragPlaceholder class="dnd-tile dnd-tile--md" style="opacity:0.35">{{ tile.text }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <div *ngIf="allFilled" class="dnd-feedback dnd-feedback--ok">
+    <span class="dnd-feedback__icon dnd-feedback__icon--ok">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </span>
+    <span>Të gjitha çiftet u caktuan — gati për ta dërguar.</span>
+  </div>
+
+  <!-- Submit -->
+  <button class="dnd-submit" [disabled]="!allFilled" (click)="submit()" type="button">
+    Dërgo përgjigjen
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M13 5l7 7-7 7"/>
+    </svg>
+  </button>
+</div>

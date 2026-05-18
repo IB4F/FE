@@ -78,7 +78,6 @@ export class LoginComponent implements OnInit {
     this._authService.apiAuthLoginPost(this.loginFormGroup.value).pipe(
       switchMap(resp => {
         this._tokenStorageService.saveTokens(resp?.data, this.rememberMe);
-        this.toast.success(resp?.message, 'SUCCESS', 3000);
         
         // Check if user must change password
         if (resp?.data?.mustChangePassword) {
