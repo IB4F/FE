@@ -51,13 +51,12 @@
 
               <div class="bg-field">
                 <span class="bg-field__label">Pikët</span>
-                <div style="display:flex;align-items:center;gap:14px;margin-top:8px;">
-                  <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range"/>
-                  <span style="font:700 22px Poppins;color:var(--navy);min-width:32px;">{{ quizFormGroup.get('points')?.value }}</span>
-                  <span style="font:500 12px Poppins;color:var(--muted);">pikë</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
-                  <span>1</span><span>5</span><span>10</span>
+                <div class="points-selector">
+                  @for (n of [1,2,3,4,5,6,7,8,9,10]; track n) {
+                    <button type="button" class="points-dot"
+                            [class.points-dot--active]="quizFormGroup.get('points')?.value === n"
+                            (click)="quizFormGroup.get('points')?.setValue(n)">{{ n }}</button>
+                  }
                 </div>
               </div>
             </div>
@@ -164,7 +163,7 @@
           <!-- Section 3: Options (standard quiz types only) -->
           @if (!isDragType()) {
             <section class="bg-card bg-card--padded">
-              <div class="qz-section-title" style="display:flex;align-items:center;">
+              <div class="qz-section-title" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
                 <div>
                   <h3>Opsionet e Përgjigjes</h3>
                   <p>Shëno opsionet dhe zgjidh të saktat</p>
@@ -490,7 +489,7 @@
             <section class="bg-card bg-card--padded section--child-quiz">
 
               <!-- Section header -->
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
                 <div>
                   <h3 style="margin:0;font:600 15px Poppins;">Nën-Kuizet</h3>
                   <p style="margin:3px 0 0;font:500 12.5px Poppins;color:var(--muted);">Nën-pyetje të lidhura me këtë pyetje kryesore</p>
@@ -942,12 +941,12 @@
                       <!-- Points sidebar -->
                       <div class="cq-points-aside">
                         <div class="bg-kicker" style="margin-bottom:10px;">Pikët</div>
-                        <div style="display:flex;align-items:center;gap:12px;">
-                          <input type="range" min="1" max="10" step="1" formControlName="points" class="quiz-range" style="flex:1;"/>
-                          <span style="font:700 20px Poppins;color:var(--navy);min-width:28px;">{{ childQuizFormGroup.get('points')?.value }}</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;font:500 11px Poppins;color:var(--muted-2);margin-top:4px;">
-                          <span>1</span><span>5</span><span>10</span>
+                        <div class="points-selector points-selector--compact">
+                          @for (n of [1,2,3,4,5,6,7,8,9,10]; track n) {
+                            <button type="button" class="points-dot"
+                                    [class.points-dot--active]="childQuizFormGroup.get('points')?.value === n"
+                                    (click)="childQuizFormGroup.get('points')?.setValue(n)">{{ n }}</button>
+                          }
                         </div>
                       </div>
                     </div>

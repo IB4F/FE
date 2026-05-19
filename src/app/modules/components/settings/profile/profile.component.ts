@@ -42,9 +42,14 @@ export class ProfileComponent {
   @Input() childrenCount: number | null = null;
   @Input() studentsCount: number | null = null;
   @Output() saveChanges = new EventEmitter<void>();
+  @Output() cancelChanges = new EventEmitter<void>();
 
   onSaveChanges() {
     this.saveChanges.emit();
+  }
+
+  onCancelChanges() {
+    this.cancelChanges.emit();
   }
 
   showClassField(): boolean {

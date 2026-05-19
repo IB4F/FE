@@ -412,3 +412,29 @@
   box-shadow: 0 24px 60px rgba(14, 42, 71, 0.18), 0 4px 12px rgba(14, 42, 71, 0.08);
   padding: 0 !important;
 }
+
+/* ============ RESPONSIVE BREAKPOINTS ============ */
+@media (max-width: 640px) {
+  .bg-card--padded { padding: 16px; }
+
+  .bg-page-header { flex-wrap: wrap; gap: 10px; }
+  .bg-page-header__spacer { display: none; }
+  .bg-page-header__title { font: 700 18px/1.2 'Poppins'; }
+  .bg-page-header__sub { font-size: 12.5px; }
+  .bg-page-header__actions { width: 100%; flex-wrap: wrap; }
+}
+
+/* col-show-xs: hidden by default, visible only on ≤480px */
+.col-show-xs { display: none !important; }
+@media (max-width: 480px) { .col-show-xs { display: inline-flex !important; } }
+
+@media (max-width: 480px) {
+  .col-hide-xs { display: none !important; }
+
+  .bg-opt-row { flex-wrap: wrap; align-items: flex-start; gap: 8px; }
+  .bg-opt-row .bg-link-row__field { min-width: 0; flex: 1 1 calc(100% - 38px); }
+
+  .bg-pagination { flex-wrap: wrap; gap: 8px; }
+  .bg-pagination__spacer { display: none; }
+  .bg-pagination__label { display: none; }
+}

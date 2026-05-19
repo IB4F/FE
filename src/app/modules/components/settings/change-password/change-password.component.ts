@@ -63,6 +63,10 @@ export class ChangePasswordComponent implements OnInit{
     this.changePasswordFormGroup.get('confirmPassword')?.updateValueAndValidity();
   }
 
+  onCancel() {
+    this.changePasswordFormGroup.reset();
+  }
+
   emitPasswordChange() {
     if (this.changePasswordFormGroup.valid) {
       this.passwordChangeRequest.emit({

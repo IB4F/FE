@@ -72,14 +72,9 @@
   background: var(--paper);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.hint {
-  font-size: 13px;
-  color: var(--ink-3);
 }
 
 /* ---------- PROFILE HERO ---------- */

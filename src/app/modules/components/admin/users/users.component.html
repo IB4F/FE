@@ -19,7 +19,7 @@
 
       <!-- Toolbar -->
       <div class="bg-toolbar">
-        <div class="bg-search" style="width:320px;">
+        <div class="bg-search users-search">
           <span class="bg-search__icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           </span>
@@ -35,7 +35,7 @@
             <thead>
               <tr>
                 <th>Përdoruesi</th>
-                <th>Roli</th>
+                <th class="col-hide-xs">Roli</th>
                 <th class="col-hide-md">Shkolla</th>
                 <th class="col-hide-lg">Qyteti</th>
                 <th style="text-align:right;">Veprime</th>
@@ -45,18 +45,19 @@
               @for (row of dataSource.data; track row.id) {
                 <tr>
                   <!-- Përdoruesi: avatar + nome + email -->
-                  <td style="max-width:280px;">
-                    <div style="display:flex;align-items:center;gap:12px;">
+                  <td class="user-td">
+                    <div class="user-cell">
                       <span class="user-avatar-cell">{{ getInitials(row) }}</span>
-                      <div>
-                        <div style="font:600 14px Poppins;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">{{ row.firstName }} {{ row.lastName }}</div>
-                        <div style="font:500 12px Poppins;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;">{{ row.email }}</div>
+                      <div class="user-cell__info">
+                        <div class="user-cell__name">{{ row.firstName }} {{ row.lastName }}</div>
+                        <div class="user-cell__email">{{ row.email }}</div>
+                        <span class="user-cell__role-xs bg-badge col-show-xs" [ngClass]="getRoleBadgeClass(row.role)">{{ row.role }}</span>
                       </div>
                     </div>
                   </td>
 
                   <!-- Roli -->
-                  <td>
+                  <td class="col-hide-xs">
                     <span class="bg-badge" [ngClass]="getRoleBadgeClass(row.role)">{{ row.role }}</span>
                   </td>
 
@@ -94,7 +95,7 @@
 
         <!-- Pagination -->
         <div class="bg-pagination">
-          <span>Rreshta për faqe</span>
+          <span class="bg-pagination__label">Rreshta për faqe</span>
           <select class="bg-pagination__select" [value]="pageSize" (change)="onPageSizeChange($event)">
             @for (size of pageSizeOptions; track size) {
               <option [value]="size">{{ size }}</option>

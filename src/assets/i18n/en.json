@@ -11,6 +11,7 @@
   "settings.changePassword.description": "Make sure your new password is strong and hard to guess.",
   "settings.changePassword.current": "Current Password",
   "settings.changePassword.new": "New Password",
+  "settings.changePassword.currentPlaceholder": "Enter your current password",
   "settings.changePassword.newPlaceholder": "Min. 8 chars, uppercase, number, symbol",
   "settings.changePassword.confirm": "Confirm new password",
   "settings.changePassword.confirmPlaceholder": "Repeat new password",

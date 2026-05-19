@@ -399,9 +399,28 @@ export class QuizzesComponent implements OnInit {
   cqIsFormValid(): boolean {
     if (this.cqIsDragType()) {
       return ['quizType', 'question', 'explanation', 'points']
-        .every(f => this.childQuizFormGroup?.get(f)?.valid);
+        .every(f => this.childQuizFormGroup?.get(f)?.valid) && this.cqValidateDndSpecificFields();
     }
     return !!this.childQuizFormGroup?.valid && this.cqValidateImageOptions();
+  }
+
+  private cqValidateDndSpecificFields(): boolean {
+    if (this.cqIsDragSpell()) {
+      const word = this.childQuizFormGroup.get('dndSpellWord')?.value?.trim();
+      const letters = (this.childQuizFormGroup.get('dndSpellLetters')?.value as string || '')
+        .split(',').map((l: string) => l.trim()).filter(Boolean);
+      return !!word && letters.length >= 2;
+    }
+    if (this.cqIsDragOrder()) {
+      const tiles = this.cqDndOrderTiles.controls;
+      const correctOrder = this.childQuizFormGroup.get('dndOrderCorrectOrder')?.value?.trim();
+      return tiles.length >= 2 && tiles.every(t => !!t.get('text')?.value?.trim()) && !!correctOrder;
+    }
+    if (this.cqIsDragMatch()) {
+      const pairs = this.cqDndMatchPairs.controls;
+      return pairs.length >= 2 && pairs.every(p => !!p.get('word')?.value?.trim());
+    }
+    return false;
   }
 
   cqAddDndOrderTile(): void {
@@ -858,11 +877,30 @@ export class QuizzesComponent implements OnInit {
   isFormValid(): boolean {
     if (this.isDragType()) {
       const baseFields = ['quizType', 'question', 'explanation', 'points'];
-      return baseFields.every(f => this.quizFormGroup.get(f)?.valid);
+      return baseFields.every(f => this.quizFormGroup.get(f)?.valid) && this.validateDndSpecificFields();
     }
     const formValid = this.quizFormGroup.valid;
     const imagesValid = this.validateImageOptions();
     return formValid && imagesValid;
+  }
+
+  private validateDndSpecificFields(): boolean {
+    if (this.isDragSpell()) {
+      const word = this.quizFormGroup.get('dndSpellWord')?.value?.trim();
+      const letters = (this.quizFormGroup.get('dndSpellLetters')?.value as string || '')
+        .split(',').map((l: string) => l.trim()).filter(Boolean);
+      return !!word && letters.length >= 2;
+    }
+    if (this.isDragOrder()) {
+      const tiles = this.dndOrderTiles.controls;
+      const correctOrder = this.quizFormGroup.get('dndOrderCorrectOrder')?.value?.trim();
+      return tiles.length >= 2 && tiles.every(t => !!t.get('text')?.value?.trim()) && !!correctOrder;
+    }
+    if (this.isDragMatch()) {
+      const pairs = this.dndMatchPairs.controls;
+      return pairs.length >= 2 && pairs.every(p => !!p.get('word')?.value?.trim());
+    }
+    return false;
   }
 
   get isEditMode(): boolean {

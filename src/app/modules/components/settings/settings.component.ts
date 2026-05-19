@@ -150,6 +150,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           school: user.school,
           phoneNumber: phoneNumberValue
         });
+        this.profileFormGroup.markAsPristine();
         this.fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
         this.childrenCount = user.childrenCount ?? null;
         this.studentsCount = user.studentsCount ?? null;
@@ -238,6 +239,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onCancelProfile() {
+    this.loadUserData();
+  }
+
   saveProfileData() {
     if (this.profileFormGroup.valid) {
       this.user$.pipe(take(1)).subscribe(user => {
@@ -267,6 +272,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this._authService.apiAuthIdPut(userId, userDetail).subscribe({
             next: () => {
               this.userService.loadUserData(true).subscribe();
+              this.profileFormGroup.markAsPristine();
               this.toast.success('Të dhënat u përditësuan me sukses!', 'SUCCESS', 3000)
             },
             error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)

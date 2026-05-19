@@ -80,11 +80,45 @@
   margin-left: 3px;
 }
 
-.quiz-range {
-  flex: 1;
-  accent-color: var(--primary);
-  height: 4px;
+.points-selector {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+
+  &--compact {
+    gap: 5px;
+  }
+}
+
+.points-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font: 600 13px 'Poppins', sans-serif;
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+
+  &:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(1.12);
+  }
+
+  &--active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+    transform: scale(1.12);
+  }
 }
 
 .opt-textarea {
@@ -527,6 +561,43 @@
   padding: 12px 20px 18px;
   margin: 0;
 }
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .cq-points-aside {
+    position: static;
+  }
+
+  .cq-form-header {
+    gap: 8px;
+
+    .bg-btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  .qz-section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cq-row {
+    flex-wrap: wrap;
+    row-gap: 8px;
+
+    .bg-link-row__field {
+      flex: 1 1 calc(100% - 38px);
+      min-width: 0;
+    }
+  }
+}
+
+// ── ──────────────────────────────────────────────────────────────────────────
 
 ::ng-deep {
   .ql-toolbar {

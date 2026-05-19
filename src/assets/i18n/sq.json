@@ -11,6 +11,7 @@
   "settings.changePassword.description": "Sigurohuni që fjalëkalimi i ri juaj të jetë i fortë dhe i vështirë për t'u hamendësuar.",
   "settings.changePassword.current": "Fjalëkalimi aktual",
   "settings.changePassword.new": "Fjalëkalim i ri",
+  "settings.changePassword.currentPlaceholder": "Vendos fjalëkalimin aktual",
   "settings.changePassword.newPlaceholder": "Min. 8 karaktere, shkronjë e madhe, numër, simbol",
   "settings.changePassword.confirm": "Konfirmo fjalëkalimin e ri",
   "settings.changePassword.confirmPlaceholder": "Ripërsërit fjalëkalimin e ri",

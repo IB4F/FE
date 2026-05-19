@@ -72,10 +72,9 @@
   </form>
 
   <div class="panel-foot">
-    <span class="hint">{{ 'settings.profile.lastUpdate' | translate }}</span>
     <div class="actions">
-      <button class="btn btn-soft" type="button">{{ 'common.cancel' | translate }}</button>
-      <button class="btn btn-primary" type="button" (click)="onSaveChanges()">
+      <button class="btn btn-soft" type="button" [disabled]="profileFormGroup.pristine" (click)="onCancelChanges()">{{ 'common.cancel' | translate }}</button>
+      <button class="btn btn-primary" type="button" [disabled]="profileFormGroup.pristine || profileFormGroup.invalid" (click)="onSaveChanges()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         {{ 'settings.profile.save' | translate }}
       </button>

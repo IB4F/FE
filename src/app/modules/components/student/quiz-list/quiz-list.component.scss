@@ -870,6 +870,26 @@
 }
 
 /* ══════════════════════════════
+   Desktop: single-row strip
+══════════════════════════════ */
+@media (min-width: 768px) {
+  .qp-strip__inner { flex-direction: row; align-items: center; gap: 14px; }
+
+  .qp-strip__row1 {
+    flex: 1;
+    min-width: 0;
+    flex-wrap: nowrap;
+    border-right: 1px solid #E6EDF5;
+    padding-right: 14px;
+  }
+
+  .qp-strip__row2 { display: flex; gap: 8px; flex-shrink: 0; }
+
+  .qp-counter      { padding: 6px 10px; gap: 8px; }
+  .qp-counter__lbl { display: none; }
+}
+
+/* ══════════════════════════════
    Responsive
 ══════════════════════════════ */
 @media (max-width: 760px) {
@@ -907,4 +927,39 @@
   .qp-completion__stat-val { font-size: 20px; }
 
   .qp-sk-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .qp-content  { padding: 14px 14px 32px; }
+  .qp-strip    { padding: 10px 14px; }
+  .qp-sk-strip { padding: 10px 14px; }
+
+  .qp-counter       { padding: 5px 8px; gap: 6px; }
+  .qp-counter__icon { width: 24px; height: 24px; }
+  .qp-counter__val  { font-size: 12px; }
+  .qp-counter__sub  { font-size: 11px; }
+
+  .qp-wrong__recap   { padding: 14px 16px; gap: 12px; }
+  .qp-wrong__recap-x { width: 44px; height: 44px; border-radius: 12px; }
+  .qp-wrong__recap-q { font-size: 14px; }
+  .qp-wrong__body    { padding: 14px 16px; gap: 12px; }
+  .qp-expl-text      { font-size: 13.5px; }
+
+  .qp-correct         { padding: 30px 16px; gap: 12px; }
+  .qp-correct__title  { font-size: 22px; }
+  .qp-correct__points { font-size: 16px; padding: 8px 18px; }
+
+  .qp-completion__hero    { padding: 20px 16px; border-radius: 18px; gap: 16px; }
+  .qp-completion__title   { font-size: 22px; }
+  .qp-completion__sub     { font-size: 13px; }
+  .qp-completion__stat    { padding: 10px 12px; }
+  .qp-completion__stat-val { font-size: 18px; }
+  .qp-completion__stat-hdr { font-size: 10px; }
+
+  .qp-detail__hdr  { padding: 13px 16px; }
+  .qp-detail__item { padding: 11px 16px; gap: 8px; }
+  .qp-detail__q    { font-size: 12.5px; }
+
+  .qp-crumb { padding: 10px 14px; gap: 8px; }
+  .qp-crumb__icon { width: 24px; height: 24px; }
 }
