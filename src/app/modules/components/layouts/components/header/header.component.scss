@@ -30,10 +30,13 @@
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
+  transition: transform .2s ease;
 }
+.logo:hover { transform: scale(1.03); }
 .logo-img {
-  height: 28px;
+  height: 64px;
   width: auto;
+  object-fit: contain;
   display: block;
 }
 
@@ -300,10 +303,15 @@
 .mobile-cta .nav-btn { flex: 1; }
 
 /* ---- Responsive ---- */
+@media (max-width: 1023px) {
+  .logo-img { height: 56px; }
+}
+
 @media (max-width: 768px) {
   .nav-inner { height: 64px; }
   .nav-links { display: none; }
   .nav-btn { height: 38px; padding: 0 16px; font-size: 13px; }
+  .logo-img { height: 48px; }
 
   /* On landing page: hide login + register from top bar (they're in mobile menu) and show hamburger */
   .nav.landing .nav-cta .nav-login { display: none; }

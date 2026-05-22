@@ -92,8 +92,9 @@
 }
 
 .rs-logo-img {
-  height: 28px;
+  height: 56px;
   width: auto;
+  object-fit: contain;
 }
 
 .rs-login-link {
