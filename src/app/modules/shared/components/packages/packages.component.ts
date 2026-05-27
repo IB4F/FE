@@ -1,5 +1,4 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {MatIconModule} from "@angular/material/icon";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
@@ -55,7 +54,6 @@ function resolveFeatures(name: string): string[] {
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule,
     ReactiveFormsModule,
     TranslatePipe
   ],

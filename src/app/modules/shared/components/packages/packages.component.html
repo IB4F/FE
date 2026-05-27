@@ -1,20 +1,16 @@
 <div class="pkg-wrap">
 
-  <!-- Section title -->
-  <h2 class="bg-section-title">{{ 'packages.title' | translate }}</h2>
-  <p class="bg-section-sub">{{ 'packages.subtitle' | translate }}</p>
-
   <!-- Billing toggle -->
-  <div class="bg-billing-toggle-wrap">
-    <div class="bg-billing-toggle" [class.is-annual]="isAnnual">
-      <div class="bg-billing-pill"></div>
-      <button class="bg-billing-btn"
+  <div class="rg-billing-toggle-wrap">
+    <div class="rg-billing-toggle" [class.is-annual]="isAnnual">
+      <div class="rg-billing-pill"></div>
+      <button class="rg-billing-btn"
               type="button"
               [class.is-active]="!isAnnual"
               (click)="setBillingCycle('monthly')">
         {{ 'common.monthly' | translate }}
       </button>
-      <button class="bg-billing-btn"
+      <button class="rg-billing-btn"
               type="button"
               [class.is-active]="isAnnual"
               (click)="setBillingCycle('annual')">
@@ -24,31 +20,29 @@
   </div>
 
   <!-- Package cards -->
-  <div class="bg-pkg-grid">
-    <div class="bg-pkg-card"
+  <div class="rg-pkg-grid">
+    <div class="rg-pkg-card"
          *ngFor="let card of currentCards"
          [class.is-popular]="card.isBestValue"
          [class.is-selected]="selectedCard === card"
          [class.is-dimmed]="selectedCard && selectedCard !== card"
          (click)="selectCard(card)">
 
-      <div *ngIf="card.isBestValue" class="bg-pkg-badge">
-        {{ 'packages.bestValue' | translate }}
+      <span *ngIf="card.isBestValue" class="tag">{{ 'packages.bestValue' | translate }}</span>
+      <div class="tier">{{ card.title }}</div>
+      <div class="name">{{ card.title }}</div>
+      <div class="desc">{{ card.description }}</div>
+
+      <div class="price">
+        <span class="cur">€</span>
+        <span class="amt">{{ card.price }}</span>
+        <span class="per">/{{ isAnnual ? 'vit' : 'muaj' }}</span>
       </div>
 
-      <p class="bg-pkg-name">{{ card.title }}</p>
-      <p class="bg-pkg-tagline">{{ card.description }}</p>
-
-      <div class="bg-pkg-price-row">
-        <span class="bg-pkg-currency">€</span>
-        <span class="bg-pkg-price">{{ card.price }}</span>
-        <span class="bg-pkg-period">/{{ isAnnual ? 'vit' : 'muaj' }}</span>
-      </div>
-
-      <ul class="bg-pkg-features">
+      <ul class="feats">
         <li *ngFor="let feature of card.features">
-          <span class="bg-pkg-check">
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+          <span class="ck">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
               <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -57,8 +51,7 @@
         </li>
       </ul>
 
-      <button class="bg-pkg-cta" type="button">
-        <mat-icon *ngIf="selectedCard === card" style="font-size:16px;width:16px;height:16px;line-height:16px;margin-right:4px;">check</mat-icon>
+      <button class="cta" type="button">
         {{ selectedCard === card ? ('packages.selected' | translate) : ('packages.select' | translate) }}
       </button>
 

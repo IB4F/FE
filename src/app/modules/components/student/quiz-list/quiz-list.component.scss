@@ -735,7 +735,137 @@
     &:hover { transform: translateY(-2px); }
   }
 
+  &__restart {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    font: 700 14px 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+
+    &:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+  }
+
 }
+
+/* ══════════════════════════════
+   Reset confirmation overlay
+══════════════════════════════ */
+.qp-reset-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 26, 47, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+  animation: qpFadeIn 0.18s ease;
+}
+
+.qp-reset-dialog {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 28px 28px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(10,26,47,0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  animation: qpSlideUp 0.22s ease;
+
+  &__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #FEF3C7;
+    color: #D97706;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font: 700 20px 'Poppins', sans-serif;
+    color: #0E2A47;
+  }
+
+  &__body {
+    margin: 0;
+    font: 400 14px / 1.6 'Poppins', sans-serif;
+    color: #5B7A99;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  &__cancel {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: #F5F7FB;
+    color: #3D5A7A;
+    border: 1.5px solid #E6EDF5;
+    font: 600 14px 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover:not(:disabled) { background: #E6EDF5; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+
+  &__confirm {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #D97706, #F59E0B);
+    color: #fff;
+    border: none;
+    font: 700 14px 'Poppins', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 18px rgba(217,119,6,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(217,119,6,0.4); }
+    &:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+  }
+}
+
+.qp-reset-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: qpSpin 0.7s linear infinite;
+}
+
+@keyframes qpFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes qpSlideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes qpSpin    { to { transform: rotate(360deg); } }
 
 /* ══════════════════════════════
    Detail list

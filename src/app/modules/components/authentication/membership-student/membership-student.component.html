@@ -5,97 +5,142 @@
 </app-manual-payment-instructions>
 
 <ng-container *ngIf="!manualPaymentDetails">
+<div class="rg-page">
+  <div class="rg-shell">
 
-  <!-- Hero Banner -->
-  <div class="bg-hero-wrap bg-fade-up">
-    <div class="bg-hero">
-      <h1 class="bg-hero-title">{{ 'membershipStudent.subtitle' | translate }}</h1>
-      <div class="bg-hero-illu">
-        <img src="assets/svgImages/membership.svg" alt="">
+    <!-- Hero -->
+    <header class="rg-hero">
+      <div class="rg-eyebrow leaf"><span class="dot"></span>Për studentët</div>
+      <h1>Paketat tona të çmimeve, <em>të gatshme</em> për të nisur.</h1>
+      <p class="lede">Përzgjidhni paketën që u përshtatet më së miri nevojave tuaja mësimore dhe krijoni llogarinë në më pak se një minutë.</p>
+    </header>
+
+    <!-- How it works -->
+    <section class="rg-main" style="padding-top:0; padding-bottom:0">
+      <div class="rg-how-grid">
+        <div class="rg-how-item">
+          <div class="rg-how-num">1</div>
+          <div>
+            <h4>{{ 'membershipStudent.step1.title' | translate }}</h4>
+            <p>{{ 'membershipStudent.step1.description' | translate }}</p>
+          </div>
+        </div>
+        <div class="rg-how-item">
+          <div class="rg-how-num">2</div>
+          <div>
+            <h4>{{ 'membershipStudent.step2.title' | translate }}</h4>
+            <p>{{ 'membershipStudent.step2.description' | translate }}</p>
+          </div>
+        </div>
+        <div class="rg-how-item">
+          <div class="rg-how-num">3</div>
+          <div>
+            <h4>{{ 'membershipStudent.step3.title' | translate }}</h4>
+            <p>{{ 'membershipStudent.step3.description' | translate }}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Packages -->
+    <section class="rg-main" id="pricing">
+      <div class="rg-section-head">
+        <div class="rg-card-eyebrow" style="display:inline-block">Paketat</div>
+        <h2>Zgjidhni paketën <em>tuaj</em></h2>
+        <p>Përzgjidhni paketën që u përshtatet më së miri nevojave tuaja mësimore.</p>
+      </div>
+      <app-packages #packageComponent [userType]="'student'"></app-packages>
+    </section>
+
+    <!-- Form + side panel -->
+    <section class="rg-main" id="register" style="padding-top:16px">
+      <div class="rg-section-head">
+        <div class="rg-card-eyebrow" style="display:inline-block">Krijo llogarinë</div>
+        <h2>Bëhuni pjesë e <em>komunitetit</em> tonë</h2>
+        <p>Krijoni llogarinë tuaj në më pak se një minutë.</p>
+      </div>
+
+      <div class="rg-split">
+        <div class="rg-side">
+          <div class="rg-side-illu">
+            <span class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v6m0 8v6M2 12h6m8 0h6M5 5l4 4m6 6l4 4M5 19l4-4m6-6l4-4"/>
+              </svg>
+              Komuniteti
+            </span>
+            <h2 class="side-h">Mëso, <em>krijoni</em><br>së bashku.</h2>
+            <p class="side-p">Mijëra studentë shqiptarë po ndajnë dyshime, materiale dhe sukseset e tyre. Bashkohu sot.</p>
+            <div class="illu-deco c1"></div>
+            <div class="illu-deco c2"></div>
+            <div class="illu-deco c3"></div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v4c3 2.5 9 2.5 12 0v-4"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Mëso me ritmin tënd</h4>
+              <p>Akses i plotë në të gjitha materialet mësimore 24/7.</p>
+            </div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn leaf">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Anulim i lirë</h4>
+              <p>Anulo nga llogaria jote në çdo kohë, pa pyetje.</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="rg-card rg-fade">
+          <div class="rg-card-head">
+            <div class="rg-card-eyebrow">Të dhënat e studentit</div>
+            <h2 class="rg-card-title">Krijo <em>profilin</em> tënd</h2>
+            <p class="rg-card-sub">Të gjitha fushat me <span style="color:#D55858;font-weight:600">*</span> janë të detyrueshme.</p>
+          </div>
+          <div class="rg-card-body">
+            <app-register #registerComponent></app-register>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Payment -->
+    <section class="rg-main" style="padding-top:8px">
+      <div class="rg-card ms-pay-card">
+        <div class="rg-card-body">
+          <app-payment-provider-selector
+            [selectedProvider]="selectedProvider"
+            (providerChange)="selectedProvider = $event">
+          </app-payment-provider-selector>
+
+          <button
+            class="rg-btn rg-btn--primary rg-btn--lg rg-btn--block ms-submit"
+            [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
+            (click)="handlePayment()"
+          >
+            <ng-container *ngIf="!loading">
+              {{ 'membershipStudent.submit' | translate }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </ng-container>
+            <ng-container *ngIf="loading">
+              <mat-spinner diameter="20"></mat-spinner>
+              {{ 'membershipStudent.processing' | translate }}
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </section>
+
   </div>
-
-  <!-- Steps Carousel -->
-  <section class="bg-section" id="steps">
-    <h2 class="bg-section-title">{{ 'membershipStudent.howToRegister' | translate }}</h2>
-    <p class="bg-section-sub">Tre hapa të thjeshtë për të nisur udhëtimin tuaj të të mësuarit</p>
-    <div class="bg-carousel-wrap"
-         (mouseenter)="pauseCarousel()"
-         (mouseleave)="resumeCarousel()">
-      <div class="bg-carousel-track">
-        <div class="bg-step-card" [class.is-active]="activeStep === 0">
-          <div class="bg-step-num">1</div>
-          <h3 class="bg-step-title">{{ 'membershipStudent.step1.title' | translate }}</h3>
-          <p class="bg-step-desc">{{ 'membershipStudent.step1.description' | translate }}</p>
-          <span class="bg-step-arrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="bg-step-card" [class.is-active]="activeStep === 1">
-          <div class="bg-step-num">2</div>
-          <h3 class="bg-step-title">{{ 'membershipStudent.step2.title' | translate }}</h3>
-          <p class="bg-step-desc">{{ 'membershipStudent.step2.description' | translate }}</p>
-          <span class="bg-step-arrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="bg-step-card" [class.is-active]="activeStep === 2">
-          <div class="bg-step-num">3</div>
-          <h3 class="bg-step-title">{{ 'membershipStudent.step3.title' | translate }}</h3>
-          <p class="bg-step-desc">{{ 'membershipStudent.step3.description' | translate }}</p>
-        </div>
-      </div>
-      <div class="bg-carousel-dots">
-        <button class="bg-dot" [class.is-active]="activeStep === 0" (click)="setStep(0)" aria-label="Step 1"></button>
-        <button class="bg-dot" [class.is-active]="activeStep === 1" (click)="setStep(1)" aria-label="Step 2"></button>
-        <button class="bg-dot" [class.is-active]="activeStep === 2" (click)="setStep(2)" aria-label="Step 3"></button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Registration Form -->
-  <section class="bg-section" id="register">
-    <h2 class="bg-section-title">{{ 'membershipStudent.community.title' | translate }}</h2>
-    <p class="bg-section-sub">Krijoni llogarinë tuaj në më pak se një minutë</p>
-    <app-register #registerComponent></app-register>
-  </section>
-
-  <!-- Pricing Packages -->
-  <section class="bg-section" id="pricing">
-    <app-packages #packageComponent [userType]="'student'"></app-packages>
-  </section>
-
-  <!-- Payment Provider -->
-  <section class="bg-section">
-    <app-payment-provider-selector
-      [selectedProvider]="selectedProvider"
-      (providerChange)="selectedProvider = $event">
-    </app-payment-provider-selector>
-  </section>
-
-  <!-- Submit -->
-  <div class="bg-submit-wrap">
-    <button
-      class="bg-submit-btn"
-      [disabled]="!(membershipStudentService.isSubmitEnabled$ | async) || loading"
-      (click)="handlePayment()"
-    >
-      <ng-container *ngIf="!loading">
-        {{ 'membershipStudent.submit' | translate }}
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </ng-container>
-      <ng-container *ngIf="loading">
-        <mat-spinner diameter="22"></mat-spinner>
-        {{ 'membershipStudent.processing' | translate }}
-      </ng-container>
-    </button>
-  </div>
-
+</div>
 </ng-container>

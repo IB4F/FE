@@ -1,43 +1,21 @@
 import {Component, OnInit} from '@angular/core';
-import {MatButtonModule} from "@angular/material/button";
-import {
-  MatDatepickerModule
-} from "@angular/material/datepicker";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatIconModule} from "@angular/material/icon";
-import {MatInputModule} from "@angular/material/input";
-import {MatTooltipModule} from "@angular/material/tooltip";
 import {CommonModule} from "@angular/common";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Router, RouterLink} from "@angular/router";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
 import {NgToastService} from "ng-angular-popup";
 import {City, DetailsService, SupervisorApplicationDTO, SupervisorService} from "../../../../api-client";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
-import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-register-supervizor',
   standalone: true,
   imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
     CommonModule,
-    MatDatepickerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule,
-    RouterLink,
-    MatOption,
-    MatSelect,
+    ReactiveFormsModule,
     PhoneInputComponent,
-    DynamicBannerComponent
-  ,
-    TranslatePipe],
+    TranslatePipe
+  ],
   templateUrl: './register-supervizor.component.html',
   styleUrl: './register-supervizor.component.scss'
 })

@@ -2,11 +2,8 @@ import {Component, inject, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {CommonModule} from "@angular/common";
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {StripeService} from "../../../../services/stripe.service";
 import {PaddleService} from '../../../../services/paddle.service';
 import {
@@ -14,18 +11,14 @@ import {
   Class,
   DetailsService,
   FamilyRegistrationDTO,
-  StudentRegistrationDTO,
   SubscriptionPackageService,
   FamilyPricingRequestDTO,
   FamilyPricingResponseDTO
 } from "../../../../api-client";
+import {BillingInterval} from '../../../shared/constant/enums';
 import {NgToastService} from "ng-angular-popup";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect} from "@angular/material/select";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SubscriptionErrorHandlerService} from "../../../../services/subscription-error-handler.service";
 import {PhoneInputComponent} from "../../../shared/components/phone-input/phone-input.component";
-import {DynamicBannerComponent} from "../../../shared/components/dynamic-banner/dynamic-banner.component";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 import {PaymentProviderSelectorComponent} from '../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import {ManualPaymentInstructionsComponent, ManualPaymentDetails} from '../../../shared/components/manual-payment-instructions/manual-payment-instructions.component';
@@ -36,16 +29,9 @@ import {ManualPaymentInstructionsComponent, ManualPaymentDetails} from '../../..
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
     MatProgressSpinnerModule,
     MatTooltip,
-    MatOption,
-    MatSelect,
     PhoneInputComponent,
-    DynamicBannerComponent,
     TranslatePipe,
     PaymentProviderSelectorComponent,
     ManualPaymentInstructionsComponent
@@ -71,8 +57,23 @@ export class RegisterFamilyComponent implements OnInit {
 
   classesList: Class[] = [];
   familyPricingData: FamilyPricingResponseDTO[] = [];
+  familyBillingCycle: 'monthly' | 'annual' = 'annual';
   pricingLoading: boolean = false;
   selectedPackage: any = null;
+
+  get filteredFamilyPricingData(): FamilyPricingResponseDTO[] {
+    const target = this.familyBillingCycle === 'annual' ? BillingInterval.Year : BillingInterval.Month;
+    return this.familyPricingData.filter(p => p.billingInterval === target);
+  }
+
+  get isFamilyAnnual(): boolean {
+    return this.familyBillingCycle === 'annual';
+  }
+
+  setFamilyBillingCycle(cycle: 'monthly' | 'annual') {
+    this.familyBillingCycle = cycle;
+    this.selectedPackage = null;
+  }
 
   constructor(
     private _formBuilder: FormBuilder,

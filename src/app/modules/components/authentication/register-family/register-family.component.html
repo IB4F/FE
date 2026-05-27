@@ -1,245 +1,354 @@
-<div class="container">
-  <app-dynamic-banner bannerType="family"></app-dynamic-banner>
+<app-manual-payment-instructions
+  *ngIf="manualPaymentDetails"
+  [details]="manualPaymentDetails"
+  [provider]="manualPaymentProvider">
+</app-manual-payment-instructions>
 
-  <div class="title">
-    <h1>{{ 'registerFamily.title' | translate }}</h1>
-  </div>
+<ng-container *ngIf="!manualPaymentDetails">
+<div class="rg-page">
+  <div class="rg-shell">
 
-  <!-- Progress Steps -->
-  <div class="progress-steps">
-    <div class="step" [class.active]="currentStep === 'memberCountAndPackage'"
-         [class.completed]="currentStep !== 'memberCountAndPackage'">
-      <div class="step-number">1</div>
-      <div class="step-title">{{ 'registerFamily.step1.title' | translate }}</div>
-      <div class="step-description">{{ 'registerFamily.step1.desc' | translate }}</div>
+    <!-- Hero -->
+    <header class="rg-hero">
+      <div class="rg-eyebrow gold"><span class="dot"></span>Për familjet</div>
+      <h1>Përfshirja familjare në edukim, në një <em>platformë të unifikuar</em>.</h1>
+      <p class="lede">Bëhuni pjesë e platformës sonë si familje dhe ndiqni progresin e fëmijëve tuaj nga një llogari e vetme.</p>
+    </header>
+
+    <!-- Stepper -->
+    <div class="rg-stepper">
+      <button class="rg-step"
+              [class.is-active]="currentStep === 'memberCountAndPackage'"
+              [class.is-done]="currentStep !== 'memberCountAndPackage'"
+              (click)="currentStep !== 'memberCountAndPackage' && goBackToMemberCountAndPackage()"
+              type="button">
+        <span class="num">
+          <ng-container *ngIf="currentStep === 'memberCountAndPackage'">1</ng-container>
+          <ng-container *ngIf="currentStep !== 'memberCountAndPackage'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </ng-container>
+        </span>
+        <div class="meta">
+          <span class="t">Hapi 1</span>
+          <span class="h">{{ 'registerFamily.step1.title' | translate }}</span>
+          <span class="d">{{ 'registerFamily.step1.desc' | translate }}</span>
+        </div>
+      </button>
+
+      <button class="rg-step"
+              [class.is-active]="currentStep === 'parentInfo'"
+              [class.is-done]="currentStep === 'childrenInfo' || currentStep === 'payment'"
+              type="button">
+        <span class="num">
+          <ng-container *ngIf="currentStep !== 'childrenInfo' && currentStep !== 'payment'">2</ng-container>
+          <ng-container *ngIf="currentStep === 'childrenInfo' || currentStep === 'payment'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </ng-container>
+        </span>
+        <div class="meta">
+          <span class="t">Hapi 2</span>
+          <span class="h">{{ 'registerFamily.step2.title' | translate }}</span>
+          <span class="d">{{ 'registerFamily.step2.desc' | translate }}</span>
+        </div>
+      </button>
+
+      <button class="rg-step"
+              [class.is-active]="currentStep === 'childrenInfo'"
+              [class.is-done]="currentStep === 'payment'"
+              type="button">
+        <span class="num">
+          <ng-container *ngIf="currentStep !== 'payment'">3</ng-container>
+          <ng-container *ngIf="currentStep === 'payment'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </ng-container>
+        </span>
+        <div class="meta">
+          <span class="t">Hapi 3</span>
+          <span class="h">{{ 'registerFamily.step3.title' | translate }}</span>
+          <span class="d">{{ 'registerFamily.step3.desc' | translate }}</span>
+        </div>
+      </button>
+
+      <button class="rg-step"
+              [class.is-active]="currentStep === 'payment'"
+              type="button">
+        <span class="num">4</span>
+        <div class="meta">
+          <span class="t">Hapi 4</span>
+          <span class="h">{{ 'registerFamily.step4.title' | translate }}</span>
+          <span class="d">Finalizoni regjistrimin</span>
+        </div>
+      </button>
     </div>
-    <div class="step" [class.active]="currentStep === 'parentInfo'"
-         [class.completed]="currentStep === 'childrenInfo' || currentStep === 'payment'">
-      <div class="step-number">2</div>
-      <div class="step-title">{{ 'registerFamily.step2.title' | translate }}</div>
-      <div class="step-description">{{ 'registerFamily.step2.desc' | translate }}</div>
-    </div>
-    <div class="step" [class.active]="currentStep === 'childrenInfo'" [class.completed]="currentStep === 'payment'">
-      <div class="step-number">3</div>
-      <div class="step-title">{{ 'registerFamily.step3.title' | translate }}</div>
-      <div class="step-description">{{ 'registerFamily.step3.desc' | translate }}</div>
-    </div>
-    <div class="step" [class.active]="currentStep === 'payment'">
-      <div class="step-number">4</div>
-      <div class="step-title">{{ 'registerFamily.step4.title' | translate }}</div>
-      <div class="step-description">{{ 'registerFamily.step4.desc' | translate }}</div>
-    </div>
-  </div>
 
-  <div class="content-and-form">
-    <div class="visual-section">
-      <img class="image" src="assets/svgImages/kids.svg"
-           alt="Ilustrim i një familjeje.">
-    </div>
+    <!-- Main split -->
+    <main class="rg-main" style="padding-top:20px">
+      <div class="rg-split">
 
-    <div class="form-section-wrapper">
-      <form [formGroup]="registerFamilyForm" class="form-container">
-        <h2 class="form-title">{{ 'registerFamily.formTitle' | translate }}</h2>
-
-        <!-- Step 1: Member Count and Package Selection -->
-        <div *ngIf="currentStep === 'memberCountAndPackage'" class="form-section member-count-and-package-section">
-          <h3>{{ 'registerFamily.howManyChildren' | translate }}</h3>
-
-          <!-- Member Count Selection -->
-          <div class="member-count-section">
-            <h4>{{ 'registerFamily.childrenCount' | translate }}</h4>
-            <div class="children-counter">
-              <button mat-icon-button (click)="decrementChildren()" [disabled]="numberOfChildren <= 1">
-                <mat-icon>remove</mat-icon>
-              </button>
-              <span class="count">{{ numberOfChildren }}</span>
-              <button mat-icon-button (click)="incrementChildren()" [disabled]="numberOfChildren >= 10">
-                <mat-icon>add</mat-icon>
-              </button>
+        <!-- Side panel (desktop only) -->
+        <div class="rg-side">
+          <div class="rg-side-illu">
+            <span class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Për familjet
+            </span>
+            <h2 class="side-h">Një llogari, <em>të gjithë fëmijët</em>.</h2>
+            <p class="side-p">Krijoni një llogari familjare dhe menaxhoni mësimet, raportet dhe komunikimin me mësuesit në një vend të vetëm.</p>
+            <div class="illu-deco c1"></div>
+            <div class="illu-deco c2"></div>
+            <div class="illu-deco c3"></div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn gold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v6m0 8v6M2 12h6m8 0h6M5 5l4 4m6 6l4 4M5 19l4-4m6-6l4-4"/>
+              </svg>
+            </span>
+            <div>
+              <h4>{{ numberOfChildren }} {{ numberOfChildren === 1 ? 'fëmijë' : 'fëmijë' }} të zgjedhur</h4>
+              <p>Mund të ndryshoni numrin e fëmijëve në hapin e parë.</p>
             </div>
           </div>
+          <div class="rg-side-fact">
+            <span class="icn leaf">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Anulim i lirë</h4>
+              <p>Anulo nga llogaria jote në çdo kohë, pa pyetje.</p>
+            </div>
+          </div>
+        </div>
 
-          <!-- Package Selection -->
-          <div class="package-selection-section">
-            <h4>{{ 'registerFamily.selectPackage' | translate }}</h4>
-            <div *ngIf="familyPricingData.length > 0 && !pricingLoading" class="package-cards">
-              <div *ngFor="let pricing of familyPricingData"
-                   class="package-card"
-                   [class.selected]="selectedPackage?.id === pricing.packageId"
-                   (click)="selectPackage(pricing)">
-                <div class="package-title">{{ pricing.name }}</div>
-                <div class="package-price">{{ pricing.totalPriceFormatted }}</div>
-                <div *ngIf="pricing.breakdown" class="package-breakdown">{{ pricing.breakdown }}</div>
-                <div class="package-selection-indicator">
-                  <mat-icon *ngIf="selectedPackage?.id === pricing.packageId">check_circle</mat-icon>
+        <!-- Form card -->
+        <section class="rg-card rg-fade" [attr.key]="currentStep">
+          <div class="rg-card-head">
+            <div class="rg-card-eyebrow">Hapi
+              {{ currentStep === 'memberCountAndPackage' ? '1' : currentStep === 'parentInfo' ? '2' : currentStep === 'childrenInfo' ? '3' : '4' }}
+              nga 4
+            </div>
+            <h2 class="rg-card-title">Regjistrimi i <em>familjes</em></h2>
+            <p class="rg-card-sub">
+              {{ currentStep === 'memberCountAndPackage' ? ('registerFamily.step1.desc' | translate) :
+                 currentStep === 'parentInfo' ? ('registerFamily.step2.desc' | translate) :
+                 currentStep === 'childrenInfo' ? ('registerFamily.step3.desc' | translate) :
+                 'Finalizoni regjistrimin dhe zgjidhni metodën e pagesës.' }}
+            </p>
+          </div>
+
+          <div class="rg-card-body">
+            <form [formGroup]="registerFamilyForm">
+
+              <!-- ── STEP 1: numri + paketa ── -->
+              <div *ngIf="currentStep === 'memberCountAndPackage'">
+                <div class="rf-counter-row">
+                  <label class="rg-label" style="margin:0">{{ 'registerFamily.childrenCount' | translate }}</label>
+                  <div class="rg-counter">
+                    <button class="rg-counter-btn" type="button" (click)="decrementChildren()" [disabled]="numberOfChildren <= 1">−</button>
+                    <span class="rg-counter-val">{{ numberOfChildren }}</span>
+                    <button class="rg-counter-btn" type="button" (click)="incrementChildren()" [disabled]="numberOfChildren >= 10">+</button>
+                  </div>
+                </div>
+
+                <label class="rg-label" style="margin-top:18px; display:block">{{ 'registerFamily.selectPackage' | translate }}</label>
+
+                <!-- Billing cycle toggle -->
+                <div class="rg-billing-toggle-wrap" style="justify-content:flex-start; margin-bottom:16px">
+                  <div class="rg-billing-toggle" [class.is-annual]="isFamilyAnnual">
+                    <div class="rg-billing-pill"></div>
+                    <button class="rg-billing-btn" type="button"
+                            [class.is-active]="!isFamilyAnnual"
+                            (click)="setFamilyBillingCycle('monthly')">
+                      {{ 'common.monthly' | translate }}
+                    </button>
+                    <button class="rg-billing-btn" type="button"
+                            [class.is-active]="isFamilyAnnual"
+                            (click)="setFamilyBillingCycle('annual')">
+                      {{ 'common.annual' | translate }}
+                    </button>
+                  </div>
+                </div>
+
+                <div *ngIf="pricingLoading" class="rf-loading">
+                  <mat-spinner diameter="28"></mat-spinner>
+                  <span>{{ 'registerFamily.pricingLoading' | translate }}</span>
+                </div>
+
+                <div *ngIf="!pricingLoading && filteredFamilyPricingData.length > 0" class="rg-pkg-list">
+                  <button type="button"
+                          *ngFor="let pricing of filteredFamilyPricingData"
+                          class="rg-pkg-row"
+                          [class.is-selected]="selectedPackage?.id === pricing.packageId"
+                          (click)="selectPackage(pricing)">
+                    <span class="radio"><i></i></span>
+                    <div class="info">
+                      <div class="name">{{ pricing.name }}</div>
+                      <div class="desc" *ngIf="pricing.breakdown">{{ pricing.breakdown }}</div>
+                    </div>
+                    <div class="price">
+                      <div class="amt">{{ pricing.totalPriceFormatted }}</div>
+                      <div class="per">për muaj / fëmijë</div>
+                    </div>
+                  </button>
+                </div>
+
+                <div class="rg-nav-actions">
+                  <span></span>
+                  <button class="rg-btn rg-btn--primary rg-btn--lg" type="button"
+                          (click)="proceedToParentInfo()" [disabled]="!selectedPackage">
+                    Vazhdo me të dhënat e prindit
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div *ngIf="pricingLoading" class="pricing-loading">
-              <mat-spinner diameter="30"></mat-spinner>
-              <span>{{ 'registerFamily.pricingLoading' | translate }}</span>
-            </div>
+              <!-- ── STEP 2: prindi ── -->
+              <div *ngIf="currentStep === 'parentInfo'">
+                <div class="rg-fieldset">
+                  <div class="rg-field">
+                    <label class="rg-label">{{ 'common.firstName' | translate }} <span class="req">*</span></label>
+                    <input class="rg-input" formControlName="firstName" [placeholder]="'common.firstName' | translate">
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('firstName')?.touched && registerFamilyForm.get('firstName')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                  </div>
+                  <div class="rg-field">
+                    <label class="rg-label">{{ 'common.lastName' | translate }} <span class="req">*</span></label>
+                    <input class="rg-input" formControlName="lastName" [placeholder]="'common.lastName' | translate">
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('lastName')?.touched && registerFamilyForm.get('lastName')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                  </div>
+                  <div class="rg-field full">
+                    <label class="rg-label">{{ 'common.email' | translate }} <span class="req">*</span></label>
+                    <input class="rg-input" type="email" formControlName="email" [placeholder]="'common.email' | translate">
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('email')?.touched && registerFamilyForm.get('email')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                  </div>
+                  <div class="rg-field full">
+                    <label class="rg-label">Nr. telefonit</label>
+                    <app-phone-input formControlName="phoneNumber" placeholder=""></app-phone-input>
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('phoneNumber')?.touched && registerFamilyForm.get('phoneNumber')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('phoneNumber')?.touched && registerFamilyForm.get('phoneNumber')?.hasError('invalidPhone')">{{ 'common.phoneInvalid' | translate }}</p>
+                  </div>
+                  <div class="rg-field full">
+                    <label class="rg-label">{{ 'common.password' | translate }} <span class="req">*</span></label>
+                    <div class="rg-pw">
+                      <input class="rg-input" formControlName="password"
+                             [type]="hidePass ? 'password' : 'text'"
+                             [placeholder]="'common.password' | translate" required>
+                      <div class="rg-pw-tools">
+                        <button type="button" class="rg-pw-btn"
+                                [matTooltip]="'common.passwordTooltip' | translate"
+                                matTooltipPosition="above">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        </button>
+                        <button type="button" class="rg-pw-btn" (click)="hidePass = !hidePass">
+                          <svg *ngIf="hidePass" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                          <svg *ngIf="!hidePass" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.55 19.55 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.5 19.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <p class="rg-field-error" *ngIf="registerFamilyForm.get('password')?.touched && registerFamilyForm.get('password')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                  </div>
+                </div>
+
+                <div class="rg-nav-actions">
+                  <button class="rg-btn rg-btn--outline rg-btn--lg" type="button" (click)="goBackToMemberCountAndPackage()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    {{ 'common.back' | translate }}
+                  </button>
+                  <button class="rg-btn rg-btn--primary rg-btn--lg" type="button"
+                          (click)="proceedToChildrenInfo()" [disabled]="registerFamilyForm.invalid">
+                    {{ 'registerFamily.proceed.childrenInfo' | translate }}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ── STEP 3: fëmijët ── -->
+              <div *ngIf="currentStep === 'childrenInfo'" formArrayName="familyMembers">
+                <div *ngFor="let member of familyMembers.controls; let i = index"
+                     [formGroupName]="i" class="rg-child">
+                  <h4><span class="idx">{{ i + 1 }}</span>{{ 'registerFamily.child' | translate }} {{ i + 1 }}</h4>
+                  <div class="rg-fieldset">
+                    <div class="rg-field">
+                      <label class="rg-label">{{ 'common.firstName' | translate }} <span class="req">*</span></label>
+                      <input class="rg-input" formControlName="firstName" [placeholder]="'common.firstName' | translate">
+                      <p class="rg-field-error" *ngIf="member.get('firstName')?.touched && member.get('firstName')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                    </div>
+                    <div class="rg-field">
+                      <label class="rg-label">{{ 'common.lastName' | translate }} <span class="req">*</span></label>
+                      <input class="rg-input" formControlName="lastName" [placeholder]="'common.lastName' | translate">
+                      <p class="rg-field-error" *ngIf="member.get('lastName')?.touched && member.get('lastName')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                    </div>
+                    <div class="rg-field full">
+                      <label class="rg-label">{{ 'common.currentClass' | translate }} <span class="req">*</span></label>
+                      <select class="rg-select" formControlName="currentClass">
+                        <option value="" disabled>{{ 'common.currentClass' | translate }}</option>
+                        <option *ngFor="let cls of classesList" [value]="cls.id">{{ cls.name }}</option>
+                      </select>
+                      <p class="rg-field-error" *ngIf="member.get('currentClass')?.touched && member.get('currentClass')?.hasError('required')">{{ 'common.required' | translate }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rg-nav-actions">
+                  <button class="rg-btn rg-btn--outline rg-btn--lg" type="button" (click)="goBackToParentInfo()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    {{ 'common.back' | translate }}
+                  </button>
+                  <button class="rg-btn rg-btn--primary rg-btn--lg" type="button"
+                          (click)="proceedToPayment()" [disabled]="familyMembers.invalid">
+                    {{ 'registerFamily.proceed.payment' | translate }}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- ── STEP 4: pagesa ── -->
+              <div *ngIf="currentStep === 'payment'">
+                <div class="rg-summary">
+                  <div class="rg-summary-row">
+                    <span class="lbl">Numri i fëmijëve</span>
+                    <span class="val">{{ numberOfChildren }}</span>
+                  </div>
+                  <div class="rg-summary-row">
+                    <span class="lbl">Paketa e zgjedhur</span>
+                    <span class="val">{{ selectedPackage?.title }}</span>
+                  </div>
+                  <div class="rg-summary-row total">
+                    <span class="lbl">Çmimi total</span>
+                    <span class="val">{{ selectedPackage?.priceDisplay }}</span>
+                  </div>
+                </div>
+
+                <app-payment-provider-selector
+                  [selectedProvider]="selectedProvider"
+                  (providerChange)="selectedProvider = $event">
+                </app-payment-provider-selector>
+
+                <div class="rg-nav-actions">
+                  <button class="rg-btn rg-btn--outline rg-btn--lg" type="button" (click)="goBackToChildrenInfo()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    {{ 'common.back' | translate }}
+                  </button>
+                  <button class="rg-btn rg-btn--primary rg-btn--lg" type="button"
+                          (click)="handlePayment()" [disabled]="loading">
+                    <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+                    <span>{{ loading ? ('registerFamily.finalizing' | translate) : ('registerFamily.finalize' | translate) }}</span>
+                    <svg *ngIf="!loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </button>
+                </div>
+              </div>
+
+            </form>
           </div>
+        </section>
 
-          <button mat-raised-button color="primary" (click)="proceedToParentInfo()"
-                  [disabled]="!selectedPackage" class="next-button">
-            {{ 'registerFamily.proceed.parentInfo' | translate }}
-          </button>
-        </div>
+      </div>
+    </main>
 
-        <!-- Step 2: Parent Information -->
-        <div *ngIf="currentStep === 'parentInfo'" class="form-section parent-info">
-          <h3>{{ 'registerFamily.parentInfo.title' | translate }}</h3>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.firstName' | translate }}</mat-label>
-            <input matInput formControlName="firstName">
-            <mat-error *ngIf="registerFamilyForm.get('firstName')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.lastName' | translate }}</mat-label>
-            <input matInput formControlName="lastName">
-            <mat-error *ngIf="registerFamilyForm.get('lastName')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.email' | translate }}</mat-label>
-            <input matInput formControlName="email">
-            <mat-error *ngIf="registerFamilyForm.get('email')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <app-phone-input
-              formControlName="phoneNumber"
-              placeholder="">
-            </app-phone-input>
-            <mat-error *ngIf="registerFamilyForm.get('phoneNumber')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="registerFamilyForm.get('phoneNumber')?.hasError('invalidPhone')">
-              {{ 'common.phoneInvalid' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.password' | translate }}</mat-label>
-            <input matInput [placeholder]="'common.password' | translate" formControlName="password"
-                   [type]="hidePass ? 'password' : 'text'" required>
-            <mat-icon matSuffix [matTooltip]="'common.passwordTooltip' | translate">info</mat-icon>
-            <button mat-icon-button matSuffix (click)="hidePass = !hidePass"
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePass">
-              <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-            <mat-error *ngIf="registerFamilyForm.get('password')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-
-          <div class="button-group">
-            <button mat-button (click)="goBackToMemberCountAndPackage()" class="back-button">
-              <mat-icon>arrow_back</mat-icon>
-              {{ 'common.back' | translate }}
-            </button>
-            <button mat-raised-button color="primary" (click)="proceedToChildrenInfo()"
-                    [disabled]="registerFamilyForm.invalid" class="next-button">
-              {{ 'registerFamily.proceed.childrenInfo' | translate }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Step 3: Children Information -->
-        <div *ngIf="currentStep === 'childrenInfo'" formArrayName="familyMembers"
-             class="form-section family-members-section">
-          <h3>{{ 'registerFamily.childrenInfo.title' | translate }} ({{ numberOfChildren }})</h3>
-          <div *ngFor="let member of familyMembers.controls; let i = index" [formGroupName]="i"
-               class="family-member-card">
-            <h4>{{ 'registerFamily.child' | translate }} {{ i + 1 }}</h4>
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'common.firstName' | translate }}</mat-label>
-              <input matInput formControlName="firstName">
-              <mat-error *ngIf="member.get('firstName')?.hasError('required')">
-                {{ 'common.required' | translate }}
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{ 'common.lastName' | translate }}</mat-label>
-              <input matInput formControlName="lastName">
-              <mat-error *ngIf="member.get('lastName')?.hasError('required')">
-                {{ 'common.required' | translate }}
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" style="width: 100%;">
-              <mat-label>{{ 'common.currentClass' | translate }}</mat-label>
-              <mat-select [placeholder]="'common.currentClass' | translate" formControlName="currentClass" required>
-                <mat-option *ngFor="let class of classesList" [value]="class.id">
-                  {{ class.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="member.get('currentClass')?.hasError('required')">
-                {{ 'common.required' | translate }}
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="button-group">
-            <button mat-button (click)="goBackToParentInfo()" class="back-button">
-              <mat-icon>arrow_back</mat-icon>
-              {{ 'common.back' | translate }}
-            </button>
-            <button mat-raised-button color="primary" (click)="proceedToPayment()"
-                    [disabled]="familyMembers.invalid" class="next-button">
-              {{ 'registerFamily.proceed.payment' | translate }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Step 4: Payment -->
-        <div *ngIf="currentStep === 'payment'" class="form-section payment-section">
-
-          <!-- Manual payment instructions (BKT / Raiffeisen) -->
-          <app-manual-payment-instructions
-            *ngIf="manualPaymentDetails"
-            [details]="manualPaymentDetails"
-            [provider]="manualPaymentProvider">
-          </app-manual-payment-instructions>
-
-          <ng-container *ngIf="!manualPaymentDetails">
-          <div class="summary-item">
-            <span class="label">{{ 'registerFamily.payment.childrenCount' | translate }}</span>
-            <span class="value">{{ numberOfChildren }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="label">{{ 'registerFamily.payment.package' | translate }}</span>
-            <span class="value">{{ selectedPackage?.title }}</span>
-          </div>
-          <div class="summary-item">
-            <span class="label">{{ 'registerFamily.payment.totalPrice' | translate }}</span>
-            <span class="value">{{ selectedPackage?.priceDisplay }}</span>
-          </div>
-
-          <app-payment-provider-selector
-            [selectedProvider]="selectedProvider"
-            (providerChange)="selectedProvider = $event">
-          </app-payment-provider-selector>
-
-          <div class="button-group">
-            <button mat-button (click)="goBackToChildrenInfo()" class="back-button">
-              <mat-icon>arrow_back</mat-icon>
-              {{ 'common.back' | translate }}
-            </button>
-            <button mat-raised-button color="primary" class="final-button"
-                    (click)="handlePayment()" [disabled]="loading">
-              <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-              <span *ngIf="!loading">{{ 'registerFamily.finalize' | translate }}</span>
-              <span *ngIf="loading">{{ 'registerFamily.finalizing' | translate }}</span>
-            </button>
-          </div>
-          </ng-container>
-        </div>
-      </form>
-    </div>
   </div>
 </div>
+</ng-container>

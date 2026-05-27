@@ -1,118 +1,123 @@
-<div class="bg-form-wrap">
-  <!-- Left illustration -->
-  <div class="bg-form-illu">
-    <img src="assets/svgImages/registerIcon.svg" alt="Register illustration">
-  </div>
+<form [formGroup]="registerFormGroup" autocomplete="off">
+  <div class="rg-fieldset">
 
-  <!-- Right: form card -->
-  <div class="bg-form-card">
-    <form [formGroup]="registerFormGroup" autocomplete="off">
-      <div class="bg-form-grid">
+    <!-- First name -->
+    <div class="rg-field">
+      <label class="rg-label">{{ 'common.firstName' | translate }} <span class="req">*</span></label>
+      <input class="rg-input"
+             type="text"
+             [placeholder]="'common.firstName' | translate"
+             formControlName="firstName"
+             [class.rg-input--error]="registerFormGroup.get('firstName')?.touched && registerFormGroup.get('firstName')?.invalid">
+      @if (registerFormGroup.get('firstName')?.touched && registerFormGroup.get('firstName')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
 
-        <!-- First name -->
-        <div class="bg-input-wrap">
-          <input class="bg-input"
-                 type="text"
-                 [placeholder]="'common.firstName' | translate"
-                 formControlName="firstName"
-                 [class.bg-input--error]="registerFormGroup.get('firstName')?.touched && registerFormGroup.get('firstName')?.invalid">
-          @if (registerFormGroup.get('firstName')?.touched && registerFormGroup.get('firstName')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
+    <!-- Last name -->
+    <div class="rg-field">
+      <label class="rg-label">{{ 'common.lastName' | translate }} <span class="req">*</span></label>
+      <input class="rg-input"
+             type="text"
+             [placeholder]="'common.lastName' | translate"
+             formControlName="lastName"
+             [class.rg-input--error]="registerFormGroup.get('lastName')?.touched && registerFormGroup.get('lastName')?.invalid">
+      @if (registerFormGroup.get('lastName')?.touched && registerFormGroup.get('lastName')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="rg-field full">
+      <label class="rg-label">{{ 'common.email' | translate }} <span class="req">*</span></label>
+      <input class="rg-input"
+             type="email"
+             [placeholder]="'common.email' | translate"
+             formControlName="email"
+             [class.rg-input--error]="registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.invalid">
+      @if (registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+      @if (registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.hasError('email')) {
+        <p class="rg-field-error">Format email-i i pavlefshëm</p>
+      }
+    </div>
+
+    <!-- Date of birth -->
+    <div class="rg-field">
+      <label class="rg-label">{{ 'common.dateOfBirth' | translate }}</label>
+      <input class="rg-input"
+             type="date"
+             formControlName="dateOfBirth"
+             [class.rg-input--error]="registerFormGroup.get('dateOfBirth')?.touched && registerFormGroup.get('dateOfBirth')?.invalid">
+      @if (registerFormGroup.get('dateOfBirth')?.touched && registerFormGroup.get('dateOfBirth')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
+    <!-- School -->
+    <div class="rg-field">
+      <label class="rg-label">{{ 'common.school' | translate }}</label>
+      <input class="rg-input"
+             type="text"
+             [placeholder]="'common.school' | translate"
+             formControlName="school"
+             [class.rg-input--error]="registerFormGroup.get('school')?.touched && registerFormGroup.get('school')?.invalid">
+      @if (registerFormGroup.get('school')?.touched && registerFormGroup.get('school')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
+    <!-- Current class -->
+    <div class="rg-field">
+      <label class="rg-label">{{ 'common.currentClass' | translate }} <span class="req">*</span></label>
+      <select class="rg-select"
+              formControlName="currentClass"
+              [class.rg-select--error]="registerFormGroup.get('currentClass')?.touched && registerFormGroup.get('currentClass')?.invalid">
+        <option value="" disabled>{{ 'common.currentClass' | translate }}</option>
+        @for (c of classesList; track c.id) {
+          <option [value]="c.id">{{ c.name }}</option>
+        }
+      </select>
+      @if (registerFormGroup.get('currentClass')?.touched && registerFormGroup.get('currentClass')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
+    <!-- Password -->
+    <div class="rg-field full">
+      <label class="rg-label">{{ 'common.password' | translate }} <span class="req">*</span></label>
+      <div class="rg-pw">
+        <input class="rg-input"
+               [type]="hidePass ? 'password' : 'text'"
+               [placeholder]="'common.password' | translate"
+               formControlName="password"
+               [class.rg-input--error]="registerFormGroup.get('password')?.touched && registerFormGroup.get('password')?.invalid">
+        <div class="rg-pw-tools">
+          <button type="button" class="rg-pw-btn"
+                  [matTooltip]="'common.passwordTooltip' | translate"
+                  matTooltipPosition="above">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          </button>
+          <button type="button" class="rg-pw-btn" (click)="hidePass = !hidePass"
+                  [attr.aria-label]="hidePass ? 'Shfaq fjalëkalimin' : 'Fshih fjalëkalimin'">
+            <svg *ngIf="hidePass" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="!hidePass" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.55 19.55 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.5 19.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
         </div>
-
-        <!-- Last name -->
-        <div class="bg-input-wrap">
-          <input class="bg-input"
-                 type="text"
-                 [placeholder]="'common.lastName' | translate"
-                 formControlName="lastName"
-                 [class.bg-input--error]="registerFormGroup.get('lastName')?.touched && registerFormGroup.get('lastName')?.invalid">
-          @if (registerFormGroup.get('lastName')?.touched && registerFormGroup.get('lastName')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-        </div>
-
-        <!-- Email -->
-        <div class="bg-input-wrap full">
-          <input class="bg-input"
-                 type="email"
-                 [placeholder]="'common.email' | translate"
-                 formControlName="email"
-                 [class.bg-input--error]="registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.invalid">
-          @if (registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-          @if (registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.hasError('email')) {
-            <p class="bg-field-error">Format email-i i pavlefshëm</p>
-          }
-        </div>
-
-        <!-- Date of birth -->
-        <div class="bg-input-wrap">
-          <input class="bg-input bg-input--date"
-                 type="date"
-                 formControlName="dateOfBirth"
-                 [class.bg-input--error]="registerFormGroup.get('dateOfBirth')?.touched && registerFormGroup.get('dateOfBirth')?.invalid">
-          @if (registerFormGroup.get('dateOfBirth')?.touched && registerFormGroup.get('dateOfBirth')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-        </div>
-
-        <!-- School -->
-        <div class="bg-input-wrap">
-          <input class="bg-input"
-                 type="text"
-                 [placeholder]="'common.school' | translate"
-                 formControlName="school"
-                 [class.bg-input--error]="registerFormGroup.get('school')?.touched && registerFormGroup.get('school')?.invalid">
-          @if (registerFormGroup.get('school')?.touched && registerFormGroup.get('school')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-        </div>
-
-        <!-- Current class -->
-        <div class="bg-input-wrap full">
-          <select class="bg-input bg-select"
-                  formControlName="currentClass"
-                  [class.bg-input--error]="registerFormGroup.get('currentClass')?.touched && registerFormGroup.get('currentClass')?.invalid">
-            <option value="" disabled>{{ 'common.currentClass' | translate }}</option>
-            @for (c of classesList; track c.id) {
-              <option [value]="c.id">{{ c.name }}</option>
-            }
-          </select>
-          @if (registerFormGroup.get('currentClass')?.touched && registerFormGroup.get('currentClass')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-        </div>
-
-        <!-- Password -->
-        <div class="bg-input-wrap full">
-          <input class="bg-input has-icon"
-                 [type]="hidePass ? 'password' : 'text'"
-                 [placeholder]="'common.password' | translate"
-                 formControlName="password"
-                 [class.bg-input--error]="registerFormGroup.get('password')?.touched && registerFormGroup.get('password')?.invalid">
-          <span class="bg-input-icon">
-            <button type="button"
-                    class="bg-input-icon-btn"
-                    [matTooltip]="'common.passwordTooltip' | translate"
-                    matTooltipPosition="above">
-              i
-            </button>
-            <button type="button"
-                    class="bg-input-icon-btn"
-                    (click)="hidePass = !hidePass"
-                    [attr.aria-label]="hidePass ? 'Shfaq fjalëkalimin' : 'Fshih fjalëkalimin'">
-              <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-          </span>
-          @if (registerFormGroup.get('password')?.touched && registerFormGroup.get('password')?.hasError('required')) {
-            <p class="bg-field-error">{{ 'common.required' | translate }}</p>
-          }
-        </div>
-
       </div>
-    </form>
+      <p class="rg-field-note">Min. 8 karaktere · numra dhe shenja</p>
+      @if (registerFormGroup.get('password')?.touched && registerFormGroup.get('password')?.hasError('required')) {
+        <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
   </div>
-</div>
+</form>

@@ -81,6 +81,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
   explanationAudio: HTMLAudioElement | null = null;
   isComplete: boolean = false;
   quizResults: QuizResult[] = [];
+  showResetConfirm: boolean = false;
+  isResetting: boolean = false;
 
   get scoreRingC(): number { return 2 * Math.PI * 56; }
   get scoreRingOffset(): number { return this.scoreRingC * (1 - this.getProgressPercentage() / 100); }
@@ -372,6 +374,39 @@ export class QuizListComponent implements OnInit, OnDestroy {
     });
   }
 
+  openResetConfirm() {
+    this.showResetConfirm = true;
+  }
+
+  cancelReset() {
+    this.showResetConfirm = false;
+  }
+
+  confirmReset() {
+    this.isResetting = true;
+    this.studentService.apiStudentQuizzesLinkIdResetPost(this.linkId).subscribe({
+      next: () => {
+        this.isComplete = false;
+        this.showResetConfirm = false;
+        this.isResetting = false;
+        this.currentQuizIndex = 0;
+        this.quizResults = [];
+        this.progress = null;
+        this.currentQuiz = null;
+        this.parentQuizIds = [];
+        this.dataLoaded = false;
+        this.showExplanation = false;
+        this.showCorrectFlash = false;
+        this.stopExplanationAudio();
+        this.loadQuizzesAndProgress();
+      },
+      error: (err) => {
+        this.isResetting = false;
+        this.toast.danger(err?.error?.message || 'Gabim gjatë rivendosjes së testit.', 'GABIM', 3000);
+      },
+    });
+  }
+
   goBack() {
     this.router.navigate(['/student/kurset']);
   }
@@ -426,7 +461,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private stopExplanationAudio() {
+  stopExplanationAudio() {
     if (this.explanationAudio) {
       this.explanationAudio.pause();
       this.explanationAudio.currentTime = 0;

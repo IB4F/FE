@@ -1,93 +1,192 @@
-<div class="container">
-  <app-dynamic-banner bannerType="supervisor"></app-dynamic-banner>
+<div class="rg-page">
+  <div class="rg-shell">
 
-  <div class="title">
-    <h1>{{ 'registerSupervisor.title' | translate }}</h1>
-  </div>
+    <!-- Hero -->
+    <header class="rg-hero">
+      <div class="rg-eyebrow"><span class="dot"></span>Për shkollat &amp; institucionet</div>
+      <h1>Menaxhimi i studentëve në një <em>platformë të unifikuar</em>.</h1>
+      <p class="lede">Bëhuni pjesë e platformës sonë dhe administroni klasat, mësuesit dhe nxënësit nga një vend i vetëm.</p>
+    </header>
 
-  <div class="form-container">
-    <div class="register-panel">
-      <form [formGroup]="registerSupervizorFormGroup">
-        <h2>{{ 'registerSupervisor.formTitle' | translate }}</h2>
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'registerSupervisor.schoolName' | translate }}</mat-label>
-          <input matInput [placeholder]="'registerSupervisor.schoolName' | translate" formControlName="schoolName" required>
-          <mat-error *ngIf="registerSupervizorFormGroup.get('schoolName')?.hasError('required')">
-            {{ 'common.required' | translate }}
-          </mat-error>
-        </mat-form-field>
+    <main class="rg-main">
+      <div class="rg-split">
 
-        <div class="field-container">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'registerSupervisor.contactFirstName' | translate }}</mat-label>
-            <input matInput [placeholder]="'common.firstName' | translate" formControlName="contactPersonFirstName" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonFirstName')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'registerSupervisor.contactLastName' | translate }}</mat-label>
-            <input matInput [placeholder]="'common.lastName' | translate" formControlName="contactPersonLastName" required>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonLastName')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
+        <!-- Side panel -->
+        <div class="rg-side">
+          <div class="rg-side-illu">
+            <span class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v4c3 2.5 9 2.5 12 0v-4"/>
+              </svg>
+              Institucionet
+            </span>
+            <h2 class="side-h">Një infrastrukturë <em>dixhitale</em> për shkollën tuaj.</h2>
+            <p class="side-p">Brain Gain ju jep mjetet për të menaxhuar nxënësit, klasat, provimet dhe komunikimin me prindërit.</p>
+            <div class="illu-deco c1"></div>
+            <div class="illu-deco c2"></div>
+            <div class="illu-deco c3"></div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v4c3 2.5 9 2.5 12 0v-4"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Klasat 1–12 të mbuluara</h4>
+              <p>Programe që ndjekin kurrikulën zyrtare shqiptare.</p>
+            </div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn leaf">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Mësues &amp; administratë</h4>
+              <p>Roli i secilit pjesëtar, i përcaktuar qartë.</p>
+            </div>
+          </div>
+          <div class="rg-side-fact">
+            <span class="icn gold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </span>
+            <div>
+              <h4>Të dhëna të sigurta</h4>
+              <p>GDPR · enkriptim SSL · server në BE.</p>
+            </div>
+          </div>
         </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'registerSupervisor.contactEmail' | translate }}</mat-label>
-          <input matInput [placeholder]="'common.email' | translate" formControlName="contactPersonEmail" required>
-          <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('required')">
-            {{ 'common.required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('email')">
-            {{ 'registerSupervisor.invalidEmail' | translate }}
-          </mat-error>
-        </mat-form-field>
+        <!-- Form card -->
+        <section class="rg-card rg-fade">
+          <div class="rg-card-head">
+            <div class="rg-card-eyebrow">{{ 'registerSupervisor.formTitle' | translate }}</div>
+            <h2 class="rg-card-title">Regjistrimi i <em>shkollës</em></h2>
+            <p class="rg-card-sub">Pas dërgimit do të kontaktoheni nga ekipi ynë brenda 1–2 ditë pune.</p>
+          </div>
 
-        <div class="field-container">
-          <mat-form-field appearance="outline">
-            <app-phone-input
-              formControlName="contactPersonPhone"
-              placeholder="">
-            </app-phone-input>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('invalidPhone')">
-              {{ 'common.phoneInvalid' | translate }}
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'registerSupervisor.cityField' | translate }}</mat-label>
-            <mat-select [placeholder]="'registerSupervisor.cityField' | translate" formControlName="city" required>
-              <mat-option *ngFor="let cities of citiesList" [value]="cities.name">
-                {{ cities.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="registerSupervizorFormGroup.get('city')?.hasError('required')">
-              {{ 'common.required' | translate }}
-            </mat-error>
-          </mat-form-field>
-        </div>
+          <div class="rg-card-body">
+            <form [formGroup]="registerSupervizorFormGroup">
+              <div class="rg-fieldset">
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'registerSupervisor.address' | translate }}</mat-label>
-          <textarea matInput [placeholder]="'registerSupervisor.addressPlaceholder' | translate" formControlName="address" rows="3" required></textarea>
-          <mat-error *ngIf="registerSupervizorFormGroup.get('address')?.hasError('required')">
-            {{ 'common.required' | translate }}
-          </mat-error>
-        </mat-form-field>
+                <!-- School name -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.schoolName' | translate }} <span class="req">*</span></label>
+                  <input class="rg-input"
+                         [placeholder]="'registerSupervisor.schoolName' | translate"
+                         formControlName="schoolName">
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('schoolName')?.touched && registerSupervizorFormGroup.get('schoolName')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'registerSupervisor.additionalInfo' | translate }}</mat-label>
-          <textarea matInput [placeholder]="'registerSupervisor.additionalInfo' | translate" formControlName="additionalInfo" rows="3"></textarea>
-        </mat-form-field>
+                <!-- Contact first name -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.contactFirstName' | translate }} <span class="req">*</span></label>
+                  <input class="rg-input"
+                         [placeholder]="'common.firstName' | translate"
+                         formControlName="contactPersonFirstName">
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonFirstName')?.touched && registerSupervizorFormGroup.get('contactPersonFirstName')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                </div>
 
-        <div class="btn-container">
-          <button mat-button [disabled]="!isRegisterFormValid()" (click)="submitRequest()">{{ 'registerSupervisor.apply' | translate }}</button>
-        </div>
-      </form>
-    </div>
+                <!-- Contact last name -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.contactLastName' | translate }} <span class="req">*</span></label>
+                  <input class="rg-input"
+                         [placeholder]="'common.lastName' | translate"
+                         formControlName="contactPersonLastName">
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonLastName')?.touched && registerSupervizorFormGroup.get('contactPersonLastName')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                </div>
+
+                <!-- Contact email -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.contactEmail' | translate }} <span class="req">*</span></label>
+                  <input class="rg-input"
+                         type="email"
+                         [placeholder]="'common.email' | translate"
+                         formControlName="contactPersonEmail">
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.touched && registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonEmail')?.touched && registerSupervizorFormGroup.get('contactPersonEmail')?.hasError('email')">
+                    {{ 'registerSupervisor.invalidEmail' | translate }}
+                  </p>
+                </div>
+
+                <!-- Phone -->
+                <div class="rg-field full">
+                  <label class="rg-label">Nr. telefonit <span class="req">*</span></label>
+                  <app-phone-input formControlName="contactPersonPhone" placeholder=""></app-phone-input>
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.touched && registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('contactPersonPhone')?.touched && registerSupervizorFormGroup.get('contactPersonPhone')?.hasError('invalidPhone')">
+                    {{ 'common.phoneInvalid' | translate }}
+                  </p>
+                </div>
+
+                <!-- City -->
+                <div class="rg-field">
+                  <label class="rg-label">{{ 'registerSupervisor.cityField' | translate }} <span class="req">*</span></label>
+                  <select class="rg-select" formControlName="city">
+                    <option value="">Zgjidhni qytetin</option>
+                    <option *ngFor="let city of citiesList" [value]="city.name">{{ city.name }}</option>
+                  </select>
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('city')?.touched && registerSupervizorFormGroup.get('city')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                </div>
+
+                <!-- Address -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.address' | translate }} <span class="req">*</span></label>
+                  <textarea class="rg-textarea"
+                            [placeholder]="'registerSupervisor.addressPlaceholder' | translate"
+                            formControlName="address"
+                            rows="2"></textarea>
+                  <p class="rg-field-error" *ngIf="registerSupervizorFormGroup.get('address')?.touched && registerSupervizorFormGroup.get('address')?.hasError('required')">
+                    {{ 'common.required' | translate }}
+                  </p>
+                </div>
+
+                <!-- Additional info -->
+                <div class="rg-field full">
+                  <label class="rg-label">{{ 'registerSupervisor.additionalInfo' | translate }}</label>
+                  <textarea class="rg-textarea"
+                            [placeholder]="'registerSupervisor.additionalInfo' | translate"
+                            formControlName="additionalInfo"
+                            rows="3"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="rg-field full">
+                  <button class="rg-btn rg-btn--primary rg-btn--lg rg-btn--block"
+                          type="button"
+                          [disabled]="!isRegisterFormValid()"
+                          (click)="submitRequest()">
+                    {{ 'registerSupervisor.apply' | translate }}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14M13 6l6 6-6 6"/>
+                    </svg>
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
   </div>
 </div>

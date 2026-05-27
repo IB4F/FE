@@ -354,6 +354,47 @@
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
               Kthehu te kurset
             </button>
+            <button class="qp-completion__restart" (click)="openResetConfirm()" type="button">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>
+              </svg>
+              Fillo sërish
+            </button>
+          </div>
+
+          <!-- Reset confirmation overlay -->
+          <div class="qp-reset-overlay" *ngIf="showResetConfirm" (click)="cancelReset()">
+            <div class="qp-reset-dialog" (click)="$event.stopPropagation()">
+              <div class="qp-reset-dialog__icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>
+                </svg>
+              </div>
+              <h3 class="qp-reset-dialog__title">Fillo sërish nga fillimi?</h3>
+              <p class="qp-reset-dialog__body">
+                Nëse rifillon, të gjitha përparuesitë e tua për këtë test do të fshihen.<br>
+                Pikët e fituara gjatë kësaj sesioni nuk do të ruhen. Kjo veprim nuk mund të kthehet mbrapsht.
+              </p>
+              <div class="qp-reset-dialog__actions">
+                <button class="qp-reset-dialog__cancel" (click)="cancelReset()" type="button" [disabled]="isResetting">
+                  Anulo
+                </button>
+                <button class="qp-reset-dialog__confirm" (click)="confirmReset()" type="button" [disabled]="isResetting">
+                  <ng-container *ngIf="!isResetting">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>
+                    </svg>
+                    Fillo sërish
+                  </ng-container>
+                  <ng-container *ngIf="isResetting">
+                    <span class="qp-reset-spinner"></span>
+                    Duke rivendosur...
+                  </ng-container>
+                </button>
+              </div>
+            </div>
           </div>
 
         </div>
