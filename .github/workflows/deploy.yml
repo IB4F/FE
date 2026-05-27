@@ -1,0 +1,89 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    defaults:
+      run:
+        shell: powershell
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production
+        run: npx ng build --configuration=production
+
+      - name: Deploy with Robocopy
+        env:
+          FRONTEND_DEPLOY_PATH: ${{ secrets.FRONTEND_DEPLOY_PATH }}
+        run: |
+          $src = "dist\brain-gain-fe\browser"
+          $dst = $env:FRONTEND_DEPLOY_PATH
+          Write-Host "Source: $src"
+          Write-Host "Destination: $dst"
+          robocopy $src $dst /MIR /XF web.config /R:3 /W:5
+          $rc = $LASTEXITCODE
+          Write-Host "Robocopy exit code: $rc"
+          if ($rc -ge 8) {
+            Write-Host "Robocopy failed (exit code $rc indicates error)"
+            exit 1
+          }
+          Write-Host "Robocopy completed successfully (exit code $rc)"
+
+      - name: Health check
+        run: |
+          $url = "https://braingainalbania.al"
+          $success = $false
+          $maxAttempts = 5
+          $attempt = 0
+          while ($attempt -lt $maxAttempts) {
+            $attempt++
+            Write-Host "Health check attempt $attempt of $maxAttempts..."
+            try {
+              $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 15
+              if ($response.StatusCode -eq 200) {
+                Write-Host "Health check passed - HTTP $($response.StatusCode)"
+                $success = $true
+                break
+              }
+              Write-Host "Attempt $attempt - unexpected status: $($response.StatusCode)"
+            } catch {
+              Write-Host "Attempt $attempt failed: $($_.Exception.Message)"
+            }
+            if ($attempt -lt $maxAttempts) {
+              Write-Host "Waiting 10 seconds before next attempt..."
+              Start-Sleep -Seconds 10
+            }
+          }
+          if (-not $success) {
+            Write-Host "Health check failed after $maxAttempts attempts"
+            exit 1
+          }
+
+      - name: Deployment summary
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+          Write-Host "========================================"
+          Write-Host "   DEPLOYMENT SUMMARY"
+          Write-Host "========================================"
+          Write-Host "Status    : SUCCESS"
+          Write-Host "Timestamp : $timestamp"
+          Write-Host "Branch    : $env:GITHUB_REF_NAME"
+          Write-Host "Commit    : $env:GITHUB_SHA"
+          Write-Host "Site      : https://braingainalbania.al"
+          Write-Host "========================================"
