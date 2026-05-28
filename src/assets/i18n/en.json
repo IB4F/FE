@@ -112,6 +112,7 @@
   "auth.login.forgotPassword": "Forgot your password?",
   "auth.login.noAccount": "Don't have an account?",
   "auth.login.register": "Register",
+  "auth.login.backToLogin": "Back to login",
   "auth.register.birthday": "Date of Birth",
   "auth.forgotPassword.title": "Forgot your password?",
   "auth.forgotPassword.description": "Please enter your email address to receive instructions for resetting your password.",

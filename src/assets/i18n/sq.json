@@ -112,6 +112,7 @@
   "auth.login.forgotPassword": "Harruat fjalëkalimin?",
   "auth.login.noAccount": "Nuk ke një llogari?",
   "auth.login.register": "Regjistrohu",
+  "auth.login.backToLogin": "Kthehu te hyrja",
   "auth.register.birthday": "Ditëlindja",
   "auth.forgotPassword.title": "Harruat fjalëkalimin?",
   "auth.forgotPassword.description": "Ju lutem vendosni adresën tuaj të email-it për të marrë udhëzimet për ndryshimin e fjalëkalimit.",

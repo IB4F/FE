@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -6,7 +6,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgToastService} from "ng-angular-popup";
 import {AuthService, ForgotPasswordDTO} from "../../../../api-client";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
@@ -34,6 +34,7 @@ export class ForgetPasswordComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<ForgetPasswordComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: { email?: string },
     private _authService: AuthService,
     private toast: NgToastService,
   ) {
@@ -45,7 +46,7 @@ export class ForgetPasswordComponent implements OnInit {
 
   initaliazeForm() {
     this.emailForm = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: [this.data?.email ?? '', [Validators.required, Validators.email]]
     });
   }
 
