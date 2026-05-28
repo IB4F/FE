@@ -32,6 +32,7 @@ jobs:
         env:
           FRONTEND_DEPLOY_PATH: ${{ secrets.FRONTEND_DEPLOY_PATH }}
         run: |
+          $ErrorActionPreference = 'Continue'
           $src = "dist\brain-gain-fe\browser"
           $dst = $env:FRONTEND_DEPLOY_PATH
           Write-Host "Source: $src"
@@ -40,10 +41,12 @@ jobs:
           $rc = $LASTEXITCODE
           Write-Host "Robocopy exit code: $rc"
           if ($rc -ge 8) {
-            Write-Host "Robocopy failed (exit code $rc indicates error)"
-            exit 1
+            Write-Host "Robocopy failed with exit code $rc"
+            [Environment]::Exit(1)
           }
-          Write-Host "Robocopy completed successfully (exit code $rc)"
+          Write-Host "Robocopy completed successfully"
+          [Environment]::Exit(0)
+        shell: powershell
 
       - name: Health check
         run: |
