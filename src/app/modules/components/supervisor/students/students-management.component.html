@@ -1,142 +1,150 @@
-<div class="students-management">
-  <div class="page-header">
-    <div class="header-left">
-      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
-        <mat-icon>arrow_back</mat-icon>
-        {{ 'supervisor.students.back' | translate }}
-      </button>
-      <h1>{{ 'supervisor.students.title' | translate }}</h1>
-    </div>
-  </div>
+<div class="sv-frame">
+  <div class="sv-main">
 
-  <!-- Success Message for Created Student -->
-  <mat-card *ngIf="createdStudent" class="success-card">
-    <mat-card-content>
-      <div class="success-header">
-        <mat-icon color="primary">check_circle</mat-icon>
-        <h3>{{ 'supervisor.students.created.title' | translate }}</h3>
-      </div>
+    <!-- ─── Success State ─────────────────────────────────────────────────── -->
+    <ng-container *ngIf="createdStudent">
+      <div class="sv-stagger sv-success-wrap">
 
-      <div class="student-credentials">
-        <div class="credential-item">
-          <label>{{ 'supervisor.students.created.name' | translate }}</label>
-          <span>{{ createdStudent.firstName }} {{ createdStudent.lastName }}</span>
+        <div class="sv-success-card">
+          <span class="sv-success-ico">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <div class="sv-success-body">
+            <h4 class="sv-success-title">Studenti u krijua me sukses</h4>
+            <p class="sv-success-desc">Ruaj me kujdes kredencialet më poshtë. Fjalëkalimi do të jetë i përkohshëm; studenti do ta ndryshojë në hyrjen e parë.</p>
+
+            <div class="sv-cred">
+              <span class="sv-cred-k">Emri</span>
+              <span class="sv-cred-v sv-cred-plain">{{ createdStudent.firstName }} {{ createdStudent.lastName }} · {{ getClassName(createdStudent.currentClass) }} · {{ createdStudent.school }}</span>
+              <span></span>
+
+              <span class="sv-cred-k">Email</span>
+              <span class="sv-cred-v">{{ createdStudent.generatedEmail }}</span>
+              <button class="sv-cred-copy" title="Kopjo email" (click)="copyToClipboard(createdStudent!.generatedEmail, 'Email')">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+
+              <span class="sv-cred-k">Fjalëkalimi</span>
+              <span class="sv-cred-v" style="letter-spacing:.06em">{{ createdStudent.generatedPassword }}</span>
+              <button class="sv-cred-copy" title="Kopjo fjalëkalimin" (click)="copyToClipboard(createdStudent!.generatedPassword, 'Password')">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="credential-item">
-          <label>{{ 'supervisor.students.created.email' | translate }}</label>
-          <span class="email-text">{{ createdStudent.generatedEmail }}</span>
-          <button mat-icon-button
-                  (click)="copyToClipboard(createdStudent!.generatedEmail, 'Email')">
-            <mat-icon>content_copy</mat-icon>
+
+        <div class="sv-success-actions">
+          <button class="sv-btn sv-btn-primary" (click)="clearCreatedStudent()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+            Krijo një tjetër
+          </button>
+          <button class="sv-btn sv-btn-ghost" (click)="goBack()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Kthehu te paneli
           </button>
         </div>
-        <div class="credential-item">
-          <label>{{ 'supervisor.students.created.password' | translate }}</label>
-          <span class="password-text">{{ createdStudent.generatedPassword }}</span>
-          <button mat-icon-button
-                  (click)="copyToClipboard(createdStudent!.generatedPassword, 'Password')">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </div>
-        <div class="credential-item">
-          <label>{{ 'supervisor.students.created.class' | translate }}</label>
-          <span>{{ getClassName(createdStudent.currentClass) }}</span>
-        </div>
-        <div class="credential-item">
-          <label>{{ 'supervisor.students.created.school' | translate }}</label>
-          <span>{{ createdStudent.school }}</span>
-        </div>
-      </div>
 
-      <div class="success-actions">
-        <button mat-raised-button color="primary" (click)="clearCreatedStudent()">
-          {{ 'supervisor.students.created.createAnother' | translate }}
+      </div>
+    </ng-container>
+
+    <!-- ─── Form State ─────────────────────────────────────────────────────── -->
+    <ng-container *ngIf="!createdStudent">
+
+      <!-- Page Head -->
+      <div class="sv-page-head sv-stagger">
+        <button class="sv-btn sv-btn-ghost sv-btn-sm sv-back-btn" (click)="goBack()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Kthehu te paneli
         </button>
+        <h1 class="sv-title">Shto një <em>student të ri</em></h1>
+        <p class="sv-subtitle">Plotëso të dhënat e studentit. Sistemi do të gjenerojë automatikisht email-in dhe fjalëkalimin e përkohshëm.</p>
       </div>
-    </mat-card-content>
-  </mat-card>
 
-  <!-- Create Student Form -->
-  <mat-card *ngIf="!createdStudent" class="create-form-card">
-    <mat-card-header>
-      <mat-card-title>{{ 'supervisor.students.form.title' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'supervisor.students.form.subtitle' | translate }}</mat-card-subtitle>
-    </mat-card-header>
+      <!-- Form Panel -->
+      <div class="sv-panel sv-stagger" *ngIf="createStudentForm">
+        <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()" class="sv-form-inner">
 
-    <mat-card-content>
-      <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()">
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.firstName' | translate }}</mat-label>
-            <input matInput formControlName="firstName" [placeholder]="'common.firstName' | translate">
-            <mat-error *ngIf="createStudentForm.get('firstName')?.hasError('required')">
-              {{ 'supervisor.students.form.firstNameRequired' | translate }}
-            </mat-error>
-            <mat-error *ngIf="createStudentForm.get('firstName')?.hasError('minlength')">
-              {{ 'supervisor.students.form.firstNameMinLength' | translate }}
-            </mat-error>
-          </mat-form-field>
+          <div class="sv-form-grid">
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.lastName' | translate }}</mat-label>
-            <input matInput formControlName="lastName" [placeholder]="'common.lastName' | translate">
-            <mat-error *ngIf="createStudentForm.get('lastName')?.hasError('required')">
-              {{ 'supervisor.students.form.lastNameRequired' | translate }}
-            </mat-error>
-            <mat-error *ngIf="createStudentForm.get('lastName')?.hasError('minlength')">
-              {{ 'supervisor.students.form.lastNameMinLength' | translate }}
-            </mat-error>
-          </mat-form-field>
-        </div>
+            <div class="sv-field">
+              <label class="sv-label" for="firstName">Emri <span class="sv-req">*</span></label>
+              <input class="sv-input" id="firstName" type="text" formControlName="firstName"
+                     placeholder="p.sh. Andi"
+                     [class.sv-input-err]="createStudentForm.get('firstName')?.invalid && createStudentForm.get('firstName')?.touched"/>
+              <span class="sv-field-err" *ngIf="createStudentForm.get('firstName')?.invalid && createStudentForm.get('firstName')?.touched">
+                Emri është i detyrueshëm (min. 2 karaktere)
+              </span>
+            </div>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'supervisor.students.form.classLabel' | translate }}</mat-label>
-            <mat-select formControlName="currentClass" [placeholder]="'supervisor.students.form.classPlaceholder' | translate">
-              <mat-option *ngFor="let class of classesList" [value]="class.id">
-                {{ class.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createStudentForm.get('currentClass')?.hasError('required')">
-              {{ 'supervisor.students.form.classRequired' | translate }}
-            </mat-error>
-          </mat-form-field>
+            <div class="sv-field">
+              <label class="sv-label" for="lastName">Mbiemri <span class="sv-req">*</span></label>
+              <input class="sv-input" id="lastName" type="text" formControlName="lastName"
+                     placeholder="p.sh. Hoxha"
+                     [class.sv-input-err]="createStudentForm.get('lastName')?.invalid && createStudentForm.get('lastName')?.touched"/>
+              <span class="sv-field-err" *ngIf="createStudentForm.get('lastName')?.invalid && createStudentForm.get('lastName')?.touched">
+                Mbiemri është i detyrueshëm (min. 2 karaktere)
+              </span>
+            </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'common.school' | translate }}</mat-label>
-            <input matInput
-                   formControlName="school"
-                   [placeholder]="'supervisor.students.form.schoolPlaceholder' | translate"
-                   readonly>
-            <mat-error *ngIf="createStudentForm.get('school')?.hasError('required')">
-              {{ 'supervisor.students.form.schoolRequired' | translate }}
-            </mat-error>
-          </mat-form-field>
-        </div>
+            <div class="sv-field">
+              <label class="sv-label" for="currentClass">Klasa aktuale <span class="sv-req">*</span></label>
+              <select class="sv-select" id="currentClass" formControlName="currentClass"
+                      [class.sv-input-err]="createStudentForm.get('currentClass')?.invalid && createStudentForm.get('currentClass')?.touched">
+                <option value="" disabled selected>Zgjidh klasën…</option>
+                <option *ngFor="let cls of classesList" [value]="cls.id">{{ cls.name }}</option>
+              </select>
+              <span class="sv-field-err" *ngIf="createStudentForm.get('currentClass')?.invalid && createStudentForm.get('currentClass')?.touched">
+                Klasa është e detyrueshme
+              </span>
+            </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ 'supervisor.students.form.dob' | translate }}</mat-label>
-          <input matInput type="date" formControlName="dateOfBirth">
-          <mat-error *ngIf="createStudentForm.get('dateOfBirth')?.hasError('required')">
-            {{ 'supervisor.students.form.dobRequired' | translate }}
-          </mat-error>
-        </mat-form-field>
+            <div class="sv-field">
+              <label class="sv-label" for="school">Shkolla <span class="sv-req">*</span></label>
+              <input class="sv-input sv-input-disabled" id="school" type="text"
+                     formControlName="school" readonly/>
+            </div>
 
-        <div class="form-actions">
-          <button mat-raised-button
-                  type="submit"
-                  color="primary"
-                  [disabled]="createStudentForm.invalid || isCreatingStudent">
-            <mat-icon *ngIf="isCreatingStudent">hourglass_empty</mat-icon>
-            <mat-icon *ngIf="!isCreatingStudent">person_add</mat-icon>
-            {{ isCreatingStudent ? ('supervisor.students.form.creating' | translate) : ('supervisor.students.form.submit' | translate) }}
-          </button>
+            <div class="sv-field">
+              <label class="sv-label" for="dateOfBirth">Data e lindjes <span class="sv-req">*</span></label>
+              <input class="sv-input" id="dateOfBirth" type="date" formControlName="dateOfBirth"
+                     [class.sv-input-err]="createStudentForm.get('dateOfBirth')?.invalid && createStudentForm.get('dateOfBirth')?.touched"/>
+              <span class="sv-field-err" *ngIf="createStudentForm.get('dateOfBirth')?.invalid && createStudentForm.get('dateOfBirth')?.touched">
+                Data e lindjes është e detyrueshme
+              </span>
+            </div>
 
-          <button mat-button type="button" (click)="createStudentForm.reset()">
-            {{ 'common.cancel' | translate }}
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+            <div class="sv-field sv-field-full">
+              <label class="sv-label" for="notes">Shënime <span class="sv-opt">(opsionale)</span></label>
+              <textarea class="sv-input sv-textarea" id="notes"
+                        formControlName="notes"
+                        placeholder="Çdo informacion shtesë mbi studentin…" rows="3"></textarea>
+            </div>
+
+          </div>
+
+          <!-- Panel Footer -->
+          <div class="sv-form-footer">
+            <div class="sv-form-hint">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Të dhënat ruhen të enkriptuara. Kredencialet u dërgohen vetëm supervizorit.
+            </div>
+            <div class="sv-form-btns">
+              <button type="button" class="sv-btn sv-btn-ghost" (click)="createStudentForm.reset()">
+                Anulo
+              </button>
+              <button type="submit" class="sv-btn sv-btn-primary"
+                      [disabled]="createStudentForm.invalid || isCreatingStudent">
+                <svg *ngIf="!isCreatingStudent" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+                <span class="sv-spinner-sm" *ngIf="isCreatingStudent"></span>
+                {{ isCreatingStudent ? 'Duke krijuar…' : 'Krijo Student' }}
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </ng-container>
+
+  </div>
 </div>

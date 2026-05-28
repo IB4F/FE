@@ -466,6 +466,11 @@
   "supervisor.passwordReset.reason": "Reason:",
   "supervisor.passwordReset.empty.title": "No password reset requests",
   "supervisor.passwordReset.empty.desc": "All requests are handled or there are no new requests",
+  "supervisor.passwordReset.approved.title": "Password reset successfully",
+  "supervisor.passwordReset.approved.instruction": "Communicate the new password to the student in person or by phone. The student will be required to change it after logging in.",
+  "supervisor.passwordReset.approved.copy": "Copy password",
+  "supervisor.passwordReset.approved.dismiss": "Done, go back",
+  "auth.forgotPassword.descriptionBga": "Your request will be sent to your supervisor. Contact your supervisor for the new password.",
 
   "supervisor.progress.title": "Student Progress Details",
   "supervisor.progress.loading": "Loading progress details...",

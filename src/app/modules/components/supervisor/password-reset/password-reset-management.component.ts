@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -20,6 +22,12 @@ interface PasswordResetRequest {
   reason: string;
 }
 
+interface ApprovalResult {
+  studentName: string;
+  studentEmail: string;
+  newPassword: string;
+}
+
 @Component({
   selector: 'app-password-reset-management',
   standalone: true,
@@ -29,8 +37,8 @@ interface PasswordResetRequest {
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
-  ,
+    MatTooltipModule,
+    MatSnackBarModule,
     TranslatePipe],
   templateUrl: './password-reset-management.component.html',
   styleUrl: './password-reset-management.component.scss'
@@ -42,15 +50,23 @@ export class PasswordResetManagementComponent implements OnInit, OnDestroy {
   isLoading = false;
   error: string | null = null;
   isProcessingRequest = false;
+  approvalResult: ApprovalResult | null = null;
 
   constructor(
     private supervisorService: SupervisorService,
     private toast: NgToastService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private snackBar: MatSnackBar
   ) {}
 
+  private readonly SESSION_KEY = 'supervisor_approval_result';
+
   ngOnInit(): void {
+    const saved = sessionStorage.getItem(this.SESSION_KEY);
+    if (saved) {
+      this.approvalResult = JSON.parse(saved);
+    }
     this.loadPendingRequests();
   }
 
@@ -85,15 +101,14 @@ export class PasswordResetManagementComponent implements OnInit, OnDestroy {
 
   approveRequest(request: PasswordResetRequest): void {
     this.isProcessingRequest = true;
-    
+
     this.supervisorService.apiSupervisorStudentsStudentIdPasswordResetPost(request.studentId, true)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
-          this.toast.success('Kërkesa u pranua me sukses', 'Sukses', 3000);
+        next: (response: ApprovalResult) => {
+          this.approvalResult = response;
+          sessionStorage.setItem(this.SESSION_KEY, JSON.stringify(response));
           this.isProcessingRequest = false;
-          // Redirect to dashboard after successful approval
-          this.router.navigate(['/supervizor/dashboard']);
         },
         error: (error) => {
           console.error('Error approving request:', error);
@@ -101,5 +116,37 @@ export class PasswordResetManagementComponent implements OnInit, OnDestroy {
           this.isProcessingRequest = false;
         }
       });
+  }
+
+  rejectRequest(request: PasswordResetRequest): void {
+    this.isProcessingRequest = true;
+
+    this.supervisorService.apiSupervisorStudentsStudentIdPasswordResetPost(request.studentId, false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.toast.success('Kërkesa u refuzua', 'Sukses', 3000);
+          this.isProcessingRequest = false;
+          this.loadPendingRequests();
+        },
+        error: (error) => {
+          console.error('Error rejecting request:', error);
+          this.toast.danger(error?.error?.message || 'Ndodhi një gabim gjatë refuzimit të kërkesës', 'Gabim', 3000);
+          this.isProcessingRequest = false;
+        }
+      });
+  }
+
+  copyPassword(): void {
+    if (!this.approvalResult?.newPassword) return;
+    navigator.clipboard.writeText(this.approvalResult.newPassword).then(() => {
+      this.snackBar.open('Fjalëkalimi u kopjua', 'Mbyll', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'top' });
+    });
+  }
+
+  dismissApprovalResult(): void {
+    this.approvalResult = null;
+    sessionStorage.removeItem(this.SESSION_KEY);
+    this.loadPendingRequests();
   }
 }

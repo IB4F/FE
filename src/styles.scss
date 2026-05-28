@@ -3,6 +3,40 @@
 @import './styles/brain-gain';
 @import './styles/register';
 
+/* Supervisor design tokens — sv- prefix to avoid collisions with Material */
+:root {
+  --sv-paper: #F2F7FA;
+  --sv-paper-2: #E6F1F7;
+  --sv-paper-3: #FAFCFD;
+  --sv-ink: #061B25;
+  --sv-ink-2: #3A5360;
+  --sv-ink-3: #7A8C95;
+  --sv-ink-4: #B0BEC5;
+  --sv-blue: #2BA8DC;
+  --sv-blue-deep: #1E7FAA;
+  --sv-blue-soft: #E6F4FA;
+  --sv-blue-softer: #F2F9FC;
+  --sv-teal: #1FB5C9;
+  --sv-teal-deep: #0F7A8A;
+  --sv-indigo: #272578;
+  --sv-indigo-soft: #EEEEF7;
+  --sv-ok: #16A085;
+  --sv-ok-soft: #E6F6F2;
+  --sv-warn: #D97706;
+  --sv-warn-soft: #FEF3C7;
+  --sv-err: #DC2626;
+  --sv-err-soft: #FEE2E2;
+  --sv-line: rgba(6,27,37,.08);
+  --sv-line-2: rgba(6,27,37,.05);
+  --sv-line-3: rgba(6,27,37,.12);
+  --sv-shadow-sm: 0 1px 2px rgba(6,27,37,.04), 0 1px 1px rgba(6,27,37,.03);
+  --sv-shadow: 0 1px 0 rgba(6,27,37,.02), 0 8px 24px -12px rgba(6,27,37,.12);
+  --sv-shadow-lg: 0 4px 12px rgba(6,27,37,.06), 0 24px 48px -16px rgba(6,27,37,.18);
+  --sv-font-display: 'Fraunces', 'Times New Roman', serif;
+  --sv-font-sans: 'Inter', system-ui, sans-serif;
+  --sv-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
 /* Brain Gain design tokens — Registration page */
 :root {
   --primary:        #1B9CD8;

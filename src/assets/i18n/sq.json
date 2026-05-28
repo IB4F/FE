@@ -466,6 +466,11 @@
   "supervisor.passwordReset.reason": "Arsyeja:",
   "supervisor.passwordReset.empty.title": "Nuk ka kërkesa për reset password",
   "supervisor.passwordReset.empty.desc": "Të gjitha kërkesat janë të trajtuara ose nuk ka kërkesa të reja",
+  "supervisor.passwordReset.approved.title": "Fjalëkalimi u rivendos me sukses",
+  "supervisor.passwordReset.approved.instruction": "Komunikojeni fjalëkalimin e ri studentit personalisht ose me telefon. Studenti do të detyrohet ta ndryshojë pas hyrjes.",
+  "supervisor.passwordReset.approved.copy": "Kopjo fjalëkalimin",
+  "supervisor.passwordReset.approved.dismiss": "U bë, kthehu",
+  "auth.forgotPassword.descriptionBga": "Kërkesa juaj do të dërgohet tek supervizori juaj. Kontaktoni supervizorin tuaj për fjalëkalimin e ri.",
 
   "supervisor.progress.title": "Detajet e Progresit të Studentit",
   "supervisor.progress.loading": "Duke ngarkuar detajet e progresit...",

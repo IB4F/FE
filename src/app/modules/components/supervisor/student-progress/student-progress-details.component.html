@@ -1,185 +1,290 @@
-<div class="student-progress-details">
-  <div class="page-header">
-    <div class="header-left">
-      <button mat-raised-button (click)="goBack()" matTooltipPosition="above" color="warn">
-        <mat-icon>arrow_back</mat-icon>
-        {{ 'common.backLabel' | translate }}
-      </button>
-      <h1>{{ 'supervisor.progress.title' | translate }}</h1>
+<div class="sv-frame">
+  <div class="sv-main">
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="sv-loader">
+      <div class="sv-spinner"></div>
+      <p>Duke ngarkuar detajet e progresit…</p>
     </div>
-    <button mat-raised-button color="primary" (click)="refreshData()" [disabled]="isLoading">
-      <mat-icon>refresh</mat-icon>
-      {{ 'common.refresh' | translate }}
-    </button>
-  </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>{{ 'supervisor.progress.loading' | translate }}</p>
-  </div>
+    <!-- Error -->
+    <div *ngIf="error && !isLoading" class="sv-error-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Ndodhi një gabim</h3>
+      <p>{{ error }}</p>
+      <button class="sv-btn sv-btn-primary" (click)="refreshData()">Provo sërish</button>
+    </div>
 
-  <!-- Error State -->
-  <div *ngIf="error && !isLoading" class="error-container">
-    <mat-icon color="warn">error</mat-icon>
-    <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="refreshData()">
-      {{ 'common.retry' | translate }}
-    </button>
-  </div>
+    <!-- Content -->
+    <ng-container *ngIf="progressDetails && !isLoading">
 
-  <!-- Content -->
-  <div *ngIf="progressDetails && !isLoading" class="content">
+      <!-- Page Head -->
+      <div class="sv-page-head sv-stagger">
+        <div class="sv-head-left">
+          <button class="sv-btn sv-btn-ghost sv-btn-sm" style="align-self:flex-start;margin-bottom:6px" (click)="goBack()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Kthehu te lista
+          </button>
+          <span class="sv-eyebrow"><span class="pip"></span>Detajet e progresit</span>
+          <h1 class="sv-title">Progresi i <em>{{ progressDetails.studentName }}</em></h1>
+          <p class="sv-subtitle">Pamje e plotë e aktivitetit, pikëve dhe lidhjeve të mësuara — gjeneruar në kohë reale.</p>
+        </div>
+        <div class="sv-head-actions">
+          <button class="sv-btn sv-btn-ghost" (click)="refreshData()" [disabled]="isEditing">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.97-5.5"/></svg>
+            Rifresko
+          </button>
+          <button class="sv-btn sv-btn-primary" (click)="openEdit()" *ngIf="!isEditing">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Modifiko
+          </button>
+        </div>
+      </div>
 
-    <!-- Student Basic Info -->
-    <mat-card class="student-info-card">
-      <mat-card-header>
-        <mat-card-title>{{ 'supervisor.progress.studentInfo' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="info-grid">
-          <div class="info-item">
-            <label>{{ 'supervisor.progress.name' | translate }}</label>
-            <span>{{ progressDetails.studentName }}</span>
+      <!-- ─── Edit Form inline ──────────────────────────────────────────── -->
+      <div *ngIf="isEditing && editForm" class="sv-edit-panel sv-stagger" [formGroup]="editForm">
+        <div class="sv-edit-panel-head">
+          <h3 class="sv-edit-title">Modifiko të dhënat</h3>
+          <button class="sv-iconbtn-close" (click)="cancelEdit()" title="Mbyll">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="sv-edit-form-grid">
+          <div class="sv-field">
+            <label class="sv-label">Emri <span class="sv-req">*</span></label>
+            <input class="sv-input" type="text" formControlName="firstName"
+                   [class.sv-input-err]="editForm.get('firstName')?.invalid && editForm.get('firstName')?.touched"/>
           </div>
-          <div class="info-item">
-            <label>{{ 'supervisor.progress.overall' | translate }}</label>
-            <span class="progress-percentage">{{ progressDetails.overallProgress }}%</span>
+          <div class="sv-field">
+            <label class="sv-label">Mbiemri <span class="sv-req">*</span></label>
+            <input class="sv-input" type="text" formControlName="lastName"
+                   [class.sv-input-err]="editForm.get('lastName')?.invalid && editForm.get('lastName')?.touched"/>
           </div>
-          <div class="info-item">
-            <label>{{ 'supervisor.progress.points' | translate }}</label>
-            <span class="points-earned">{{ progressDetails.totalPointsEarned }} / {{ progressDetails.totalPossiblePoints }}</span>
+          <div class="sv-field">
+            <label class="sv-label">Klasa aktuale <span class="sv-req">*</span></label>
+            <select class="sv-select" formControlName="currentClass">
+              <option value="" disabled>Zgjidh klasën…</option>
+              <option *ngFor="let cls of classesList" [value]="cls.id">{{ cls.name }}</option>
+            </select>
           </div>
-          <div class="info-item">
-            <label>{{ 'supervisor.progress.timeSpent' | translate }}</label>
-            <span class="time-spent">{{ formatTime(progressDetails.totalTimeSpentMinutes) }}</span>
+          <div class="sv-field">
+            <label class="sv-label">Data e lindjes <span class="sv-req">*</span></label>
+            <input class="sv-input" type="date" formControlName="dateOfBirth"/>
+          </div>
+          <div class="sv-field sv-field-full">
+            <label class="sv-label">Shënime <span class="sv-opt">(opsionale)</span></label>
+            <textarea class="sv-input sv-textarea" formControlName="notes"
+                      placeholder="Shënime shtesë rreth studentit…" rows="3"></textarea>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
 
-    <!-- Generated Password Section -->
-    <mat-card class="password-card" *ngIf="progressDetails">
-      <mat-card-header>
-        <mat-card-title>{{ 'supervisor.progress.password.title' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="password-info">
-          <div *ngIf="progressDetails.generatedPassword" class="password-available">
-            <mat-icon color="primary">lock</mat-icon>
-            <div class="password-content">
-              <label>{{ 'supervisor.progress.password.label' | translate }}</label>
-              <div class="password-display">
-                <span class="password-text">{{ progressDetails.generatedPassword }}</span>
-                <button mat-icon-button
-                        (click)="copyPassword(progressDetails.generatedPassword!)">
-                  <mat-icon>content_copy</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="!progressDetails.generatedPassword" class="password-used">
-            <mat-icon color="warn">lock_open</mat-icon>
-            <div class="password-content">
-              <label>{{ 'supervisor.progress.password.status' | translate }}</label>
-              <span class="password-status">{{ 'supervisor.progress.password.used' | translate }}</span>
-            </div>
+        <div class="sv-edit-footer">
+          <span class="sv-edit-hint">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Email-i i studentit nuk ndryshon.
+          </span>
+          <div class="sv-edit-btns">
+            <button class="sv-btn sv-btn-ghost sv-btn-sm" (click)="cancelEdit()">Anulo</button>
+            <button class="sv-btn sv-btn-primary sv-btn-sm"
+                    [disabled]="editForm.invalid || isSaving"
+                    (click)="saveEdit()">
+              <span *ngIf="isSaving" class="sv-row-spinner"></span>
+              <svg *ngIf="!isSaving" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              {{ isSaving ? 'Duke ruajtur…' : 'Ruaj ndryshimet' }}
+            </button>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <!-- Progress Overview -->
-    <mat-card class="progress-overview-card">
-      <mat-card-header>
-        <mat-card-title>{{ 'supervisor.progress.overview.title' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="progress-overview">
-          <div class="progress-item">
-            <label>{{ 'supervisor.progress.overall' | translate }}</label>
-            <div class="progress-container">
-              <mat-progress-bar
-                mode="determinate"
-                [value]="getProgressPercentage()"
-                [color]="getProgressColor(getProgressPercentage())">
-              </mat-progress-bar>
-              <span class="progress-text">{{ getProgressPercentage().toFixed(1) }}%</span>
+      <!-- Student Head Card -->
+      <div class="sv-progress-head sv-stagger">
+        <div class="sv-ph-av">
+          {{ progressDetails.studentName?.split(' ')?.[0]?.charAt(0)?.toUpperCase() ?? '' }}{{ progressDetails.studentName?.split(' ')?.[1]?.charAt(0)?.toUpperCase() ?? '' }}
+        </div>
+        <div>
+          <h2 class="sv-ph-name">{{ progressDetails.studentName }}</h2>
+          <div class="sv-ph-meta">
+            <span class="sv-ph-status"
+                  [class.aktiv]="progressDetails.overallProgress > 40"
+                  [class.idle]="progressDetails.overallProgress <= 40">
+              <span class="sv-ph-dot"></span>
+              {{ progressDetails.overallProgress > 40 ? 'Aktiv' : 'Joaktiv' }}
+            </span>
+            <span class="sv-ph-sep"></span>
+            <span>{{ progressDetails.completedLinks }} / {{ progressDetails.totalLinks }} lidhje</span>
+          </div>
+          <div *ngIf="progressDetails.notes" class="sv-ph-notes">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            {{ progressDetails.notes }}
+          </div>
+        </div>
+        <div class="sv-ph-kpis">
+          <div class="sv-ph-kpi">
+            <div class="sv-ph-kpi-k">Progres total</div>
+            <div class="sv-ph-kpi-v">{{ progressDetails.overallProgress.toFixed(0) }}%</div>
+          </div>
+          <div class="sv-ph-kpi">
+            <div class="sv-ph-kpi-k">Pikë të fituara</div>
+            <div class="sv-ph-kpi-v">
+              {{ progressDetails.totalPointsEarned }}<span class="sv-ph-kpi-sub">/{{ progressDetails.totalPossiblePoints }}</span>
+            </div>
+          </div>
+          <div class="sv-ph-kpi">
+            <div class="sv-ph-kpi-k">Koha e studimit</div>
+            <div class="sv-ph-kpi-v">{{ formatTime(progressDetails.totalTimeSpentMinutes) }}</div>
+          </div>
+          <div class="sv-ph-kpi">
+            <div class="sv-ph-kpi-k">Mesatare kuize</div>
+            <div class="sv-ph-kpi-v">{{ progressDetails.averageScore.toFixed(1) }}<span class="sv-ph-kpi-sub">/20</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Insight Stat Cards -->
+      <div class="sv-stats sv-stats-3 sv-stagger">
+
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Lidhjet e përfunduara</div>
+            <div class="sv-trend sv-trend-ok" *ngIf="progressDetails.totalLinks > 0">
+              {{ ((progressDetails.completedLinks / progressDetails.totalLinks) * 100).toFixed(0) }}%
+            </div>
+          </div>
+          <div class="sv-stat-value sv-stat-ok">
+            {{ progressDetails.completedLinks }}<span class="sv-stat-unit">/{{ progressDetails.totalLinks }}</span>
+          </div>
+          <div class="sv-stat-bar">
+            <div class="sv-bar-fill" [style.width.%]="progressDetails.totalLinks > 0 ? (progressDetails.completedLinks / progressDetails.totalLinks) * 100 : 0"></div>
+          </div>
+          <div class="sv-stat-meta">{{ progressDetails.totalLinks - progressDetails.completedLinks }} lidhje mbetur</div>
+        </div>
+
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Kuizet e zgjidhura</div>
+            <div class="sv-trend sv-trend-teal" *ngIf="progressDetails.totalQuizzes > 0">
+              {{ ((progressDetails.completedQuizzes / progressDetails.totalQuizzes) * 100).toFixed(0) }}%
+            </div>
+          </div>
+          <div class="sv-stat-value sv-stat-teal">
+            {{ progressDetails.completedQuizzes }}<span class="sv-stat-unit">/{{ progressDetails.totalQuizzes }}</span>
+          </div>
+          <div class="sv-stat-bar">
+            <div class="sv-bar-fill" [style.width.%]="progressDetails.totalQuizzes > 0 ? (progressDetails.completedQuizzes / progressDetails.totalQuizzes) * 100 : 0"></div>
+          </div>
+          <div class="sv-stat-meta">Mesatare pikë {{ progressDetails.averageScore.toFixed(1) }}/20</div>
+        </div>
+
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Progres mesatar</div>
+            <div class="sv-trend" [class.sv-trend-ok]="progressDetails.overallProgress > 70"
+                                  [class.sv-trend-teal]="progressDetails.overallProgress > 40 && progressDetails.overallProgress <= 70"
+                                  [class.sv-trend-warn]="progressDetails.overallProgress <= 40">
+              {{ progressDetails.overallProgress > 70 ? 'Shkëlqyeshëm' : progressDetails.overallProgress > 40 ? 'Mirë' : 'Duhet vëmendje' }}
+            </div>
+          </div>
+          <div class="sv-stat-value"
+               [class.sv-stat-ok]="progressDetails.overallProgress > 70"
+               [class.sv-stat-teal]="progressDetails.overallProgress > 40 && progressDetails.overallProgress <= 70"
+               [class.sv-stat-warn]="progressDetails.overallProgress <= 40">
+            {{ progressDetails.overallProgress.toFixed(0) }}<span class="sv-stat-unit">%</span>
+          </div>
+          <div class="sv-stat-sparkline">
+            <svg width="100%" height="36" viewBox="0 0 220 36" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="spark-prog" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#16A085" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#16A085" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <polygon points="0,30 27,26 55,22 82,18 110,14 137,10 165,8 192,6 220,4 220,36 0,36" fill="url(#spark-prog)"/>
+              <polyline points="0,30 27,26 55,22 82,18 110,14 137,10 165,8 192,6 220,4" fill="none" stroke="#16A085" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="220" cy="4" r="3" fill="#16A085"/>
+            </svg>
+          </div>
+          <div class="sv-stat-meta">Aktiviteti i fundit: {{ formatDate(progressDetails.lastActivityAt) }}</div>
+        </div>
+
+      </div><!-- /sv-stats -->
+
+      <!-- Modules heading -->
+      <h2 class="sv-mods-title">Progresi për çdo lidhje</h2>
+
+      <!-- Modules list -->
+      <div *ngIf="progressDetails.linkProgress && progressDetails.linkProgress.length > 0"
+           class="sv-modules sv-stagger">
+
+        <div *ngFor="let link of progressDetails.linkProgress" class="sv-mod">
+
+          <!-- Donut + Hub + Title -->
+          <div class="sv-mod-title">
+            <svg width="42" height="42" viewBox="0 0 42 42" style="flex-shrink:0">
+              <circle cx="21" cy="21" r="16" fill="none" stroke="#e2e8f0" stroke-width="4.5"/>
+              <circle cx="21" cy="21" r="16" fill="none"
+                [attr.stroke]="link.progressPercentage > 70 ? '#16A085' : link.progressPercentage > 40 ? '#2BA8DC' : '#D97706'"
+                stroke-width="4.5"
+                stroke-linecap="round"
+                [attr.stroke-dasharray]="100.53"
+                [attr.stroke-dashoffset]="100.53 * (1 - link.progressPercentage / 100)"
+                transform="rotate(-90 21 21)"/>
+            </svg>
+            <div>
+              <div class="sv-mod-hub">{{ link.learnHubTitle }}</div>
+              <h4 class="sv-mod-h4">{{ link.linkTitle }}</h4>
             </div>
           </div>
 
-          <div class="stats-grid">
-            <div class="stat-item">
-              <label>{{ 'supervisor.progress.stats.links' | translate }}</label>
-              <span>{{ progressDetails.completedLinks }} / {{ progressDetails.totalLinks }}</span>
-            </div>
-            <div class="stat-item">
-              <label>{{ 'supervisor.progress.stats.quizzes' | translate }}</label>
-              <span>{{ progressDetails.completedQuizzes }} / {{ progressDetails.totalQuizzes }}</span>
-            </div>
-            <div class="stat-item">
-              <label>{{ 'supervisor.progress.stats.avgScore' | translate }}</label>
-              <span>{{ progressDetails.averageScore.toFixed(1) }}</span>
-            </div>
-            <div class="stat-item">
-              <label>{{ 'supervisor.progress.stats.firstActivity' | translate }}</label>
-              <span>{{ formatDate(progressDetails.firstActivityAt) }}</span>
-            </div>
-            <div class="stat-item">
-              <label>{{ 'supervisor.progress.stats.lastActivity' | translate }}</label>
-              <span>{{ formatDate(progressDetails.lastActivityAt) }}</span>
-            </div>
+          <!-- Pikët -->
+          <div class="sv-mod-stat">
+            <span class="sv-mod-k">Pikët</span>
+            <span class="sv-mod-v">
+              {{ link.pointsEarned }}<span class="sv-mod-sub">/{{ link.possiblePoints }}</span>
+            </span>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
 
-    <!-- Detailed Progress by Link -->
-    <mat-card class="detailed-progress-card" *ngIf="progressDetails.linkProgress && progressDetails.linkProgress.length > 0">
-      <mat-card-header>
-        <mat-card-title>{{ 'supervisor.progress.linkProgress.title' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="link-progress-list">
-          <div *ngFor="let link of progressDetails.linkProgress" class="link-progress-item">
-            <div class="link-header">
-              <h4>{{ link.linkTitle }}</h4>
-              <mat-chip [color]="link.isCompleted ? 'primary' : 'accent'" selected>
-                {{ link.isCompleted ? ('supervisor.progress.link.completed' | translate) : ('supervisor.progress.link.inProgress' | translate) }}
-              </mat-chip>
-            </div>
-            <div class="link-details">
-              <div class="link-info">
-                <p><strong>{{ 'supervisor.progress.link.learnHub' | translate }}</strong> {{ link.learnHubTitle }}</p>
-                <p><strong>{{ 'supervisor.progress.link.progress' | translate }}</strong> {{ link.progressPercentage }}%</p>
-                <p><strong>{{ 'supervisor.progress.link.quizzes' | translate }}</strong> {{ link.completedQuizzes }} / {{ link.totalQuizzes }}</p>
-                <p><strong>{{ 'supervisor.progress.link.points' | translate }}</strong> {{ link.pointsEarned }} / {{ link.possiblePoints }}</p>
-                <p><strong>{{ 'supervisor.progress.link.avgScore' | translate }}</strong> {{ link.averageScore.toFixed(1) }}</p>
-                <p><strong>{{ 'supervisor.progress.link.timeSpent' | translate }}</strong> {{ formatTime(link.timeSpentMinutes) }}</p>
-                <p><strong>{{ 'supervisor.progress.link.firstAttempt' | translate }}</strong> {{ formatDate(link.firstAttemptAt) }}</p>
-                <p><strong>{{ 'supervisor.progress.link.lastAttempt' | translate }}</strong> {{ formatDate(link.lastAttemptAt) }}</p>
-              </div>
-              <div class="link-progress-bar">
-                <mat-progress-bar
-                  mode="determinate"
-                  [value]="link.progressPercentage"
-                  [color]="getProgressColor(link.progressPercentage)">
-                </mat-progress-bar>
-              </div>
-            </div>
+          <!-- Kuizet -->
+          <div class="sv-mod-stat">
+            <span class="sv-mod-k">Kuizet</span>
+            <span class="sv-mod-v">
+              {{ link.completedQuizzes }}<span class="sv-mod-sub">/{{ link.totalQuizzes }}</span>
+            </span>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
 
-    <!-- No Links Message -->
-    <mat-card class="no-data-card" *ngIf="!progressDetails.linkProgress || progressDetails.linkProgress.length === 0">
-      <mat-card-content>
-        <div class="no-data-message">
-          <mat-icon>info</mat-icon>
-          <p>{{ 'supervisor.progress.noLinks' | translate }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
+          <!-- Koha -->
+          <div class="sv-mod-stat">
+            <span class="sv-mod-k">Koha</span>
+            <span class="sv-mod-v">{{ formatTime(link.timeSpentMinutes) }}</span>
+          </div>
+
+          <!-- Status pill -->
+          <div style="text-align:right">
+            <span class="sv-status"
+                  [class.sv-status-aktiv]="link.progressPercentage > 70"
+                  [class.sv-status-new]="link.progressPercentage > 40 && link.progressPercentage <= 70"
+                  [class.sv-status-idle]="link.progressPercentage <= 40 && link.progressPercentage > 0"
+                  [class.sv-status-new]="link.progressPercentage === 0">
+              {{ link.progressPercentage > 70 ? 'Mbaroi' : link.progressPercentage > 40 ? 'Në progres' : link.progressPercentage > 0 ? 'I ngadaltë' : 'Pa filluar' }}
+            </span>
+          </div>
+
+        </div><!-- /sv-mod -->
+      </div><!-- /sv-modules -->
+
+      <!-- Empty modules -->
+      <div *ngIf="!progressDetails.linkProgress || progressDetails.linkProgress.length === 0"
+           class="sv-empty">
+        <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
+          <rect width="80" height="80" rx="20" fill="#E6F4FA"/>
+          <path d="M20 56V40a20 20 0 0 1 40 0v16" stroke="#2BA8DC" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="40" cy="30" r="8" stroke="#1FB5C9" stroke-width="2"/>
+        </svg>
+        <h3>Nuk ka aktivitet të regjistruar</h3>
+        <p>Studenti ende nuk ka filluar asnjë lidhje mësimore.</p>
+      </div>
+
+    </ng-container><!-- /progressDetails -->
+
+  </div><!-- /sv-main -->
+</div><!-- /sv-frame -->

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +15,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {SupervisorService} from "../../../../api-client";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
+import { DetailsService } from '../../../../api-client/api/details.service';
+import { Class } from '../../../../api-client/model/class';
 
 interface StudentProgressResponse {
   studentId: string;
@@ -31,6 +34,11 @@ interface StudentProgressResponse {
   lastActivityAt: string | null;
   linkProgress: LinkProgress[];
   generatedPassword?: string;
+  notes?: string | null;
+  firstName?: string;
+  lastName?: string;
+  currentClass?: string;
+  dateOfBirth?: string;
 }
 
 interface LinkProgress {
@@ -55,14 +63,14 @@ interface LinkProgress {
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatTooltipModule
-  ,
+    MatTooltipModule,
     TranslatePipe],
   templateUrl: './student-progress-details.component.html',
   styleUrl: './student-progress-details.component.scss'
@@ -75,11 +83,18 @@ export class StudentProgressDetailsComponent implements OnInit, OnDestroy {
   isLoading = true;
   error: string | null = null;
 
+  isEditing = false;
+  isSaving = false;
+  editForm!: FormGroup;
+  classesList: Class[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private supervisorService: SupervisorService,
+    private detailsService: DetailsService,
+    private fb: FormBuilder,
     private toast: NgToastService
   ) {}
 
@@ -87,6 +102,7 @@ export class StudentProgressDetailsComponent implements OnInit, OnDestroy {
     this.studentId = this.route.snapshot.paramMap.get('studentId');
     if (this.studentId) {
       this.loadStudentProgressDetails();
+      this.loadClassesList();
     } else {
       this.error = 'ID-ja e studentit nuk u gjet';
       this.isLoading = false;
@@ -147,6 +163,62 @@ export class StudentProgressDetailsComponent implements OnInit, OnDestroy {
 
   refreshData(): void {
     this.loadStudentProgressDetails();
+  }
+
+  private loadClassesList(): void {
+    this.detailsService.apiDetailsGetClassGet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({ next: (res: Class[]) => this.classesList = res });
+  }
+
+  openEdit(): void {
+    if (!this.progressDetails) return;
+    this.editForm = this.fb.group({
+      firstName:   [this.progressDetails.firstName   || this.progressDetails.studentName?.split(' ')[0] || '', [Validators.required, Validators.minLength(2)]],
+      lastName:    [this.progressDetails.lastName    || this.progressDetails.studentName?.split(' ')[1] || '', [Validators.required, Validators.minLength(2)]],
+      currentClass:[this.progressDetails.currentClass || '', [Validators.required]],
+      dateOfBirth: [this.progressDetails.dateOfBirth ? this.progressDetails.dateOfBirth.substring(0, 10) : '', [Validators.required]],
+      notes:       [this.progressDetails.notes || null]
+    });
+    this.isEditing = true;
+  }
+
+  cancelEdit(): void {
+    this.isEditing = false;
+  }
+
+  saveEdit(): void {
+    if (!this.editForm.valid || !this.studentId) return;
+    this.isSaving = true;
+    const v = this.editForm.value;
+    const payload = {
+      firstName:   v.firstName.trim(),
+      lastName:    v.lastName.trim(),
+      currentClass: v.currentClass,
+      dateOfBirth: new Date(v.dateOfBirth).toISOString(),
+      notes:       v.notes?.trim() || null
+    };
+
+    this.supervisorService.apiSupervisorStudentsStudentIdPut(this.studentId, payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          this.toast.success('Të dhënat u përditësuan me sukses!', 'Sukses', 3000);
+          if (this.progressDetails) {
+            this.progressDetails.studentName = `${res.firstName} ${res.lastName}`;
+            this.progressDetails.firstName   = res.firstName;
+            this.progressDetails.lastName    = res.lastName;
+            this.progressDetails.currentClass = res.currentClass;
+            this.progressDetails.notes        = res.notes;
+          }
+          this.isSaving = false;
+          this.isEditing = false;
+        },
+        error: (err: any) => {
+          this.toast.danger(err?.error?.message || 'Ndodhi një gabim gjatë ruajtjes', 'Gabim', 3000);
+          this.isSaving = false;
+        }
+      });
   }
 
   getProgressPercentage(): number {

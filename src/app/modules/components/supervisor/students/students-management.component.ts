@@ -109,11 +109,12 @@ export class StudentsManagementComponent implements OnInit, OnDestroy {
     const schoolValue = this.currentUser?.school || '';
     
     this.createStudentForm = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      currentClass: ['', [Validators.required]],
-      school: [{ value: schoolValue, disabled: true }, [Validators.required]],
-      dateOfBirth: ['', [Validators.required]]
+      firstName:   ['', [Validators.required, Validators.minLength(2)]],
+      lastName:    ['', [Validators.required, Validators.minLength(2)]],
+      currentClass:['', [Validators.required]],
+      school:      [{ value: schoolValue, disabled: true }, [Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
+      notes:       [null]
     });
   }
 
@@ -148,8 +149,9 @@ export class StudentsManagementComponent implements OnInit, OnDestroy {
     const formValue = this.createStudentForm.getRawValue();
     const studentData: CreateStudentBySupervisorDTO = {
       ...formValue,
-      school: this.currentUser?.school || formValue.school, // Ensure school is from current user
-      dateOfBirth: new Date(formValue.dateOfBirth).toISOString()
+      school: this.currentUser?.school || formValue.school,
+      dateOfBirth: new Date(formValue.dateOfBirth).toISOString(),
+      notes: formValue.notes?.trim() || null
     };
 
     this.supervisorService.apiSupervisorStudentsPost(studentData)

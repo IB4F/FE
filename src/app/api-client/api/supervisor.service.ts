@@ -443,6 +443,41 @@ export class SupervisorService extends BaseService {
     }
 
     /**
+     * Përditëson të dhënat e një nxënësi
+     * @param studentId ID-ja e nxënësit
+     * @param body UpdateStudentBySupervisorDTO
+     */
+    public apiSupervisorStudentsStudentIdPut(studentId: string, body?: any, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (studentId === null || studentId === undefined) {
+            throw new Error('Required parameter studentId was null or undefined when calling apiSupervisorStudentsStudentIdPut.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        const httpContentTypeSelected = this.configuration.selectHeaderContentType(['application/json', 'text/json', 'application/*+json']);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        const localVarPath = `/api/Supervisor/students/${this.configuration.encodeParam({name: 'studentId', value: studentId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid'})}`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('put', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: body,
+            responseType: 'json',
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            transferCache: localVarTransferCache,
+            reportProgress: reportProgress
+        });
+    }
+
+    /**
      * Fshin një nxënës nga menaxhimi i supervizorit
      * @param studentId ID-ja e nxënësit që duhet fshirë
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

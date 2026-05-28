@@ -57,6 +57,10 @@ export class ForgetPasswordComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  get isBgaStudent(): boolean {
+    return (this.emailForm.get('email')?.value ?? '').endsWith('@bga.al');
+  }
+
   sendEmail() {
     const email: ForgotPasswordDTO = {email: this.emailForm.get('email')?.value};
     this._authService.apiAuthRequestResetPost(email).subscribe({
@@ -65,7 +69,7 @@ export class ForgetPasswordComponent implements OnInit {
         this.closeModal();
       },
       error: (err) => {
-        this.toast.danger('Somthing went Wrong!', 'ERROR', 5000);
+        this.toast.danger(err?.error?.message || 'Ndodhi një gabim', 'GABIM', 5000);
       }
     })
   }

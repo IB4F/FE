@@ -9,11 +9,12 @@
  */
 
 
-export interface CreateStudentBySupervisorDTO { 
+export interface CreateStudentBySupervisorDTO {
     firstName?: string | null;
     lastName?: string | null;
     currentClass?: string | null;
     school?: string | null;
     dateOfBirth?: string;
+    notes?: string | null;
 }
 

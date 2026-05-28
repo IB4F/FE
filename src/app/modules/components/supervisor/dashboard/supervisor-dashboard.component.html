@@ -1,213 +1,493 @@
-<div class="supervisor-dashboard">
-  <div class="dashboard-header">
-    <h1>{{ 'supervisor.dashboard.title' | translate }}</h1>
-    <button mat-raised-button color="primary" (click)="refreshDashboard()" [disabled]="isLoading">
-      <mat-icon>refresh</mat-icon>
-      {{ 'common.refresh' | translate }}
-    </button>
-  </div>
+<div class="sv-frame">
+  <div class="sv-main">
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner></mat-spinner>
-    <p>{{ 'supervisor.dashboard.loading' | translate }}</p>
-  </div>
-
-  <!-- Error State -->
-  <div *ngIf="error && !isLoading" class="error-container">
-    <mat-icon color="warn">error</mat-icon>
-    <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="loadDashboardData()">
-      {{ 'common.retry' | translate }}
-    </button>
-  </div>
-
-  <!-- Dashboard Content -->
-  <div *ngIf="dashboardData && !isLoading" class="dashboard-content">
-
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>people</mat-icon>
-          </div>
-          <div class="stat-info">
-            <h3>{{ dashboardData.totalStudents }}</h3>
-            <p>{{ 'supervisor.dashboard.stats.totalStudents' | translate }}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>person</mat-icon>
-          </div>
-          <div class="stat-info">
-            <h3>{{ dashboardData.activeStudents }}</h3>
-            <p>{{ 'supervisor.dashboard.stats.activeStudents' | translate }}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>trending_up</mat-icon>
-          </div>
-          <div class="stat-info">
-            <h3>{{ dashboardData.averageProgress.toFixed(1) }}%</h3>
-            <p>{{ 'supervisor.dashboard.stats.avgProgress' | translate }}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>security</mat-icon>
-          </div>
-          <div class="stat-info">
-            <h3>{{ dashboardData.pendingPasswordResetRequests }}</h3>
-            <p>{{ 'supervisor.dashboard.stats.pendingReset' | translate }}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <!-- ─── Page Header ─────────────────────────────────────────────────── -->
+    <div class="sv-page-head sv-stagger">
+      <div class="sv-head-left">
+        <span class="sv-eyebrow"><span class="pip"></span>Paneli i supervizorit</span>
+        <h1 class="sv-title">{{ greeting }}<ng-container *ngIf="dashboardData">, <em>Supervisor</em></ng-container>.</h1>
+        <p class="sv-subtitle">
+          <ng-container *ngIf="dashboardData && dashboardData.students.length > 0">
+            Ja një përmbledhje e shpejtë e studentëve — progresi, aktiviteti i fundit dhe kërkesat në pritje.
+          </ng-container>
+          <ng-container *ngIf="!dashboardData || dashboardData.students.length === 0">
+            Nuk ke ende studentë nën menaxhim. Shto studentin e parë për të filluar të ndjekësh progresin e tyre.
+          </ng-container>
+        </p>
+      </div>
+      <div class="sv-head-actions">
+        <button class="sv-btn sv-btn-ghost" (click)="refreshDashboard()" [disabled]="isLoading">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+          Rifresko
+        </button>
+      </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button mat-raised-button color="primary" (click)="navigateToAddStudent()">
-        <mat-icon>person_add</mat-icon>
-        {{ 'supervisor.dashboard.actions.addStudent' | translate }}
-      </button>
-      <button mat-raised-button color="accent" (click)="navigateToPasswordReset()"
-              [disabled]="dashboardData.pendingPasswordResetRequests === 0">
-        <mat-icon>security</mat-icon>
-        {{ 'supervisor.dashboard.actions.manageReset' | translate }}
-        <span *ngIf="dashboardData.pendingPasswordResetRequests > 0" class="badge">
-          {{ dashboardData.pendingPasswordResetRequests }}
-        </span>
-      </button>
+    <!-- ─── Loading State ────────────────────────────────────────────────── -->
+    <div *ngIf="isLoading" class="sv-loader">
+      <div class="sv-spinner"></div>
+      <p>Duke ngarkuar të dhënat…</p>
     </div>
 
-    <!-- Students Table -->
-    <mat-card class="students-card">
-      <mat-card-header>
-        <mat-card-title>{{ 'supervisor.dashboard.students.title' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'supervisor.dashboard.students.subtitle' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <!-- Search Field -->
-        <div class="search-bar-container">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-label>{{ 'supervisor.dashboard.students.search.label' | translate }}</mat-label>
-            <input
-              matInput
-              [placeholder]="'supervisor.dashboard.students.search.placeholder' | translate"
-              (keyup)="applyFilter($event)"
-            >
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
+    <!-- ─── Error State ──────────────────────────────────────────────────── -->
+    <div *ngIf="error && !isLoading" class="sv-error-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Ndodhi një gabim</h3>
+      <p>{{ error }}</p>
+      <button class="sv-btn sv-btn-primary" (click)="loadDashboardData()">Provo sërish</button>
+    </div>
+
+    <!-- ─── Dashboard Content ───────────────────────────────────────────── -->
+    <ng-container *ngIf="dashboardData && !isLoading">
+
+      <!-- Stats Grid -->
+      <div class="sv-stats sv-stagger">
+
+        <!-- Card 1 — Total Students -->
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Total studentë</div>
+            <span class="sv-trend sv-trend-indigo" *ngIf="dashboardData.totalStudents > 0">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+              +2 këtë muaj
+            </span>
+          </div>
+          <div class="sv-stat-value sv-stat-indigo">{{ dashboardData.totalStudents }}</div>
+          <div class="sv-stat-sparkline">
+            <svg width="100%" height="36" viewBox="0 0 220 36" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="spark-ind" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#272578" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#272578" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <polygon points="0,34 27,28 55,20 82,24 110,16 137,12 165,8 192,6 220,4 220,36 0,36" fill="url(#spark-ind)"/>
+              <polyline points="0,34 27,28 55,20 82,24 110,16 137,12 165,8 192,6 220,4" fill="none" stroke="#272578" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="220" cy="4" r="3" fill="#272578"/>
+            </svg>
+          </div>
+          <div class="sv-stat-meta">
+            <span class="sv-dot sv-dot-ok"></span>{{ dashboardData.activeStudents }} aktivë
+            &nbsp;·&nbsp;
+            {{ dashboardData.totalStudents - dashboardData.activeStudents }} joaktivë
+          </div>
         </div>
 
-        <!-- Table Container -->
-        <div *ngIf="dataSource.data.length > 0" class="table-container">
-          <table mat-table [dataSource]="dataSource" matSort class="students-table">
-
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.name' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                {{ student.firstName }} {{ student.lastName }}
-              </td>
-            </ng-container>
-
-            <!-- Email Column -->
-            <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef>{{ 'common.email' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                <span class="email-text">{{ student.email }}</span>
-              </td>
-            </ng-container>
-
-            <!-- Class Column -->
-            <ng-container matColumnDef="class">
-              <th mat-header-cell *matHeaderCellDef>{{ 'common.currentClass' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                {{ student.currentClass }}
-              </td>
-            </ng-container>
-
-            <!-- Progress Column -->
-            <ng-container matColumnDef="progress">
-              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.progress' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                <div class="progress-container">
-                  <mat-progress-bar
-                    mode="determinate"
-                    [value]="student.progressPercentage || 0"
-                    [color]="getProgressColor(student.progressPercentage || 0)">
-                  </mat-progress-bar>
-                  <span class="progress-text">{{ (student.progressPercentage || 0).toFixed(1) }}%</span>
-                </div>
-              </td>
-            </ng-container>
-
-            <!-- Status Column -->
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.status' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                <mat-chip [color]="getStatusColor(student.isActive)" selected>
-                  {{ getStatusText(student.isActive) }}
-                </mat-chip>
-              </td>
-            </ng-container>
-
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>{{ 'supervisor.dashboard.col.actions' | translate }}</th>
-              <td mat-cell *matCellDef="let student">
-                <button mat-icon-button
-                        (click)="viewStudentProgressDetails(student)">
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                <button mat-icon-button
-                        (click)="deleteStudent(student)"
-                        color="warn">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+        <!-- Card 2 — Active Students -->
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Studentë aktivë</div>
+            <span class="sv-trend sv-trend-ok" *ngIf="dashboardData.totalStudents > 0">
+              {{ ((dashboardData.activeStudents / dashboardData.totalStudents) * 100).toFixed(0) }}%
+            </span>
+          </div>
+          <div class="sv-stat-value sv-stat-ok">{{ dashboardData.activeStudents }}</div>
+          <div class="sv-stat-bar" *ngIf="dashboardData.totalStudents > 0">
+            <div class="sv-bar-fill" [style.width.%]="(dashboardData.activeStudents / dashboardData.totalStudents) * 100"></div>
+          </div>
+          <div class="sv-stat-meta">Aktivë në 7 ditët e fundit</div>
         </div>
 
-        <!-- Paginator -->
-        <mat-paginator
-          *ngIf="dataSource.data.length > 0"
-          #paginator
-          showFirstLastButtons
-          [length]="length"
-          [pageSize]="pageSize"
-          [pageIndex]="pageNumber"
-          [pageSizeOptions]="pageSizeOptions"
-          (page)="onPageChange($event)">
-        </mat-paginator>
+        <!-- Card 3 — Average Progress -->
+        <div class="sv-stat-card">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Progres mesatar</div>
+            <span class="sv-trend sv-trend-teal">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+              +4 pikë
+            </span>
+          </div>
+          <div class="sv-stat-value sv-stat-teal">{{ dashboardData.averageProgress.toFixed(0) }}<span class="sv-stat-unit">%</span></div>
+          <div class="sv-stat-sparkline">
+            <svg width="100%" height="36" viewBox="0 0 220 36" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="spark-tl" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#16A085" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#16A085" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <polygon points="0,30 27,26 55,22 82,18 110,14 137,10 165,8 192,6 220,4 220,36 0,36" fill="url(#spark-tl)"/>
+              <polyline points="0,30 27,26 55,22 82,18 110,14 137,10 165,8 192,6 220,4" fill="none" stroke="#16A085" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="220" cy="4" r="3" fill="#16A085"/>
+            </svg>
+          </div>
+          <div class="sv-stat-meta">Mesatare e të gjithë studentëve</div>
+        </div>
 
-        <!-- Empty State -->
-        <div *ngIf="dataSource.data.length === 0" class="empty-state">
-          <mat-icon>people_outline</mat-icon>
-          <h3>{{ 'supervisor.dashboard.empty.title' | translate }}</h3>
-          <p>{{ getNoDataMessage() }}</p>
-          <button mat-raised-button color="primary" (click)="navigateToAddStudent()">
-            {{ 'supervisor.dashboard.actions.addStudent' | translate }}
+        <!-- Card 4 — Password Reset Requests -->
+        <div class="sv-stat-card" [class.sv-stat-urgent]="dashboardData.pendingPasswordResetRequests > 0">
+          <div class="sv-stat-top">
+            <div class="sv-stat-label">Kërkesa reset password</div>
+            <span class="sv-trend sv-trend-warn" *ngIf="dashboardData.pendingPasswordResetRequests > 0">Kërkon vëmendje</span>
+          </div>
+          <div class="sv-stat-value" [class.sv-stat-warn]="dashboardData.pendingPasswordResetRequests > 0">
+            {{ dashboardData.pendingPasswordResetRequests }}
+          </div>
+          <div class="sv-stat-meta">
+            {{ dashboardData.pendingPasswordResetRequests > 0 ? (dashboardData.pendingPasswordResetRequests + ' në pritje — kërkojnë veprim') : 'Pa kërkesa në pritje' }}
+          </div>
+          <button class="sv-btn sv-btn-ghost sv-btn-sm sv-btn-manage"
+                  [disabled]="dashboardData.pendingPasswordResetRequests === 0"
+                  (click)="navigateToPasswordReset()">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Menaxho
+            <span *ngIf="dashboardData.pendingPasswordResetRequests > 0" class="sv-badge sv-badge-warn">{{ dashboardData.pendingPasswordResetRequests }}</span>
           </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+
+      </div><!-- /sv-stats -->
+
+      <!-- ─── Students Panel ─────────────────────────────────────────────── -->
+      <div class="sv-panel sv-stagger">
+        <div class="sv-panel-head">
+          <div>
+            <h2 class="sv-panel-title">Lista e studentëve</h2>
+            <p class="sv-panel-sub">
+              Studentët nën menaxhimin tuaj
+              <ng-container *ngIf="dashboardData.students.length > 0">· {{ length }} {{ length === 1 ? 'rezultat' : 'rezultate' }}</ng-container>
+            </p>
+          </div>
+          <div class="sv-panel-head-actions" *ngIf="dashboardData.students.length > 0">
+            <button class="sv-btn sv-btn-ghost sv-btn-sm">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtrim
+            </button>
+            <button class="sv-btn sv-btn-blue sv-btn-sm" (click)="navigateToStudents()">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Student i ri
+            </button>
+          </div>
+        </div>
+
+        <!-- Populated state -->
+        <ng-container *ngIf="dashboardData.students.length > 0">
+
+          <!-- Action Bar: Search + Chips -->
+          <div class="sv-action-bar">
+            <div class="sv-search">
+              <svg class="sv-search-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input class="sv-search-input" type="text"
+                     placeholder="Kërko sipas emrit, email-it ose klasës…"
+                     (keyup)="applyFilter($event)" />
+            </div>
+            <div class="sv-chips">
+              <button class="sv-chip" [class.sv-chip-active]="activeFilter === 'all'" (click)="setFilter('all')">
+                Të gjithë <span class="sv-chip-count">{{ dashboardData.totalStudents }}</span>
+              </button>
+              <button class="sv-chip" [class.sv-chip-active]="activeFilter === 'aktiv'" (click)="setFilter('aktiv')">
+                Aktivë <span class="sv-chip-count">{{ countAktiv }}</span>
+              </button>
+              <button class="sv-chip" [class.sv-chip-active]="activeFilter === 'idle'" (click)="setFilter('idle')">
+                Joaktivë <span class="sv-chip-count">{{ countIdle }}</span>
+              </button>
+              <button class="sv-chip" [class.sv-chip-active]="activeFilter === 'new'" (click)="setFilter('new')">
+                Të rinj <span class="sv-chip-count">{{ countNew }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="sv-table-wrap">
+            <div class="sv-table">
+              <div class="sv-tr sv-tr-head">
+                <div class="sv-th">Studenti</div>
+                <div class="sv-th sv-email-col">Email</div>
+                <div class="sv-th">Klasa</div>
+                <div class="sv-th">Progresi · 30 ditët e fundit</div>
+                <div class="sv-th">Statusi</div>
+                <div class="sv-th sv-th-right">Aksionet</div>
+              </div>
+
+              <ng-container *ngFor="let student of dataSource.data | slice:(pageNumber * pageSize):(pageNumber * pageSize + pageSize)">
+
+              <div class="sv-tr sv-tr-data"
+                   [class.sv-tr-confirm-open]="pendingResetStudent?.studentId === student.studentId">
+
+                <!-- Studenti -->
+                <div class="sv-td sv-td-student">
+                  <div class="sv-avatar"
+                       [class.sv-av-0]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 0"
+                       [class.sv-av-1]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 1"
+                       [class.sv-av-2]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 2"
+                       [class.sv-av-3]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 3"
+                       [class.sv-av-4]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 4"
+                       [class.sv-av-5]="getAvatarIndex(student.firstName + ' ' + student.lastName) === 5">
+                    {{ student.firstName.charAt(0).toUpperCase() }}{{ student.lastName.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="sv-student-info">
+                    <span class="sv-student-name">{{ student.firstName }} {{ student.lastName }}</span>
+                    <span class="sv-student-email-mono">{{ student.email }}</span>
+                    <!-- visible only on mobile -->
+                    <div class="sv-mob-row2">
+                      <span class="sv-class-pill">
+                        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        {{ student.currentClass }}
+                      </span>
+                      <span class="sv-status"
+                            [class.sv-status-aktiv]="student.status === 'aktiv'"
+                            [class.sv-status-idle]="student.status === 'idle'"
+                            [class.sv-status-new]="student.status === 'new'">
+                        <span class="sv-status-dot"></span>
+                        {{ getStatusLabel(student.status) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email col (nascosta tablet) -->
+                <div class="sv-td sv-email-col">
+                  <span class="sv-mono">{{ student.email }}</span>
+                </div>
+
+                <!-- Klasa -->
+                <div class="sv-td">
+                  <span class="sv-class-pill">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    {{ student.currentClass }}
+                  </span>
+                </div>
+
+                <!-- Progresi -->
+                <div class="sv-td sv-td-progress">
+                  <svg width="32" height="32" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="12" fill="none" stroke="#e2e8f0" stroke-width="3.6"/>
+                    <circle cx="16" cy="16" r="12" fill="none"
+                      [attr.stroke]="getProgressColorHex(student.progressPercentage || 0)"
+                      stroke-width="3.6" stroke-linecap="round"
+                      [attr.stroke-dasharray]="75.398"
+                      [attr.stroke-dashoffset]="75.398 * (1 - (student.progressPercentage || 0) / 100)"
+                      transform="rotate(-90 16 16)"/>
+                  </svg>
+                  <svg class="sv-spark-sm" width="80" height="28" viewBox="0 0 72 24">
+                    <polyline
+                      [attr.points]="getSparkPoints(student.progressPercentage || 0)"
+                      fill="none"
+                      [attr.stroke]="getProgressColorHex(student.progressPercentage || 0)"
+                      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="72" cy="4" r="2.5" [attr.fill]="getProgressColorHex(student.progressPercentage || 0)"/>
+                  </svg>
+                  <span class="sv-pct-mono">{{ (student.progressPercentage || 0).toFixed(0) }}%</span>
+                </div>
+
+                <!-- Statusi -->
+                <div class="sv-td">
+                  <span class="sv-status"
+                        [class.sv-status-aktiv]="student.status === 'aktiv'"
+                        [class.sv-status-idle]="student.status === 'idle'"
+                        [class.sv-status-new]="student.status === 'new'">
+                    <span class="sv-status-dot"></span>
+                    {{ getStatusLabel(student.status) }}
+                  </span>
+                </div>
+
+                <!-- Aksionet -->
+                <div class="sv-td sv-td-actions">
+                  <button class="sv-iconbtn" title="Shiko progresin" (click)="viewStudentProgressDetails(student)">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button class="sv-iconbtn"
+                          title="Reseto fjalëkalimin direkt"
+                          [disabled]="resettingStudentId === student.studentId"
+                          (click)="requestDirectReset(student)">
+                    <svg *ngIf="resettingStudentId !== student.studentId" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                    <span *ngIf="resettingStudentId === student.studentId" class="sv-row-spinner"></span>
+                  </button>
+                  <button class="sv-iconbtn sv-iconbtn-danger" title="Fshi studentin" (click)="deleteStudent(student)">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+
+              </div><!-- /sv-tr-data -->
+
+              <!-- Inline confirm panel sotto la riga -->
+              <div *ngIf="pendingResetStudent?.studentId === student.studentId"
+                   class="sv-inline-confirm">
+                <div class="sv-inline-confirm-inner">
+                  <div class="sv-inline-confirm-ico">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                  </div>
+                  <div class="sv-inline-confirm-content">
+                    <p class="sv-inline-confirm-text">
+                      Gjenero fjalëkalim të ri për
+                      <strong>{{ student.firstName }} {{ student.lastName }}</strong>
+                      · <span class="sv-mono-sm">{{ student.email }}</span>.
+                      Studenti do ta ndryshojë pas hyrjes.
+                      <strong>Veprim i pakthyeshëm.</strong>
+                    </p>
+                    <div class="sv-inline-confirm-actions">
+                      <button class="sv-btn sv-btn-ghost sv-btn-sm" (click)="cancelDirectReset()">
+                        Anulo
+                      </button>
+                      <button class="sv-btn sv-btn-warn sv-btn-sm"
+                              [disabled]="resettingStudentId === student.studentId"
+                              (click)="confirmDirectReset()">
+                        <svg *ngIf="resettingStudentId !== student.studentId" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                        <span *ngIf="resettingStudentId === student.studentId" class="sv-row-spinner"></span>
+                        Rivendos fjalëkalimin
+                      </button>
+                    </div>
+                  </div>
+                  <button class="sv-inline-confirm-close" (click)="cancelDirectReset()" title="Mbyll">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Inline success panel sotto la riga -->
+              <div *ngIf="directResetResult && lastResetStudentId === student.studentId"
+                   class="sv-inline-success">
+                <div class="sv-inline-success-inner">
+                  <div class="sv-inline-success-ico">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </div>
+                  <div class="sv-inline-success-content">
+                    <span class="sv-inline-success-label">Fjalëkalimi u rivendos — komunikoje studentit:</span>
+                    <div class="sv-inline-success-passbox">
+                      <span class="sv-inline-success-pass">{{ directResetResult.newPassword }}</span>
+                      <button class="sv-btn sv-btn-ghost sv-btn-sm" (click)="copyDirectResetPassword()">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Kopjo
+                      </button>
+                    </div>
+                  </div>
+                  <button class="sv-inline-confirm-close" (click)="dismissDirectReset()" title="Mbyll">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              </ng-container>
+
+              <div class="sv-tr-empty" *ngIf="dataSource.data.length === 0">
+                <p>{{ getNoDataMessage() }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer / Pager -->
+          <div class="sv-table-foot" *ngIf="length > 0">
+            <span class="sv-foot-info">
+              Duke shfaqur 1–{{ Math.min((pageNumber + 1) * pageSize, length) }} nga {{ length }} studentë
+            </span>
+            <div class="sv-pager">
+              <button class="sv-pager-btn" [disabled]="pageNumber === 0"
+                      (click)="onPageChange({pageIndex: pageNumber - 1, pageSize: pageSize, length: length})">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <ng-container *ngFor="let p of [].constructor(Math.ceil(length / pageSize)); let i = index">
+                <button class="sv-pager-btn" [class.sv-pager-active]="i === pageNumber"
+                        (click)="onPageChange({pageIndex: i, pageSize: pageSize, length: length})">
+                  {{ i + 1 }}
+                </button>
+              </ng-container>
+              <button class="sv-pager-btn" [disabled]="(pageNumber + 1) * pageSize >= length"
+                      (click)="onPageChange({pageIndex: pageNumber + 1, pageSize: pageSize, length: length})">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </ng-container>
+
+        <!-- Empty State -->
+        <div *ngIf="dashboardData.students.length === 0" class="sv-empty">
+          <svg viewBox="0 0 200 140" width="180" height="126" fill="none">
+            <defs>
+              <linearGradient id="ea1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#E6F4FA"/>
+                <stop offset="1" stop-color="#F2F9FC"/>
+              </linearGradient>
+            </defs>
+            <rect x="22" y="34" width="156" height="90" rx="14" fill="url(#ea1)" stroke="#CFE6F2"/>
+            <circle cx="56" cy="62" r="14" fill="#fff" stroke="#B4DCEE"/>
+            <rect x="78" y="54" width="74" height="6" rx="3" fill="#B4DCEE"/>
+            <rect x="78" y="66" width="48" height="5" rx="2.5" fill="#CFE6F2"/>
+            <circle cx="56" cy="98" r="14" fill="#fff" stroke="#B4DCEE" stroke-dasharray="3 3"/>
+            <rect x="78" y="90" width="74" height="6" rx="3" fill="#CFE6F2"/>
+            <rect x="78" y="102" width="36" height="5" rx="2.5" fill="#E6F1F7"/>
+            <circle cx="160" cy="34" r="14" fill="#2BA8DC"/>
+            <path d="M156 34l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+          <h3>Nuk ka studentë të regjistruar</h3>
+          <p>Shto studentin e parë duke përdorur butonin "Student i ri". Do të marrësh kredencialet dhe do të mund të ndjekësh progresin menjëherë.</p>
+          <button class="sv-btn sv-btn-primary" (click)="navigateToStudents()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+            Shto Studentin e Parë
+          </button>
+        </div>
+
+      </div><!-- /sv-panel -->
+
+      <!-- ─── Bottom Grid ──────────────────────────────────────────────── -->
+      <div class="sv-grid-2 sv-stagger" *ngIf="dashboardData.students.length > 0">
+
+        <div class="sv-tile">
+          <h3 class="sv-tile-title">Aktiviteti i fundit</h3>
+          <p class="sv-tile-sub">Veprimet e studentëve në 24 orët e fundit</p>
+
+          <!-- Dati reali dal backend -->
+          <div class="sv-activity-list" *ngIf="(dashboardData.recentActivities?.length ?? 0) > 0">
+            <div class="sv-activity-item"
+                 *ngFor="let act of dashboardData.recentActivities"
+                 [class.ok]="act.type === 'ok'"
+                 [class.warn]="act.type === 'warn'"
+                 [class.info]="act.type === 'info'">
+              <span class="sv-activity-ico">
+                <!-- ok: check -->
+                <svg *ngIf="act.type === 'ok'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+                <!-- warn: clock -->
+                <svg *ngIf="act.type === 'warn'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                <!-- info: star/spark -->
+                <svg *ngIf="act.type === 'info'" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2 13.6 8.4 20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2z"/></svg>
+                <!-- default: user-plus -->
+                <svg *ngIf="act.type === 'default'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+              </span>
+              <div class="sv-activity-body">
+                <div class="sv-activity-who">{{ act.studentName }}</div>
+                <div class="sv-activity-what">{{ act.description }}</div>
+              </div>
+              <span class="sv-activity-time">{{ act.timeAgo }}</span>
+            </div>
+          </div>
+
+          <!-- Empty fallback -->
+          <div *ngIf="!(dashboardData.recentActivities?.length)" class="sv-activity-empty">
+            Nuk ka aktivitet të regjistruar ende.
+          </div>
+        </div>
+
+        <div class="sv-tile sv-tile-dark">
+          <h3 class="sv-tile-title sv-tile-title-dark">Përmbledhje javore</h3>
+          <p class="sv-tile-sub sv-tile-sub-dark">7 ditët e fundit</p>
+          <div class="sv-weekly-main">
+            <div class="sv-weekly-label">Progres mesatar</div>
+            <div class="sv-weekly-value">{{ dashboardData.averageProgress.toFixed(0) }}<span class="sv-weekly-unit">%</span></div>
+            <svg *ngIf="dashboardData.weeklyProgressTrend?.length" width="100%" height="42" viewBox="0 0 300 42" preserveAspectRatio="none" style="margin:8px 0">
+              <defs>
+                <linearGradient id="wk-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1FB5C9" stop-opacity="0.22"/>
+                  <stop offset="100%" stop-color="#1FB5C9" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path [attr.d]="getWeeklySparkArea(dashboardData.weeklyProgressTrend, 300, 42)" fill="url(#wk-grad)"/>
+              <polyline [attr.points]="getWeeklySparkPoints(dashboardData.weeklyProgressTrend, 300, 42)" fill="none" stroke="#1FB5C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="sv-weekly-kpis">
+            <div class="sv-weekly-kpi">
+              <div class="sv-weekly-kpi-l">Studentë aktivë</div>
+              <div class="sv-weekly-kpi-v">{{ dashboardData.activeStudents }}</div>
+            </div>
+            <div class="sv-weekly-kpi">
+              <div class="sv-weekly-kpi-l">Total studentë</div>
+              <div class="sv-weekly-kpi-v">{{ dashboardData.totalStudents }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /sv-grid-2 -->
+
+    </ng-container>
+
   </div>
 </div>
