@@ -147,6 +147,10 @@ export class HeaderComponent implements OnInit {
     return this.userRole === UserRole.STUDENT || this.userRole === UserRole.FAMILY;
   }
 
+  get dashboardRoute(): string {
+    return this.userRole === UserRole.FAMILY ? '/family/dashboard' : '/student/dashboard';
+  }
+
   showPanel(): boolean {
     return this.userRole === UserRole.ADMIN;
   }

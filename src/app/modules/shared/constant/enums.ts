@@ -52,6 +52,7 @@ export enum ROUTES {
   ADMIN = '/admin/panel',
   STUDENT = '/student/dashboard',
   SUPERVISOR = '/supervizor/dashboard',
+  FAMILY = '/family/dashboard',
   DEFAULT = ''
 }
 

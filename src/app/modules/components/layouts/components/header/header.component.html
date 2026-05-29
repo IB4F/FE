@@ -18,7 +18,7 @@
     <div class="nav-cta">
       @if (isLogged) {
         @if (showDashboard()) {
-          <button class="nav-btn nav-btn-ghost" routerLink="/student/dashboard">{{ labelDashboard }}</button>
+          <button class="nav-btn nav-btn-ghost" [routerLink]="dashboardRoute">{{ labelDashboard }}</button>
         }
         @if (showPanel()) {
           <button class="nav-btn nav-btn-ghost" routerLink="/admin/panel">{{ labelPanel }}</button>

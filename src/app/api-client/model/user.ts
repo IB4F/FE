@@ -11,6 +11,7 @@ import { Payment } from './payment';
 import { UserRole } from './userRole';
 import { Subscription } from './subscription';
 import { ApprovalStatus } from './approvalStatus';
+import { ChildSummaryDto } from './childSummaryDto';
 
 
 export interface User {
@@ -51,6 +52,9 @@ export interface User {
     subscriptions?: Array<Subscription> | null;
     childrenCount?: number;
     studentsCount?: number;
+    isActive?: boolean;
+    lastLoginAt?: string | null;
+    children?: Array<ChildSummaryDto> | null;
 }
 export namespace User {
 }

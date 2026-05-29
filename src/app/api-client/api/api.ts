@@ -1,5 +1,7 @@
 export * from './adminDashboard.service';
 import { AdminDashboardService } from './adminDashboard.service';
+export * from './family.service';
+import { FamilyService } from './family.service';
 export * from './adminUser.service';
 import { AdminUserService } from './adminUser.service';
 export * from './auth.service';
@@ -28,4 +30,4 @@ export * from './subscriptionPackage.service';
 import { SubscriptionPackageService } from './subscriptionPackage.service';
 export * from './supervisor.service';
 import { SupervisorService } from './supervisor.service';
-export const APIS = [AdminDashboardService, AdminUserService, AuthService, DashboardService, DetailsService, FileService, LearnHubsService, LinksService, ProgressService, QuizzesService, StudentService, SubscriptionService, SubscriptionAccessService, SubscriptionPackageService, SupervisorService];
+export const APIS = [AdminDashboardService, AdminUserService, AuthService, DashboardService, DetailsService, FamilyService, FileService, LearnHubsService, LinksService, ProgressService, QuizzesService, StudentService, SubscriptionService, SubscriptionAccessService, SubscriptionPackageService, SupervisorService];

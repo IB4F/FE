@@ -1,0 +1,114 @@
+<div class="fm-frame">
+  <div class="fm-main">
+
+    <!-- Header -->
+    <div class="fm-page-head fm-stagger">
+      <div class="fm-head-left">
+        <span class="fm-eyebrow"><span class="pip"></span>Paneli i familjes</span>
+        <h1 class="fm-title">{{ greeting }}<ng-container *ngIf="currentUser">, <em>{{ currentUser.firstName }}</em>.</ng-container></h1>
+        <p class="fm-subtitle">
+          <ng-container *ngIf="children.length > 0">
+            Ja një përmbledhje e shpejtë e fëmijëve tuaj dhe aktivitetit të tyre.
+          </ng-container>
+          <ng-container *ngIf="!isLoading && children.length === 0">
+            Nuk keni ende fëmijë të regjistruar. Shtoni fëmijën e parë për të filluar.
+          </ng-container>
+        </p>
+      </div>
+      <div class="fm-head-actions">
+        <button class="fm-btn fm-btn-primary" (click)="goToChildren()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Menaxho fëmijët
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="fm-loader">
+      <div class="fm-spinner"></div>
+      <p>Duke ngarkuar të dhënat…</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !isLoading" class="fm-error-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Ndodhi një gabim</h3>
+      <p>{{ error }}</p>
+      <button class="fm-btn fm-btn-primary" (click)="loadData()">Provo sërish</button>
+    </div>
+
+    <ng-container *ngIf="!isLoading && !error">
+
+      <!-- Stats -->
+      <div class="fm-stats fm-stagger">
+        <div class="fm-stat-card">
+          <div class="fm-stat-label">Fëmijë total</div>
+          <div class="fm-stat-value fm-stat-indigo">{{ children.length }}</div>
+          <div class="fm-stat-meta">
+            <span class="fm-dot fm-dot-ok"></span>{{ activeChildren }} aktivë
+          </div>
+        </div>
+
+        <div class="fm-stat-card">
+          <div class="fm-stat-label">Abonime</div>
+          <div class="fm-stat-value fm-stat-ok">
+            <ng-container *ngIf="currentUser?.hasActiveSubscription">Aktiv</ng-container>
+            <ng-container *ngIf="!currentUser?.hasActiveSubscription">Joaktiv</ng-container>
+          </div>
+          <div class="fm-stat-meta" *ngIf="subscriptionExpiry">
+            Skadon: {{ subscriptionExpiry | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <div class="fm-stat-card">
+          <div class="fm-stat-label">Fëmijë aktivë</div>
+          <div class="fm-stat-value fm-stat-teal">{{ activeChildren }}</div>
+          <div class="fm-stat-bar" *ngIf="children.length > 0">
+            <div class="fm-bar-fill" [style.width.%]="(activeChildren / children.length) * 100"></div>
+          </div>
+          <div class="fm-stat-meta">Aktivë në 7 ditët e fundit</div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="children.length === 0" class="fm-empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <h3>Asnjë fëmijë i regjistruar</h3>
+        <p>Shtoni fëmijët tuaj për të filluar të ndiqni progresin e tyre.</p>
+        <button class="fm-btn fm-btn-primary" (click)="goToChildren()">Shto fëmijë</button>
+      </div>
+
+      <!-- Children list -->
+      <div *ngIf="children.length > 0" class="fm-section fm-stagger">
+        <div class="fm-section-head">
+          <h2 class="fm-section-title">Fëmijët tuaj</h2>
+          <button class="fm-btn fm-btn-ghost" (click)="goToChildren()">Shiko të gjithë</button>
+        </div>
+
+        <div class="fm-children-grid">
+          <div class="fm-child-card" *ngFor="let child of children">
+            <div class="fm-child-avatar">
+              {{ (child.firstName ?? '?')[0] }}{{ (child.lastName ?? '?')[0] }}
+            </div>
+            <div class="fm-child-info">
+              <div class="fm-child-name">{{ child.firstName }} {{ child.lastName }}</div>
+              <div class="fm-child-meta">
+                <span class="fm-badge" [class.fm-badge-ok]="child.isActive" [class.fm-badge-off]="!child.isActive">
+                  {{ child.isActive ? 'Aktiv' : 'Joaktiv' }}
+                </span>
+                <span class="fm-child-class" *ngIf="child.currentClass">{{ child.currentClass }}</span>
+              </div>
+              <div class="fm-child-last-login">
+                Hyrja e fundit: {{ getLastLoginLabel(child.lastLoginAt) }}
+              </div>
+            </div>
+            <button class="fm-btn fm-btn-ghost fm-btn-sm" (click)="goToChildren()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>

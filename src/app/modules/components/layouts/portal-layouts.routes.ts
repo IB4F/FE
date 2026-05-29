@@ -146,19 +146,19 @@ export const PortalLayoutsRoutes: Routes = [
           {
             path: 'dashboard',
             title: 'dashboard',
-            canActivate: [roleGuard('Student', 'Admin', 'Family')],
+            canActivate: [roleGuard('Student', 'Admin')],
             loadComponent: () => import('../student/dashboard/dashboard.component')
               .then(m => m.DashboardComponent)
           },
           {
             path: 'kurset',
-            canActivate: [roleGuard('Student', 'Admin', 'Family'), smartSubscriptionGuard],
+            canActivate: [roleGuard('Student', 'Admin'), smartSubscriptionGuard],
             loadComponent: () => import('../student/courses/courses.component')
               .then(m => m.CoursesComponent)
           },
           {
             path: 'quiz-list/:id',
-            canActivate: [roleGuard('Student', 'Admin', 'Family'), smartSubscriptionGuard],
+            canActivate: [roleGuard('Student', 'Admin'), smartSubscriptionGuard],
             loadComponent: () => import('../student/quiz-list/quiz-list.component')
               .then(m => m.QuizListComponent)
           },
@@ -172,6 +172,20 @@ export const PortalLayoutsRoutes: Routes = [
             path: 'membership',
             loadComponent: () => import('../authentication/register-family/register-family.component')
               .then(m => m.RegisterFamilyComponent)
+          },
+          {
+            path: 'dashboard',
+            title: 'Dashboard Familja',
+            canActivate: [roleGuard('Family', 'Admin')],
+            loadComponent: () => import('../family/dashboard/family-dashboard.component')
+              .then(m => m.FamilyDashboardComponent)
+          },
+          {
+            path: 'children',
+            title: 'Menaxhimi i Fëmijëve',
+            canActivate: [roleGuard('Family', 'Admin')],
+            loadComponent: () => import('../family/children/family-children.component')
+              .then(m => m.FamilyChildrenComponent)
           }
         ]
       }
