@@ -43,6 +43,11 @@ export class SidebarComponent implements OnInit {
       path: '/admin/learnhub',
       label: 'LearnHub',
       icon: 'M4 6h16M4 12h16M4 18h10'
+    },
+    {
+      path: '/admin/concept-tags',
+      label: 'Etiketat',
+      icon: 'M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01'
     }
   ];
 

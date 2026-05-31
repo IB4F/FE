@@ -92,6 +92,13 @@ export const PortalLayoutsRoutes: Routes = [
             ]
           },
           {
+            path: 'concept-tags',
+            title: 'Etiketat e Koncepteve',
+            canActivate: [roleGuard('Admin')],
+            loadComponent: () => import('../admin/concept-tags/concept-tags.component')
+              .then(m => m.ConceptTagsComponent)
+          },
+          {
             path: 'learnhub',
             canActivate: [roleGuard('Admin')],
             children: [

@@ -448,6 +448,58 @@
   p  { margin: 0; font-size: 14px; color: var(--sv-ink-3, #7A8C95); max-width: 340px; }
 }
 
+// ─── Concept Mastery ─────────────────────────────────────────────────────────
+.sv-concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.sv-concept-card {
+  background: #fff;
+  border: 1px solid var(--sv-border, #E2EDF2);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sv-concept-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sv-concept-name {
+  font: 600 13px var(--sv-font, 'Poppins', sans-serif);
+  color: var(--sv-ink, #061B25);
+}
+
+.sv-concept-pct {
+  font: 700 13px var(--sv-font, 'Poppins', sans-serif);
+}
+
+.sv-concept-bar-bg {
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: #E6EDF5;
+  overflow: hidden;
+}
+
+.sv-concept-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+
+.sv-concept-meta {
+  font: 400 11px var(--sv-font, 'Poppins', sans-serif);
+  color: var(--sv-ink-3, #7A8C95);
+}
+
 // ─── Tablet hide stats ────────────────────────────────────────────────────────
 @media (max-width: 1024px) {
   .sv-mod:nth-child(n) > .sv-mod-stat:nth-child(3),

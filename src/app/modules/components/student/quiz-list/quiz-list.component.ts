@@ -46,6 +46,8 @@ interface QuizData {
   quizzTypeName: string;
   parentQuizId: string | null;
   multipleAnswer: boolean;
+  isReview?: boolean;
+  conceptTagName?: string | null;
   // DnD-specific payloads (populated only for the respective type)
   dndSpell?: { wordLength: number; letters: string[]; hint: string; imageUrl: string | null };
   dndOrder?: { tiles: { id: string; text: string }[] };
@@ -124,16 +126,23 @@ export class QuizListComponent implements OnInit, OnDestroy {
     });
   }
 
+  reviewStartIndex: number = 0;
+
   loadQuizzesAndProgress() {
     this.studentService.apiStudentQuizzesLinkIdGet(this.linkId).subscribe({
       next: (result) => {
-        this.parentQuizIds = result.parentQuizIds || [];
+        const regularIds: string[] = result.parentQuizIds || [];
+        const reviewIds: string[] = result.reviewQuizIds || [];
+        this.reviewStartIndex = regularIds.length;
+        this.parentQuizIds = [...regularIds, ...reviewIds];
         this.progress = result.progress || null;
         this.currentQuizIndex = this.progress?.currentQuizIndex ?? 0;
 
         if (this.parentQuizIds.length > 0 && this.currentQuizIndex < this.parentQuizIds.length) {
           this.loadCurrentQuiz();
-        } else if (this.progress && this.progress.completedQuizzes === this.progress.totalQuizzes) {
+        } else if (this.progress && this.progress.completedQuizzes === this.progress.totalQuizzes && reviewIds.length === 0) {
+          this.showCompletionMessage();
+        } else if (this.parentQuizIds.length === 0) {
           this.showCompletionMessage();
         }
         this.dataLoaded = true;

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../../api-client";
+import {take} from 'rxjs';
 import {CommonModule} from "@angular/common";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
@@ -28,7 +29,7 @@ export class EmailVerificationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
       const token = params['token'];
       const verificationType = params['verificationType'];
       if (token) {

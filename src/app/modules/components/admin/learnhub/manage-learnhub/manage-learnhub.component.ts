@@ -193,7 +193,7 @@ export class ManageLearnhubComponent implements OnInit {
           message: `Jeni i sigurt që dëshironi të fshini "${linkTitle}"? Të gjitha kuizet e lidhura do të fshihen gjithashtu.`
         }
       });
-      ref.afterClosed().subscribe(result => {
+      ref.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
         if (!result?.success) return;
         this.linksService.apiLinksDeleteLinkDelete(linkId).subscribe({
           next: () => {

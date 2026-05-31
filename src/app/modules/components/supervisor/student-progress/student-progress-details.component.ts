@@ -13,7 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgToastService } from 'ng-angular-popup';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {SupervisorService} from "../../../../api-client";
+import {SupervisorService, UserConceptMasteryDTO} from "../../../../api-client";
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 import { DetailsService } from '../../../../api-client/api/details.service';
 import { Class } from '../../../../api-client/model/class';
@@ -33,6 +33,7 @@ interface StudentProgressResponse {
   firstActivityAt: string | null;
   lastActivityAt: string | null;
   linkProgress: LinkProgress[];
+  conceptMastery?: UserConceptMasteryDTO[];
   generatedPassword?: string;
   notes?: string | null;
   firstName?: string;
@@ -159,6 +160,12 @@ export class StudentProgressDetailsComponent implements OnInit, OnDestroy {
     if (progress >= 80) return 'primary';
     if (progress >= 60) return 'accent';
     return 'warn';
+  }
+
+  getMasteryBarColor(level: number): string {
+    if (level >= 85) return '#22c55e';
+    if (level >= 40) return '#f59e0b';
+    return '#ef4444';
   }
 
   refreshData(): void {

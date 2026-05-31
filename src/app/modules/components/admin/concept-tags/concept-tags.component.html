@@ -1,0 +1,77 @@
+<div class="bg-app">
+  <div class="bg-page">
+    <header class="bg-page-header">
+      <div>
+        <h1 class="bg-page-header__title">Etiketat e Koncepteve</h1>
+        <p class="bg-page-header__sub">Menaxho etiketat e koncepteve gramatikore për sistemin e rishikimit</p>
+      </div>
+    </header>
+
+    <!-- Add new tag -->
+    <div class="ct-add-card">
+      <div class="ct-add-row">
+        <input
+          class="bg-input ct-input"
+          type="text"
+          placeholder="Emri i etiketës së re (p.sh. Pjesorja, Mënyra Kushtore…)"
+          [(ngModel)]="newTagName"
+          (keyup.enter)="addTag()"
+          maxlength="100"
+        />
+        <button class="bg-btn bg-btn--primary" (click)="addTag()" [disabled]="!newTagName.trim() || isSavingNew">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Shto Etiketën
+        </button>
+      </div>
+    </div>
+
+    <!-- Tags list -->
+    <div class="ct-list">
+      @if (isLoading) {
+        <div class="ct-empty">Duke ngarkuar…</div>
+      } @else if (tags.length === 0) {
+        <div class="ct-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted-2);margin-bottom:8px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          <p>Nuk ka etiketa akoma. Shto etiketën e parë.</p>
+        </div>
+      } @else {
+        @for (tag of tags; track tag.id) {
+          <div class="ct-item">
+            @if (editingTagId === tag.id) {
+              <div class="ct-item__edit">
+                <input
+                  class="bg-input ct-input"
+                  type="text"
+                  [(ngModel)]="editingTagName"
+                  (keyup.enter)="saveEdit()"
+                  (keyup.escape)="cancelEdit()"
+                  maxlength="100"
+                  autofocus
+                />
+                <button class="bg-btn bg-btn--primary" (click)="saveEdit()" [disabled]="!editingTagName.trim() || isSavingEdit">
+                  Ruaj
+                </button>
+                <button class="bg-btn bg-btn--ghost" (click)="cancelEdit()">Anulo</button>
+              </div>
+            } @else {
+              <div class="ct-item__view">
+                <span class="ct-item__name">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  {{ tag.name }}
+                </span>
+                <div class="ct-item__actions">
+                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--primary" (click)="startEdit(tag)" title="Modifiko">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button type="button" class="bg-iconbtn bg-iconbtn--small bg-iconbtn--danger" (click)="deleteTag(tag)" title="Fshi">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

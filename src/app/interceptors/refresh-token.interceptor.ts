@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
 import { SessionService } from '../services/session.service';
 import { inject } from '@angular/core';
-import {BehaviorSubject, catchError, filter, switchMap, take, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, EMPTY, filter, switchMap, take, throwError} from 'rxjs';
 import {AuthService} from "../api-client";
 import {Router} from "@angular/router";
 
@@ -26,7 +26,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
           tokenStorage.clearTokens();
           sessionService.clearInactivityTimer();
           router.navigate(['/hyr']);
-          return throwError(() => error);
+          return EMPTY;
         }
 
         if (!refreshTokenInFlight) {

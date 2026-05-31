@@ -25,9 +25,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         notificationService.warning('Shumë kërkesa. Ju lutemi prisni pak sekonda.', 'KUJDES', 4000);
       } else if (error.status >= 500) {
         notificationService.danger('Server error. Please try again later.', 'ERROR', 3000);
-      } else if (error.error && (error.error.message || error.error.error)) {
-        const message = error.error.message || error.error.error;
-        notificationService.warning(message, 'KUJDES', 3000);
       }
       return throwError(() => error);
     })

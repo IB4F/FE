@@ -243,7 +243,7 @@ export class SupervisorDashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result && result.success) {
         this.performDeleteStudent(student.studentId);
       }

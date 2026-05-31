@@ -264,7 +264,7 @@ export class LearnhubComponent implements OnInit, OnDestroy, AfterViewInit {
         message: `Jeni i sigurt që dëshironi të fshini "${learnHub.title}"? Ky veprim nuk mund të kthehet mbrapsht.`
       }
     });
-    ref.afterClosed().subscribe(result => {
+    ref.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (!result?.success) return;
       if (!this.isComponentActive) return;
       if (!this.tokenStorageService.getAccessToken()) return;

@@ -30,4 +30,6 @@ export * from './subscriptionPackage.service';
 import { SubscriptionPackageService } from './subscriptionPackage.service';
 export * from './supervisor.service';
 import { SupervisorService } from './supervisor.service';
-export const APIS = [AdminDashboardService, AdminUserService, AuthService, DashboardService, DetailsService, FamilyService, FileService, LearnHubsService, LinksService, ProgressService, QuizzesService, StudentService, SubscriptionService, SubscriptionAccessService, SubscriptionPackageService, SupervisorService];
+export * from './conceptTags.service';
+import { ConceptTagsService } from './conceptTags.service';
+export const APIS = [AdminDashboardService, AdminUserService, AuthService, ConceptTagsService, DashboardService, DetailsService, FamilyService, FileService, LearnHubsService, LinksService, ProgressService, QuizzesService, StudentService, SubscriptionService, SubscriptionAccessService, SubscriptionPackageService, SupervisorService];

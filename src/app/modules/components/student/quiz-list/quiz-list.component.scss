@@ -258,6 +258,19 @@
 }
 
 /* ── Child breadcrumb ── */
+.qp-review-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  font: 600 12px 'Poppins', sans-serif;
+  color: #c2410c;
+  margin-bottom: 4px;
+}
+
 .qp-crumb {
   display: flex;
   align-items: center;

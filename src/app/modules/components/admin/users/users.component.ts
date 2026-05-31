@@ -126,7 +126,7 @@ export class UsersComponent implements OnInit {
         message: `Jeni i sigurt që dëshironi të fshini "${(user as any).firstName} ${(user as any).lastName}"? Ky veprim nuk mund të kthehet mbrapsht.`
       }
     });
-    ref.afterClosed().subscribe(result => {
+    ref.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (!result?.success) return;
       this.deleteUser(user.id);
     });

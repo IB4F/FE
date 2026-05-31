@@ -41,6 +41,14 @@
         </mat-error>
       </mat-form-field>
 
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Etiketë Koncepti (Opsionale)</mat-label>
+        <mat-select formControlName="conceptTagId">
+          <mat-option [value]="null">Pa etiketë</mat-option>
+          <mat-option *ngFor="let tag of conceptTags" [value]="tag.id">{{ tag.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="points-section">
         <mat-label>{{ 'admin.quizModal.points' | translate }}: {{ quizFormGroup.get('points')?.value }}</mat-label>
         <mat-slider max="10" min="1" step="1" discrete="true" [showTickMarks]="false">

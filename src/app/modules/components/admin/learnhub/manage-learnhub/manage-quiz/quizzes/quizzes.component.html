@@ -16,7 +16,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           Pamje Paraprake
         </button>
-        <button type="button" class="bg-btn bg-btn--primary" [disabled]="!isFormValid()" (click)="handleButtonClick()">
+        <button type="button" class="bg-btn bg-btn--primary" [disabled]="!isFormValid() || (isEditMode && !quizFormGroup.dirty)" (click)="handleButtonClick()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
           {{ isEditMode ? 'Ruaj ndryshimet' : 'Publiko Pyetjen' }}
         </button>
@@ -47,6 +47,18 @@
                 @if (quizFormGroup.get('quizType')?.hasError('required') && quizFormGroup.get('quizType')?.touched) {
                   <span class="field-error">Fusha është e detyrueshme</span>
                 }
+              </label>
+
+              <label class="bg-field">
+                <span class="bg-field__label">Etiketë Koncepti <span class="qz-opt-badge" style="font-size:10px;">Opsionale</span></span>
+                <div class="bg-select-wrap">
+                  <select class="bg-select" formControlName="conceptTagId">
+                    <option [value]="null">Pa etiketë</option>
+                    @for (tag of conceptTags; track tag.id) {
+                      <option [value]="tag.id">{{ tag.name }}</option>
+                    }
+                  </select>
+                </div>
               </label>
 
               <div class="bg-field">

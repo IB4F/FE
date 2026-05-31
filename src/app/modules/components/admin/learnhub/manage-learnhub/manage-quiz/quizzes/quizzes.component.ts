@@ -8,7 +8,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {DetailsService, QuizType, QuizzesService, FileService} from '../../../../../../../api-client';
+import {DetailsService, QuizType, QuizzesService, FileService, ConceptTagDTO} from '../../../../../../../api-client';
+import {ConceptTagsService} from '../../../../../../../api-client/api/conceptTags.service';
 import {NgToastService} from "ng-angular-popup";
 import {atLeastOneCorrectOptionValidator} from "../../../../../../../helpers/customValidators/option-chek.validator";
 import {MatDialogModule, MatDialog} from "@angular/material/dialog";
@@ -59,6 +60,7 @@ export class QuizzesComponent implements OnInit {
   quizFormGroup!: FormGroup;
 
   quizTypes: QuizType[] = [];
+  conceptTags: ConceptTagDTO[] = [];
   selectedQuestionAudio: File | null = null;
   selectedExplanationAudio: File | null = null;
   selectedOptionImages: (File | null)[] = [null, null, null, null];
@@ -164,6 +166,7 @@ export class QuizzesComponent implements OnInit {
     private fileService: FileService,
     private toast: NgToastService,
     private _detailsService: DetailsService,
+    private conceptTagsService: ConceptTagsService,
     private dialog: MatDialog,
     private sanitizer: DomSanitizer,
   ) {
@@ -299,7 +302,7 @@ export class QuizzesComponent implements OnInit {
       quizType:    data.quizType,
       question:    data.question,
       explanation: data.explanation,
-      points:      data.points
+      points:      data.points,
     });
 
     if (data.questionAudioId && data.questionAudioUrl)
@@ -630,7 +633,7 @@ export class QuizzesComponent implements OnInit {
         id: childQuiz.id
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result.success) {
         this.quizzesService.apiQuizzesDeleteQuizDelete(childQuiz.id).subscribe({
           next: () => {
@@ -658,6 +661,7 @@ export class QuizzesComponent implements OnInit {
         atLeastOneCorrectOptionValidator()
       ),
       points: [1, Validators.required],
+      conceptTagId: [null],
       // DragSpell
       dndSpellWord:    [''],
       dndSpellLetters: [''],
@@ -756,7 +760,8 @@ export class QuizzesComponent implements OnInit {
       quizType: data.quizType,
       question: data.question,
       explanation: data.explanation,
-      points: data.points
+      points: data.points,
+      conceptTagId: data.conceptTagId || null
     });
 
     if (data.questionAudioId && data.questionAudioUrl) {
@@ -865,13 +870,21 @@ export class QuizzesComponent implements OnInit {
 
   private loadCombos() {
     this.getQuizTypeList();
+    this.getConceptTagList();
   }
 
   private getQuizTypeList() {
     this._detailsService.apiDetailsGetQuizTypesGet().subscribe({
       next: res => { this.quizTypes = res; },
       error: () => { this.toast.danger('Gabim në ngarkimin e llojeve të kuizeve', 'GABIM', 3000); }
-    })
+    });
+  }
+
+  private getConceptTagList() {
+    this.conceptTagsService.apiConceptTagsGet().subscribe({
+      next: res => { this.conceptTags = res; },
+      error: () => {}
+    });
   }
 
   isFormValid(): boolean {
@@ -1111,6 +1124,7 @@ export class QuizzesComponent implements OnInit {
           question:          formValue.question,
           explanation:       formValue.explanation,
           points:            formValue.points,
+          conceptTagId:      formValue.conceptTagId || null,
           questionAudioId,
           questionImageId,
           explanationAudioId,

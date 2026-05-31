@@ -10,11 +10,14 @@
 import { DashboardStatsDTO } from './dashboardStatsDTO';
 import { LearnHubProgressDTO } from './learnHubProgressDTO';
 import { WeeklyActivityDayDTO } from './weeklyActivityDayDTO';
+import { UserConceptMasteryDTO } from './userConceptMasteryDTO';
 
 
 export interface DashboardDTO {
     stats?: DashboardStatsDTO;
     latestLearnHubs?: Array<LearnHubProgressDTO> | null;
     weeklyActivity?: Array<WeeklyActivityDayDTO> | null;
+    conceptMastery?: Array<UserConceptMasteryDTO> | null;
+    pendingReviews?: number;
 }
 

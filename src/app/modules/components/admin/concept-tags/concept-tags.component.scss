@@ -1,0 +1,87 @@
+.ct-add-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.ct-add-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.ct-input {
+  flex: 1;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: 500 14px Poppins, sans-serif;
+  color: var(--text);
+  background: var(--input-bg, #fafafa);
+  outline: none;
+  transition: border-color .15s;
+
+  &:focus {
+    border-color: var(--primary);
+  }
+}
+
+.ct-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ct-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: var(--muted);
+  font: 500 14px Poppins, sans-serif;
+  text-align: center;
+}
+
+.ct-item {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: border-color .15s;
+
+  &:hover {
+    border-color: var(--primary-light, #c7d7ff);
+  }
+}
+
+.ct-item__view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ct-item__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 14px Poppins, sans-serif;
+  color: var(--text);
+}
+
+.ct-item__actions {
+  display: flex;
+  gap: 6px;
+}
+
+
+.ct-item__edit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}

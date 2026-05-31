@@ -172,7 +172,7 @@ export class ManageQuizComponent implements OnInit {
         id: quiz.id
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result.success) {
         this.deleteQuiz(quiz.id);
       }
@@ -202,7 +202,7 @@ export class ManageQuizComponent implements OnInit {
         linkId: this.linkId
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result?.success) {
         this.getQuizList();
       }
@@ -219,7 +219,7 @@ export class ManageQuizComponent implements OnInit {
         linkId: this.linkId
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
       if (result?.success) {
         this.getQuizList();
       }

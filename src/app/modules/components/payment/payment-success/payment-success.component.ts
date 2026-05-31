@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
+import { take } from 'rxjs';
 import {TranslatePipe} from '../../../../pipes/translate.pipe';
 
 @Component({
@@ -26,7 +27,7 @@ export class PaymentSuccessComponent implements OnInit {
 
   ngOnInit(): void {
     // Check for session_id from Stripe
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
       this.sessionId = params['session_id'] || null;
     });
 

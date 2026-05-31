@@ -14,6 +14,8 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatButtonModule} from "@angular/material/button";
 import {QuizzesService} from "../../../../../../../api-client";
 import {NgToastService} from "ng-angular-popup";
+import {ConceptTagDTO} from "../../../../../../../api-client/model/conceptTagDTO";
+import {ConceptTagsService} from "../../../../../../../api-client/api/conceptTags.service";
 import {TranslatePipe} from '../../../../../../../pipes/translate.pipe';
 
 @Component({
@@ -39,18 +41,24 @@ import {TranslatePipe} from '../../../../../../../pipes/translate.pipe';
 })
 export class QuizModalComponent implements OnInit {
   quizFormGroup!: FormGroup;
+  conceptTags: ConceptTagDTO[] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<QuizModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { exam: any, linkId: string },
     private quizzesService: QuizzesService,
+    private conceptTagsService: ConceptTagsService,
     private toast: NgToastService
   ) {
   }
 
   ngOnInit() {
     this.initializeQuizForm();
+    this.conceptTagsService.apiConceptTagsGet().subscribe({
+      next: res => { this.conceptTags = res; },
+      error: () => {}
+    });
   }
 
   initializeQuizForm() {
@@ -65,7 +73,8 @@ export class QuizModalComponent implements OnInit {
           this.createOption()
         ], atLeastOneCorrectOptionValidator()
       ),
-      points: [this.data.exam?.points || 1, Validators.required]
+      points: [this.data.exam?.points || 1, Validators.required],
+      conceptTagId: [this.data.exam?.conceptTagId || null]
     });
   }
 
@@ -94,6 +103,7 @@ export class QuizModalComponent implements OnInit {
     const formValue = this.quizFormGroup.value;
     const formattedData: any = {
       ...formValue,
+      conceptTagId: formValue.conceptTagId || null,
       options: formValue.options.map((option: any) => ({
         optionText: option.optionText,
         isCorrect: option.isCorrect

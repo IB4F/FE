@@ -284,6 +284,32 @@
         <p>Studenti ende nuk ka filluar asnjë lidhje mësimore.</p>
       </div>
 
+      <!-- Concept Mastery -->
+      <div *ngIf="progressDetails.conceptMastery && progressDetails.conceptMastery.length > 0" style="margin-top: 32px;">
+        <h2 class="sv-mods-title">Padronizimi i Koncepteve</h2>
+        <div class="sv-concepts-grid">
+          <div *ngFor="let c of progressDetails.conceptMastery" class="sv-concept-card">
+            <div class="sv-concept-top">
+              <span class="sv-concept-name">{{ c.conceptTagName }}</span>
+              <span class="sv-concept-pct" [style.color]="getMasteryBarColor(c.masteryLevel || 0)">
+                {{ (c.masteryLevel || 0) | number:'1.0-0' }}%
+              </span>
+            </div>
+            <div class="sv-concept-bar-bg">
+              <div class="sv-concept-bar-fill"
+                   [style.width.%]="c.masteryLevel || 0"
+                   [style.background]="getMasteryBarColor(c.masteryLevel || 0)">
+              </div>
+            </div>
+            <div class="sv-concept-meta">
+              {{ c.correctAttempts }}/{{ c.totalAttempts }} saktë
+              <span *ngIf="c.nextReviewDate"> · Rishikim: {{ c.nextReviewDate | date:'d MMM' }}</span>
+              <span *ngIf="!c.nextReviewDate && (c.masteryLevel || 0) >= 85"> · Zotëruar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </ng-container><!-- /progressDetails -->
 
   </div><!-- /sv-main -->

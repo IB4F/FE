@@ -24,5 +24,6 @@ export interface CreateQuizzDTO {
     dndSpell?: any | null;
     dndOrder?: any | null;
     dndMatch?: any | null;
+    conceptTagId?: string | null;
 }
 

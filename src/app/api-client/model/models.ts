@@ -67,3 +67,5 @@ export * from './userRegistrationStatsDTO';
 export * from './userRole';
 export * from './userType';
 export * from './weeklyActivityDayDTO';
+export * from './conceptTagDTO';
+export * from './userConceptMasteryDTO';

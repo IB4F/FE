@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, DestroyRef, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -31,6 +32,7 @@ import {TranslatePipe} from '../../../../pipes/translate.pipe';
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   resetPassForm!: FormGroup;
   emailToken!: string;
   hidePass = true;
@@ -47,7 +49,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.activatedRoute.queryParams.subscribe(val => {
+    this.activatedRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(val => {
       this.emailToken = val['token']; // Assicurati che il parametro si chiami 'token' nell'URL
     });
   }

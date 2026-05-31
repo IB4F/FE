@@ -3,7 +3,7 @@ import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {Subject, takeUntil} from "rxjs";
 import {UserService} from "../../../../services/user.service";
-import {DashboardDTO, DashboardService, LearnHubProgressDTO, WeeklyActivityDayDTO} from "../../../../api-client";
+import {DashboardDTO, DashboardService, LearnHubProgressDTO, UserConceptMasteryDTO, WeeklyActivityDayDTO} from "../../../../api-client";
 
 @Component({
   selector: 'app-dashboard',
@@ -61,6 +61,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (this.dashboardData?.latestLearnHubs || [])
       .filter(h => (h.progressPercentage || 0) < 100)
       .slice(0, 3);
+  }
+
+  get weakConcepts(): UserConceptMasteryDTO[] {
+    return (this.dashboardData?.conceptMastery || [])
+      .filter(c => (c.masteryLevel || 0) < 85)
+      .slice(0, 5);
+  }
+
+  get pendingReviews(): number {
+    return this.dashboardData?.pendingReviews || 0;
+  }
+
+  getMasteryColor(level: number): string {
+    if (level >= 70) return '#22c55e';
+    if (level >= 40) return '#f59e0b';
+    return '#ef4444';
   }
 
   get today(): string {
