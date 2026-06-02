@@ -1,0 +1,195 @@
+<!-- ===== HERO ===== -->
+<section class="help-hero">
+  <div class="help-container">
+    <div class="eyebrow">
+      <span class="dot">✦</span>
+      <span>Qendra e Ndihmës</span>
+    </div>
+    <h1>Si funksionon<br/><span class="ital">Brain Gain</span></h1>
+    <p class="lead">
+      Gjeni hap pas hapi çdo gjë që duhet të dini — nga regjistrimi deri te
+      monitorimi i progresit tuaj.
+    </p>
+  </div>
+  <div class="hero-blob" aria-hidden="true"></div>
+</section>
+
+<!-- ===== ROLES TABS ===== -->
+<section class="roles-section">
+  <div class="help-container">
+    <div class="section-head">
+      <div class="section-eyebrow">Udhëzuesi sipas rolit</div>
+      <h2 class="section-title">Zgjidhni rolin tuaj</h2>
+      <p class="section-blurb">
+        Platforma servirë tre profile të ndryshme. Zgjidhni tuajin për të parë
+        hapat e personalizuar.
+      </p>
+    </div>
+
+    <!-- Tab buttons -->
+    <div class="role-tabs">
+      @for (r of roles; track r.key) {
+        <button
+          class="role-tab"
+          [class.active]="activeRole === r.key"
+          (click)="activeRole = r.key"
+        >
+          <span class="tab-icon">{{ r.icon }}</span>
+          {{ r.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Steps grid -->
+    <div class="steps-grid">
+      @for (step of currentSteps; track step.num) {
+        <div class="step-card">
+          <div class="step-num">{{ step.num }}</div>
+          <div class="step-body">
+            <h4>{{ step.title }}</h4>
+            <p>{{ step.desc }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- CTA for that role -->
+    @if (activeRole === 'student') {
+      <div class="role-cta">
+        <a routerLink="/student/membership" class="btn-primary">Regjistrohu si Nxënës</a>
+        <a routerLink="/hyr" class="btn-ghost">Kam tashmë llogari</a>
+      </div>
+    }
+    @if (activeRole === 'supervisor') {
+      <div class="role-cta">
+        <a routerLink="/supervizor/apliko" class="btn-primary">Apliko si Supervisor</a>
+      </div>
+    }
+    @if (activeRole === 'family') {
+      <div class="role-cta">
+        <a routerLink="/family/membership" class="btn-primary">Regjistrohu si Familje</a>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features-section">
+  <div class="help-container">
+    <div class="section-head">
+      <div class="section-eyebrow">Çfarë ofron platforma</div>
+      <h2 class="section-title">Funksionalitetet kryesore</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h4>Spaced Repetition</h4>
+        <p>Algoritmi i ripërsëritjes planifikon automatikisht rishikimin e çdo koncepti në momentin optimal — kjo rrit memorizimin afatgjatë.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <h4>Gjurmimi i Koncepteve</h4>
+        <p>Çdo quiz gjurmon konceptet individuale — jo vetëm notat. Platforma di saktësisht çfarë e dini dhe çfarë keni nevojë të rishikoni.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <h4>Quiz Interaktivë</h4>
+        <p>Pyetjet janë ndërtuar me formate të ndryshme dhe feedback të menjëhershëm, duke e bërë mësimin argëtues dhe efektiv.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <h4>Multi-rol</h4>
+        <p>Nxënës, supervisor dhe familje bashkëpunojnë në një platformë të integruar. Supervisorët menaxhojnë nxënës, familjet monitorojnë fëmijët.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        <h4>Progres në Kohë Reale</h4>
+        <p>Dashboard-et ofrojnë pamje të qartë të ecurisë — grafikë, statistika dhe raporte që ndihmojnë vendimmarrjen.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <h4>Responsive &amp; Mobile</h4>
+        <p>Platforma funksionon pa ndryshime në celularë, tabletë dhe kompjuterë — mëso nga kudo, kurdo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+  <div class="help-container">
+    <div class="section-head">
+      <div class="section-eyebrow">Pyetjet e shpeshta</div>
+      <h2 class="section-title">Keni pyetje?</h2>
+    </div>
+
+    <div class="faq-list">
+      @for (faq of faqs; track $index) {
+        <div class="faq-item" [class.open]="openFaq === $index">
+          <button class="faq-trigger" (click)="toggleFaq($index)">
+            <span>{{ faq.q }}</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          @if (openFaq === $index) {
+            <div class="faq-answer">{{ faq.a }}</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT BANNER ===== -->
+<section class="contact-banner">
+  <div class="help-container contact-inner">
+    <div>
+      <h3>Keni ende pyetje?</h3>
+      <p>Ekipi ynë është këtu për t'ju ndihmuar. Na shkruani dhe ju përgjigjemi brenda 24 orëve.</p>
+    </div>
+    <a href="mailto:info@braingainalbania.al" class="btn-white">
+      Na kontaktoni
+    </a>
+  </div>
+</section>

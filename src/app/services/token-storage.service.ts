@@ -1,9 +1,11 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
-import {isPlatformBrowser} from "@angular/common";
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TokenStorageService {
+  private accessToken: string | null = null;
+
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   private userRoleSubject = new BehaviorSubject<string | null>(null);
   private mustChangePasswordSubject = new BehaviorSubject<boolean>(false);
@@ -14,54 +16,39 @@ export class TokenStorageService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
-      const token = this.getAccessToken();
-      this.loggedInSubject.next(!!token);
-      if (token) {
-        this.parseAndSetRole(token);
-      }
+      // mustChangePassword is not sensitive — restore from sessionStorage on reload
+      const mcp = sessionStorage.getItem('mustChangePassword') === 'true';
+      this.mustChangePasswordSubject.next(mcp);
     }
   }
 
-  // GETTERS (optimized for speed)
-  getAccessToken = (): string | null => {
-    if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem('accessToken') ?? sessionStorage.getItem('accessToken');
-  };
-  getRefreshToken = (): string | null => {
-    if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem('refreshToken') ?? sessionStorage.getItem('refreshToken');
-  };
+  getAccessToken = (): string | null => this.accessToken;
+
   getRole = (): string | null => this.userRoleSubject.value;
   getMustChangePassword = (): boolean => this.mustChangePasswordSubject.value;
   getUserId = (): string | null => this.userIdSubject.value;
   getUserEmail = (): string | null => {
-    const token = this.getAccessToken();
+    const token = this.accessToken;
     if (!token) return null;
     const payload = this.parseJwt(token);
     return payload?.email ?? payload?.unique_name ?? null;
   };
 
-  // SETTERS (optimized for speed)
-  saveTokens = (tokens: { accessToken: string; refreshToken: string; mustChangePassword?: boolean }, rememberMe = false): void => {
+  saveTokens = (tokens: { accessToken: string; mustChangePassword?: boolean }): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem('accessToken', tokens.accessToken);
-    storage.setItem('refreshToken', tokens.refreshToken);
+    this.accessToken = tokens.accessToken;
     if (tokens.mustChangePassword !== undefined) {
-      storage.setItem('mustChangePassword', tokens.mustChangePassword.toString());
+      sessionStorage.setItem('mustChangePassword', tokens.mustChangePassword.toString());
       this.mustChangePasswordSubject.next(tokens.mustChangePassword);
     }
     this.parseAndSetRole(tokens.accessToken);
     this.loggedInSubject.next(true);
   };
 
-  // UTILITIES (optimized for speed)
   clearTokens = (): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    ['accessToken', 'refreshToken', 'mustChangePassword'].forEach(key => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    });
+    this.accessToken = null;
+    sessionStorage.removeItem('mustChangePassword');
     this.loggedInSubject.next(false);
     this.userRoleSubject.next(null);
     this.mustChangePasswordSubject.next(false);
@@ -70,20 +57,8 @@ export class TokenStorageService {
 
   setMustChangePassword = (value: boolean): void => {
     if (!isPlatformBrowser(this.platformId)) return;
-    const storage = localStorage.getItem('accessToken') ? localStorage : sessionStorage;
-    storage.setItem('mustChangePassword', value.toString());
+    sessionStorage.setItem('mustChangePassword', value.toString());
     this.mustChangePasswordSubject.next(value);
-  };
-
-  loadTokensFromStorage = (): void => {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const accessToken = this.getAccessToken();
-    const refreshToken = this.getRefreshToken();
-    const rememberMe = !!localStorage.getItem('accessToken');
-    const mustChangePassword = (rememberMe ? localStorage : sessionStorage).getItem('mustChangePassword') === 'true';
-    if (accessToken && refreshToken) {
-      this.saveTokens({ accessToken, refreshToken, mustChangePassword }, rememberMe);
-    }
   };
 
   private parseAndSetRole(token: string): void {
@@ -96,8 +71,7 @@ export class TokenStorageService {
         const userId = payload.sub ?? payload.nameid ?? null;
         this.userIdSubject.next(userId);
       }
-    } catch (e) {
-      console.error('Error parsing JWT token', e);
+    } catch {
       this.userRoleSubject.next(null);
       this.userIdSubject.next(null);
     }

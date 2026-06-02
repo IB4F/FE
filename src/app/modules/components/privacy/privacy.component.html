@@ -1,0 +1,264 @@
+<!-- ===== HERO ===== -->
+<section class="priv-hero">
+  <div class="priv-container">
+    <div class="eyebrow">
+      <span class="dot">✦</span>
+      <span>Politika e Privatësisë</span>
+    </div>
+    <h1>Privatësia juaj<br/><span class="ital">është prioriteti ynë</span></h1>
+    <p class="lead">
+      Ne i trajtojmë të dhënat tuaja me kujdesin dhe transparencën që meritoni.
+      Lexoni si i mbledhim, përdorim dhe mbrojmë informacionet tuaja.
+    </p>
+    <p class="last-updated">Përditësuar së fundmi: {{ lastUpdated }}</p>
+  </div>
+</section>
+
+<!-- ===== LAYOUT ===== -->
+<div class="priv-body">
+  <div class="priv-container content-grid">
+
+    <!-- Sidebar nav -->
+    <nav class="priv-nav" aria-label="Navigimi i privatësisë">
+      <ul>
+        @for (s of sections; track s.id; let i = $index) {
+          <li>
+            <button
+              class="nav-btn"
+              [class.active]="activeSection === s.id"
+              (click)="setSection(s.id)"
+            >
+              <span class="nav-num">{{ i + 1 }}</span>
+              <span class="nav-label">{{ s.label }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Section panel -->
+    <article class="priv-article">
+
+      @if (activeSection === 'kontrollori') {
+        <div class="section-panel">
+          <h2>Kontrollori i të Dhënave</h2>
+          <p>
+            Brain Gain Albania sh.p.k. (referuar si "Brain Gain", "ne" ose "kontrollori") është
+            kontrollori i të dhënave tuaja personale. Selia jonë ndodhet në:
+          </p>
+          <div class="info-box">
+            <p><strong>Brain Gain Albania sh.p.k.</strong></p>
+            <p>Rruga e Durrësit, 10</p>
+            <p>1001 Tiranë, Shqipëri</p>
+            <p>Email: <a href="mailto:info@braingainalbania.al">info&#64;braingainalbania.al</a></p>
+            <p>Tel: <a href="tel:+35542223344">+355 4 222 33 44</a></p>
+          </div>
+        </div>
+      }
+
+      @if (activeSection === 'mbledhja') {
+        <div class="section-panel">
+          <h2>Të Dhënat që Mbledhim</h2>
+          <p>Ne mbledhim kategorite e mëposhtme të të dhënave personale:</p>
+          <h3>Të dhëna që na jepni direkt</h3>
+          <ul>
+            <li><strong>Të dhënat e llogarisë:</strong> emri i plotë, adresa e email-it, fjalëkalimi i enkriptuar.</li>
+            <li><strong>Profili:</strong> klasa shkollore, fotografia e profilit (opsionale), numri i telefonit.</li>
+            <li><strong>Të dhënat e pagesës:</strong> ne <em>nuk</em> ruajmë drejtpërsëdrejt të dhëna të kartës bankare — pagesa procesohet nga ofrues të certifikuar (Stripe/banka partnere).</li>
+            <li><strong>Komunikimet:</strong> mesazhet e dërguara ndaj ekipit tonë të mbështetjes.</li>
+          </ul>
+          <h3>Të dhëna të gjeneruara automatikisht</h3>
+          <ul>
+            <li><strong>Të dhënat e përdorimit:</strong> quizet e bëra, konceptet e mësuara, koha e aktivitetit.</li>
+            <li><strong>Të dhënat teknike:</strong> adresa IP, lloji i shfletuesit, sistemi operativ, ID-ja e sesionit.</li>
+            <li><strong>Cookies dhe teknologji të ngjashme:</strong> shih seksionin "Cookies".</li>
+          </ul>
+        </div>
+      }
+
+      @if (activeSection === 'perdorimi') {
+        <div class="section-panel">
+          <h2>Si i Përdorim të Dhënat</h2>
+          <p>Të dhënat tuaja personale përdoren për qëllimet e mëposhtme:</p>
+          <ul>
+            <li>Krijimi dhe menaxhimi i llogarisë suaj.</li>
+            <li>Ofrimi dhe personalizimi i shërbimeve arsimore.</li>
+            <li>Gjurmimi i progresit dhe rekomandimi i materialeve mësimore (algoritmi spaced repetition).</li>
+            <li>Procesimi i pagesave dhe menaxhimi i abonimeve.</li>
+            <li>Komunikimi i azhurnimeve, konfirmimeve dhe njoftimeve të rëndësishme.</li>
+            <li>Mbështetja teknike dhe zgjidhja e problemeve.</li>
+            <li>Analiza e agreguar dhe anonime për përmirësimin e platformës.</li>
+            <li>Respektimi i detyrimeve ligjore.</li>
+          </ul>
+        </div>
+      }
+
+      @if (activeSection === 'baza') {
+        <div class="section-panel">
+          <h2>Baza Ligjore e Përpunimit</h2>
+          <p>Përpunojmë të dhënat tuaja bazuar në:</p>
+          <ul>
+            <li><strong>Ekzekutimi i kontratës:</strong> kur ofrojmë shërbimin e platformës që keni porositur.</li>
+            <li><strong>Pajtimi (consent):</strong> për komunikimet marketing opsionale.</li>
+            <li><strong>Interesi legjitim:</strong> për sigurinë e platformës dhe parandalimin e abuzimeve.</li>
+            <li><strong>Detyrimi ligjor:</strong> kur ligji shqiptar ose BE-je e kërkon ruajtjen ose zbulimin e të dhënave.</li>
+          </ul>
+        </div>
+      }
+
+      @if (activeSection === 'ndarja') {
+        <div class="section-panel">
+          <h2>Ndarja me Palë të Treta</h2>
+          <p>Nuk i shesim të dhënat tuaja. I ndajmë vetëm në rastet e mëposhtme:</p>
+          <ul>
+            <li>
+              <strong>Ofruesit e shërbimeve:</strong> kompani si Stripe (pagesa), ofruesit e serverëve
+              dhe shërbimeve të email-it — të gjithë të lidhur me marrëveshje konfidencialiteti.
+            </li>
+            <li>
+              <strong>Supervisorët dhe familjet:</strong> supervisori i caktuar mund të shohë progresin
+              e nxënësit; prindi mund të shohë aktivitetin e fëmijës. Ky qasje kufizohet sipas roleve.
+            </li>
+            <li>
+              <strong>Autoritetet ligjore:</strong> vetëm kur urdhërohet nga ligji ose urdhër gjykate.
+            </li>
+          </ul>
+        </div>
+      }
+
+      @if (activeSection === 'ruajtja') {
+        <div class="section-panel">
+          <h2>Ruajtja dhe Siguria e të Dhënave</h2>
+          <p>
+            Serverët tanë ndodhen brenda Bashkimit Europian dhe zbatojnë standardet e sigurisë GDPR.
+            Marrim masat teknike dhe organizative për të mbrojtur të dhënat tuaja, përfshirë:
+          </p>
+          <ul>
+            <li>Enkriptim HTTPS/TLS për të gjitha komunikimet.</li>
+            <li>Fjalëkalime të hashuara me algoritme moderne (bcrypt).</li>
+            <li>Qasje e kufizuar nga personeli bazuar në parimin "minimum privilege".</li>
+            <li>Monitorim i vazhdueshëm dhe backup të rregullt.</li>
+          </ul>
+          <p>
+            Ruajmë të dhënat e llogarisë suaj për sa kohë llogaria është aktive dhe deri në
+            <strong>3 vjet</strong> pas mbylljes, ose kur fshirja kërkohet prej jush.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'te-drejtat') {
+        <div class="section-panel">
+          <h2>Të Drejtat Tuaja</h2>
+          <p>Sipas GDPR dhe legjislacionit shqiptar, keni të drejtë të:</p>
+          <ul>
+            <li><strong>Qasjes:</strong> të kërkoni kopje të të dhënave tuaja.</li>
+            <li><strong>Korrigjimit:</strong> të korrigjoni të dhëna të pasakta ose të pakompletuara.</li>
+            <li><strong>Fshirjes ("të drejtën e harrimit"):</strong> të kërkoni fshirjen e të dhënave tuaja.</li>
+            <li><strong>Kufizimit:</strong> të kufizoni mënyrën si i përpunojmë të dhënat tuaja.</li>
+            <li><strong>Transferimit:</strong> të merrni të dhënat tuaja në format të lexueshëm nga makina.</li>
+            <li><strong>Kundërshtimit:</strong> të kundërshtoni përpunimin bazuar në interes legjitim.</li>
+            <li><strong>Tërheqjes së pajtimit:</strong> kur përpunimi bazohet tek pajtimi juaj.</li>
+          </ul>
+          <p>
+            Për të ushtruar këto të drejta, na kontaktoni në
+            <a href="mailto:info@braingainalbania.al">info&#64;braingainalbania.al</a>.
+            Ju përgjigjemi brenda 30 ditëve.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'femijte') {
+        <div class="section-panel">
+          <h2>Mbrojtja e Fëmijëve</h2>
+          <p>
+            Platforma është projektuar për nxënës të çdo moshe, por krijimi i llogarive për
+            fëmijë nën 16 vjeç kryhet nga prindërit ose kujdestarët ligjorë nëpërmjet llogarisë
+            familjare. Ne nuk mbledhim me vetëdije të dhëna të drejtpërdrejta nga fëmijë nën 13 vjeç
+            pa miratimin e prindërve.
+          </p>
+          <p>
+            Nëse besoni se fëmija juaj na ka dhënë të dhëna pa autorizim, ju lutemi na kontaktoni
+            menjëherë dhe do t'i fshijmë ato.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'cookies') {
+        <div class="section-panel">
+          <h2>Ruajtja Lokale (localStorage / sessionStorage)</h2>
+          <p>
+            Platforma <strong>nuk përdor cookies</strong>. Për funksionimin e saj përdoret
+            ekskluzivisht ruajtja lokale e shfletuesit (<em>localStorage</em> dhe <em>sessionStorage</em>),
+            teknologji që nuk dërgojnë të dhëna automatikisht te serveri.
+          </p>
+          <h3>localStorage — mbetet deri sa ta fshini</h3>
+          <ul>
+            <li><strong>Token autentikimi (JWT):</strong> ruhet kur aktivizoni "Më mbaj të kyçur". Mundëson hyrjen automatike pa fjalëkalim gjatë vizitave të ardhshme.</li>
+            <li><strong>Tema (e errët / e ndritshme):</strong> preference vizuale e zgjedhur nga ju.</li>
+            <li><strong>Font për disleksinë:</strong> aktivizimi i fontit të aksesueshmërisë.</li>
+            <li><strong>Gjuha:</strong> gjuha e ndërfaqes e zgjedhur nga preferencat.</li>
+          </ul>
+          <h3>sessionStorage — fshihet kur mbyllni skedën</h3>
+          <ul>
+            <li><strong>Token autentikimi (JWT):</strong> ruhet kur <em>nuk</em> aktivizoni "Më mbaj të kyçur". Fshihet automatikisht me mbylljen e skedës.</li>
+            <li><strong>Gjendje e përkohshme UI:</strong> të dhëna të ndërmjetme gjatë operacioneve (p.sh. menaxhim fëmijësh, reset fjalëkalimi) — fshihen me mbylljen e skedës.</li>
+          </ul>
+          <p>
+            Mund të fshini të gjitha të dhënat lokale në çdo kohë nëpërmjet cilësimeve të shfletuesit tuaj.
+            Nëse fshini localStorage, do të dilni nga llogaria dhe preferencat do të rivendosen.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'ndryshimet') {
+        <div class="section-panel">
+          <h2>Ndryshimet e Politikës</h2>
+          <p>
+            Mund ta azhurnojmë këtë politikë herë pas here. Çdo ndryshim material do t'ju njoftohet
+            me email dhe nëpërmjet njoftimit brenda platformës të paktën <strong>14 ditë</strong>
+            para hyrjes në fuqi.
+          </p>
+          <p>
+            Vazhdimi i përdorimit të shërbimit pas datës efektive konsiderohet pranim i politikës
+            së re.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'kontakti') {
+        <div class="section-panel">
+          <h2>Kontakti</h2>
+          <p>Për çdo pyetje lidhur me privatësinë ose ushtrimin e të drejtave tuaja:</p>
+          <div class="info-box">
+            <p><strong>Zyra e Mbrojtjes së të Dhënave</strong></p>
+            <p>Brain Gain Albania sh.p.k.</p>
+            <p>Rruga e Durrësit, 10, 1001 Tiranë, Shqipëri</p>
+            <p>Email: <a href="mailto:info@braingainalbania.al">info&#64;braingainalbania.al</a></p>
+          </div>
+          <p>
+            Keni gjithashtu të drejtën të paraqisni ankesë tek Komisarit për të Dhënat Personale
+            të Shqipërisë (<a href="https://www.idp.al" target="_blank" rel="noopener">www.idp.al</a>).
+          </p>
+        </div>
+      }
+
+      <!-- Prev / Next navigation -->
+      <div class="section-nav">
+        <button class="nav-arrow" (click)="prev()" [disabled]="activeIndex === 0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Seksioni paraardhës
+        </button>
+        <span class="nav-counter">{{ activeIndex + 1 }} / {{ sections.length }}</span>
+        <button class="nav-arrow" (click)="next()" [disabled]="activeIndex === sections.length - 1">
+          Seksioni tjetër
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+    </article>
+  </div>
+</div>

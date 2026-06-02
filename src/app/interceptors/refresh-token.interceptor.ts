@@ -2,9 +2,9 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TokenStorageService } from '../services/token-storage.service';
 import { SessionService } from '../services/session.service';
 import { inject } from '@angular/core';
-import {BehaviorSubject, catchError, EMPTY, filter, switchMap, take, throwError} from 'rxjs';
-import {AuthService} from "../api-client";
-import {Router} from "@angular/router";
+import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
+import { AuthService } from '../api-client';
+import { Router } from '@angular/router';
 
 let refreshTokenInFlight: BehaviorSubject<string | null> | null = null;
 
@@ -21,23 +21,21 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         error.status === 401 &&
         !req.url.includes('/refresh')
       ) {
-        const refreshToken = tokenStorage.getRefreshToken();
-        if (!refreshToken) {
-          tokenStorage.clearTokens();
-          sessionService.clearInactivityTimer();
-          router.navigate(['/hyr']);
-          return EMPTY;
-        }
-
         if (!refreshTokenInFlight) {
           const subject = new BehaviorSubject<string | null>(null);
           refreshTokenInFlight = subject;
-          const accessToken = tokenStorage.getAccessToken();
-          authService.apiAuthRefreshPost({ accessToken, refreshToken }).subscribe({
-            next: (newTokens) => {
-              tokenStorage.saveTokens(newTokens);
-              subject.next(newTokens.accessToken);
-              subject.complete();
+
+          // No body needed — the HttpOnly cookie is sent automatically via withCredentials
+          authService.apiAuthRefreshPost({}).subscribe({
+            next: (response: any) => {
+              const newAccessToken = response?.data?.accessToken ?? response?.accessToken;
+              if (newAccessToken) {
+                tokenStorage.saveTokens({ accessToken: newAccessToken });
+                subject.next(newAccessToken);
+                subject.complete();
+              } else {
+                subject.error(error);
+              }
               refreshTokenInFlight = null;
             },
             error: () => {

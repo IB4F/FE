@@ -173,6 +173,18 @@ export const PortalLayoutsRoutes: Routes = [
         ]
       },
       {
+        path: 'ndihma',
+        title: 'Ndihmë',
+        loadComponent: () => import('../help/help.component')
+          .then(m => m.HelpComponent)
+      },
+      {
+        path: 'privatesia',
+        title: 'Politika e Privatësisë',
+        loadComponent: () => import('../privacy/privacy.component')
+          .then(m => m.PrivacyComponent)
+      },
+      {
         path: 'family',
         children: [
           {

@@ -1,4 +1,4 @@
-import {ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom} from '@angular/core';
+import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom} from '@angular/core';
 import {provideRouter, withInMemoryScrolling} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -26,11 +26,11 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     importProvidersFrom(
-      ApiModule.forRoot(() => new Configuration()),
+      ApiModule.forRoot(() => new Configuration({ withCredentials: true })),
       QuillModule.forRoot()
     ),
     {
-      provide: ENVIRONMENT_INITIALIZER,
+      provide: APP_INITIALIZER,
       multi: true,
       useFactory: appInitializer
     }
