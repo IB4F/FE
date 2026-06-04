@@ -14,9 +14,9 @@
       <!-- ===== LOGIN VIEW ===== -->
       @if (!showForgotForm) {
         <div @viewSwitch>
-        <p class="lg-eyebrow">Mirëse erdhe përsëri</p>
+        <p class="lg-eyebrow">{{ 'auth.login.welcome' | translate }}</p>
         <h1 class="lg-title">{{ 'auth.login.title' | translate }}</h1>
-        <p class="lg-sub">Hyr me email-in dhe fjalëkalimin tënd për të vazhduar.</p>
+        <p class="lg-sub">{{ 'auth.login.subtitle' | translate }}</p>
 
         <form [formGroup]="loginFormGroup" (ngSubmit)="onLogin()">
 
@@ -32,7 +32,7 @@
               <p class="lg-error">{{ 'common.required' | translate }}</p>
             }
             @if (loginFormGroup.get('email')?.touched && loginFormGroup.get('email')?.hasError('email')) {
-              <p class="lg-error">Format email-i i pavlefshëm</p>
+              <p class="lg-error">{{ 'auth.login.emailInvalid' | translate }}</p>
             }
           </div>
 
@@ -52,7 +52,7 @@
                   i
                 </button>
                 <button type="button" class="lg-icon-btn" (click)="hidePass = !hidePass"
-                        [attr.aria-label]="hidePass ? 'Shfaq fjalëkalimin' : 'Fshih fjalëkalimin'">
+                        [attr.aria-label]="hidePass ? ('auth.login.showPassword' | translate) : ('auth.login.hidePassword' | translate)">
                   <mat-icon>{{ hidePass ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
               </div>
@@ -65,7 +65,7 @@
           <!-- Remember me + forgot password -->
           <div class="lg-row">
             <label class="lg-check">
-              <input type="checkbox" [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}"> Qëndro i kyçur
+              <input type="checkbox" [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}"> {{ 'auth.login.rememberMe' | translate }}
             </label>
             <span class="lg-forgot" (click)="toggleForgotForm()">
               {{ 'auth.login.forgotPassword' | translate }}
@@ -82,10 +82,10 @@
           </button>
 
           <!-- Divider -->
-          <div class="lg-divider">ose vazhdo me</div>
+          <div class="lg-divider">{{ 'auth.login.orWith' | translate }}</div>
 
           <!-- Social (coming soon) -->
-          <p class="lg-social-soon">Opsionet e hyrjes me Google dhe Apple do të aktivizohen së shpejti.</p>
+          <p class="lg-social-soon">{{ 'auth.login.socialSoon' | translate }}</p>
           <div class="lg-social">
             <button type="button" class="lg-social-btn" disabled>
               <svg width="18" height="18" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@
       <!-- ===== FORGOT PASSWORD VIEW ===== -->
       @if (showForgotForm) {
         <div @viewSwitch>
-        <p class="lg-eyebrow">Rivendos fjalëkalimin</p>
+        <p class="lg-eyebrow">{{ 'auth.login.resetTitle' | translate }}</p>
         <h1 class="lg-title">{{ 'auth.forgotPassword.title' | translate }}</h1>
         <p class="lg-sub">{{ 'auth.forgotPassword.description' | translate }}</p>
 
@@ -134,18 +134,18 @@
                 <p class="lg-error">{{ 'common.required' | translate }}</p>
               }
               @if (forgotFormGroup.get('email')?.touched && forgotFormGroup.get('email')?.hasError('email')) {
-                <p class="lg-error">Format email-i i pavlefshëm</p>
+                <p class="lg-error">{{ 'auth.login.emailInvalid' | translate }}</p>
               }
             </div>
 
             <button type="submit" class="lg-reset-btn" [disabled]="forgotFormGroup.invalid || isSendingReset">
-              @if (isSendingReset) { Duke dërguar... } @else { Dërgo linkun e rivendosjes }
+              @if (isSendingReset) { {{ 'auth.resend.sending' | translate }} } @else { {{ 'auth.login.sendReset' | translate }} }
             </button>
           </form>
         } @else {
           <div class="lg-reset-success">
             <mat-icon class="lg-reset-success-icon">mark_email_read</mat-icon>
-            <p>Kontrollo email-in tënd. Nëse llogaria ekziston, do të marrësh një link brenda pak minutash.</p>
+            <p>{{ 'auth.login.checkEmail' | translate }}</p>
           </div>
         }
 
@@ -162,9 +162,9 @@
     <div class="lg-bottom-meta">
       <span>© 2026 Brain Gain Albania</span>
       <div class="lg-meta-links">
-        <a href="#">Privatësia</a>
-        <a href="#">Kushtet</a>
-        <a href="mailto:info@braingainalbania.al">Kontakt</a>
+        <a routerLink="/privatesia">{{ 'auth.login.metaPrivacy' | translate }}</a>
+        <a routerLink="/kushtet">{{ 'auth.login.metaTerms' | translate }}</a>
+        <a href="mailto:info@braingainalbania.al">{{ 'auth.login.metaContact' | translate }}</a>
       </div>
     </div>
 
@@ -180,24 +180,22 @@
       <div class="lg-visual-illu">
         <img src="assets/svgImages/loginIcon.svg" alt="">
       </div>
-      <p class="lg-visual-title">Platforma #1 e nxënësve shqiptar</p>
-      <p class="lg-visual-sub">
-        Bashkohu me mijëra studentë që kanë kaluar provimin e ngasjes me sukses.
-      </p>
+      <p class="lg-visual-title">{{ 'auth.login.tagline' | translate }}</p>
+      <p class="lg-visual-sub">{{ 'auth.login.taglineSub' | translate }}</p>
       <div class="lg-visual-stats">
         <div class="lg-stat">
           <div class="lg-stat-num">12k+</div>
-          <div class="lg-stat-label">Nxënës</div>
+          <div class="lg-stat-label">{{ 'auth.login.statsStudents' | translate }}</div>
         </div>
         <div class="lg-stat-divider"></div>
         <div class="lg-stat">
           <div class="lg-stat-num">98%</div>
-          <div class="lg-stat-label">Kalosje</div>
+          <div class="lg-stat-label">{{ 'auth.login.statsPass' | translate }}</div>
         </div>
         <div class="lg-stat-divider"></div>
         <div class="lg-stat">
           <div class="lg-stat-num">350+</div>
-          <div class="lg-stat-label">Supervizorë</div>
+          <div class="lg-stat-label">{{ 'auth.login.statsSupervisors' | translate }}</div>
         </div>
       </div>
     </div>

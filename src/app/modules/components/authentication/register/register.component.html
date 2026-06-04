@@ -39,7 +39,7 @@
         <p class="rg-field-error">{{ 'common.required' | translate }}</p>
       }
       @if (registerFormGroup.get('email')?.touched && registerFormGroup.get('email')?.hasError('email')) {
-        <p class="rg-field-error">Format email-i i pavlefshëm</p>
+        <p class="rg-field-error">{{ 'auth.register.emailInvalid' | translate }}</p>
       }
     </div>
 
@@ -113,9 +113,24 @@
           </button>
         </div>
       </div>
-      <p class="rg-field-note">Min. 8 karaktere · numra dhe shenja</p>
+      <p class="rg-field-note">{{ 'auth.register.passwordHint' | translate }}</p>
       @if (registerFormGroup.get('password')?.touched && registerFormGroup.get('password')?.hasError('required')) {
         <p class="rg-field-error">{{ 'common.required' | translate }}</p>
+      }
+    </div>
+
+    <div class="rg-field rg-field--terms">
+      <label class="rg-terms-label">
+        <input type="checkbox" formControlName="termsAccepted" class="rg-terms-check">
+        <span>
+          {{ 'auth.register.termsText' | translate }}
+          <a routerLink="/kushtet" target="_blank">{{ 'auth.register.termsLink' | translate }}</a>
+          dhe
+          <a routerLink="/privatesia" target="_blank">{{ 'auth.register.privacyLink' | translate }}</a>
+        </span>
+      </label>
+      @if (registerFormGroup.get('termsAccepted')?.touched && registerFormGroup.get('termsAccepted')?.invalid) {
+        <p class="rg-field-error">{{ 'auth.register.termsRequired' | translate }}</p>
       }
     </div>
 

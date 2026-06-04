@@ -1,7 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {CommonModule} from "@angular/common";
+import {RouterLink} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {StripeService} from "../../../../services/stripe.service";
@@ -28,7 +29,9 @@ import {ManualPaymentInstructionsComponent, ManualPaymentDetails} from '../../..
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
+    RouterLink,
     MatProgressSpinnerModule,
     MatTooltip,
     PhoneInputComponent,
@@ -43,6 +46,7 @@ export class RegisterFamilyComponent implements OnInit {
   private stripeService = inject(StripeService);
   private paddleService = inject(PaddleService);
   loading = false;
+  termsAccepted = false;
   selectedProvider = 'Paddle';
   manualPaymentDetails: ManualPaymentDetails | null = null;
   manualPaymentProvider = '';
@@ -231,9 +235,13 @@ export class RegisterFamilyComponent implements OnInit {
   }
 
   handlePayment(): void {
+    if (!this.termsAccepted) {
+      this.toast.danger('Duhet të pranoni Kushtet e Shërbimit dhe Politikën e Privatësisë', 'GABIM', 4000);
+      return;
+    }
     this.loading = true;
-    const registerForm: any = this.registerFamilyForm.value;
-    
+    const registerForm: any = { ...this.registerFamilyForm.value, termsAccepted: true };
+
     // Validate required data
     if (!registerForm || !this.selectedPackage?.id) {
       this.toast.danger('Ju lutemi plotësoni të gjitha fushat dhe zgjidhni një paketë', 'GABIM', 3000);

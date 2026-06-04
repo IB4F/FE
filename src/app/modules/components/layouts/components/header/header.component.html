@@ -8,9 +8,9 @@
     <!-- Centre nav links (landing page only, not logged in) -->
     @if (!isLogged && isLandingPage) {
       <div class="nav-links">
-        <a href="#classes">Klasat</a>
-        <a href="#how">Si funksionon</a>
-        <a href="#voices">Komuniteti</a>
+        <a href="#classes">{{ 'header.nav.classes' | translate }}</a>
+        <a href="#how">{{ 'header.nav.howItWorks' | translate }}</a>
+        <a href="#voices">{{ 'header.nav.community' | translate }}</a>
       </div>
     }
 
@@ -76,9 +76,9 @@
   <!-- Mobile dropdown menu -->
   <div class="mobile-menu" [class.open]="isMobileMenuOpen">
     <div class="mobile-menu-inner">
-      <a href="#classes" (click)="closeMobileMenu()">Klasat</a>
-      <a href="#how" (click)="closeMobileMenu()">Si funksionon</a>
-      <a href="#voices" (click)="closeMobileMenu()">Komuniteti</a>
+      <a href="#classes" (click)="closeMobileMenu()">{{ 'header.nav.classes' | translate }}</a>
+      <a href="#how" (click)="closeMobileMenu()">{{ 'header.nav.howItWorks' | translate }}</a>
+      <a href="#voices" (click)="closeMobileMenu()">{{ 'header.nav.community' | translate }}</a>
       <div class="mobile-cta">
         <a class="nav-btn nav-btn-ghost" routerLink="/hyr" (click)="closeMobileMenu()">{{ labelLogin }}</a>
         <a class="nav-btn nav-btn-primary" routerLink="/membership" (click)="closeMobileMenu()">{{ labelRegister }}</a>

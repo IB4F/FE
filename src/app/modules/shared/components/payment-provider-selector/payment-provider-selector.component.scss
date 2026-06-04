@@ -1,145 +1,168 @@
 .pay-wrap {
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
 }
 
-/* ===== Section headers ===== */
-.bg-section-title {
-  font-size: 32px;
-  font-weight: 600;
-  text-align: center;
-  color: var(--navy);
-  margin: 0 0 8px;
-  letter-spacing: -0.5px;
-}
-
-.bg-section-sub {
-  text-align: center;
-  color: var(--gray-text);
-  font-size: 16px;
-  margin: 0 0 36px;
-}
-
-/* ===== Group label ===== */
-.pay-group-label {
+/* ── Header ──────────────────────────────────────── */
+.pay-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--gray-text);
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gray-line, #e5e7eb);
+}
+
+.pay-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pay-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin: 0 0 12px;
+  letter-spacing: .12em;
+  color: var(--primary, #1b9cd8);
 
   mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    color: var(--primary);
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
   }
 }
 
-/* ===== Payment card grid ===== */
+.pay-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy, #0b1f2a);
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.pay-ssl {
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 4px 10px;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+/* ── Group label ─────────────────────────────────── */
+.pay-group-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-text, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin: 0 0 10px;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    color: var(--primary, #1b9cd8);
+  }
+}
+
+/* ── Payment card grid ───────────────────────────── */
 .bg-payment-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 840px;
-  margin: 0 auto;
+  gap: 10px;
+  margin-bottom: 0;
 }
 
-/* ===== Individual payment card ===== */
+/* ── Individual payment card ─────────────────────── */
 .bg-payment-card {
   background: white;
-  border: 1.5px solid var(--gray-line);
-  border-radius: var(--radius-md);
-  padding: 22px 16px 18px;
+  border: 1.5px solid var(--gray-line, #e5e7eb);
+  border-radius: 12px;
+  padding: 16px 12px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
   position: relative;
   text-align: center;
 
   &:hover {
-    border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    border-color: var(--primary, #1b9cd8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(27,156,216,.12);
   }
 
   &.is-selected {
-    border-color: var(--primary);
-    background: var(--primary-softer);
-    box-shadow: 0 0 0 3px rgba(27, 156, 216, 0.15);
+    border-color: var(--primary, #1b9cd8);
+    background: var(--primary-softer, #eff8ff);
+    box-shadow: 0 0 0 3px rgba(27,156,216,.15);
 
-    .bg-payment-icon mat-icon {
-      color: var(--primary);
-    }
+    .bg-payment-icon mat-icon { color: var(--primary, #1b9cd8); }
+    .bg-payment-name { color: var(--primary-dark, #1579aa); }
+  }
 
-    .bg-payment-name {
-      color: var(--primary-dark);
-    }
+  &.is-disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 
-/* ===== Card icon ===== */
+/* ── Card icon ───────────────────────────────────── */
 .bg-payment-icon {
-  height: 36px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 
   mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
-    color: var(--navy);
-    transition: color 0.25s;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: var(--navy, #0b1f2a);
+    transition: color .2s;
   }
 }
 
-/* ===== Card labels ===== */
+/* ── Card labels ─────────────────────────────────── */
 .bg-payment-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--navy);
-  letter-spacing: 0.2px;
-  transition: color 0.25s;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy, #0b1f2a);
+  transition: color .2s;
 }
 
 .bg-payment-label {
-  font-size: 11px;
-  color: var(--gray-text);
+  font-size: 10px;
+  color: var(--gray-text, #6b7280);
   line-height: 1.4;
 }
 
-/* ===== Disabled card ===== */
-.bg-payment-card.is-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-
-  &:hover {
-    border-color: var(--gray-line);
-    transform: none;
-    box-shadow: none;
-  }
-}
-
-/* ===== Badges ===== */
+/* ── Badges ──────────────────────────────────────── */
 .pay-badge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: white;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
-  border-radius: var(--radius-pill);
-  padding: 3px 10px;
-  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--primary-light, #38bdf8), var(--primary-dark, #1579aa));
+  border-radius: 20px;
+  padding: 2px 8px;
+  letter-spacing: .04em;
   text-transform: uppercase;
   margin-top: 2px;
 }
@@ -148,41 +171,31 @@
   background: linear-gradient(135deg, #9ca3af, #6b7280);
 }
 
-/* ===== Security note ===== */
+/* ── Security note ───────────────────────────────── */
 .pay-security {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
-  font-size: 12px;
-  color: var(--gray-text);
-  margin-top: 24px;
+  font-size: 11px;
+  color: var(--gray-text, #6b7280);
+  margin-top: 16px;
   margin-bottom: 0;
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
-    line-height: 15px;
-    color: var(--primary);
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #16a34a;
   }
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 980px) {
-  .bg-payment-grid {
-    max-width: 100%;
-  }
-}
-
+/* ── Responsive ──────────────────────────────────── */
 @media (max-width: 640px) {
-  .bg-payment-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .bg-payment-grid { grid-template-columns: repeat(2, 1fr); }
+  .pay-ssl { display: none; }
 }
 
 @media (max-width: 400px) {
-  .bg-payment-grid {
-    grid-template-columns: 1fr;
-  }
+  .bg-payment-grid { grid-template-columns: 1fr; }
 }

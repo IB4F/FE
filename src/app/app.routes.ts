@@ -47,6 +47,12 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'accept-terms',
+    title: 'Prano Kushtet e Shërbimit',
+    loadComponent: () => import('./modules/components/authentication/accept-terms/accept-terms.component')
+      .then(m => m.AcceptTermsComponent),
+  },
+  {
     path: 'membership',
     title: 'Membership',
     loadComponent: () => import('./modules/components/authentication/membership/membership.component')

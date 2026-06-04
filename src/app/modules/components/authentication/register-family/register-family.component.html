@@ -328,6 +328,18 @@
                   (providerChange)="selectedProvider = $event">
                 </app-payment-provider-selector>
 
+                <div class="rg-field rg-field--terms">
+                  <label class="rg-terms-label">
+                    <input type="checkbox" [(ngModel)]="termsAccepted" class="rg-terms-check">
+                    <span>
+                      Kam lexuar dhe pranoj
+                      <a routerLink="/kushtet" target="_blank">Kushtet e Shërbimit</a>
+                      dhe
+                      <a routerLink="/privatesia" target="_blank">Politikën e Privatësisë</a>
+                    </span>
+                  </label>
+                </div>
+
                 <div class="rg-nav-actions">
                   <button class="rg-btn rg-btn--outline rg-btn--lg" type="button" (click)="goBackToChildrenInfo()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>

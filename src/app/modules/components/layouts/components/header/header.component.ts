@@ -9,6 +9,7 @@ import { filter, map } from 'rxjs';
 import {AuthService} from "../../../../../api-client";
 import {SessionService} from "../../../../../services/session.service";
 import {TranslationService} from "../../../../../services/translation.service";
+import {TranslatePipe} from "../../../../../pipes/translate.pipe";
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ import {TranslationService} from "../../../../../services/translation.service";
   imports: [
     CommonModule,
     RouterLink,
+    TranslatePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

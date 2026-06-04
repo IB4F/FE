@@ -9,3 +9,22 @@
 }
 
 .rg-label .req { color: #D55858; }
+
+/* ── Terms checkbox ── */
+.rg-field--terms { margin-top: 8px; }
+
+.rg-terms-label {
+  display: flex; align-items: flex-start; gap: 10px;
+  cursor: pointer; font-size: 14px; line-height: 1.5;
+  color: #5A7383;
+}
+
+.rg-terms-check {
+  margin-top: 2px; flex-shrink: 0;
+  width: 16px; height: 16px; accent-color: #0D7A8C; cursor: pointer;
+}
+
+.rg-terms-label a {
+  color: #0D7A8C; text-decoration: underline;
+  &:hover { color: #1FB5C9; }
+}

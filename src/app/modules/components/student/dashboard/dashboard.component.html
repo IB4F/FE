@@ -109,10 +109,10 @@
               <path d="M20 6 9 17l-5-5"/>
             </svg>
           </span>
-          <span class="pulse-stat__label">Progres total</span>
+          <span class="pulse-stat__label">{{ 'dashboard.stats.totalProgress' | translate }}</span>
         </div>
         <div class="pulse-stat__value">{{ dashboardData!.stats?.totalProgress || 0 }}%</div>
-        <div class="pulse-stat__sub pulse-stat__sub--green">total i përgjithshëm</div>
+        <div class="pulse-stat__sub pulse-stat__sub--green">{{ 'dashboard.stats.accuracy' | translate }}</div>
       </div>
 
       <!-- Points -->
@@ -123,10 +123,10 @@
               <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
             </svg>
           </span>
-          <span class="pulse-stat__label">Pikë të grumbulluara</span>
+          <span class="pulse-stat__label">{{ 'dashboard.stats.points' | translate }}</span>
         </div>
         <div class="pulse-stat__value">{{ dashboardData!.stats?.pointsCollected || 0 }}</div>
-        <div class="pulse-stat__sub pulse-stat__sub--sky">të fituara deri tani</div>
+        <div class="pulse-stat__sub pulse-stat__sub--sky">{{ 'dashboard.stats.earnedSoFar' | translate }}</div>
       </div>
 
       <!-- LearnHubs -->
@@ -145,7 +145,7 @@
         <div class="pulse-stat__value">
           {{ dashboardData!.stats?.completedLearnHubs || 0 }}/{{ dashboardData!.stats?.totalLearnHubs || 0 }}
         </div>
-        <div class="pulse-stat__sub pulse-stat__sub--amber">të përfunduara</div>
+        <div class="pulse-stat__sub pulse-stat__sub--amber">{{ 'dashboard.stats.completedOf' | translate }}</div>
       </div>
 
       <!-- Accuracy -->
@@ -159,11 +159,11 @@
               <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
             </svg>
           </span>
-          <span class="pulse-stat__label">Saktësi mesatare</span>
+          <span class="pulse-stat__label">{{ 'dashboard.stats.accuracy' | translate }}</span>
         </div>
         <div class="pulse-stat__value">{{ averageAccuracy }}</div>
         <div class="pulse-stat__sub" [class.pulse-stat__sub--purple]="dashboardData!.stats?.averageAccuracy != null">
-          {{ dashboardData!.stats?.averageAccuracy != null ? 'mesatare e përgjigjeve' : 'nuk ka të dhëna ende' }}
+          {{ dashboardData!.stats?.averageAccuracy != null ? ('dashboard.stats.avgAnswers' | translate) : ('dashboard.stats.noData' | translate) }}
         </div>
       </div>
     </div>
@@ -176,13 +176,13 @@
 
         <!-- LearnHub cards -->
         <div class="pulse-section-header">
-          <h3 class="pulse-section-header__title">LearnHub-et e tua të fundit</h3>
+          <h3 class="pulse-section-header__title">{{ 'dashboard.recent.title' | translate }}</h3>
           <span class="pulse-section-header__badge">
-            {{ (dashboardData!.latestLearnHubs || []).length }} aktive
+            {{ (dashboardData!.latestLearnHubs || []).length }} {{ 'dashboard.recent.active' | translate }}
           </span>
           <div class="pulse-section-header__spacer"></div>
           <a routerLink="/student/kurset" class="pulse-section-header__link">
-            Shiko të gjitha
+            {{ 'dashboard.recent.viewAll' | translate }}
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14M13 5l7 7-7 7"/>

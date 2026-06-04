@@ -1,0 +1,56 @@
+<div class="at-shell">
+  <div class="at-card">
+
+    <div class="at-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+    </div>
+
+    <h1>Kushtet e Shërbimit janë përditësuar</h1>
+    <p class="at-lead">
+      Kemi bërë ndryshime në Kushtet tona të Shërbimit dhe Politikën e Privatësisë.
+      Për të vazhduar të përdorni Brain Gain Albania, ju lutemi lexoni dhe pranoni
+      versionin e ri.
+    </p>
+
+    <div class="at-links">
+      <a routerLink="/kushtet" target="_blank" class="at-doc-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        Lexo Kushtet e Shërbimit
+        <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+      <a routerLink="/privatesia" target="_blank" class="at-doc-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Lexo Politikën e Privatësisë
+        <svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="at-actions">
+      <button class="at-btn-accept" (click)="accept()" [disabled]="loading">
+        @if (loading) {
+          <span class="at-spinner"></span>
+        }
+        Pranoj dhe vazhdoj
+      </button>
+      <button class="at-btn-logout" (click)="logout()">
+        Dilni nga llogaria
+      </button>
+    </div>
+
+  </div>
+</div>

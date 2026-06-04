@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom} from '@angular/core';
+import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, inject} from '@angular/core';
 import {provideRouter, withInMemoryScrolling} from '@angular/router';
 
 import {routes} from './app.routes';
@@ -10,11 +10,20 @@ import {refreshTokenInterceptor} from "./interceptors/refresh-token.interceptor"
 import {errorInterceptor} from "./interceptors/error.interceptor";
 import {appInitializer} from "./services/app-initializer.service";
 import {ApiModule, Configuration} from "./api-client";
+import {INITIAL_LANGUAGE, parseLangCookie} from "./tokens/language.token";
+import {TranslationService} from "./services/translation.service";
 import {loaderInterceptor} from "./interceptors/loader.interceptor";
 import {QuillModule} from "ngx-quill";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Provide the initial language from the cookie (browser-side)
+    {
+      provide: INITIAL_LANGUAGE,
+      useFactory: () => parseLangCookie(
+        typeof document !== 'undefined' ? document.cookie : undefined
+      )
+    },
     provideRouter(routes, withInMemoryScrolling({scrollPositionRestoration: 'top', anchorScrolling: 'enabled',})),
     provideHttpClient(
       withInterceptors([
@@ -33,6 +42,14 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       multi: true,
       useFactory: appInitializer
+    },
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: () => {
+        const translation = inject(TranslationService);
+        return () => translation.init();
+      }
     }
   ]
 };

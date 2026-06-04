@@ -2,6 +2,7 @@ import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import {RouterLink} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {passwordValidator} from "../../../../helpers/customValidators/check-password.validator";
 import {MembershipStudentService} from "../../../../services/membership-student.service";
@@ -15,6 +16,7 @@ import {TranslatePipe} from "../../../../pipes/translate.pipe";
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    RouterLink,
     MatTooltipModule,
     TranslatePipe
   ],
@@ -46,7 +48,8 @@ export class RegisterComponent implements OnInit {
       school: ['', Validators.required],
       currentClass: ['', Validators.required],
       dateOfBirth: [null, Validators.required],
-      password: ['', [Validators.required, passwordValidator]]
+      password: ['', [Validators.required, passwordValidator]],
+      termsAccepted: [false, [Validators.requiredTrue]]
     });
 
     this.registerFormGroup.statusChanges

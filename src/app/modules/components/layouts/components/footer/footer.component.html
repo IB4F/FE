@@ -6,12 +6,12 @@
         <a href="/" class="f-logo">
           <img src="assets/svgImages/bga-logo.svg" alt="Brain Gain" class="f-logo-img">
         </a>
-        <p class="footer-tagline">Platforma digjitale e edukimit për fëmijët shqiptarë në mbarë botën. Asnjëherë mos ndalo së mësuari.</p>
+        <p class="footer-tagline">{{ 'footer.tagline' | translate }}</p>
       </div>
 
       <!-- Contacts -->
       <div class="footer-col">
-        <h5>Kontaktet</h5>
+        <h5>{{ 'footer.contact.title' | translate }}</h5>
         <ul>
           <li>Rruga e Durrësit, 10<br/>1001 Tiranë, AL</li>
           <li><a href="tel:+35542223344">+355 4 222 33 44</a></li>
@@ -21,29 +21,30 @@
 
       <!-- Platform -->
       <div class="footer-col">
-        <h5>Platforma</h5>
+        <h5>{{ 'footer.platform.title' | translate }}</h5>
         <ul>
-          <li><a href="/#classes">Klasat 1–12</a></li>
-          <li><a href="/#how">Si funksionon</a></li>
-          <li><a routerLink="/membership">Çmimi</a></li>
+          <li><a href="/#classes">{{ 'footer.platform.classes' | translate }}</a></li>
+          <li><a href="/#how">{{ 'footer.platform.howItWorks' | translate }}</a></li>
+          <li><a routerLink="/membership">{{ 'footer.platform.pricing' | translate }}</a></li>
         </ul>
       </div>
 
       <!-- Company -->
       <div class="footer-col">
-        <h5>Kompania</h5>
+        <h5>{{ 'footer.company.title' | translate }}</h5>
         <ul>
-          <li><a href="#">Rreth nesh</a></li>
-          <li><a href="#">Karriera</a></li>
-          <li><a routerLink="/privatesia">Privatësia</a></li>
-          <li><a routerLink="/ndihma">Ndihmë</a></li>
-          <li><button class="f-pref-btn" (click)="openPreferences()">Preferencat</button></li>
+          <li><a href="#">{{ 'footer.company.about' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.company.careers' | translate }}</a></li>
+          <li><a routerLink="/privatesia">{{ 'footer.company.privacy' | translate }}</a></li>
+          <li><a routerLink="/kushtet">{{ 'footer.company.terms' | translate }}</a></li>
+          <li><a routerLink="/ndihma">{{ 'footer.company.help' | translate }}</a></li>
+          <li><button class="f-pref-btn" (click)="openPreferences()">{{ 'footer.company.preferences' | translate }}</button></li>
         </ul>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© {{ currentYear }} Brain Gain Albania · Të gjitha të drejtat e rezervuara</span>
+      <span>© {{ currentYear }} Brain Gain Albania · {{ 'footer.rights' | translate }}</span>
       <div class="socials">
         <a href="#" aria-label="Facebook">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-4H13V7.5c0-1.1.3-1.9 1.9-1.9H17V2.2C16.6 2.1 15.4 2 14 2c-2.9 0-4.9 1.8-4.9 5v3H6v4h3v8h4z"/></svg>

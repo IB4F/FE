@@ -185,6 +185,12 @@ export const PortalLayoutsRoutes: Routes = [
           .then(m => m.PrivacyComponent)
       },
       {
+        path: 'kushtet',
+        title: 'Kushtet e Shërbimit',
+        loadComponent: () => import('../terms/terms.component')
+          .then(m => m.TermsComponent)
+      },
+      {
         path: 'family',
         children: [
           {

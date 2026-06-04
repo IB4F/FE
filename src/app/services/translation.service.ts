@@ -1,7 +1,9 @@
-import { ApplicationRef, Injectable, NgZone } from '@angular/core';
+import { ApplicationRef, Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { INITIAL_LANGUAGE, VALID_LANGUAGES } from '../tokens/language.token';
 
 export type Language = string;
 
@@ -10,15 +12,15 @@ export interface LanguageOption {
   label: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+const COOKIE_NAME = 'lang';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+
+@Injectable({ providedIn: 'root' })
 export class TranslationService {
-  private readonly STORAGE_KEY = 'preferredLanguage';
   private readonly DEFAULT_LANGUAGE: Language = 'sq';
 
-  private currentLanguageSubject = new BehaviorSubject<Language>(this.loadFromStorage());
-  public currentLanguage$: Observable<Language> = this.currentLanguageSubject.asObservable();
+  private currentLanguageSubject: BehaviorSubject<Language>;
+  public currentLanguage$: Observable<Language>;
 
   private translations: { [key: string]: string } = {};
   private cache: { [lang: string]: { [key: string]: string } } = {};
@@ -28,8 +30,22 @@ export class TranslationService {
     { code: 'en', label: 'English' },
   ];
 
-  constructor(private http: HttpClient, private ngZone: NgZone, private appRef: ApplicationRef) {
-    this.loadLanguage(this.currentLanguageSubject.value).subscribe();
+  constructor(
+    private http: HttpClient,
+    private ngZone: NgZone,
+    private appRef: ApplicationRef,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(INITIAL_LANGUAGE) initialLanguage: Language,
+  ) {
+    this.currentLanguageSubject = new BehaviorSubject<Language>(initialLanguage);
+    this.currentLanguage$ = this.currentLanguageSubject.asObservable();
+  }
+
+  /** Called by APP_INITIALIZER — resolves only when translations are fully loaded. */
+  init(): Promise<void> {
+    return firstValueFrom(this.loadLanguage(this.currentLanguageSubject.value)).then(() => {
+      this.applyLanguage();
+    });
   }
 
   getCurrentLanguage(): Language {
@@ -41,7 +57,7 @@ export class TranslationService {
       this.ngZone.run(() => {
         Promise.resolve().then(() => {
           this.currentLanguageSubject.next(language);
-          this.saveToStorage(language);
+          this.saveToCookie(language);
           this.applyLanguage();
         });
       });
@@ -81,17 +97,9 @@ export class TranslationService {
     );
   }
 
-  private loadFromStorage(): Language {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem(this.STORAGE_KEY) ?? this.DEFAULT_LANGUAGE;
-    }
-    return this.DEFAULT_LANGUAGE;
-  }
-
-  private saveToStorage(language: Language): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem(this.STORAGE_KEY, language);
-    }
+  private saveToCookie(language: Language): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(language)}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax`;
   }
 
   private applyLanguage(): void {

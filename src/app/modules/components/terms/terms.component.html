@@ -1,0 +1,336 @@
+<!-- ===== HERO ===== -->
+<section class="terms-hero">
+  <div class="terms-container">
+    <div class="eyebrow">
+      <span class="dot">✦</span>
+      <span>Kushtet e Shërbimit</span>
+    </div>
+    <h1>Rregullat e<br/><span class="ital">bashkëpunimit tonë</span></h1>
+    <p class="lead">
+      Duke përdorur Brain Gain Albania, pranoni këto kushte. Ju lutemi lexojini
+      me kujdes — janë shkruar në gjuhë të qartë, pa zhargon ligjor të panevojshëm.
+    </p>
+    <p class="last-updated">Përditësuar së fundmi: {{ lastUpdated }}</p>
+  </div>
+</section>
+
+<!-- ===== LAYOUT ===== -->
+<div class="terms-body">
+  <div class="terms-container content-grid">
+
+    <!-- Sidebar nav -->
+    <nav class="terms-nav" aria-label="Navigimi i kushteve">
+      <ul>
+        @for (s of sections; track s.id; let i = $index) {
+          <li>
+            <button
+              class="nav-btn"
+              [class.active]="activeSection === s.id"
+              (click)="setSection(s.id)"
+            >
+              <span class="nav-num">{{ i + 1 }}</span>
+              <span class="nav-label">{{ s.label }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Section panel -->
+    <article class="terms-article">
+
+      @if (activeSection === 'pranimi') {
+        <div class="section-panel">
+          <h2>Pranimi i Kushteve</h2>
+          <p>
+            Duke krijuar një llogari ose duke përdorur shërbimet e Brain Gain Albania sh.p.k.
+            ("Brain Gain", "ne", "platforma"), ju konfirmoni se keni lexuar, kuptuar dhe pranuar
+            këto Kushte të Shërbimit, si dhe <a routerLink="/privatesia">Politikën e Privatësisë</a>.
+          </p>
+          <p>
+            Nëse nuk pajtoheni me këto kushte, ju lutemi mos e përdorni platformën.
+          </p>
+          <p>
+            Personat nën moshën 16 vjeç duhet të regjistrohen nëpërmjet llogarisë familjare,
+            me miratimin e një prindi ose kujdestari ligjor. Duke krijuar llogari familjare
+            dhe duke shtuar fëmijë, prindi konfirmon se ka autoritetin ligjor për të pranuar
+            këto kushte në emër të fëmijës.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'sherbimi') {
+        <div class="section-panel">
+          <h2>Përshkrimi i Shërbimit</h2>
+          <p>
+            Brain Gain Albania është një platformë digjitale arsimore që ofron kurse,
+            materiale mësimore dhe quiz interaktivë për nxënës shqiptarë të klasave 1–12,
+            kudo në botë.
+          </p>
+          <p>Platforma mbështet tre profile përdoruesish:</p>
+          <ul>
+            <li><strong>Nxënës:</strong> qasje te kurset dhe quiz-et sipas klasës dhe abonimit.</li>
+            <li><strong>Supervisor:</strong> menaxhim nxënësish, monitorim progresi dhe mbështetje akademike.</li>
+            <li><strong>Familje:</strong> regjistrim dhe monitorim i fëmijëve nën të njëjtin abonim familjar.</li>
+          </ul>
+          <p>
+            Ne rezervojmë të drejtën të modifikojmë, shtojmë ose heqim funksionalitete të
+            platformës në çdo kohë, me njoftim paraprak kur ndikimi është material për
+            përdoruesit ekzistues.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'llogarite') {
+        <div class="section-panel">
+          <h2>Llogaritë dhe Regjistrimi</h2>
+          <h3>Krijimi i llogarisë</h3>
+          <p>
+            Për të përdorur platformat, duhet të krijoni një llogari me të dhëna të sakta dhe
+            të plota. Jeni përgjegjës për të mbajtur konfidencialitetin e kredencialeve tuaja.
+          </p>
+          <h3>Siguria e llogarisë</h3>
+          <ul>
+            <li>Mos ndani fjalëkalimin tuaj me të tjerë.</li>
+            <li>Njoftoni menjëherë ekipin tonë nëse dyshoni se llogaria juaj është kompromisuar.</li>
+            <li>Çdo aktivitet i ndërmarrë nën llogarinë tuaj është përgjegjësia juaj.</li>
+          </ul>
+          <h3>Verifikimi i email-it</h3>
+          <p>
+            Pas regjistrimit duhet të verifikoni adresën e email-it brenda 48 orëve.
+            Llogaritë e paverifikuara mund të çaktivizohen automatikisht.
+          </p>
+          <h3>Një llogari për person</h3>
+          <p>
+            Çdo person fizik mund të mbajë vetëm një llogari aktive. Krijimi i llogarive
+            të shumëfishta është i ndaluar dhe mund të çojë në bllokimin e të gjitha llogarive.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'abonimi') {
+        <div class="section-panel">
+          <h2>Abonimi dhe Pagesa</h2>
+          <h3>Paketat e abonimit</h3>
+          <p>
+            Qasja te përmbajtja e plotë e platformës kërkon një abonim aktiv. Paketat e
+            disponueshme, çmimet dhe periodiciteti i faturimit shfaqen në faqen e çmimeve.
+            Ne rezervojmë të drejtën të ndryshojmë çmimet me njoftim 30 ditë paraprak.
+          </p>
+          <h3>Faturimi</h3>
+          <ul>
+            <li>Pagesa procesohet nëpërmjet ofruesve të certifikuar (Stripe/banka partnere).</li>
+            <li>Abonimi rinovohet automatikisht në fund të çdo periudhe, nëse nuk anulohet paraprakisht.</li>
+            <li>Faturat dërgohen me email pas çdo pagese të suksesshme.</li>
+          </ul>
+          <h3>Anulimi</h3>
+          <p>
+            Mund ta anuloni abonimin në çdo kohë nga seksioni "Cilësimet". Anulimi hyn në
+            fuqi në fund të periudhës aktuale të faturimit — qasja mbetet aktive deri atëherë.
+            Nuk kemi politikë rimbursimi për periudhën e mbetur, me përjashtim të rasteve
+            kur ligji shqiptar e kërkon ndryshe.
+          </p>
+          <h3>Dështimi i pagesës</h3>
+          <p>
+            Nëse pagesa dështon, ju njoftojmë me email. Pas 7 ditëve pa pagesë të suksesshme,
+            qasja te përmbajtja premium pezullohet deri sa situata të rregullohet.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'perdorimi') {
+        <div class="section-panel">
+          <h2>Përdorimi i Pranueshëm</h2>
+          <p>Platforma është projektuar për qëllime arsimore. Është e ndaluar:</p>
+          <ul>
+            <li>Ndarja e kredencialeve të llogarisë me persona të tjerë.</li>
+            <li>Çdo tentativë për të manipuluar, hakuar ose bllokuar shërbimin.</li>
+            <li>Shkarkimi i masivëm i përmbajtjes me mjete automatike (scraping).</li>
+            <li>Ripublikimi ose shitja e materialeve të platformës pa leje me shkrim.</li>
+            <li>Ngarkimi ose ndarja e përmbajtjes abuzive, diskriminuese ose të paligjshme.</li>
+            <li>Krijimi i llogarive false ose impersonimi i personave të tjerë.</li>
+            <li>Çdo përdorim që shkel legjislacionin shqiptar ose ndërkombëtar.</li>
+          </ul>
+          <p>
+            Shkeljet mund të rezultojnë në pezullim ose mbyllje të menjëhershme të llogarisë,
+            pa rimbursim, dhe nëse aplikohet, në masa ligjore.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'pronesia') {
+        <div class="section-panel">
+          <h2>Pronësia Intelektuale</h2>
+          <h3>Përmbajtja e platformës</h3>
+          <p>
+            Të gjitha materialet e platformës — tekste, imazhe, video, quiz, logo dhe kod
+            burimor — janë pronë ekskluzive e Brain Gain Albania sh.p.k. ose e licencuesve
+            të saj, dhe mbrohen nga ligjet e së drejtës së autorit.
+          </p>
+          <p>
+            Abonimi ju jep një licencë të kufizuar, jo ekskluzive dhe të patransferueshme
+            për të aksesuar dhe përdorur përmbajtjen <strong>vetëm për qëllime personale arsimore</strong>.
+          </p>
+          <h3>Çfarë nuk lejohet</h3>
+          <ul>
+            <li>Kopjimi, printimi ose shpërndarja e materialeve pa leje me shkrim.</li>
+            <li>Krijimi i veprave derivative bazuar në përmbajtjen tonë.</li>
+            <li>Heqja e shënimeve të së drejtës së autorit ose markave tregtare.</li>
+          </ul>
+          <h3>Përmbajtja e ngarkuar nga përdoruesit</h3>
+          <p>
+            Nëse ngarkoni ndonjë material (p.sh. si supervisor), na jepni një licencë
+            jo ekskluzive për ta përdorur brenda platformës për qëllimin e destinuar.
+            Mbani të gjitha të drejtat e tjera mbi atë material.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'privatesia') {
+        <div class="section-panel">
+          <h2>Privatësia</h2>
+          <p>
+            Mbledhja dhe përpunimi i të dhënave tuaja personale rregullohen nga
+            <a routerLink="/privatesia">Politika jonë e Privatësisë</a>, e cila është
+            pjesë integrale e këtyre Kushteve të Shërbimit.
+          </p>
+          <p>
+            Duke pranuar këto kushte, pranoni gjithashtu Politikën e Privatësisë.
+            Ju inkurajojmë ta lexoni plotësisht para se të krijoni llogarinë.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'perjashtimi') {
+        <div class="section-panel">
+          <h2>Kufizimi i Përgjegjësisë</h2>
+          <h3>Shërbimi "si është"</h3>
+          <p>
+            Platforma ofrohet "si është" dhe "sipas disponueshmërisë". Nuk garantojmë
+            që shërbimi do të jetë i pandërprerë, pa gabime ose i përshtatshëm për çdo
+            qëllim specifik të juajin.
+          </p>
+          <h3>Kufiri i dëmshpërblimit</h3>
+          <p>
+            Në masën maksimale të lejuar nga legjislacioni shqiptar, Brain Gain Albania
+            nuk do të jetë përgjegjëse për dëme indirekte, të rastësishme ose pasuese
+            që rrjedhin nga përdorimi ose pamundësia e përdorimit të platformës.
+          </p>
+          <p>
+            Përgjegjësia jonë totale ndaj jush nuk do të kalojë shumën e paguar prej jush
+            gjatë 12 muajve të fundit para ngjarjes që ka sjellë pretendimin.
+          </p>
+          <h3>Lidhjet e jashtme</h3>
+          <p>
+            Platforma mund të përmbajë lidhje me faqe të jashtme. Nuk jemi përgjegjës
+            për përmbajtjen ose praktikat e privatësisë së atyre faqeve.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'nderprerja') {
+        <div class="section-panel">
+          <h2>Ndërprerja e Shërbimit</h2>
+          <h3>Ndërprerja nga ju</h3>
+          <p>
+            Mund ta mbyllni llogarinë në çdo kohë nga seksioni "Cilësimet" ose duke na
+            kontaktuar. Pas mbylljes, të dhënat tuaja fshihen sipas afateve të përcaktuara
+            në Politikën e Privatësisë.
+          </p>
+          <h3>Ndërprerja nga ne</h3>
+          <p>
+            Rezervojmë të drejtën të pezullojmë ose mbyllim llogarinë tuaj nëse:
+          </p>
+          <ul>
+            <li>Shkelni këto Kushte të Shërbimit.</li>
+            <li>Kryeni aktivitete mashtruese ose abuzive.</li>
+            <li>Pagesa mbetet e pazgjidhur për më shumë se 30 ditë.</li>
+            <li>Ligji kërkon ndërprerjen e shërbimit.</li>
+          </ul>
+          <p>
+            Në rast ndërprerje për shkelje, nuk kemi detyrim rimbursimi. Për ndërprerje
+            të paarsyeshme nga ana jonë, do të rimbursojmë pjesën proporcionale të periudhës
+            së papërdorur.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'ndryshimet') {
+        <div class="section-panel">
+          <h2>Ndryshimet e Kushteve</h2>
+          <p>
+            Mund t'i azhurnojmë këto kushte herë pas here. Ndryshimet materiale do t'ju
+            njoftohen me email dhe nëpërmjet njoftimit brenda platformës të paktën
+            <strong>14 ditë</strong> para hyrjes në fuqi.
+          </p>
+          <p>
+            Vazhdimi i përdorimit të shërbimit pas datës efektive konsiderohet pranim i
+            kushteve të reja. Nëse nuk pajtoheni me ndryshimet, keni të drejtë të mbyllni
+            llogarinë pa penalitet para datës efektive.
+          </p>
+          <p>
+            Versioni aktual i kushteve është gjithmonë i disponueshëm në këtë faqe, me
+            datën e përditësimit të fundit të shënuar në krye.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'ligji') {
+        <div class="section-panel">
+          <h2>Ligji i Zbatueshëm dhe Zgjidhja e Mosmarrëveshjeve</h2>
+          <p>
+            Këto Kushte të Shërbimit rregullohen nga ligjet e Republikës së Shqipërisë.
+            Çdo mosmarrëveshje që lind nga ose në lidhje me këto kushte do të zgjidhet
+            fillimisht nëpërmjet negociatave të mira ndërmjet palëve.
+          </p>
+          <p>
+            Nëse zgjidhja miqësore nuk arrihet brenda 30 ditëve, mosmarrëveshja do t'i
+            nënshtrohet juridiksionit ekskluziv të gjykatave kompetente të Tiranës, Shqipëri.
+          </p>
+          <p>
+            Nëse ndonjë dispozitë e këtyre kushteve konsiderohet e pavlefshme ose e
+            pazbatueshme nga një gjykatë kompetente, dispozitat e tjera mbeten plotësisht
+            në fuqi.
+          </p>
+        </div>
+      }
+
+      @if (activeSection === 'kontakti') {
+        <div class="section-panel">
+          <h2>Kontakti</h2>
+          <p>
+            Për çdo pyetje lidhur me këto Kushte të Shërbimit, na kontaktoni:
+          </p>
+          <div class="info-box">
+            <p><strong>Brain Gain Albania sh.p.k.</strong></p>
+            <p>Rruga e Durrësit, 10, 1001 Tiranë, Shqipëri</p>
+            <p>Email: <a href="mailto:info@braingainalbania.al">info&#64;braingainalbania.al</a></p>
+            <p>Tel: <a href="tel:+35542223344">+355 4 222 33 44</a></p>
+          </div>
+          <p>
+            Për çështje të privatësisë dhe mbrojtjes së të dhënave, referojuni gjithashtu
+            <a routerLink="/privatesia">Politikës sonë të Privatësisë</a>.
+          </p>
+        </div>
+      }
+
+      <!-- Prev / Next navigation -->
+      <div class="section-nav">
+        <button class="nav-arrow" (click)="prev()" [disabled]="activeIndex === 0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Seksioni paraardhës
+        </button>
+        <span class="nav-counter">{{ activeIndex + 1 }} / {{ sections.length }}</span>
+        <button class="nav-arrow" (click)="next()" [disabled]="activeIndex === sections.length - 1">
+          Seksioni tjetër
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+
+    </article>
+  </div>
+</div>

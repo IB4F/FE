@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 interface Grade {
   name: string;
@@ -17,7 +18,7 @@ interface Grade {
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'
 })

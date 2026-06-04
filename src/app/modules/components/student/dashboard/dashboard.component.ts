@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {Subject, takeUntil} from "rxjs";
 import {UserService} from "../../../../services/user.service";
 import {DashboardDTO, DashboardService, LearnHubProgressDTO, UserConceptMasteryDTO, WeeklyActivityDayDTO} from "../../../../api-client";
@@ -8,7 +9,7 @@ import {DashboardDTO, DashboardService, LearnHubProgressDTO, UserConceptMasteryD
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

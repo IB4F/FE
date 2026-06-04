@@ -7,21 +7,21 @@
     <div class="hero-copy">
       <div class="eyebrow reveal">
         <span class="dot">✦</span>
-        <span>Asnjëherë mos ndalo së mësuari</span>
+        <span>{{ 'landing.hero.eyebrow' | translate }}</span>
       </div>
 
       <h1 class="reveal" style="--d:.05s">
-        Rrit potencialin tënd me <span class="ital">mësim</span> që <span class="underline-deco">frymëzon</span>.
+        {{ 'landing.hero.title.prefix' | translate }} <span class="ital">{{ 'landing.hero.title.ital' | translate }}</span> {{ 'landing.hero.title.middle' | translate }} <span class="underline-deco">{{ 'landing.hero.title.underline' | translate }}</span>.
       </h1>
 
       <p class="lead reveal" style="--d:.15s">
-        Brain Gain Albania është platforma digjitale që sjell kuriozitetin, krijimtarinë dhe njohuritë pranë çdo familjeje shqiptare në mbarë botën — me përmbajtje argëtuese, ndërvepruese dhe të personalizuar për çdo moshë.
+        {{ 'landing.hero.description' | translate }}
       </p>
 
       <div class="meta-stats reveal" style="--d:.35s">
-        <div class="stat"><div class="num" data-count="12">12</div><div class="lbl">Klasa shkollore</div></div>
-        <div class="stat"><div class="num"><span data-count="8400">0</span>+</div><div class="lbl">Nxënës aktivë</div></div>
-        <div class="stat"><div class="num"><span data-count="98">0</span>%</div><div class="lbl">Kënaqësi familjesh</div></div>
+        <div class="stat"><div class="num" data-count="12">12</div><div class="lbl">{{ 'landing.hero.stats.classes' | translate }}</div></div>
+        <div class="stat"><div class="num"><span data-count="8400">0</span>+</div><div class="lbl">{{ 'landing.hero.stats.students' | translate }}</div></div>
+        <div class="stat"><div class="num"><span data-count="98">0</span>%</div><div class="lbl">{{ 'landing.hero.stats.families' | translate }}</div></div>
       </div>
     </div>
 
@@ -51,12 +51,10 @@
   <div class="lp-container">
     <div class="section-head">
       <div class="reveal">
-        <div class="section-eyebrow">12 klasa · 1 platformë</div>
-        <h2 class="section-title">Nga abetarja<br/>te <em>matura</em>.</h2>
+        <div class="section-eyebrow">{{ 'landing.classes.eyebrow' | translate }}</div>
+        <h2 class="section-title">{{ 'landing.classes.title' | translate }}</h2>
       </div>
-      <p class="section-blurb reveal" style="--d:.1s">
-        Brain Gain ndjek nxënësin nga klasa e parë deri në të dymbëdhjetën. Filloni me Klasën e parë sot dhe rinjihuni kur klasa juaj të jetë gati.
-      </p>
+      <p class="section-blurb reveal" style="--d:.1s">{{ 'landing.classes.description' | translate }}</p>
     </div>
 
     <div class="grades-grid">
@@ -70,11 +68,11 @@
         >
           <div class="grade-top">
             <div class="grade-num">{{ i + 1 }}</div>
-            <span class="grade-status">{{ i === 0 ? 'Aktive' : 'Së shpejti' }}</span>
+            <span class="grade-status">{{ i === 0 ? ('landing.grade.active' | translate) : ('landing.grade.soon' | translate) }}</span>
           </div>
           <div>
             <h4>{{ g.name }}</h4>
-            <p>{{ i === 0 ? g.desc : 'Në punim e sipër. Do të njoftoheni kur klasa të bëhet aktive.' }}</p>
+            <p>{{ i === 0 ? g.desc : ('cards.comingSoon' | translate) }}</p>
           </div>
           <div class="grade-arrow">
             <svg viewBox="0 0 24 24" fill="none">
@@ -92,12 +90,10 @@
   <div class="lp-container">
     <div class="section-head">
       <div class="reveal">
-        <div class="section-eyebrow">Si funksionon</div>
-        <h2 class="section-title">Tre hapa,<br/>një <em>shprehi</em> e re.</h2>
+        <div class="section-eyebrow">{{ 'landing.how.eyebrow' | translate }}</div>
+        <h2 class="section-title">{{ 'landing.how.title' | translate }}</h2>
       </div>
-      <p class="section-blurb reveal" style="--d:.1s">
-        Pa shkarkime, pa libra të rëndë. Vetëm një llogari familjare që rritet bashkë me fëmijën tuaj.
-      </p>
+      <p class="section-blurb reveal" style="--d:.1s">{{ 'landing.how.description' | translate }}</p>
     </div>
 
     <div class="how-grid">
@@ -105,22 +101,22 @@
         <div class="step">
           <div class="sn">/ 01</div>
           <div>
-            <h3>Krijo profilin e familjes</h3>
-            <p>Shto fëmijët, zgjidh klasën dhe lëndët që ju interesojnë më shumë. Profilet janë private dhe të personalizuara për secilin.</p>
+            <h3>{{ 'landing.how.step1.title' | translate }}</h3>
+            <p>{{ 'landing.how.step1.desc' | translate }}</p>
           </div>
         </div>
         <div class="step">
           <div class="sn">/ 02</div>
           <div>
-            <h3>Mëso me lojë</h3>
-            <p>Çdo ditë, një rrugë e re mësimi: videosqarime të shkurtra, kuize ndërvepruese dhe sfida krijuese. Mjafton 15 minuta në ditë.</p>
+            <h3>{{ 'landing.how.step2.title' | translate }}</h3>
+            <p>{{ 'landing.how.step2.desc' | translate }}</p>
           </div>
         </div>
         <div class="step">
           <div class="sn">/ 03</div>
           <div>
-            <h3>Ndjek progresin</h3>
-            <p>Prindërit marrin raporte javore të qarta. Fëmijët shohin vulat e tyre dhe historinë e ditës — motivim që mban gjallë kuriozitetin.</p>
+            <h3>{{ 'landing.how.step3.title' | translate }}</h3>
+            <p>{{ 'landing.how.step3.desc' | translate }}</p>
           </div>
         </div>
       </div>
@@ -151,12 +147,10 @@
   <div class="lp-container">
     <div class="section-head">
       <div class="reveal">
-        <div class="section-eyebrow">Komuniteti</div>
-        <h2 class="section-title">Familjet që na <em>besojnë</em>.</h2>
+        <div class="section-eyebrow">{{ 'landing.community.eyebrow' | translate }}</div>
+        <h2 class="section-title">{{ 'landing.community.title' | translate }}</h2>
       </div>
-      <p class="section-blurb reveal" style="--d:.1s">
-        Nga Tirana në Nju-Jork, mijëra familje shqiptare e nisin ditën me Brain Gain.
-      </p>
+      <p class="section-blurb reveal" style="--d:.1s">{{ 'landing.community.description' | translate }}</p>
     </div>
 
     <div class="test-grid">
@@ -202,14 +196,14 @@
     <div class="cta-box reveal">
       <div class="cta-grid">
         <div>
-          <div class="section-eyebrow" style="color: var(--teal)">Bashkohu sot</div>
-          <h2>Mësimi i parë<br/>fillon me një <em>klikim</em>.</h2>
+          <div class="section-eyebrow" style="color: var(--teal)">{{ 'landing.cta.eyebrow' | translate }}</div>
+          <h2>{{ 'landing.cta.title' | translate }}</h2>
         </div>
         <div>
-          <p>Hap llogarinë e familjes falas. Pa kartelë krediti, pa pagesa të fshehura — vetëm mësim cilësor në gjuhën tuaj.</p>
+          <p>{{ 'landing.cta.description' | translate }}</p>
           <div class="cta-actions">
-            <a class="btn btn-primary" routerLink="/membership">Regjistrohu falas</a>
-            <a class="btn btn-ghost" style="border-color: rgba(255,255,255,.3); color: white" href="mailto:info@braingainalbania.al">Bisedo me ne</a>
+            <a class="btn btn-primary" routerLink="/membership">{{ 'landing.cta.register' | translate }}</a>
+            <a class="btn btn-ghost" style="border-color: rgba(255,255,255,.3); color: white" href="mailto:info@braingainalbania.al">{{ 'landing.cta.contact' | translate }}</a>
           </div>
         </div>
       </div>

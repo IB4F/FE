@@ -128,6 +128,11 @@ export class LoginComponent implements OnInit {
       switchMap(resp => {
         this._tokenStorageService.saveTokens(resp?.data);
 
+        if (resp?.data?.requiresTermsReAcceptance) {
+          this.router.navigate(['/accept-terms']);
+          return this.userService.loadUserData(true);
+        }
+
         if (resp?.data?.mustChangePassword) {
           this._tokenStorageService.setMustChangePassword(true);
           this.router.navigate(['/change-password-first-time']);
