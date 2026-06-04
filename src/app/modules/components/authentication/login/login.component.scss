@@ -161,6 +161,45 @@
   margin: 4px 0 0 4px;
 }
 
+/* ── Lockout banner ── */
+.lg-lockout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff7ed;
+  border: 1.5px solid #f97316;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  color: #c2410c;
+
+  svg { flex-shrink: 0; margin-top: 2px; }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  strong {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  span {
+    font-size: 12px;
+    color: #9a3412;
+  }
+}
+
+.lg-countdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  color: #c2410c;
+  letter-spacing: .05em;
+}
+
 /* Remember + forgot row */
 .lg-row {
   display: flex;

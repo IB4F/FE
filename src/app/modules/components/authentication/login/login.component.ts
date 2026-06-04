@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
@@ -41,7 +41,7 @@ import {animate, style, transition, trigger} from "@angular/animations";
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginFormGroup!: FormGroup;
   forgotFormGroup!: FormGroup;
   hidePass = true;
@@ -49,6 +49,10 @@ export class LoginComponent implements OnInit {
   showForgotForm = false;
   resetSent = false;
   isSendingReset = false;
+
+  lockedUntil: Date | null = null;
+  lockoutCountdown = '';
+  private lockoutInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -147,12 +151,58 @@ export class LoginComponent implements OnInit {
           this.navigateTo();
         }
       },
-      error: (error) => this.toast.danger(error?.error?.message, 'ERROR', 3000)
+      error: (error) => {
+        if (error?.status === 429 && error?.error?.lockedUntil) {
+          this.handleLockout(error.error.lockedUntil);
+        } else {
+          this.toast.danger(error?.error?.message || 'Ndodhi një gabim', 'GABIM', 4000);
+        }
+      }
     });
   }
 
   isLoginFormValid(): boolean {
-    return this.loginFormGroup.valid;
+    return this.loginFormGroup.valid && !this.lockedUntil;
+  }
+
+  ngOnDestroy(): void {
+    this.clearLockoutInterval();
+  }
+
+  private handleLockout(lockedUntil: string): void {
+    this.lockedUntil = new Date(lockedUntil);
+    this.updateCountdown();
+    this.lockoutInterval = setInterval(() => this.updateCountdown(), 1000);
+  }
+
+  private updateCountdown(): void {
+    if (!this.lockedUntil) return;
+    const remaining = Math.max(0, this.lockedUntil.getTime() - Date.now());
+
+    if (remaining === 0) {
+      this.lockedUntil = null;
+      this.lockoutCountdown = '';
+      this.clearLockoutInterval();
+      return;
+    }
+
+    const totalSec = Math.ceil(remaining / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+
+    if (h > 0) {
+      this.lockoutCountdown = `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    } else {
+      this.lockoutCountdown = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+  }
+
+  private clearLockoutInterval(): void {
+    if (this.lockoutInterval !== null) {
+      clearInterval(this.lockoutInterval);
+      this.lockoutInterval = null;
+    }
   }
 
   navigateTo() {

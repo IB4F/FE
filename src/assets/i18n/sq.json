@@ -675,5 +675,9 @@
   "landing.hero.description": "Brain Gain Albania është platforma digjitale që sjell kuriozitetin, krijimtarinë dhe njohuritë pranë çdo familjeje shqiptare në mbarë botën — me përmbajtje argëtuese, ndërvepruese dhe të personalizuar për çdo moshë.",
   "landing.hero.stats.classes": "Klasa shkollore",
   "landing.hero.stats.students": "Nxënës aktivë",
-  "landing.hero.stats.families": "Kënaqësi familjesh"
+  "landing.hero.stats.families": "Kënaqësi familjesh",
+
+  "auth.login.locked": "Llogaria u bllokua përkohësisht",
+  "auth.login.lockedDesc": "Shumë tentativa të dështuara. Provoni sërish pas:",
+  "auth.login.lockedExpired": "Bllokimi ka skaduar. Mund të provoni përsëri."
 }

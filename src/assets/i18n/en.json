@@ -675,5 +675,9 @@
   "landing.hero.description": "Brain Gain Albania is the digital platform that brings curiosity, creativity and knowledge to every Albanian family worldwide — with fun, interactive and personalised content for every age.",
   "landing.hero.stats.classes": "School grades",
   "landing.hero.stats.students": "Active students",
-  "landing.hero.stats.families": "Family satisfaction"
+  "landing.hero.stats.families": "Family satisfaction",
+
+  "auth.login.locked": "Account temporarily locked",
+  "auth.login.lockedDesc": "Too many failed attempts. Try again in:",
+  "auth.login.lockedExpired": "Lockout has expired. You can try again."
 }
