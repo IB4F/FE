@@ -58,6 +58,7 @@ jobs:
           } else {
             Write-Host "No existing deployment found, skipping backup"
           }
+          [Environment]::Exit(0)
         shell: powershell
 
       - name: Deploy with Robocopy
