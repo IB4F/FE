@@ -28,6 +28,32 @@ jobs:
       - name: Build production
         run: npx ng build --configuration=production
 
+      - name: Backup current frontend
+        env:
+          FRONTEND_DEPLOY_PATH: ${{ secrets.FRONTEND_DEPLOY_PATH }}
+        run: |
+          $dst = $env:FRONTEND_DEPLOY_PATH
+          if (Test-Path $dst) {
+            $date = Get-Date -Format "yyyyMMdd_HHmmss"
+            $sha = $env:GITHUB_SHA.Substring(0, 8)
+            $backupRoot = "C:\Backups\Frontend"
+            $backupDir = "$backupRoot\backup_${date}_${sha}"
+            New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
+            robocopy $dst $backupDir /MIR /XF web.config /R:3 /W:5
+            Write-Host "Backup created: $backupDir"
+            $backups = Get-ChildItem -Path $backupRoot -Directory | Sort-Object Name
+            if ($backups.Count -gt 3) {
+              $toDelete = $backups | Select-Object -First ($backups.Count - 3)
+              foreach ($old in $toDelete) {
+                Remove-Item -Recurse -Force $old.FullName
+                Write-Host "Removed old backup: $($old.Name)"
+              }
+            }
+          } else {
+            Write-Host "No existing deployment found, skipping backup"
+          }
+        shell: powershell
+
       - name: Deploy with Robocopy
         env:
           FRONTEND_DEPLOY_PATH: ${{ secrets.FRONTEND_DEPLOY_PATH }}
@@ -49,6 +75,7 @@ jobs:
         shell: powershell
 
       - name: Health check
+        id: health_check
         run: |
           $url = "https://braingainalbania.al"
           $success = $false
@@ -79,12 +106,16 @@ jobs:
           }
 
       - name: Deployment summary
+        if: always()
+        env:
+          HEALTH_CHECK_OUTCOME: ${{ steps.health_check.outcome }}
         run: |
           $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+          $status = if ($env:HEALTH_CHECK_OUTCOME -eq "success") { "SUCCESS" } else { "FAILED" }
           Write-Host "========================================"
           Write-Host "   DEPLOYMENT SUMMARY"
           Write-Host "========================================"
-          Write-Host "Status    : SUCCESS"
+          Write-Host "Status    : $status"
           Write-Host "Timestamp : $timestamp"
           Write-Host "Branch    : $env:GITHUB_REF_NAME"
           Write-Host "Commit    : $env:GITHUB_SHA"
