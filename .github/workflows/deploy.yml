@@ -32,6 +32,7 @@ jobs:
         env:
           FRONTEND_DEPLOY_PATH: ${{ secrets.FRONTEND_DEPLOY_PATH }}
         run: |
+          $ErrorActionPreference = 'Continue'
           $dst = $env:FRONTEND_DEPLOY_PATH
           if (Test-Path $dst) {
             $date = Get-Date -Format "yyyyMMdd_HHmmss"
@@ -40,6 +41,11 @@ jobs:
             $backupDir = "$backupRoot\backup_${date}_${sha}"
             New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
             robocopy $dst $backupDir /MIR /XF web.config /R:3 /W:5
+            $rc = $LASTEXITCODE
+            if ($rc -ge 8) {
+              Write-Host "Backup robocopy failed with exit code $rc"
+              [Environment]::Exit(1)
+            }
             Write-Host "Backup created: $backupDir"
             $backups = Get-ChildItem -Path $backupRoot -Directory | Sort-Object Name
             if ($backups.Count -gt 3) {
