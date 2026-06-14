@@ -128,11 +128,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLogin() {
+    let skipNavigation = false;
+
     this._authService.apiAuthLoginPost({ ...this.loginFormGroup.value, rememberMe: this.rememberMe }).pipe(
       switchMap(resp => {
         this._tokenStorageService.saveTokens(resp?.data);
 
         if (resp?.data?.requiresTermsReAcceptance) {
+          skipNavigation = true;
           this.router.navigate(['/accept-terms']);
           return this.userService.loadUserData(true);
         }
@@ -147,7 +150,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       })
     ).subscribe({
       next: () => {
-        if (!this._tokenStorageService.getMustChangePassword()) {
+        if (!this._tokenStorageService.getMustChangePassword() && !skipNavigation) {
           this.navigateTo();
         }
       },
